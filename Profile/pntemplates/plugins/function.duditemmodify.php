@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2002, Zikula Development Team
  * @link http://www.zikula.org
- * @version $Id: function.dudoptionalitemmodify.php 370 2009-11-25 10:44:01Z mateo $
+ * @version $Id: function.duditemmodify.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  *
  * Dynamic User data Module
@@ -17,16 +17,16 @@
  * Smarty function to display an editable dynamic user data field
  *
  * Example
- * <!--[dudoptionalitemmodify proplabel="_YICQ"]-->
+ * <!--[duditemmodify proplabel="_YICQ"]-->
  *
  * Example
- * <!--[dudoptionalitemmodify proplabel="_YICQ" uid=$uid]-->
+ * <!--[duditemmodify proplabel="_YICQ" uid=$uid]-->
  *
  * Example
- * <!--[dudoptionalitemmodify propattribute="signature"]-->
+ * <!--[duditemmodify propattribute="signature"]-->
  *
  * Example
- * <!--[dudoptionalitemmodify item=$item]-->
+ * <!--[duditemmodify item=$item]-->
  *
  * @author       Mark West
  * @since         21/01/04
@@ -42,7 +42,7 @@
  * @param        string      $mode              Display mode: 'normal' = normal editing, 'simple' = simplified for search window
  * @return       string      the results of the module function
  */
-function smarty_function_dudoptionalitemmodify($params, &$smarty)
+function smarty_function_duditemmodify($params, &$smarty)
 {
     extract($params);
     unset($params);
@@ -78,7 +78,7 @@ function smarty_function_dudoptionalitemmodify($params, &$smarty)
     if (!isset($mode) || empty ($mode)) {
         $mode = 'normal'; // alternative is 'simple'
     }
-    if ($mode != 'normal' && $mode != 'simple') {
+    if (!in_array($mode, array('normal', 'simple'))) {
         return __f('Unknown \'%1$s\' value [%2$s] in duditem', array('mode', $mode), $dom);
     }
 
@@ -105,7 +105,7 @@ function smarty_function_dudoptionalitemmodify($params, &$smarty)
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
         if (empty($uservalue)) {
-            $uservalue = pnConfigGetVar('timezone_offset');
+            $uservalue = pnUserGetVar('tzoffset') ? pnUserGetVar('tzoffset') : pnConfigGetVar('timezone_offset');
         }
         $tzinfo = pnModGetVar(PN_CONFIG_MODULE, 'timezone_info');
 

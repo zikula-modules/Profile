@@ -27,6 +27,9 @@ function Profile_userapi_getall($args)
     if (!isset($args['numitems'])) {
         $args['numitems'] = -1;
     }
+    if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
+        $args['index'] = 'prop_label';
+    }
 
     if (!isset($args['startnum']) || !isset($args['numitems'])) {
         return LogUtil::registerArgsError();
@@ -60,7 +63,8 @@ function Profile_userapi_getall($args)
             $item['prop_listoptions']   = $validationinfo['listoptions'];
             $item['prop_note']          = $validationinfo['note'];
             $item['prop_validation']    = $validationinfo['validation'];
-            $items[$item['prop_label']] = $item;
+
+            $items[$item[$args['index']]] = $item;
         }
     }
 
@@ -140,6 +144,10 @@ function Profile_userapi_getallactive($args)
         return LogUtil::registerArgsError();
     }
 
+    if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
+        $args['index'] = 'prop_label';
+    }
+
     static $items;
 
     // Security check
@@ -154,29 +162,30 @@ function Profile_userapi_getallactive($args)
         $where   = "WHERE $column[prop_weight] > '0'
                     AND   $column[prop_dtype] >= '0'";
         $orderBy = $column['prop_weight'];
-        $props   = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], 'prop_label');
+        $items   = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], 'prop_label');
+    }
 
-        // Put items into result array.
-        foreach ($props as $item)
-        {
-            if (SecurityUtil::checkPermission('Profile::', $item['prop_label'].'::'.$item['prop_id'], ACCESS_READ)) {
-                // Extract the validation info array
-                $validationinfo = @unserialize($item['prop_validation']);
+    // Put items into result array.
+    $result = array();
+    foreach ($items as $item)
+    {
+        if (SecurityUtil::checkPermission('Profile::', $item['prop_label'].'::'.$item['prop_id'], ACCESS_READ)) {
+            // Extract the validation info array
+            $validationinfo = @unserialize($item['prop_validation']);
 
-                $item['prop_required']    = $validationinfo['required'];
-                $item['prop_viewby']      = $validationinfo['viewby'];
-                $item['prop_displaytype'] = $validationinfo['displaytype'];
-                $item['prop_listoptions'] = $validationinfo['listoptions'];
-                $item['prop_note']        = $validationinfo['note'];
-                $item['prop_validation']  = $validationinfo['validation'];
+            $item['prop_required']    = $validationinfo['required'];
+            $item['prop_viewby']      = $validationinfo['viewby'];
+            $item['prop_displaytype'] = $validationinfo['displaytype'];
+            $item['prop_listoptions'] = $validationinfo['listoptions'];
+            $item['prop_note']        = $validationinfo['note'];
+            $item['prop_validation']  = $validationinfo['validation'];
 
-                $items[$item['prop_label']] = $item;
-            }
+            $result[$item[$args['index']]] = $item;
         }
     }
 
     // Return the items
-    return $items;
+    return $result;
 }
 
 /**
@@ -251,27 +260,27 @@ function Profile_userapi_savedata($args)
         return LogUtil::registerArgsError();
     }
 
-    $fieldlist = $args['dynadata'];
+    $fields = $args['dynadata'];
 
-    // create the basic array for dbutil
-    $profile = array('uid' => $args['uid']);
+    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('index' => 'prop_attribute_name'));
 
-    while (list($fieldattribute, $fieldvalue) = each($fieldlist))
+    foreach ($duds as $attrname => $dud)
     {
-        // Combining fields, TODO: Extend to other types than only EXTDATE
-        if (is_array($fieldvalue)) {
-            $definition = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $fieldattribute));
-            if ($definition) {
+        $fieldvalue = '';
+        if (isset($fields[$attrname])) {
+            // Combining fields, TODO: Extend to other types than only EXTDATE
+            if (is_array($fields[$attrname])) {
                 // Must check type, if EXTDATE { implode } else { serialize }
-                if ($definition['prop_displaytype'] == 6) {
-                    $fieldvalue = implode('-', $fieldvalue);
+                if ($dud['prop_displaytype'] == 6) {
+                    $fieldvalue = implode('-', $fields[$attrname]);
                 } else {
-                    $fieldvalue = serialize(array_values($fieldvalue));
+                    $fieldvalue = serialize(array_values($fields[$attrname]));
                 }
+            } else {
+                $fieldvalue = $fields[$attrname];
             }
         }
-
-        pnUserSetVar($fieldattribute, $fieldvalue, $args['uid']);
+        pnUserSetVar($attrname, $fieldvalue, $args['uid']);
     }
 
     // Return the result (true = success, false = failure

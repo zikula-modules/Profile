@@ -10,9 +10,7 @@
         <legend><!--[$templatetitle]--></legend>
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
         <!--[foreach from=$duditems item=item]-->
-        <!--[if $item.prop_weight gt 0]-->
-        <!--[dudoptionalitemmodify item=$item tableless=true]-->
-        <!--[/if]-->
+        <!--[duditemmodify item=$item tableless=true]-->
         <!--[/foreach]-->
     </fieldset>
     <div class="z-formbuttons">

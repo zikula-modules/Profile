@@ -41,29 +41,10 @@
         <!--[/if]-->
 
         <!--[if $canview eq true and $field.prop_attribute_name neq 'avatar']-->
-        <!--[* Special check in case of plugin need *]-->
-        <!--[if $field.prop_attribute_name eq 'tzoffset']-->
         <div class="z-formrow">
             <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
-            <div class="z-formnote"><!--[dudtimezoneoffset zone=$userinfo[$field.prop_label]|pnvarprepfordisplay]--></div>
+            <!--[duditemdisplay item=$field userinfo=$userinfo]-->
         </div>
-        <!--[elseif $field.prop_attribute_name eq 'url' AND isset($userinfo[$field.prop_label])]-->
-        <div class="z-formrow">
-            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
-            <div class="z-formnote"><a href="<!--[$userinfo[$field.prop_label]|pnvarprepfordisplay]-->" title="<!--[$uname|pnvarprepfordisplay]--> <!--[gt text="Website URL"]-->" rel="nofollow"><!--[$userinfo[$field.prop_label]|pnvarprepfordisplay]--></a></div>
-        </div>
-        <!--[elseif isset($userinfo[$field.prop_label])]-->
-        <div class="z-formrow">
-            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
-            <div class="z-formnote"><!--[$userinfo[$field.prop_label]|pnvarprephtmldisplay|default:"&nbsp;"]--></div>
-        </div>
-        <!--[elseif isset($userinfo.__ATTRIBUTES__[$field.prop_attribute_name])]-->
-        <div class="z-formrow">
-            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
-            <!--[gt text=$userinfo.__ATTRIBUTES__[$field.prop_attribute_name] assign='uservalue']-->
-            <div class="z-formnote"><!--[$uservalue|pnvarprephtmldisplay|default:'&nbsp;']--></div>
-        </div>
-        <!--[/if]-->
         <!--[/if]-->
         <!--[/foreach]-->
     </div>

@@ -137,15 +137,15 @@ function Profile_adminapi_update($args)
 
     // assumes if required is set, all the validation info is
     if (isset($args['required'])) {
-	    // Produce the validation array
-	    $validationinfo = array('required'    => $args['required'],
-	                            'viewby'      => $args['viewby'],
-	                            'displaytype' => $args['displaytype'],
-	                            'listoptions' => $args['listoptions'],
-	                            'note'        => $args['note'],
-	                            'validation'  => $args['validation']);
+        // Produce the validation array
+        $validationinfo = array('required'    => $args['required'],
+                                'viewby'      => $args['viewby'],
+                                'displaytype' => $args['displaytype'],
+                                'listoptions' => $args['listoptions'],
+                                'note'        => $args['note'],
+                                'validation'  => $args['validation']);
 
-	    $obj['prop_validation'] = serialize($validationinfo);
+        $obj['prop_validation'] = serialize($validationinfo);
     }
 
     $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');

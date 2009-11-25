@@ -74,7 +74,7 @@ function Profile_user_view($args)
     // get all active profile fields
     $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
     foreach ($activeduds as $dudlabel => $activedud) {
-        $dudarray[$dudlabel] = $activedud['prop_attribute_name'];
+        $dudarray[$activedud['prop_attribute_name']] = $userinfo['__ATTRIBUTES__'][$activedud['prop_attribute_name']];
     }
 
     // Create output object
@@ -118,7 +118,7 @@ function Profile_user_modify($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // The API function is called.
-    $items = pnModAPIFunc('Profile', 'user', 'getall');
+    $items = pnModAPIFunc('Profile', 'user', 'getallactive');
 
     // The return value of the function is checked here
     if ($items == false) {

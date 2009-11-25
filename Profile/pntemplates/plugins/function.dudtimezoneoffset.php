@@ -44,6 +44,7 @@ function smarty_function_dudtimezoneoffset($params, &$smarty)
     $tzinfo = pnModGetVar(PN_CONFIG_MODULE, 'timezone_info');
 
     if (isset($tzinfo[$zone])) {
+        // FIXME DateUtil::getTimezoneName($zone); in 1.2.1
         return DataUtil::formatForDisplay($tzinfo[$zone]);
     } else {
         return;
