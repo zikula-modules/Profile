@@ -191,8 +191,8 @@ function smarty_function_dudoptionalitemmodify($params, &$smarty)
             $render->assign('listoptions', $list);
 
             // translate them if needed
-            foreach ($list as $k => $v) {
-                $list[$k] = __($v, $dom);
+            foreach ($list as $k => $value) {
+                $list[$k] = __($value, $dom);
             }
             $render->assign('listoutput', $list);
             break;
@@ -213,8 +213,8 @@ function smarty_function_dudoptionalitemmodify($params, &$smarty)
             $render->assign('listoptions', $list);
 
             // translate them if needed
-            foreach ($list as $k => $v) {
-                $list[$k] = __($v, $dom);
+            foreach ($list as $k => $value) {
+                $list[$k] = __($value, $dom);
             }
             $render->assign('listoutput', $list);
             break;
@@ -244,8 +244,8 @@ function smarty_function_dudoptionalitemmodify($params, &$smarty)
 
             $array = array();
             foreach ($combos as $combo) {
-                list($id, $val) = explode($second_break, $combo);
-                $array[$id] = $val;
+                list($id, $value) = explode($second_break, $combo);
+                $array[$id] = __($value, $dom);
             }
 
             $render->assign('fields', $array);

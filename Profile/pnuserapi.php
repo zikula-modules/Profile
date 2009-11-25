@@ -106,8 +106,6 @@ function Profile_userapi_get($args)
     // Create the item array
     $item = array('prop_id'             => $result['prop_id'],
                   'prop_label'          => $result['prop_label'],
-                  'prop_dtype'          => $result['prop_dtype'],
-                  'prop_length'         => $result['prop_length'],
                   'prop_weight'         => $result['prop_weight'],
                   'prop_attribute_name' => $result['prop_attribute_name'],
                   'prop_required'       => $validationinfo['required'],

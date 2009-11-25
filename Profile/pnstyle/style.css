@@ -70,6 +70,9 @@ p.profile_usererror {
     font-weight: bold;
     margin: 0;
 }
+#modifyprofileform p.z-formnote {
+    font-style: italic;
+}
 #modifyprofileform .z-frontendformbuttons {
     text-align: left;
     margin-left: 14em;

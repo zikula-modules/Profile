@@ -1,5 +1,6 @@
 
 Rework the view method + dud view templates
+Add a validation for checkfox and do not let it be required
 Style the warning, and margins for errors, etc
 Hide some form fields for specific types
 	Checkbox can't be required
@@ -11,8 +12,6 @@ Think about external DUDs
 Prevent removal of core items.
 API functions to be reviewed to check all functionality required by other modules can be provided.
 DUD API to be documented.
-
-Use "validation" to have info about avatars and timezoneoffset or language definition for list (if available)
 
 Group fields
 Either using a different type in prop_dtype where more than one field can be merge to one field...

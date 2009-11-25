@@ -1,5 +1,5 @@
 <!--[*  $Id: profile_admin_new.htm 370 2009-11-25 10:44:01Z mateo $  *]-->
-<!--[pnajaxheader modname='Profile' filename='profile_edit_property.js' effects=true nobehaviour=true noscriptaculous=true]-->
+<!--[pnajaxheader modname='Profile' filename='profile_edit_property.js' nobehaviour=true noscriptaculous=true]-->
 <!--[gt text='Create profile property' assign='templatetitle']-->
 
 <!--[include file='profile_admin_menu.htm']-->
@@ -14,10 +14,11 @@
             <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
             <fieldset>
                 <legend><!--[gt text='New Property']--></legend>
+                <div class="z-formnote z-warningmsg"><!--[gt text="No special characters nor blanks are allowed in the label or internal name."]--></div>
                 <div class="z-formrow">
                     <label for="profile_label"><!--[gt text='Property label']--></label>
                     <input id="profile_label" name="label" type="text" size="20" maxlength="255" />
-                    <div class="z-formnote z-warningmsg"><!--[gt text="Reminder: After you create a new property label above (such as _MYINT), you must add the msgid to your 'module_profile.pot' (you need two lines msgid '_MYINT' then on line after that msgstr '', generate the PO file and translate it to provide a display string for the new property label."]--></div>
+                    <div class="z-formnote z-warningmsg"><!--[gt text="Reminder: After you create a new property label above (such as _MYDUDLABEL), you must add the msgid to your '/module/Profile/locale/module_profile.pot' (you need two lines msgid '_MYDUDLABEL' then one line after the msgstr '', generate the PO file for a specific language and translate it to provide a display string for the new property label."]--></div>
                 </div>
                 <div class="z-formrow">
                     <label for="profile_attributename"><!--[gt text='Internal name']--></label>
@@ -42,11 +43,13 @@
                         <!--[html_options options=$displaytypes]-->
                     </select>
                 </div>
-                <div class="z-formrow">
+                <div class="z-formrow" id="profile_content_wrapper">
                     <label for="profile_listoptions"><!--[gt text='List content']--></label>
                     <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions"></textarea>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Precede each option by <strong>@@</strong>. For example: <strong>@@radio 1@@radio 2@@radio 3</strong>. <br />The options are susceptible to be translated."]--></p>
+					<p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Precede each option by <strong>@@</strong>. For example: <br />a simple list: <strong>@@option 1@@option 2@@option 3</strong>, <br />and a multiple select: <strong>1@@option 1@@option 2@@option 3</strong>. <br />The options are susceptible to be translated."]--></p>
+					<p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="The format to describe the options is: <strong>id1,label1;id2,label2;id3,label3</strong>. Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (','). The labels are susceptible to be translated."]--></p>
                 </div>
-                <p class="z-formnote z-sub"><!--[gt text="Reminder: Precede each option by @@. For combo boxes: id1,label1;id2,label2;id3,label3;... Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (',')."]--></p>
                 <div class="z-formrow">
                     <label for="profile_note"><!--[gt text='Note']--></label>
                     <textarea id="profile_note" cols="50" rows="5" name="note"></textarea>
