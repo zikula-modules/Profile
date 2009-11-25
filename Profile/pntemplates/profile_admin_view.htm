@@ -1,0 +1,61 @@
+<!--[*  $Id: profile_admin_view.htm 370 2009-11-25 10:44:01Z mateo $  *]-->
+<!--[pnajaxheader modname='Profile' filename='profile.js']-->
+<!--[gt text='View Properties' assign='templatetitle']-->
+
+<!--[include file='profile_admin_menu.htm']-->
+
+<div class="z-admincontainer">
+    <div class="z-adminpageicon"><!--[pnimg modname='core' src='windowlist.gif' set='icons/large' alt=$templatetitle]--></div>
+
+    <h2><!--[$templatetitle]--></h2>
+
+    <form class="z-adminform" action="" method="post" enctype="application/x-www-form-urlencoded">
+        <div>
+            <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
+            <input type="hidden" id="startnum" name="startnum" value="<!--[$startnum]-->" />
+            <div id="profilehint" class="z-informationmsg" style="display:none"><!--[gt text="Tip: You can arrange the order of the individual properties, using drag and drop. The display order will be saved when you drop the property at the desired place."]--></div>
+            <ol id="profilelist">
+                <li class="profilelistheader z-clearfix">
+                    <span style="width:25%"><strong><!--[gt text='Property Label']--></strong></span>
+                    <span><strong><!--[gt text='Internal name']--></strong></span>
+                    <span><strong><!--[gt text='Dud type']--></strong></span>
+                    <span><strong><!--[gt text='Status']--></strong></span>
+                    <span style="width:7%"><strong><!--[gt text='Actions']--></strong></span>
+                </li>
+                <!--[foreach from=$duditems item='duditem']-->
+                <li id="profile_<!--[$duditem.prop_id]-->" class="<!--[cycle values='z-odd,z-even']--> z-sortable z-clearfix">
+                    <span id="profiledrag_<!--[$duditem.prop_id]-->" style="width: 25%"><!--[$duditem.prop_label|pnvarprephtmldisplay]--> (<!--[gt text=$duditem.prop_label]-->)</span>
+                    <span><!--[$duditem.prop_attribute_name]--></span>
+                    <span><!--[$duditem.dtype|pnvarprephtmldisplay]--></span>
+                    <span>
+                        <!--[if $duditem.status.url ne '']-->
+                        <a href="<!--[$duditem.status.url|pnvarprepfordisplay]-->" id="profilestatus_<!--[$duditem.prop_id]-->" class="profilestatus_<!--[$duditem.statusval]-->">
+                            <!--[pnimg modname='core' set='icons/extrasmall' src=$duditem.status.image alt=$duditem.status.title title=$duditem.status.title]-->
+                            <strong><!--[$duditem.status.title]--></strong>
+                        </a>
+                        <!--[else]-->
+                        <!--[pnimg modname='core' set='icons/extrasmall' src=$duditem.status.image alt=$duditem.status.title title=$duditem.status.title]-->
+                        <!--[/if]-->
+                    </span>
+                    <span style="width:7%;">
+                        <!--[assign var='options' value=$duditem.options]-->
+                        <!--[section name='options' loop=$options]-->
+                        <a href="<!--[$options[options].url|pnvarprepfordisplay]-->"<!--[if $options[options].class]--> class="<!--[$options[options].class|pnvarprepfordisplay]-->"<!--[/if]-->><!--[pnimg modname='core' set='icons/extrasmall' src=$options[options].image alt=$options[options].title title=$options[options].title]--></a>
+                        <!--[/section]-->
+                    </span>
+                </li>
+                <!--[/foreach]-->
+            </ol>
+        </div>
+    </form>
+
+    <!--[pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='startnum' shift=1]-->
+</div>
+
+<script type="text/javascript">
+    // <![CDATA[
+    var msgProfileStatusDeactivate = '<!--[gt text="Deactivate"]-->';
+    var msgProfileStatusActivate = '<!--[gt text="Activate"]-->';
+    Event.observe(window, 'load', profileinit, false);
+    // ]]>
+</script>

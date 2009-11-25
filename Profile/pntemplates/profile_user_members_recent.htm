@@ -1,0 +1,68 @@
+<!--[* $Id: profile_user_members_recent.htm 335 2009-11-09 06:52:03Z drak $ *]-->
+<!--[gt text='Last %s registered users' tag1=$recentmembersitemsperpage assign='templatetitle']-->
+
+<!--[include file='profile_user_menu.htm']-->
+
+<table class="z-datatable">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th><!--[gt text='User Name']--></th>
+            <th><!--[gt text='Registration Date']--></th>
+            <!--[ if @isset($dudarray._UREALNAME) ]-->
+            <th><!--[gt text='True name']--></th>
+            <!--[/if]-->
+            <!--[if $msgmodule]-->
+            <th><!--[gt text='PM']--></th>
+            <!--[/if]-->
+            <!--[ if @isset($dudarray._YOURHOMEPAGE) ]-->
+            <th><!--[gt text='URL']--></th>
+            <!--[/if]-->
+            <!--[if $adminedit]-->
+            <th><!--[gt text='Options']--></th>
+            <!--[/if]-->
+        </tr>
+    </thead>
+    <tbody>
+        <!--[counter start=0 skip=1 assign='row']-->
+        <!--[section name=users loop=$users]-->
+        <!--[counter assign='row']-->
+        <tr class="<!--[cycle values='z-odd,z-even']-->">
+            <td>
+                <!--[if $users[users].onlinestatus eq 1]-->
+                <a href="<!--[pnmodurl modname='Profile' type='user' func='onlinemembers']-->"><!--[pnimg modname='core' src='greenled.gif' set='icons/extrasmall' __title='Online' __alt='Online']--></a>
+                <!--[else]-->
+                <!--[pnimg modname='core' src='redled.gif' set='icons/extrasmall' __title='Offline' __alt='Offline' ]-->
+                <!--[/if]-->
+            </td>
+            <td><strong><!--[$users[users].uname|userprofilelink]--></strong></td>
+            <td><!--[$users[users].pn_user_regdate|pndate_format|default:"&nbsp;"]--></td>
+            <!--[ if @isset($dudarray._UREALNAME) ]-->
+            <td><!--[$users[users]._UREALNAME|default:"&nbsp;"]--></td>
+            <!--[/if]-->
+            <!--[if $msgmodule]-->
+            <td><a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="mail_new.gif" __alt='Send private message' ]--></a></td>
+            <!--[/if]-->
+            <!--[ if @isset($dudarray._YOURHOMEPAGE) ]-->
+            <td>
+                <!--[if $users[users]._YOURHOMEPAGE eq '']-->
+                &nbsp;
+                <!--[else]-->
+                <a href="<!--[$users[users]._YOURHOMEPAGE|pnvarprepfordisplay]-->"><!--[pnimg modname=core set=icons/extrasmall src="agt_internet.gif" title=$users[users]._YOURHOMEPAGE alt=$users[users]._YOURHOMEPAGE]--></a>
+                <!--[/if]-->
+            </td>
+            <!--[/if]-->
+            <!--[if $adminedit]-->
+            <td>
+                <a href="<!--[pnmodurl modname='Users' type='admin' func='modify' userid=$users[users].pn_uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src='xedit.gif' __alt='Edit']--></a>
+                <!--[if $admindelete]-->
+                <a href="<!--[pnmodurl modname='Users' type='admin' func='deleteusers' userid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src='14_layer_deletelayer.gif' __alt='Delete']--></a>
+                <!--[/if]-->
+            </td>
+            <!--[/if]-->
+        </tr>
+        <!--[sectionelse]-->
+        <tr class="z-datatableempty"><td colspan="7"><!--[gt text='No users found.']--></td></tr>
+        <!--[/section]-->
+    </tbody>
+</table>

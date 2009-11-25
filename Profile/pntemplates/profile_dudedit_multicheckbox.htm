@@ -1,0 +1,47 @@
+<!--[* $Id: profile_dudedit_multicheckbox.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
+
+<!--[if $tableless]-->
+<div class="<!--[$class|default:'z-formrow']-->">
+    <!--[if $properror neq '']-->
+    <p class="z-errormsg"><!--[$properror]--></p>
+    <!--[/if]-->
+
+    <label for="prop_<!--[$prop_attribute_name]-->">
+        <!--[gt text=$proplabeltext]--> 
+        <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
+    </label>
+    <div id="prop_<!--[$prop_attribute_name]-->">
+        <!--[html_checkboxes name="dynadata[$prop_attribute_name]" labels=true options=$fields selected=$value assign='fields']-->
+        <!--[foreach from=$fields item='field']-->
+        <span class="z-formnote"><!--[$field]--></span>
+        <!--[/foreach]-->
+    </div>
+
+    <!--[if $note neq '']-->
+    <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
+    <!--[/if]-->
+</div>
+<!--[else]-->
+
+<tr class="<!--[$class|default:'z-formrow']-->">
+    <td valign="top">
+        <label for="prop_<!--[$prop_attribute_name]-->">
+            <!--[gt text=$proplabeltext]--> 
+            <!--[if $required and $mode eq 'normal']--> <span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
+        </label>
+    </td>
+    <td valign="top" id="prop_<!--[$prop_attribute_name]-->">
+        <!--[if $properror neq '']-->
+        <p class="z-errormsg"><!--[$properror]--></p>
+        <!--[/if]-->
+
+        <!--[foreach name='field' item='field' from=$validation]-->
+        <input id="<!--[$prop_attribute_name]-->_<!--[$field.id]-->" type="checkbox" name="dynadata[<!--[$prop_attribute_name]-->][<!--[$field.id]-->]" value="1" size="10"<!--[if isset($value[$field.id])]--> checked="checked"<!--[/if]--> /> <label for="<!--[$prop_attribute_name]-->_<!--[$field.id]-->"><!--[$field.value]--></label>
+        <!--[/foreach]-->
+
+        <!--[if $note neq '']-->
+        <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
+        <!--[/if]-->
+    </td>
+</tr>
+<!--[/if]-->

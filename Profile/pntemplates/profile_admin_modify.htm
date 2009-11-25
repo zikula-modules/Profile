@@ -1,0 +1,69 @@
+<!--[*  $Id: profile_admin_modify.htm 370 2009-11-25 10:44:01Z mateo $  *]-->
+<!--[pnajaxheader modname='Profile' filename='profile_edit_property.js' effects=true nobehaviour=true noscriptaculous=true]-->
+<!--[gt text='Modify Property' assign=templatetitle]-->
+
+<!--[include file='profile_admin_menu.htm']-->
+
+<div class="z-admincontainer">
+    <div class="z-adminpageicon"><!--[pnimg modname='core' src='xedit.gif' set='icons/large' alt=$templatetitle]--></div>
+
+    <h2><!--[$templatetitle]--></h2>
+
+    <form class="z-form" action="<!--[pnmodurl modname='Profile' type='admin' func='update']-->" method="post" enctype="application/x-www-form-urlencoded">
+        <div>
+            <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
+            <input type="hidden" name="dudid" value="<!--[$dudid]-->" />
+            <fieldset>
+                <legend><!--[gt text='Existing Property']--></legend>
+                <div class="z-formrow">
+                    <label for="profile_label"><!--[gt text='Property label']--></label>
+                    <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="<!--[$item.prop_label|pnvarprepfordisplay]-->" />
+                    <div class="z-formnote z-warningmsg"><!--[gt text="Reminder: After you create a new property label above (such as _MYINT), you must add the msgid to your 'module_profile.pot' (you need two lines msgid '_MYINT' then on line after that msgstr '', generate the PO file and translate it to provide a display string for the new property label."]--></div>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_attributename"><!--[gt text='Internal name']--></label>
+                    <span id="profile_attributename"><!--[$item.prop_attribute_name]--></span>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_required"><!--[gt text='Required']--></label>
+                    <select id="profile_required" name="required">
+                        <!--[html_options options=$requiredoptions selected=$item.prop_required]-->
+                    </select>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_viewby"><!--[gt text='Viewable by']--></label>
+                    <select id="profile_viewby" name="viewby">
+                        <!--[html_options options=$viewbyoptions selected=$item.prop_viewby]-->
+                    </select>
+                </div>
+                <input type="hidden" name="dtype" value="<!--[$item.prop_dtype|pnvarprepfordisplay]-->" />
+                <div class="z-formrow">
+                    <label for="profile_displaytype"><!--[gt text='Display type']--></label>
+                    <select id="profile_displaytype" name="displaytype">
+                        <!--[html_options options=$displaytypes selected=$item.prop_displaytype]-->
+                    </select>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_listoptions"><!--[gt text='List content']--></label>
+                    <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions"><!--[$item.prop_listoptions|pnvarprepfordisplay]--></textarea>
+                </div>
+                <p class="z-formnote z-sub"><!--[gt text="Reminder: Precede each option by @@. For combo boxes: id1,label1;id2,label2;id3,label3;... Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (',')."]--></p>
+                <div class="z-formrow">
+                    <label for="profile_note"><!--[gt text='Note']--></label>
+                    <textarea id="profile_note" cols="50" rows="5" name="note"><!--[$item.prop_note|pnvarprepfordisplay]--></textarea>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_validation"><!--[gt text='Validation']--></label>
+                    <textarea id="profile_validation" cols="50" rows="2" name="validation"><!--[$item.prop_validation|pnvarprepfordisplay]--></textarea>
+                </div>
+            </fieldset>
+
+            <!--[pnmodcallhooks hookobject='item' hookaction='modify' hookid=$dudid module='Profile']-->
+
+            <div class="z-formbuttons">
+                <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='Update Configuration' __title='Update Configuration']-->
+                <a href="<!--[pnmodurl modname='Profile' type='admin' func='view']-->"><!--[pnimg modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel']--></a>
+            </div>
+        </div>
+    </form>
+</div>

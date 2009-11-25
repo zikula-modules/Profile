@@ -1,0 +1,31 @@
+<!--[*  $Id: profile_form_display.htm 335 2009-11-09 06:52:03Z drak $  *]-->
+<!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
+
+<!--[foreach from=$duditems item='field']-->
+<tr class="<!--[cycle values='z-odd,z-even']-->">
+    <!--[* Hightlight the realname *]-->
+    <!--[assign var='usebold' value=0]-->
+    <!--[if $field.prop_attribute_name eq 'realname']-->
+    <!--[assign var='usebold' value=1]-->
+    <!--[/if]-->
+
+    <td><!--[gt text=$field.prop_label domain='module_profile']--></td>
+    <!--[if $field.prop_attribute_name eq 'tzoffset']-->
+    <td><!--[dudtimezoneoffset zone=$userinfo[$field.prop_attribute_name]|default:''|pnvarprepfordisplay]--></td>
+    <!--[elseif $field.prop_attribute_name eq 'url' AND $userinfo[$field.prop_attribute_name]|default:'' neq '']-->
+    <td>
+        <a href="<!--[$userinfo[$field.prop_attribute_name]|default:''|pnvarprepfordisplay]-->" title="<!--[gt text='%s\'s website' tag1=$uname|pnvarprepfordisplay domain='module_profile']-->"><!--[$userinfo[$field.prop_attribute_name]|default:''|pnvarprepfordisplay]--></a>
+    </td>
+    <!--[elseif $field.prop_attribute_name eq 'avatar']-->
+    <td>
+        <img src="<!--[$avatarpath]-->/<!--[$userinfo[$field.prop_attribute_name]|default:'blank.gif'|pnvarprepfordisplay]-->" alt="" />
+    </td>
+    <!--[else]-->
+    <td>
+        <!--[if $usebold]--><strong><!--[/if]-->
+            <!--[$userinfo[$field.prop_attribute_name]|default:'']-->
+        <!--[if $usebold]--></strong><!--[/if]-->
+    </td>
+    <!--[/if]-->
+</tr>
+<!--[/foreach]-->

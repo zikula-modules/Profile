@@ -1,0 +1,28 @@
+<!--[*  $Id: profile_user_modify.htm 335 2009-11-09 06:52:03Z drak $  *]-->
+<!--[gt text='Edit Personal Info' assign='templatetitle']-->
+<!--[pnajaxheader validation=true]-->
+
+<!--[include file='profile_user_menu.htm']-->
+
+<em><!--[gt text="The items that are marked with an asterisk ('*') are required entries."]--></em>
+<form id="modifyprofileform" class="z-form" action="<!--[pnmodurl modname='Profile' type='user' func='update']-->" method="post" enctype="application/x-www-form-urlencoded">
+    <fieldset>
+        <legend><!--[$templatetitle]--></legend>
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
+        <!--[foreach from=$duditems item=item]-->
+        <!--[if $item.prop_weight gt 0]-->
+        <!--[dudoptionalitemmodify item=$item tableless=true]-->
+        <!--[/if]-->
+        <!--[/foreach]-->
+    </fieldset>
+    <div class="z-formbuttons">
+        <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='OK' __title='OK']-->
+        <a href="<!--[pnmodurl modname='Profile' func='view']-->"><!--[pnimg modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel']--></a>
+    </div>
+</form>
+
+<script type="text/javascript">
+    // <![CDATA[
+    var valid = new Validation('modifyprofileform');
+    // ]]>
+</script>

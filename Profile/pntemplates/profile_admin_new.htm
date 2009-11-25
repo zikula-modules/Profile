@@ -1,0 +1,68 @@
+<!--[*  $Id: profile_admin_new.htm 370 2009-11-25 10:44:01Z mateo $  *]-->
+<!--[pnajaxheader modname='Profile' filename='profile_edit_property.js' effects=true nobehaviour=true noscriptaculous=true]-->
+<!--[gt text='Create profile property' assign='templatetitle']-->
+
+<!--[include file='profile_admin_menu.htm']-->
+
+<div class="z-admincontainer">
+    <div class="z-adminpageicon"><!--[pnimg modname='core' src='filenew.gif' set='icons/large' alt=$templatetitle]--></div>
+
+    <h2><!--[$templatetitle]--></h2>
+
+    <form class="z-form" action="<!--[pnmodurl modname='Profile' type='admin' func='create']-->" method="post" enctype="application/x-www-form-urlencoded">
+        <div>
+            <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
+            <fieldset>
+                <legend><!--[gt text='New Property']--></legend>
+                <div class="z-formrow">
+                    <label for="profile_label"><!--[gt text='Property label']--></label>
+                    <input id="profile_label" name="label" type="text" size="20" maxlength="255" />
+                    <div class="z-formnote z-warningmsg"><!--[gt text="Reminder: After you create a new property label above (such as _MYINT), you must add the msgid to your 'module_profile.pot' (you need two lines msgid '_MYINT' then on line after that msgstr '', generate the PO file and translate it to provide a display string for the new property label."]--></div>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_attributename"><!--[gt text='Internal name']--></label>
+                    <input id="profile_attributename" name="attributename" type="text" size="20" maxlength="80" />
+                    <div class="z-formnote z-warningmsg"><!--[gt text="The internal name, called 'attribute', cannot be changed afterwards, so select it carefully!"]--></div>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_required"><!--[gt text='Required']--></label>
+                    <select id="profile_required" name="required">
+                        <!--[html_options options=$requiredoptions]-->
+                    </select>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_viewby"><!--[gt text='Viewable by']--></label>
+                    <select id="profile_viewby" name="viewby">
+                        <!--[html_options options=$viewbyoptions]-->
+                    </select>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_displaytype"><!--[gt text='Display type']--></label>
+                    <select id="profile_displaytype" name="displaytype">
+                        <!--[html_options options=$displaytypes]-->
+                    </select>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_listoptions"><!--[gt text='List content']--></label>
+                    <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions"></textarea>
+                </div>
+                <p class="z-formnote z-sub"><!--[gt text="Reminder: Precede each option by @@. For combo boxes: id1,label1;id2,label2;id3,label3;... Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (',')."]--></p>
+                <div class="z-formrow">
+                    <label for="profile_note"><!--[gt text='Note']--></label>
+                    <textarea id="profile_note" cols="50" rows="5" name="note"></textarea>
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_validation"><!--[gt text='Validation']--></label>
+                    <textarea id="profile_validation" cols="50" rows="2" name="validation"></textarea>
+                </div>
+            </fieldset>
+
+            <!--[pnmodcallhooks hookobject='item' hookaction='new' module='Profile']-->
+
+            <div class="z-formbuttons">
+                <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='Create' __title='Create']-->
+                <a href="<!--[pnmodurl modname='Profile' type='admin' func='view']-->"><!--[pnimg modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel']--></a>
+            </div>
+        </div>
+    </form>
+</div>

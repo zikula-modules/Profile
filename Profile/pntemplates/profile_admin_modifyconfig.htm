@@ -1,0 +1,83 @@
+<!--[*  $Id: profile_admin_modifyconfig.htm 335 2009-11-09 06:52:03Z drak $  *]-->
+
+<!--[include file='profile_admin_menu.htm']-->
+
+<div class="z-admincontainer">
+    <div class="z-adminpageicon"><!--[pnimg modname='core' src='configure.gif' set='icons/large' __alt='Settings']--></div>
+
+    <h2><!--[gt text="Settings"]--></h2>
+
+    <form class="z-form" action="<!--[pnmodurl modname='Profile' type='admin' func='updateconfig']-->" method="post" enctype="application/x-www-form-urlencoded">
+        <div>
+            <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
+            <fieldset>
+                <legend><!--[gt text='Display settings']--></legend>
+                <div class="z-formrow">
+                    <label for="profile_displaygraphics"><!--[gt text="Display graphics in user's account panel"]--></label>
+                    <!--[if $pncore.Profile.displaygraphics eq 1]-->
+                    <input id="profile_displaygraphics" name="displaygraphics" type="checkbox" value="1" checked="checked" />
+                    <!--[else]-->
+                    <input id="profile_displaygraphics" name="displaygraphics" type="checkbox" value="1" />
+                    <!--[/if]-->
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_itemsperpage"><!--[gt text='Links per page']--></label>
+                    <input id="profile_itemsperpage" type="text" name="itemsperpage" size="3" value="<!--[$pncore.Profile.itemsperpage|pnvarprepfordisplay]-->" />
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_itemsperrow"><!--[gt text='Links per row']--></label>
+                    <input id="profile_itemsperrow" type="text" name="itemsperrow" size="3" value="<!--[$pncore.Profile.itemsperrow|pnvarprepfordisplay]-->" />
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><!--[gt text='Dud fields global settings']--></legend>
+                <div class="z-formrow">
+                    <label for="profile_dudtextdisplaytags"><!--[gt text='Display allowed tags warning for textareas']--></label>
+                    <!--[if $pncore.Profile.dudtextdisplaytags|default:0 eq 1]-->
+                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" checked="checked" />
+                    <!--[else]-->
+                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" />
+                    <!--[/if]-->
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><!--[gt text='Members List']--></legend>
+                <div class="z-formrow">
+                    <label for="profile_memberslistitemsperpage"><!--[gt text='Items per page on Members List page']--></label>
+                    <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="<!--[$pncore.Profile.memberslistitemsperpage|pnvarprepfordisplay]-->" />
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_onlinemembersitemsperpage"><!--[gt text='Items per page on Members Online page']--></label>
+                    <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="<!--[$pncore.Profile.onlinemembersitemsperpage|pnvarprepfordisplay]-->" />
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_recentmembersitemsperpage"><!--[gt text='Items per page on Recent Members page']--></label>
+                    <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="<!--[$pncore.Profile.recentmembersitemsperpage|pnvarprepfordisplay]-->" />
+                </div>
+                <div class="z-formrow">
+                    <label for="profile_filterunverified"><!--[gt text='Filter unverified users from the Members list']--></label>
+                    <div id="profile_filterunverified">
+                        <!--[if $pncore.Profile.filterunverified eq 1]-->
+                        <input id="filterunverified1" type="radio" name="filterunverified" value="1" checked="checked" />
+                        <label for="filterunverified1"><!--[gt text='Yes']--></label>
+                        <input id="filterunverified0" type="radio" name="filterunverified" value="0" />
+                        <label for="filterunverified0"><!--[gt text='No']--></label>
+                        <!--[else]-->
+                        <input id="filterunverified1" type="radio" name="filterunverified" value="1" />
+                        <label for="filterunverified1"><!--[gt text='Yes']--></label>
+                        <input id="filterunverified0" type="radio" name="filterunverified" value="0" checked="checked" />
+                        <label for="filterunverified0"><!--[gt text='No']--></label>
+                        <!--[/if]-->
+                    </div>
+                </div>
+            </fieldset>
+
+            <!--[pnmodcallhooks hookobject='module' hookaction='modifyconfig' module='Profile']-->
+
+            <div class="z-formbuttons">
+                <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='OK' __title='OK']-->
+                <a href="<!--[pnmodurl modname='Profile' type='admin' func='view']-->"><!--[pnimg modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel']--></a>
+            </div>
+        </div>
+    </form>
+</div>

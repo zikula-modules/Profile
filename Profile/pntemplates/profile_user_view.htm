@@ -1,0 +1,73 @@
+<!--[*  $Id: profile_user_view.htm 368 2009-11-23 23:35:31Z mateo $  *]-->
+<!--[array_field_isset array=$userinfo field='_UREALNAME' returnValue=true assign='name']-->
+<!--[if !$name]--><!--[assign var='name' value=$uname]--><!--[/if]-->
+<!--[gt text="%s's personal information" tag1=$name|@ucwords|pnvarprepfordisplay assign='templatetitle']-->
+
+<!--[include file='profile_user_menu.htm']-->
+
+<div id="profile_wrapper">
+    <!--[if @in_array('avatar', $dudarray)]-->
+
+    <!--[if $userinfo.__ATTRIBUTES__.avatar eq '' or $userinfo.__ATTRIBUTES__.avatar eq 'blank.gif']-->
+        <!--[pnimg modname='core' src='personal.gif' set='icons/large' class='profileavatar']-->
+    <!--[else]-->
+        <!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
+        <img src="<!--[$avatarpath]-->/<!--[$userinfo.__ATTRIBUTES__.avatar|pnvarprepfordisplay]-->" alt="" class="profileavatar" />
+    <!--[/if]-->
+    <!--[/if]-->
+
+    <h3><!--[$templatetitle]--></h3>
+
+    <div class="z-form">
+        <div class="z-formrow">
+            <strong class="z-label"><!--[gt text='User Name']--></strong>
+            <div><!--[$uname|pnvarprepfordisplay]--></div>
+        </div>
+        <!--[foreach item='field' from=$fields]-->
+
+        <!--[* Special check if user can view information *]-->
+        <!--[assign var='canview' value=false]-->
+        <!--[if $field.prop_viewby eq 0]-->
+            <!--[* Available to anyone *]-->
+            <!--[assign var='canview' value=true]-->
+        <!--[elseif $field.prop_viewby eq 1 and $ismember]-->
+            <!--[* Available to members only or higher *]-->
+            <!--[assign var='canview' value=true]-->
+        <!--[elseif $field.prop_viewby eq 2]-->
+            <!--[* Available to the specific member or higher *]-->
+            <!--[if $sameuser OR $isadmin]-->
+                <!--[assign var='canview' value=true]-->
+            <!--[/if]-->
+        <!--[/if]-->
+
+        <!--[if $canview eq true and $field.prop_attribute_name neq 'avatar']-->
+        <!--[* Special check in case of plugin need *]-->
+        <!--[if $field.prop_attribute_name eq 'tzoffset']-->
+        <div class="z-formrow">
+            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
+            <div class="z-formnote"><!--[dudtimezoneoffset zone=$userinfo[$field.prop_label]|pnvarprepfordisplay]--></div>
+        </div>
+        <!--[elseif $field.prop_attribute_name eq 'url' AND isset($userinfo[$field.prop_label])]-->
+        <div class="z-formrow">
+            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
+            <div class="z-formnote"><a href="<!--[$userinfo[$field.prop_label]|pnvarprepfordisplay]-->" title="<!--[$uname|pnvarprepfordisplay]--> <!--[gt text="Website URL"]-->" rel="nofollow"><!--[$userinfo[$field.prop_label]|pnvarprepfordisplay]--></a></div>
+        </div>
+        <!--[elseif isset($userinfo[$field.prop_label])]-->
+        <div class="z-formrow">
+            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
+            <div class="z-formnote"><!--[$userinfo[$field.prop_label]|pnvarprephtmldisplay|default:"&nbsp;"]--></div>
+        </div>
+        <!--[elseif isset($userinfo.__ATTRIBUTES__[$field.prop_attribute_name])]-->
+        <div class="z-formrow">
+            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
+            <!--[gt text=$userinfo.__ATTRIBUTES__[$field.prop_attribute_name] assign='uservalue']-->
+            <div class="z-formnote"><!--[$uservalue|pnvarprephtmldisplay|default:'&nbsp;']--></div>
+        </div>
+        <!--[/if]-->
+        <!--[/if]-->
+        <!--[/foreach]-->
+    </div>
+
+    <!--[pnmodurl modname='Profile' func='view' uid=$userinfo.uid assign='returnurl']-->
+    <!--[pnmodcallhooks hookobject='item' hookaction='display' hookid=$userinfo.uid module='Profile' returnurl=$returnurl owneruid=$userinfo.uid]-->
+</div>

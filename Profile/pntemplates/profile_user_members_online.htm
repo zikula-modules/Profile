@@ -1,0 +1,38 @@
+<!--[* $Id: profile_user_members_online.htm 335 2009-11-09 06:52:03Z drak $ *]-->
+<!--[gt text='Current members online' assign='templatetitle']-->
+<!--[include file='profile_user_menu.htm']-->
+
+<table class="z-datatable">
+    <thead>
+        <tr>
+            <th><!--[gt text='User Name']--></th>
+            <th><!--[gt text='True name']--></th>
+            <!--[if $msgmodule]-->
+            <th><!--[gt text='PM']--></th>
+            <!--[/if]-->
+            <th><!--[gt text='URL']--></th>
+        </tr>
+    </thead>
+    <tbody>
+        <!--[counter start=0 skip=1 assign='row']-->
+        <!--[foreach from=$users item='user']-->
+        <!--[counter assign='row']-->
+        <tr class="<!--[cycle values='z-odd,z-even']-->">
+            <td><strong><!--[$user.uname|userprofilelink]--></strong></td>
+            <td><!--[$user._UREALNAME|default:'&nbsp;']--></td>
+            <!--[if $msgmodule]-->
+            <td><a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$user.uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src='mail_new.gif' __alt='Send private message']--></a></td>
+            <!--[/if]-->
+            <td>
+                <!--[if @isset($user._YOURHOMEPAGE) and ($user._YOURHOMEPAGE eq '' or $user._YOURHOMEPAGE eq 'http://')]-->
+                &nbsp;
+                <!--[elseif @isset($user._YOURHOMEPAGE)]-->
+                <a href="<!--[$user._YOURHOMEPAGE|pnvarprepfordisplay]-->"><!--[pnimg modname='core' set='icons/extrasmall' src='agt_internet.gif' title=$user._YOURHOMEPAGE alt=$user._YOURHOMEPAGE]--></a>
+                <!--[/if]-->
+            </td>
+        </tr>
+        <!--[foreachelse]-->
+        <tr class="z-datatableempty"><td colspan="4"><!--[gt text='There are no users online.']--></td></tr>
+        <!--[/foreach]-->
+    </tbody>
+</table>

@@ -1,0 +1,22 @@
+<!--[* $Id: profile_block_featureduser.htm 363 2009-11-23 05:46:55Z mateo $ *]-->
+<!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
+
+<div class="profile-block-featureduser">
+    <h5><!--[$userinfo.uname|userprofilelink]--></h5>
+    <p>
+        <!--[ if @isset($userinfo._YOURAVATAR) and $userinfo._YOURAVATAR neq '' and $userinfo._YOURAVATAR neq 'blank.gif' ]-->
+        <!--[$userinfo.uname|userprofilelink:'':"`$avatarpath`/`$userinfo._YOURAVATAR`"]-->
+        <!--[else]-->
+        <!--[pnimg modname='core' src='personal.gif' set='icons/large' assign=pnprofileicon]-->
+        <!--[$userinfo.uname|userprofilelink:'pnprofileicon':$pnprofileicon]-->
+        <!--[/if]-->
+    </p>
+    <!--[foreach from=$fieldstoshow item='show_label']-->
+        <!--[ if @isset($userinfo.$show_label) and $userinfo.$show_label neq '' ]-->
+        <p><strong><!--[gt text=$show_label domain='module_profile']--></strong><br /><!--[$userinfo.$show_label|pnvarprephtmldisplay]--></p>
+        <!--[/if]-->
+    <!--[/foreach]-->
+    <!--[if $showregdate]-->
+        <span><!--[gt text='Registered on %s' tag1=$userinfo.user_regdate|pndate_format domain='module_profile']--></span>
+    <!--[/if]-->
+</div>

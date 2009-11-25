@@ -1,0 +1,10 @@
+<!--[* $Id: profile_block_lastseen.htm 335 2009-11-09 06:52:03Z drak $ *]-->
+<!--[if $users]-->
+<ul>
+    <!--[foreach from=$users item='user']-->
+    <!--[pnusergetvar name='uname' uid=$user.uid assign='uname']-->
+    <!--[pnusergetvar name='lastlogin' uid=$user.uid assign='lastseen']-->
+    <li><!--[$uname|userprofilelink]--> (<!--[$lastseen|pndate_format]-->)</li>
+    <!--[/foreach]-->
+</ul>
+<!--[/if]-->
