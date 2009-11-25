@@ -3,7 +3,7 @@
 <!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
     <!--[if $required and $mode eq 'normal']-->
-    <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice" style="display:none">
+    <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
         <!--[gt text='Error! Required profile item missing']-->
     </p>
     <!--[/if]-->
@@ -31,7 +31,7 @@
     </td>
     <td valign="top">
         <!--[if $required and $mode eq 'normal']-->
-        <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice" style="display:none">
+        <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
             <!--[gt text='Error! Required profile item missing']-->
         </p>
         <!--[/if]-->

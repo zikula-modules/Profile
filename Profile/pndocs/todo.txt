@@ -6,6 +6,8 @@ Hide some form fields for specific types
     Checkbox prop_value with yes@no translatable values?
 	Checkbox can't be required
 Think about external DUDs 
+Deprecate dudtimezoneoffset
+
 
 
 
