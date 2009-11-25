@@ -140,6 +140,7 @@ function Profile_upgrade($oldversion)
 
             // load the user properties into an assoc array with prop_label as key
             $userprops = DBUtil::selectObjectArray('user_property', '', '', -1, -1, 'prop_label');
+            $existing  = DBUtil::selectFieldArray('objectdata_attributes', 'attribute_name', "oba_object_type = 'users'", '', true);
 
             $newprops = array();
             // expand the old DUDs with the new attribute names
@@ -156,7 +157,7 @@ function Profile_upgrade($oldversion)
                     // old DUD found
                     $userprop['prop_attribute_name'] = $mappingarray[$prop_label];
                     
-                } else {
+                } elseif (empty($userprop['prop_attribute_name']) || !in_array($userprop['prop_attribute_name'], $existing)) {
                     // seems to be user defined, dont touch it
                     $userprop['prop_attribute_name'] = $prop_label;
                 }
@@ -164,6 +165,7 @@ function Profile_upgrade($oldversion)
                 $userprop['prop_dtype'] = 1;
                 $newprops[] = $userprop;
             }
+
             // store updated properties
             DBUtil::updateObjectArray($newprops, 'user_property', 'prop_id');
 
