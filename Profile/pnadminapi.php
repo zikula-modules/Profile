@@ -273,7 +273,6 @@ function Profile_adminapi_activate($args)
  * Deactivate a dynamic user data item
  * @author Mark West
  * @param int $args['dudid'] the id of the item to be updated
- * @param int $args['weight'] the current weight of the item to be updated
  * @return bool true on success, false on failure
  * @todo remove weight; can be got from get API
  */
@@ -297,10 +296,6 @@ function Profile_adminapi_deactivate($args)
         return LogUtil::registerError(__('Forbidden to deactivate this account property.', $dom), 404);
     }
 
-    if (!isset($args['weight']) || empty($args['weight'])) {
-        $args['weight'] = $item['prop_weight'];
-    }
-
     // Update the item
     $obj = array('prop_id' => (int)$args['dudid'],
                  'prop_weight' => 0);
@@ -320,7 +315,7 @@ function Profile_adminapi_deactivate($args)
     // Update the other items
     $sql = "UPDATE $propertytable
             SET    $propertycolumn[prop_weight] = $propertycolumn[prop_weight] - 1
-            WHERE  $propertycolumn[prop_weight] > '" . (int)DataUtil::formatForStore($args['weight']) . "'";
+            WHERE  $propertycolumn[prop_weight] > '" . (int)DataUtil::formatForStore($item['weight']) . "'";
 
     $res = DBUtil::executeSQL($sql);
 

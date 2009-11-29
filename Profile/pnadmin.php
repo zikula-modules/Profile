@@ -559,7 +559,7 @@ function Profile_admin_activate($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Get parameters from whatever input we need.
-    $dudid  = (int) FormUtil::getPassedValue('dudid', (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
+    $dudid  = (int)FormUtil::getPassedValue('dudid', (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
 
     // The API function is called.
     if (pnModAPIFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
@@ -584,8 +584,7 @@ function Profile_admin_deactivate($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Get parameters from whatever input we need.
-    $dudid  = (int) FormUtil::getPassedValue('dudid',  (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
-    $weight = (int) FormUtil::getPassedValue('weight', (isset($args['weight']) ? $args['weight'] : null), 'GET');
+    $dudid  = (int)FormUtil::getPassedValue('dudid',  (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
 
     // Confirm authorisation code.
     if (!SecurityUtil::confirmAuthKey()) {
@@ -593,9 +592,7 @@ function Profile_admin_deactivate($args)
     }
 
     // The API function is called.
-    if (pnModAPIFunc('Profile', 'admin', 'deactivate',
-                     array('dudid' => $dudid,
-                           'weight' => $weight))) {
+    if (pnModAPIFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
         // Success
         LogUtil::registerStatus(__('Done! Item updated.', $dom));
     }
