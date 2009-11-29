@@ -44,6 +44,11 @@ function Profile_adminapi_create($args)
     $weightlimits = pnModAPIFunc('Profile', 'user', 'getweightlimits');
     $weight = $weightlimits['max'] + 1;
 
+    // a checkbox can't be required
+    if ($args['displaytype'] == 2 && $args['required']) {
+        $args['required'] = 0;
+    }
+
     // produce the validation array
     $validationinfo = array('required'    => $args['required'],
                             'viewby'      => $args['viewby'],
@@ -136,6 +141,11 @@ function Profile_adminapi_update($args)
 
     // assumes if displaytype is set, all the validation info is
     if (isset($args['displaytype'])) {
+        // a checkbox can't be required
+        if ($args['displaytype'] == 2 && $args['required']) {
+            $args['required'] = 0;
+        }
+
         // Produce the validation array
         $validationinfo = array('required'    => $args['required'],
                                 'viewby'      => $args['viewby'],

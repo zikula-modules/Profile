@@ -1,4 +1,4 @@
 
   THINGS TO DO
 
-  Checkbox can't be required
+  Write a help page explaining the translatio customizations

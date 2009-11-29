@@ -134,12 +134,12 @@ function smarty_function_duditemdisplay($params, &$smarty)
         }
         $tzinfo = pnModGetVar(PN_CONFIG_MODULE, 'timezone_info');
 
-	    if (!isset($tzinfo[$uservalue])) {
-	        return '';
-	    }
+        if (!isset($tzinfo[$uservalue])) {
+            return '';
+        }
 
-	    // FIXME DateUtil::getTimezoneName($uservalue); in 1.2.1
-	    $output = DataUtil::formatForDisplay($tzinfo[$uservalue]);
+        // FIXME DateUtil::getTimezoneName($uservalue); in 1.2.1
+        $output = DataUtil::formatForDisplay($tzinfo[$uservalue]);
 
 
     // checkbox
@@ -152,7 +152,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $output = isset($output[(int)$uservalue]) && !empty($output[(int)$uservalue]) ? __($output[(int)$uservalue], $dom) : __($default[(int)$uservalue], $dom);
 
 
-	// date and extdate
+    // date and extdate
     } elseif (!empty($uservalue) && ($item['prop_displaytype'] == 5 || $item['prop_displaytype'] == 6)) {
         $output = DateUtil::getDatetime(strtotime($uservalue), 'datelong');
 
@@ -173,12 +173,10 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // serialized data
     } elseif (DataUtil::is_serialized($uservalue) || is_array($uservalue)) {
         $uservalue = !is_array($uservalue) ? unserialize($uservalue) : $uservalue;
+        $output = array();
         foreach ($uservalue as $option) {
-            $output .= '<span class="z-formnote">'.__($option, $dom).'</span>';
+            $output[] = __($option, $dom);
         }
-        // needs to return to not read the z-formnote
-        $render->assign('output', $output);
-        return $render->fetch($template);
 
 
     // a string
@@ -186,7 +184,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $output .= __($uservalue, $dom);
     }
 
-    $render->assign('output', '<span class="z-formnote">'.$output.'</span>');
+    $render->assign('output', is_array($output) ? $output : array($output));
 
     return $render->fetch($template);
 }
