@@ -79,12 +79,13 @@ function smarty_function_duditemdisplay($params, &$smarty)
     if (isset($userinfo['__ATTRIBUTES__'][$item['prop_attribute_name']])) {
         $uservalue = $userinfo['__ATTRIBUTES__'][$item['prop_attribute_name']];
 
-    } elseif (isset($userinfo[$item['prop_label']])) {
-        // fool check
-        $uservalue = $userinfo[$item['prop_label']];
+    } elseif (isset($userinfo[$item['prop_attribute_name']])) {
+        // user's temp view for non-approved users needs this
+        $uservalue = $userinfo[$item['prop_attribute_name']];
 
     } else {
-        return '';
+        // can be a non-marked checkbox in the user temp data
+        $uservalue = '';
     }
 
     // build the output
@@ -94,14 +95,14 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // checks the different attributes and types
     // avatar
     if ($item['prop_attribute_name'] == 'avatar') {
+        $baseurl = pnGetBaseURL();
+        $avatarpath = pnModGetVar('Users', 'avatarpath', 'images/avatar');
         if (empty($uservalue)) {
             $uservalue = 'blank.gif';
         }
 
-        $avatar = pnModGetVar('Users', 'avatarpath', 'images/avatar');
-
         // TODO build the avatar IMG
-        $output = '';
+        $output = "<img alt=\"\" src=\"{$baseurl}{$avatarpath}/{$uservalue}\" />";
 
 
     // timezone
@@ -145,8 +146,8 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
 
     // serialized data
-    } elseif (DataUtil::is_serialized($uservalue)) {
-        $uservalue = unserialize($uservalue);
+    } elseif (DataUtil::is_serialized($uservalue) || is_array($uservalue)) {
+        $uservalue = !is_array($uservalue) ? unserialize($uservalue) : $uservalue;
         foreach ($uservalue as $option) {
             $output .= '<span class="z-formnote">'.__($option, $dom).'</span>';
         }

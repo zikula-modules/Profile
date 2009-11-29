@@ -64,6 +64,15 @@ function smarty_function_duditemmodify($params, &$smarty)
         return;
     }
 
+    // detect if we are in the registration form
+    $onregistrationform = false;
+    $func = FormUtil::getPassedValue('func', 'main');
+    if (pnModGetName() == 'Users' && $func == 'register') {
+        $onregistrationform = true;
+    }
+
+    // TODO: skip the field if not configured to be on the registration form 
+
     $dom = ZLanguage::getModuleDomain('Profile');
 
     if (!isset($uid)) {
@@ -87,7 +96,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     } elseif ($uid >= 0) {
         $uservalue = pnUserGetVar($item['prop_attribute_name'], $uid); // ($alias, $uid);
     }
-
+    
     $render = & pnRender::getInstance('Profile', false, null, true);
 
     // assign the default values for the control
@@ -95,7 +104,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     $render->assign('class',         $class);
     $render->assign('value',         DataUtil::formatForDisplay($uservalue));
     $render->assign('prop_attribute_name', DataUtil::formatforDisplay($item['prop_attribute_name']));
-    $render->assign('proplabeltext', __($item['prop_label'], $dom));
+    $render->assign('proplabeltext', $item['prop_label']);
     $render->assign('required',      $item['prop_required']);
     $render->assign('note',          $item['prop_note']);
     $render->assign('mode',          $mode);
@@ -107,35 +116,24 @@ function smarty_function_duditemmodify($params, &$smarty)
         if (empty($uservalue)) {
             $uservalue = pnUserGetVar('tzoffset') ? pnUserGetVar('tzoffset') : pnConfigGetVar('timezone_offset');
         }
+
         $tzinfo = pnModGetVar(PN_CONFIG_MODULE, 'timezone_info');
 
-        $listoutput = array();
-        $listoptions = array();
-        $selectedvalue = null;
-
-        foreach ($tzinfo as $tzindex => $tzdata) {
-            $listoptions[] = $tzindex;
-            $listoutput[]  = $tzdata;
-            if ($uservalue == $tzindex) {
-                 $selectedvalue = $uservalue;
-            }
-        }
-
-        $render->assign('selectedvalue',  $selectedvalue);
+        $render->assign('value',          isset($tzinfo[$uservalue]) ? $uservalue : null);
         $render->assign('selectmultiple', '');
-        $render->assign('listoptions',    $listoptions);
-        $render->assign('listoutput',     $listoutput);
+        $render->assign('listoptions',    array_keys($tzinfo));
+        $render->assign('listoutput',     array_values($tzinfo));
         return $render->fetch('profile_dudedit_select.htm');
     }
 
     if ($item['prop_attribute_name'] == 'avatar') {
-        if (empty($uservalue)) {
-            $uservalue = 'blank.gif';
+        // detect if it's the registration form to skip this
+        if ($onregistrationform) {
+            return '';
         }
-        $render->assign('value', DataUtil::formatForDisplay($uservalue));
 
+        // only shows a link to the Avatar module if available
         if (pnModAvailable('Avatar')) {
-            // only shows a link to the Avatar module
             $render->assign('linktext', __('Change your Avatar'));
             $render->assign('linkurl', pnModURL('Avatar'));
             $output = $render->fetch('profile_dudedit_link.htm');
@@ -145,6 +143,12 @@ function smarty_function_duditemmodify($params, &$smarty)
             }
             return $output;
         }
+
+        // display the avatar selector
+        if (empty($uservalue)) {
+            $uservalue = 'blank.gif';
+        }
+        $render->assign('value', DataUtil::formatForDisplay($uservalue));
 
         $filelist = FileUtil::getFiles(pnModGetVar('Users', 'avatarpath', 'images/avatar'), false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
@@ -160,7 +164,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $selectedvalue = $uservalue;
         }
 
-        $render->assign('selectedvalue',  $selectedvalue);
+        $render->assign('value',          $selectedvalue);
         $render->assign('selectmultiple', '');
         $render->assign('listoptions',    $listoptions);
         $render->assign('listoutput',     $listoutput);
@@ -183,7 +187,6 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         case 3: // RADIO
             $type = 'radio';
-            $render->assign('selectedvalue', $uservalue);
             $item['prop_listoptions'] = str_replace(Chr(13), '', str_replace(Chr(13), '', $item['prop_listoptions']));
 
             // extract the options
