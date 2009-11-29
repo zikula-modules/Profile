@@ -7,9 +7,6 @@
         <!--[gt text='Error! Required profile item missing']-->
     </p>
     <!--[/if]-->
-    <!--[if $properror neq '']-->
-    <p class="z-errormsg"><!--[$properror]--></p>
-    <!--[/if]-->
 
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
@@ -37,9 +34,6 @@
         <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
             <!--[gt text='Error! Required profile item missing']-->
         </p>
-        <!--[/if]-->
-        <!--[if $properror neq '']-->
-        <p class="z-errormsg"><!--[$properror]--></p>
         <!--[/if]-->
 
         <input type="text" id="prop_<!--[$prop_attribute_name]-->-year" name="dynadata[<!--[$prop_attribute_name]-->][year]" value="<!--[$value[0]]-->" size="5" maxlength="4" class="profile_l5input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" /> <!--[gt text='year']--> 

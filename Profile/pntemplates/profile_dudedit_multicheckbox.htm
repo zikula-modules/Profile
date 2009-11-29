@@ -2,9 +2,6 @@
 
 <!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
-    <!--[if $properror neq '']-->
-    <p class="z-errormsg"><!--[$properror]--></p>
-    <!--[/if]-->
 
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
@@ -31,9 +28,6 @@
         </label>
     </td>
     <td valign="top" id="prop_<!--[$prop_attribute_name]-->">
-        <!--[if $properror neq '']-->
-        <p class="z-errormsg"><!--[$properror]--></p>
-        <!--[/if]-->
 
         <!--[foreach name='field' item='field' from=$validation]-->
         <input id="<!--[$prop_attribute_name]-->_<!--[$field.id]-->" type="checkbox" name="dynadata[<!--[$prop_attribute_name]-->][<!--[$field.id]-->]" value="1" size="10"<!--[if isset($value[$field.id])]--> checked="checked"<!--[/if]--> /> <label for="<!--[$prop_attribute_name]-->_<!--[$field.id]-->"><!--[$field.value]--></label>

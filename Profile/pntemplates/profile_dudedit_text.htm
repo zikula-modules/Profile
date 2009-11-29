@@ -7,9 +7,6 @@
         <!--[gt text='Error! Required profile item missing']-->
     </p>
     <!--[/if]-->
-    <!--[if $properror neq '']-->
-    <p class="z-errormsg"><!--[$properror]--></p>
-    <!--[/if]-->
 
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
@@ -34,9 +31,6 @@
         <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
             <!--[gt text='Error! Required profile item missing']-->
         </p>
-        <!--[/if]-->
-        <!--[if $properror neq '']-->
-        <p class="z-errormsg"><!--[$properror]--></p>
         <!--[/if]-->
 
         <input id="prop_<!--[$prop_attribute_name]-->" type="text" name="dynadata[<!--[$prop_attribute_name]-->]" value="<!--[$value]-->" size="30"<!--[if $required and $mode eq 'normal']--> class="required"<!--[/if]--> />
