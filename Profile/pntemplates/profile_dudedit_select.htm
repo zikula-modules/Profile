@@ -1,9 +1,7 @@
 <!--[* $Id: profile_dudedit_select.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
 <!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
 
-<!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
-
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
         <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
@@ -22,33 +20,6 @@
     <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
     <!--[/if]-->
 </div>
-
-<!--[else]-->
-<tr class="<!--[$class|default:'z-formrow']-->">
-    <td valign="top">
-        <label for="prop_<!--[$prop_attribute_name]-->">
-            <!--[gt text=$proplabeltext]--> 
-            <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
-        </label>
-    </td>
-    <td valign="top">
-
-        <select id="prop_<!--[$prop_attribute_name]-->" name="dynadata[<!--[$prop_attribute_name]-->]<!--[if $selectmultiple]-->[]<!--[/if]-->"<!--[$selectmultiple]--><!--[if $required and $mode eq 'normal']--> class="required"<!--[/if]-->>
-            <!--[html_options id=$prop_attribute_name values=$listoptions output=$listoutput selected=$value]-->
-        </select>
-
-        <!--[if $prop_attribute_name eq 'avatar']-->
-        <p id="youravatarcontainer" class="z-formnote">
-            <span id="youravatarpath" style="display:none"><!--[$avatarpath]--></span>
-            <img id="youravatardisplay" class="pnfrontendformimage" src="<!--[$avatarpath]-->/<!--[$value]-->" alt="<!--[$proplabeltext]-->" />
-        </p>
-        <!--[/if]-->
-        <!--[if $note neq '']-->
-        <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
-        <!--[/if]-->
-    </td>
-</tr>
-<!--[/if]-->
 
 <!--[if $prop_attribute_name eq 'avatar']-->
 <!--[pnajaxheader modname='Profile' filename='showavatar.js']-->

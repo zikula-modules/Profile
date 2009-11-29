@@ -1,6 +1,5 @@
 <!--[* $Id: profile_dudedit_date.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
 
-<!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
     <!--[if $required and $mode eq 'normal']-->
     <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
@@ -19,28 +18,3 @@
     <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
     <!--[/if]-->
 </div>
-
-<!--[else]-->
-<tr class="<!--[$class|default:'z-formrow']-->">
-    <td valign="top">
-        <label for="prop_<!--[$prop_attribute_name]-->">
-            <!--[gt text=$proplabeltext]--> 
-            <!--[if $required and $mode eq 'normal']--> <span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
-        </label>
-    </td>
-    <td valign="top">
-        <!--[if $required and $mode eq 'normal']-->
-        <p id="advice-required-<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
-            <!--[gt text='Error! Required profile item missing']-->
-        </p>
-        <!--[/if]-->
-
-        <input class="profile_dateinput<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" id="prop_<!--[$prop_attribute_name]-->" type="text" name="dynadata[<!--[$prop_attribute_name]-->]" value="<!--[$value]-->" size="30" />
-        <!--[pncalendarinput objectname='' htmlname=prop_$prop_attribute_name dateformat='%Y-%m-%d' defaultdate=''|pndate_format:'%Y-%m-%d']-->
-
-        <!--[if $note neq '']-->
-        <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
-        <!--[/if]-->
-    </td>
-</tr>
-<!--[/if]-->

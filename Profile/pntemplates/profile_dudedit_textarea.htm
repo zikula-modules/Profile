@@ -1,6 +1,5 @@
 <!--[* $Id: profile_dudedit_textarea.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
 
-<!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
     <!--[if $required and $mode eq 'normal']-->
     <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
@@ -21,30 +20,3 @@
     <p class="z-formnote"><!--[gt text="Permitted HTML tags"]-->: <!--[allowedhtml]--></p>
     <!--[/if]-->
 </div>
-
-<!--[else]-->
-<tr class="<!--[$class|default:'z-formrow']-->">
-    <td valign="top">
-        <label for="prop_<!--[$prop_attribute_name]-->">
-            <!--[gt text=$proplabeltext]--> 
-            <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
-        </label>
-    </td>
-    <td valign="top">
-        <!--[if $required and $mode eq 'normal']-->
-        <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
-            <!--[gt text='Error! Required profile item missing']-->
-        </p>
-        <!--[/if]-->
-
-        <textarea id="prop_<!--[$prop_attribute_name]-->" cols="40" rows="5" name="dynadata[<!--[$prop_attribute_name]-->]"<!--[if $required and $mode eq 'normal']--> class="required"<!--[/if]-->><!--[$value]--></textarea><br />
-
-        <!--[if $note neq '']-->
-        <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
-        <!--[/if]-->
-        <!--[if $pncore.Profile.dudtextdisplaytags|default:0 eq 1]-->
-        <p><!--[gt text="Permitted HTML tags"]-->: <!--[allowedhtml]--></p>
-        <!--[/if]-->
-    </td>
-</tr>
-<!--[/if]-->

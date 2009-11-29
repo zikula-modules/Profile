@@ -1,8 +1,6 @@
 <!--[* $Id: profile_dudedit_multicheckbox.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
 
-<!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
-
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
         <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
@@ -18,24 +16,3 @@
     <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
     <!--[/if]-->
 </div>
-<!--[else]-->
-
-<tr class="<!--[$class|default:'z-formrow']-->">
-    <td valign="top">
-        <label for="prop_<!--[$prop_attribute_name]-->">
-            <!--[gt text=$proplabeltext]--> 
-            <!--[if $required and $mode eq 'normal']--> <span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
-        </label>
-    </td>
-    <td valign="top" id="prop_<!--[$prop_attribute_name]-->">
-
-        <!--[foreach name='field' item='field' from=$validation]-->
-        <input id="<!--[$prop_attribute_name]-->_<!--[$field.id]-->" type="checkbox" name="dynadata[<!--[$prop_attribute_name]-->][<!--[$field.id]-->]" value="1" size="10"<!--[if isset($value[$field.id])]--> checked="checked"<!--[/if]--> /> <label for="<!--[$prop_attribute_name]-->_<!--[$field.id]-->"><!--[$field.value]--></label>
-        <!--[/foreach]-->
-
-        <!--[if $note neq '']-->
-        <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
-        <!--[/if]-->
-    </td>
-</tr>
-<!--[/if]-->

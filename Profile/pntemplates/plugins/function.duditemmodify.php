@@ -35,7 +35,6 @@
  * @param        object     &$smarty            Reference to the Smarty object
  * @param        string      $item              The Profile DUD item
  * @param        string      $uid               User ID to display the field value for (-1 = do not load)
- * @param        string      $tableless         Don't use tables to render the markup (optional - default true)
  * @param        string      $class             CSS class to assign to the table row/form row div (optional)
  * @param        string      $proplabel         Property label to display (optional overrides the preformated dud item $item)
  * @param        string      $propattribute     Property attribute to display
@@ -84,9 +83,6 @@ function smarty_function_duditemmodify($params, &$smarty)
     if (!isset($uid)) {
         $uid = pnUserGetVar('uid');
     }
-    if (!isset($tableless) || !is_bool($tableless)) {
-        $tableless = true;
-    }
     if (!isset($class) || !is_string($class)) {
         $class = '';
     }
@@ -108,7 +104,6 @@ function smarty_function_duditemmodify($params, &$smarty)
         $output = pnModAPIFunc($item['prop_modname'], 'dud', 'edit',
                                array('item'      => $item,
                                      'uservalue' => $uservalue,
-                                     'tableless' => $tableless,
                                      'class'     => $class,
                                      'mode'      => $mode));
         if ($output) {
@@ -119,7 +114,6 @@ function smarty_function_duditemmodify($params, &$smarty)
     $render = & pnRender::getInstance('Profile', false, null, true);
 
     // assign the default values for the control
-    $render->assign('tableless',     $tableless);
     $render->assign('class',         $class);
     $render->assign('value',         DataUtil::formatForDisplay($uservalue));
     $render->assign('prop_attribute_name', DataUtil::formatforDisplay($item['prop_attribute_name']));

@@ -1,20 +1,9 @@
 <!--[* $Id: profile_user_dudtext.htm 335 2009-11-09 06:52:03Z drak $ *]-->
 
-<!--[if $tableless]-->
 <div class="<!--[$class|default:'z-formrow']-->">
     <label for="prop_<!--[$prop_attribute_name]-->"><!--[gt text=$proplabeltext]--></label>
     <span id="prop_<!--[$prop_attribute_name]-->"><a href="<!--[$linkurl|default:'#']-->"><!--[$linktext|default:'-']--></a></span>
-    <!--[if $note neq '']--><!--[gt text='Note']-->: <!--[$note]--><!--[/if]-->
+    <!--[if $note neq '']-->
+    <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
+    <!--[/if]-->
 </div>
-
-<!--[else]-->
-<tr class="<!--[$class|default:'z-formrow']-->">
-    <td valign="top">
-        <label for="prop_<!--[$prop_attribute_name]-->"><!--[gt text=$proplabeltext]--></label>
-    </td>
-    <td valign="top">
-        <span id="prop_<!--[$prop_attribute_name]-->"><!--[$content|default:'']--></span>
-        <!--[if $note neq '']--> <!--[gt text='Note']-->: <!--[$note]--><!--[/if]-->
-    </td>
-</tr>
-<!--[/if]-->
