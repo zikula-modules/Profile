@@ -67,7 +67,7 @@ function Profile_dudapi_register($args)
     }
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
     if ($item) {
-        return LogUtil::registerError(__("An account panel property already has the attribte name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
+        return LogUtil::registerError(__("An account panel property already has the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
     }
 
     // Determine the new weight
