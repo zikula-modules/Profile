@@ -47,7 +47,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
     }
 
     if (!pnUserLoggedIn()) {
-        return '';
+        return $params['default'];
     }
 
     $dom = ZLanguage::getModuleDomain('Profile');
