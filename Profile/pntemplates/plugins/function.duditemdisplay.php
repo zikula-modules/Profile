@@ -88,8 +88,30 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $uservalue = '';
     }
 
+    // try to get the DUD output if it's Third Party
+    if ($item['prop_dtype'] != 1) {
+        $output = pnModAPIFunc($item['prop_modname'], 'dud', 'edit',
+                               array('item'      => $item,
+                                     'userinfo'  => $userinfo,
+                                     'uservalue' => $uservalue,
+                                     'default'   => $default));
+        if ($output) {
+            return $output;
+        }
+    }
+
     // build the output
     $output = '';
+    $render = & pnRender::getInstance('Profile', false, null, true);
+    $render->assign('item',      $item);
+    $render->assign('userinfo',  $userinfo);
+    $render->assign('uservalue', $uservalue);
+
+    // detects the template to use
+    $template = 'profile_duddisplay_'.$item['prop_id'].'.htm';
+    if (!$render->template_exists($template)) {
+        $template = 'profile_duddisplay_generic.htm';
+    }
 
 
     // checks the different attributes and types
@@ -152,7 +174,8 @@ function smarty_function_duditemdisplay($params, &$smarty)
             $output .= '<span class="z-formnote">'.__($option, $dom).'</span>';
         }
         // needs to return to not read the z-formnote
-        return $output;
+        $render->assign('output', $output);
+        return $render->fetch($template);
 
 
     // a string
@@ -160,5 +183,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $output .= __($uservalue, $dom);
     }
 
-    return '<span class="z-formnote">'.$output.'</span>';
+    $render->assign('output', '<span class="z-formnote">'.$output.'</span>');
+
+    return $render->fetch($template);
 }

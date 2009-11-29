@@ -8,11 +8,11 @@
 <div id="profile_wrapper">
     <!--[if isset($dudarray['avatar'])]-->
 
-    <!--[if $userinfo.__ATTRIBUTES__.avatar eq '' or $userinfo.__ATTRIBUTES__.avatar eq 'blank.gif']-->
+    <!--[if $dudarray.avatar eq '' or $dudarray.avatar eq 'blank.gif']-->
         <!--[pnimg modname='core' src='personal.gif' set='icons/large' class='profileavatar']-->
     <!--[else]-->
         <!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
-        <img src="<!--[$avatarpath]-->/<!--[$userinfo.__ATTRIBUTES__.avatar|pnvarprepfordisplay]-->" alt="" class="profileavatar" />
+        <img src="<!--[$avatarpath]-->/<!--[$dudarray.avatar|pnvarprepfordisplay]-->" alt="" class="profileavatar" />
     <!--[/if]-->
     <!--[/if]-->
 
@@ -21,28 +21,9 @@
             <strong class="z-label"><!--[gt text='User Name']--></strong>
             <div><!--[$uname|pnvarprepfordisplay]--></div>
         </div>
-        <!--[foreach item='field' from=$fields]-->
-
-        <!--[* Special check if user can view information *]-->
-        <!--[assign var='canview' value=false]-->
-        <!--[if $field.prop_viewby eq 0]-->
-            <!--[* Available to anyone *]-->
-            <!--[assign var='canview' value=true]-->
-        <!--[elseif $field.prop_viewby eq 1 and $ismember]-->
-            <!--[* Available to members only or higher *]-->
-            <!--[assign var='canview' value=true]-->
-        <!--[elseif $field.prop_viewby eq 2]-->
-            <!--[* Available to the specific member or higher *]-->
-            <!--[if $sameuser OR $isadmin]-->
-                <!--[assign var='canview' value=true]-->
-            <!--[/if]-->
-        <!--[/if]-->
-
-        <!--[if $canview eq true and $field.prop_attribute_name neq 'avatar']-->
-        <div class="z-formrow">
-            <strong class="z-label"><!--[gt text=$field.prop_label]--></strong>
+        <!--[foreach from=$fields item='field']-->
+        <!--[if $field.prop_attribute_name neq 'avatar']-->
             <!--[duditemdisplay item=$field userinfo=$userinfo]-->
-        </div>
         <!--[/if]-->
         <!--[/foreach]-->
     </div>

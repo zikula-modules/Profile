@@ -102,7 +102,20 @@ function smarty_function_duditemmodify($params, &$smarty)
     } elseif ($uid >= 0) {
         $uservalue = pnUserGetVar($item['prop_attribute_name'], $uid); // ($alias, $uid);
     }
-    
+
+    // try to get the DUD output if it's Third Party
+    if ($item['prop_dtype'] != 1) {
+        $output = pnModAPIFunc($item['prop_modname'], 'dud', 'edit',
+                               array('item'      => $item,
+                                     'uservalue' => $uservalue,
+                                     'tableless' => $tableless,
+                                     'class'     => $class,
+                                     'mode'      => $mode));
+        if ($output) {
+            return $output;
+        }
+    }
+
     $render = & pnRender::getInstance('Profile', false, null, true);
 
     // assign the default values for the control

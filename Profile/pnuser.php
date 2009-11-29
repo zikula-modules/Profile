@@ -72,15 +72,26 @@ function Profile_user_view($args)
     }
 
     // get all active profile fields
-    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
-    foreach ($activeduds as $dudlabel => $activedud) {
-        $dudarray[$activedud['prop_attribute_name']] = $userinfo['__ATTRIBUTES__'][$activedud['prop_attribute_name']];
+    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive', array('index' => 'prop_attribute_name'));
+    foreach ($activeduds as $dudattr => $activedud) {
+        // check the access to this field
+        if ($activedud['prop_viewby'] != 0) {
+            // not to everyone, checks members only or higher
+            if (!($activedud['prop_viewby'] == 1 && $ismember)) {
+                // lastly check for the same user or admin
+                if (!($activedud['prop_viewby'] == 2 && ($sameuser || $isadmin))) {
+                    unset($activeduds[$dudattr]);
+                    continue;
+                }
+            }
+        }
+        $dudarray[$dudattr] = $userinfo['__ATTRIBUTES__'][$activedud['prop_attribute_name']];
     }
 
     // Create output object
     $render = & pnRender::getInstance('Profile', false. null, true);
 
-    $render->assign('dudarray',  $dudarray);
+    $render->assign('dudarray', $dudarray);
     $render->assign('fields',   $activeduds);
 
     $render->assign('uid',      $userinfo['uid']);
