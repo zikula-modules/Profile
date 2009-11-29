@@ -60,6 +60,16 @@ function Profile_dudapi_register($args)
     $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
     $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
 
+    // Check if the label or attribute name already exists
+    $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+    if ($item) {
+        return LogUtil::registerError(__("An account panel property already has the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
+    }
+    $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
+    if ($item) {
+        return LogUtil::registerError(__("An account panel property already has the attribte name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
+    }
+
     // Determine the new weight
     $weightlimits = pnModAPIFunc('Profile', 'user', 'getweightlimits');
     $weight = $weightlimits['max'] + 1;
