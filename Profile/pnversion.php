@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pnversion.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
@@ -26,7 +26,7 @@ $modversion['changelog']      = 'pndocs/changelog.txt';
 $modversion['license']        = 'pndocs/license.txt';
 $modversion['official']       = true;
 $modversion['profile']        = true;
-$modversion['author']         = 'Mateo Tibaquirá, Mark West, Franky Chestnut';
+$modversion['author']         = 'Mateo TibaquirÃ¡, Mark West, Franky Chestnut';
 $modversion['contact']        = 'http://nestormateo.com/, http://www.markwest.me.uk/, http://dev.pnconcept.com/';
 
 $modversion['securityschema'] = array('Profile::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',

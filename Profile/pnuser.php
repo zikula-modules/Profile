@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pnuser.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
@@ -118,7 +118,7 @@ function Profile_user_modify($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // The API function is called.
-    $items = pnModAPIFunc('Profile', 'user', 'getallactive');
+    $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
     // The return value of the function is checked here
     if ($items == false) {
@@ -172,8 +172,7 @@ function Profile_user_update()
     $uid = pnUserGetVar('uid');
 
     // Check for required fields - The API function is called.
-    $checkrequired = pnModAPIFunc('Profile', 'user', 'checkrequired',
-                                  array('dynadata' => $dynadata));
+    $checkrequired = pnModAPIFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
 
     if ($checkrequired['result'] == true) {
         LogUtil::registerError(__f('Error! Required profile item [%s] missing', $checkrequired['translatedFieldsStr']));

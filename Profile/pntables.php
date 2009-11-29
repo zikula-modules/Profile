@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pntables.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
@@ -25,23 +25,24 @@ function Profile_pntables()
     // Set the table name
     $pntable['user_property'] = DBUtil::getLimitedTablename('user_property');
 
-    // Set the column names.  Note that the array has been formatted
-    // on-screen to be very easy to read by a user.
     $pntable['user_property_column'] = array('prop_id'             => 'pn_prop_id',
                                              'prop_label'          => 'pn_prop_label',
                                              'prop_dtype'          => 'pn_prop_dtype',
+                                             'prop_modname'        => 'pn_prop_modname',
                                              'prop_weight'         => 'pn_prop_weight',
                                              'prop_validation'     => 'pn_prop_validation',
                                              'prop_attribute_name' => 'pn_prop_attribute_name');
 
     $pntable['user_property_column_def'] = array('prop_id'             => 'I4 NOTNULL AUTO PRIMARY',
                                                  'prop_label'          => "C(255) NOTNULL DEFAULT ''",
-                                                 'prop_dtype'          => "C(64) NOTNULL DEFAULT ''",
+                                                 'prop_dtype'          => "I4 NOTNULL DEFAULT 0",
+                                                 'prop_modname'        => "C(64) NOTNULL DEFAULT ''",
                                                  'prop_weight'         => 'I4 NOTNULL DEFAULT 0',
                                                  'prop_validation'     => 'X',
                                                  'prop_attribute_name' => "C(80) NOTNULL DEFAULT ''");
 
-    $pntable['user_property_column_idx'] = array ('prop_label' => 'prop_label');
+    $pntable['user_property_column_idx'] = array('prop_label' => 'prop_label',
+                                                 'prop_attr'  => 'prop_attribute_name');
 
     //
     // declaration of user_data is still needed for upgrade purposes
@@ -51,8 +52,6 @@ function Profile_pntables()
     // Set the table name
     $pntable['user_data'] = DBUtil::getLimitedTablename('user_data');
 
-    // Set the column names.  Note that the array has been formatted
-    // on-screen to be very easy to read by a user.
     $pntable['user_data_column'] = array('uda_id'     => 'pn_uda_id',
                                          'uda_propid' => 'pn_uda_propid',
                                          'uda_uid'    => 'pn_uda_uid',
@@ -62,8 +61,6 @@ function Profile_pntables()
                                              'uda_propid' => 'I4 NOTNULL DEFAULT 0',
                                              'uda_uid'    => 'I4 NOTNULL DEFAULT 0',
                                              'uda_value'  => 'XL NOTNULL');
-
-    $pntable['user_data_column_idx'] = array ('uid_propid' => array('uda_propid', 'uda_uid'));
 
     // Return the table information
     return $pntable;

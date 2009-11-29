@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pnform.php 362 2009-11-22 20:15:32Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html

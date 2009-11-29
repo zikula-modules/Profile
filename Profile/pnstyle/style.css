@@ -101,6 +101,10 @@ p.profile_usererror {
 /* Others
 /*******************************************************************************/
 
+.pn-module-Profile .z-menu {
+    margin-bottom: 0.5em;
+}
+
 #profile_wrapper {
     padding: 0 10px 2em;
     position: relative;

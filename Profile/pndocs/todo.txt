@@ -1,21 +1,12 @@
 
-Rework the view method + dud view templates
-Add a validation for checkfox and do not let it be required
-Style the warning, and margins for errors, etc
-Hide some form fields for specific types
+  THINGS TO DO
+
+  Rework the view method + dud view templates
+  Style the warning, and margins for errors, etc
+  Hide some form fields for specific types
     Checkbox prop_value with yes@no translatable values?
-	Checkbox can't be required
-Think about external DUDs 
-Deprecate dudtimezoneoffset
-
-
-
-
-
-Prevent removal of core items.
-API functions to be reviewed to check all functionality required by other modules can be provided.
-DUD API to be documented.
-
-Group fields
-Either using a different type in prop_dtype where more than one field can be merge to one field...
-Example : _DAYBIRTH _MONTHBIRTH _YEARBIRTH (All selects)
+    Checkbox can't be required
+  Think about external DUDs 
+  Deprecate dudtimezoneoffset
+  Do not set avatar in the update to empty....
+  API functions to be reviewed to check all functionality required by other modules can be provided.

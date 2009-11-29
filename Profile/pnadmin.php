@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pnadmin.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
@@ -66,8 +66,8 @@ function Profile_admin_view()
             // display the proper icom and link to enable or disable the field
             switch (true)
             {
-                // Mandatory DUDs can't be disabled
-                case ($item['prop_dtype'] == -1):
+                // 0 >= DUD types can't be disabled
+                case ($item['prop_dtype'] <= 0):
                     $statusval = 1;
                     $status = array('url' => '',
                                     'image' => 'greenled.gif',  'title' => __('Required', $dom));
@@ -95,19 +95,20 @@ function Profile_admin_view()
             // analizes the DUD type
             switch ($item['prop_dtype'])
             {
-                case '-1': // Mandatory
-                    $data_type_text = __('Mandatory', $dom);
+                case '-1': // Third party (non-editable)
+                    $data_type_text = __('Third party (non-editable)', $dom);
                     break;
 
-                case '0': // Core
-                    $data_type_text = __('Core', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
+                case '0': // Third party (mandatory)
+                    $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                     break;
 
                 case '1': // Normal property
                     $data_type_text = __('Normal', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                     break;
 
-                default: // Third party (string with the third party modname)
+                case '2': // Third party (normal field)
+                default:
                     $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                     break;
             }
@@ -212,7 +213,6 @@ function Profile_admin_new()
  * @see Profile_admin_new()
  * @param string 'label' the name of the item to be created
  * @param string 'dtype' the data type of the item to be created
- * @param int 'length' the length of the item to be created if dtype is string
  * @return bool true if item created, false otherwise
  */
 function Profile_admin_create($args)
@@ -223,7 +223,7 @@ function Profile_admin_create($args)
     }
 
     // Security check
-    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -271,7 +271,6 @@ function Profile_admin_create($args)
                                 'required'       => $required,
                                 'viewby'         => $viewby,
                                 'dtype'          => 1,
-                                'length'         => $length,
                                 'displaytype'    => $displaytype,
                                 'listoptions'    => $listoptions,
                                 'note'           => $note,
@@ -377,7 +376,6 @@ function Profile_admin_update($args)
     $required    = FormUtil::getPassedValue('required',      (isset($args['required']) ? $args['required'] : null), 'POST');
     $viewby      = FormUtil::getPassedValue('viewby',        (isset($args['viewby']) ? $args['viewby'] : null), 'POST');
     $dtype       = FormUtil::getPassedValue('dtype',         (isset($args['dtype']) ? $args['dtype'] : null), 'POST');
-    $length      = FormUtil::getPassedValue('length',        (isset($args['length']) ? $args['length'] : null), 'POST');
     $displaytype = FormUtil::getPassedValue('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null), 'POST');
     $listoptions = FormUtil::getPassedValue('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null), 'POST');
     $note        = FormUtil::getPassedValue('note',          (isset($args['note']) ? $args['note'] : null), 'POST');
@@ -396,7 +394,6 @@ function Profile_admin_update($args)
                           'required'    => $required,
                           'viewby'      => $viewby,
                           'label'       => $label,
-                          'length'      => $length,
                           'displaytype' => $displaytype,
                           'listoptions' => str_replace("\n", "", $listoptions),
                           'note'        => $note,
@@ -532,6 +529,10 @@ function Profile_admin_decrease_weight($var)
 
     if ($item == false) {
         return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
+    }
+
+    if ($item['prop_weight'] <= 1) {
+        return LogUtil::registerError(__('Forbidden to decrease the weight of this account property.', $dom), 404);
     }
 
     $new_weight = $item['prop_weight'] - 1;

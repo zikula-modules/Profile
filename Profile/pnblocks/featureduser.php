@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: featureduser.php 363 2009-11-23 05:46:55Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html

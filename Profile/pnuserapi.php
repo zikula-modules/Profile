@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pnuserapi.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
@@ -147,6 +147,9 @@ function Profile_userapi_getallactive($args)
     if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
         $args['index'] = 'prop_label';
     }
+    if (!isset($args['get']) || !in_array($args['get'], array('editable', 'all'))) {
+        $args['get'] = 'all';
+    }
 
     static $items;
 
@@ -162,14 +165,20 @@ function Profile_userapi_getallactive($args)
         $where   = "WHERE $column[prop_weight] > '0'
                     AND   $column[prop_dtype] >= '0'";
         $orderBy = $column['prop_weight'];
-        $items   = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], 'prop_label');
-    }
 
-    // Put items into result array.
-    $result = array();
-    foreach ($items as $item)
-    {
-        if (SecurityUtil::checkPermission('Profile::', $item['prop_label'].'::'.$item['prop_id'], ACCESS_READ)) {
+        $permFilter = array();
+        $permFilter[] = array('component_left'   =>  'Profile',
+                              'component_middle' =>  '',
+                              'component_right'  =>  '',
+                              'instance_left'    =>  'prop_label',
+                              'instance_middle'  =>  '',
+                              'instance_right'   =>  'prop_id',
+                              'level'            =>  ACCESS_READ);
+
+        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], 'prop_label', $permFilter);
+
+        foreach ($items as $k => $item)
+        {
             // Extract the validation info array
             $validationinfo = @unserialize($item['prop_validation']);
 
@@ -180,8 +189,23 @@ function Profile_userapi_getallactive($args)
             $item['prop_note']        = $validationinfo['note'];
             $item['prop_validation']  = $validationinfo['validation'];
 
-            $result[$item[$args['index']]] = $item;
+            $items[$k] = $item;
         }
+    }
+
+    // Put items into result array and filter if needed
+    $result = array();
+    foreach ($items as $item) {
+        switch ($args['get'])
+        {
+            case 'editable':
+                if ($item['prop_dtype'] < 0) {
+                    break;
+                }
+            case 'all':
+                $result[$item[$args['index']]] = $item;
+        }
+        
     }
 
     // Return the items
@@ -221,34 +245,6 @@ function Profile_userapi_getweightlimits()
 }
 
 /**
- * Utility function to check if a mail exists
- * @author FC
- * @return int number of items held by this module
- */
-function Profile_userapi_checkmailexists($args)
-{
-    $dom = ZLanguage::getModuleDomain('Profile');
-
-    // Argument check
-    if (empty($args['newmail'])) {
-        // must be set!
-        return 1;
-    }
-
-    if (empty($args['uid'])) {
-        return LogUtil::registerArgsError();
-        // FIXME
-    }
-
-    $pntable = pnDBGetTables();
-    $column  = $pntable['users_column'];
-    $where   = "WHERE $column[uid]!='". (int) DataUtil::formatForStore($args['uid'])."'
-                AND   $column[email]= '" . DataUtil::formatForStore($args['newmail'])."'";
-
-    return DBUtil::selectObjectCount ('users', $where);
-}
-
-/**
  * Utility function to save the data of the user
  * @author FC
  * @return true - success; false - failure
@@ -262,10 +258,15 @@ function Profile_userapi_savedata($args)
 
     $fields = $args['dynadata'];
 
-    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('index' => 'prop_attribute_name'));
+    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('index' => 'prop_attribute_name', 'get' => 'editable'));
 
     foreach ($duds as $attrname => $dud)
     {
+        // exclude avatar update when Avatar module is present
+        if ($attrname == 'avatar' && pnModAvailable('Avatar')) {
+            continue;
+        }
+
         $fieldvalue = '';
         if (isset($fields[$attrname])) {
             // Combining fields, TODO: Extend to other types than only EXTDATE

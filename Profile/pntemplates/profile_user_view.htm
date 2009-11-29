@@ -6,7 +6,7 @@
 <!--[include file='profile_user_menu.htm']-->
 
 <div id="profile_wrapper">
-    <!--[if @in_array('avatar', $dudarray)]-->
+    <!--[if isset($dudarray['avatar'])]-->
 
     <!--[if $userinfo.__ATTRIBUTES__.avatar eq '' or $userinfo.__ATTRIBUTES__.avatar eq 'blank.gif']-->
         <!--[pnimg modname='core' src='personal.gif' set='icons/large' class='profileavatar']-->
@@ -15,8 +15,6 @@
         <img src="<!--[$avatarpath]-->/<!--[$userinfo.__ATTRIBUTES__.avatar|pnvarprepfordisplay]-->" alt="" class="profileavatar" />
     <!--[/if]-->
     <!--[/if]-->
-
-    <h3><!--[$templatetitle]--></h3>
 
     <div class="z-form">
         <div class="z-formrow">

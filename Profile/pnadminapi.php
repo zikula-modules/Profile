@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: pnadminapi.php 370 2009-11-25 10:44:01Z mateo $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
@@ -16,14 +16,13 @@
  * @author Mark West
  * @param string $args['label'] the name of the item to be created
  * @param string $args['dtype'] the data type of the item to be created
- * @param int $args['length'] the length of the item to be created if dtype is string
  * @param string $args['validation'] data validation string for the item
  * @return mixed dud item ID on success, false on failure
  */
 function Profile_adminapi_create($args)
 {
     // Argument check
-    if ((!isset($args['label'])) || empty($args['label']) || stristr($args['label'], '-') ||
+    if ((!isset($args['label'])) || empty($args['label']) ||
        ((!isset($args['attribute_name'])) || empty($args['attribute_name'])) ||
         (!isset($args['dtype'])) || empty($args['dtype'])) {
         return LogUtil::registerArgsError();
@@ -37,13 +36,12 @@ function Profile_adminapi_create($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Clean the label
-    $permsep = pnConfigGetVar('shorturlsseparator');
+    $permsep = pnConfigGetVar('shorturlsseparator', '-');
     $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
+    $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
 
-    // The API function is called
+    // Determine the new weight
     $weightlimits = pnModAPIFunc('Profile', 'user', 'getweightlimits');
-
-    // Set default values
     $weight = $weightlimits['max'] + 1;
 
     // produce the validation array
@@ -58,13 +56,12 @@ function Profile_adminapi_create($args)
     $obj['prop_label']          = $args['label'];
     $obj['prop_attribute_name'] = $args['attribute_name'];
     $obj['prop_dtype']          = $args['dtype'];
-    $obj['prop_length']         = $args['length'];
     $obj['prop_weight']         = $weight;
     $obj['prop_validation']     = serialize($validationinfo);
 
     $res = DBUtil::insertObject($obj, 'user_property', 'prop_id');
 
-    // Check for an error with the database code
+    // Check for an error with the database
     if (!$res) {
         return LogUtil::registerError(__('Error! Creation attempt failed.', $dom));
     }
@@ -82,7 +79,6 @@ function Profile_adminapi_create($args)
  * @param int $args['dudid'] the id of the item to be updated
  * @param string $args['label'] the name of the item to be updated
  * @param string $args['dtype'] the data type of the item to be updated
- * @param int $args['length'] the length of the item to be updated if dtype is string
  * @param string $args['validation'] data validation string for the item
  * @return bool true on success, false on failure
  */
@@ -116,22 +112,25 @@ function Profile_adminapi_update($args)
         return LogUtil::registerPermissionError();
     }
 
-    if (isset($args['prop_weight']) && $args['prop_weight'] <> $item['prop_weight'])
-    {
-        $result  = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
-        $result['prop_weight'] = $item['prop_weight'];
+    if (isset($args['prop_weight'])) {
+        if ($args['prop_weight'] == 0) {
+            unset($args['prop_weight']);
+        } elseif ($args['prop_weight'] <> $item['prop_weight']) {
+            $result  = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
+            $result['prop_weight'] = $item['prop_weight'];
 
-        $pntable = pnDBGetTables();
-        $column  = $pntable['user_property_column'];
-        $where   = "$column[prop_weight] =  '$args[prop_weight]'
-                    AND $column[prop_id] <> '$args[dudid]'";
+            $pntable = pnDBGetTables();
+            $column  = $pntable['user_property_column'];
+            $where   = "$column[prop_weight] =  '$args[prop_weight]'
+                        AND $column[prop_id] <> '$args[dudid]'";
 
-        DBUtil::updateObject($result, 'user_property', $where, 'prop_id');
+            DBUtil::updateObject($result, 'user_property', $where, 'prop_id');
+        }
     }
 
+    // create the object to update
     $obj = array();
     $obj['prop_id']     = $args['dudid'];
-    $obj['prop_label']  = $args['label'];
     $obj['prop_dtype']  = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
     $obj['prop_weight'] = (isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight']);
 
@@ -146,6 +145,11 @@ function Profile_adminapi_update($args)
                                 'validation'  => $args['validation']);
 
         $obj['prop_validation'] = serialize($validationinfo);
+    }
+
+    // let to modify the label for normal fields only
+    if ($item['prop_dtype'] == 1) {
+        $obj['prop_label'] = $args['label'];
     }
 
     $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
@@ -185,6 +189,11 @@ function Profile_adminapi_delete($args)
 
     if ($item == false) {
         return LogUtil::registerError(__('No such account panel property found.', $dom));
+    }
+
+    // normal type validation
+    if ((int)$item['prop_dtype'] != 1) {
+        return LogUtil::registerError(__('Forbidden to delete this account property.', $dom), 404);
     }
 
     // Security check
@@ -265,11 +274,22 @@ function Profile_adminapi_deactivate($args)
         return LogUtil::registerArgsError();
     }
 
-    if (!isset($args['weight']) || empty($args['weight'])) {
-        $args['weight'] = DBUtil::selectFieldByID('user_property', 'prop_weight', $args['dudid'], 'prop_id');
+    $dom = ZLanguage::getModuleDomain('Profile');
+
+    $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
+
+    if ($item == false) {
+        return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
     }
 
-    $dom = ZLanguage::getModuleDomain('Profile');
+    // type validation
+    if ($item['prop_dtype'] <= 1) {
+        return LogUtil::registerError(__('Forbidden to deactivate this account property.', $dom), 404);
+    }
+
+    if (!isset($args['weight']) || empty($args['weight'])) {
+        $args['weight'] = $item['prop_weight'];
+    }
 
     // Update the item
     $obj = array('prop_id' => (int)$args['dudid'],
@@ -292,7 +312,7 @@ function Profile_adminapi_deactivate($args)
             SET    $propertycolumn[prop_weight] = $propertycolumn[prop_weight] - 1
             WHERE  $propertycolumn[prop_weight] > '" . (int)DataUtil::formatForStore($args['weight']) . "'";
 
-    $res = DBUtil::executeSQL ($sql);
+    $res = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code
     if (!$res) {
@@ -307,7 +327,7 @@ function Profile_adminapi_deactivate($args)
  * @author FC
  * @param int $args['proplabel'] the proplabel of the item to be fetched
  * @return array validation, false on failure
- * @todo : cleanup
+ * TODO cleanup
  */
 function Profile_adminapi_getype($args)
 {
@@ -319,13 +339,14 @@ function Profile_adminapi_getype($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Select the item
-    $vResult = DBUtil::selectFieldByID ('user_property', 'prop_validation', $args['proplabel'], 'prop_label');
+    $vResult = DBUtil::selectFieldByID('user_property', 'prop_validation', $args['proplabel'], 'prop_label');
 
     if ($vResult === false) {
         return LogUtil::registerError(__('No such account panel property found.', $dom));
     }
 
     $validation = unserialize($vResult);
+    // check if it's a select
     if ($validation['displaytype'] == 4)
     {
         $listoptions = explode('@@', $validation['listoptions']);

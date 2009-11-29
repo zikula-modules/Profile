@@ -2,7 +2,7 @@
 /**
  * Zikula Application Framework
  *
- * @copyright (c) 2002, Zikula Development Team
+ * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
  * @version $Id: decodeurl.php 335 2009-11-09 06:52:03Z drak $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html

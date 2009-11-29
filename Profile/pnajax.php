@@ -32,6 +32,10 @@ function Profile_ajax_changeprofileweight()
     $profilelist = FormUtil::getPassedValue('profilelist');
     $startnum = FormUtil::getPassedValue('startnum');
 
+    if ($startnum < 0) {
+        AjaxUtil::error(__f('Invalid %s passed.', 'startnum', $dom));
+    }
+
     // update the items with the new weights
     $items = array();
     $weight = $startnum + 1;
@@ -71,11 +75,11 @@ function Profile_ajax_changeprofilestatus()
     if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
         AjaxUtil::error(__('No authorization to access this module.', $dom));
     }
-
+/*
     if (!SecurityUtil::confirmAuthKey()) {
-        //AjaxUtil::error(__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again.", $dom));
+        AjaxUtil::error(__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again.", $dom));
     }
-
+*/
     $prop_id   = FormUtil::getPassedValue('dudid');
     $oldstatus = (bool)FormUtil::getPassedValue('oldstatus');
 
