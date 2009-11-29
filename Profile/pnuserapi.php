@@ -133,7 +133,7 @@ function Profile_userapi_getallactive($args)
 {
     // Optional arguments.
     if (!isset($args['startnum'])) {
-        $args['startnum'] = 1;
+        $args['startnum'] = -1;
     }
     if (!isset($args['numitems'])) {
         $args['numitems'] = -1;
@@ -174,7 +174,7 @@ function Profile_userapi_getallactive($args)
                               'instance_right'   =>  'prop_id',
                               'level'            =>  ACCESS_READ);
 
-        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, -1, -1, 'prop_label', $permFilter);
+        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, -1, -1, 'prop_id', $permFilter);
 
         foreach (array_keys($items) as $k)
         {
@@ -188,11 +188,13 @@ function Profile_userapi_getallactive($args)
         }
     }
 
+    // process the startnum and numitems
+    $items = array_splice($items, $args['startnum']+1, $args['numitems']);
+
     // Put items into result array and filter if needed
     $result = array();
     foreach ($items as $item)
     {
-        // TODO: evaluate $args['startnum'] $args['numitems']
         switch ($args['get'])
         {
             case 'editable':
