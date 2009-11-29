@@ -165,6 +165,9 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // process the generics
     } elseif (empty($uservalue)) {
         $output = $default;
+        if (empty($output)) {
+            return '';
+        }
 
 
     // serialized data
