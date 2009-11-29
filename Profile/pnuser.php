@@ -251,11 +251,8 @@ function Profile_user_viewmembers($args)
     }
 
     // Create output object
-    $render = & pnRender::getInstance('Profile', true, $cache_id);
-
-    // set the cache id
-    $render->cache_id = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
-
+    $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
+    $render  = & pnRender::getInstance('Profile', true, $cache_id);
 /*
     // check out if the contents are cached.
     if ($render->is_cached('profile_user_members_view.htm')) {
