@@ -73,8 +73,8 @@ function Profile_memberslistapi_getall($args)
     $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
-    // It's good practice to name the table and column definitions you are
-    // getting - $table and $column don't cut it in more complex modules
+    // It's good practice to name column definitions you are getting
+    // $column don't cut it in more complex modules
     $userscolumn = $pntable['users_column'];
     $datacolumn  = $pntable['objectdata_attributes_column'];
     $propcolumn  = $pntable['user_property_column'];
@@ -248,7 +248,7 @@ function Profile_memberslistapi_countitems($args)
     }
 
     // Sanitize the args used in queries
-    $args['letter']   = DataUtil::formatForStore($args['letter']);
+    $args['letter'] = DataUtil::formatForStore($args['letter']);
 
     // load the database information for the users module
     pnModDBInfoLoad('Users');
@@ -257,41 +257,119 @@ function Profile_memberslistapi_countitems($args)
     $dbconn = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
-    // It's good practice to name the table and column definitions you are
-    // getting - $table and $column don't cut it in more complex modules
+    // It's good practice to name column definitions you are getting
+    // $column don't cut it in more complex modules
     $userscolumn = $pntable['users_column'];
+    $datacolumn  = $pntable['objectdata_attributes_column'];
+    $propcolumn  = $pntable['user_property_column'];
 
-    // Get item
-    $select = "SELECT COUNT(1) FROM $pntable[users] ";
+    // Builds the sql query
+    $sql = "SELECT     COUNT(1)
+            FROM       $pntable[users] as tbl
+            LEFT JOIN  $pntable[objectdata_attributes] as a
+            ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A' ";
+    $join = "LEFT JOIN $pntable[user_property] as b
+            ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
 
-    if (isset($args['letter']) && !empty($args['letter'])) {
-        // are we listing all or "other" ?
-        $where = "WHERE UPPER($userscolumn[uname]) LIKE '".strtoupper($args['letter'])."%' AND $userscolumn[uid] != '1' ";
-        // I guess we are not..
-    } else if (isset($args['letter'])) {
-        $where = "WHERE ($userscolumn[uname] LIKE '0%'
-                      OR $userscolumn[uname] LIKE '1%'
-                      OR $userscolumn[uname] LIKE '2%'
-                      OR $userscolumn[uname] LIKE '3%'
-                      OR $userscolumn[uname] LIKE '4%'
-                      OR $userscolumn[uname] LIKE '5%'
-                      OR $userscolumn[uname] LIKE '6%'
-                      OR $userscolumn[uname] LIKE '7%'
-                      OR $userscolumn[uname] LIKE '8%'
-                      OR $userscolumn[uname] LIKE '9%'
-                      OR $userscolumn[uname] LIKE '-%'
-                      OR $userscolumn[uname] LIKE '.%'
-                      OR $userscolumn[uname] LIKE '@%'
-                      OR $userscolumn[uname] LIKE '$%') ";
-    } else {
-        $where = "WHERE $userscolumn[uid] != '1'";
+    // treat a single character as from the alpha filter and everything else as from the search input
+    if (strlen($args['letter']) > 1) {
+        $args['letter'] = "%{$args['letter']}";
     }
 
-    if (pnModGetVar('Profile', 'filterunverified')) {
-        $where .= " AND $userscolumn[activated] != '0'";
+    $where = '';
+    if ($args['searchby'] == 'uname') {
+        if (!empty($args['letter']) && preg_match('/[a-z]/i', $args['letter'])) {
+            $join  = '';
+            // are we listing all or "other" ?
+            $where = "WHERE UPPER(tbl.$userscolumn[uname]) LIKE '".strtoupper($args['letter'])."%' AND tbl.$userscolumn[uid] != '1' ";
+            // I guess we are not..
+        } else if (!empty($args['letter'])) {
+            $join  = '';
+            // But other are numbers ?
+            $where = "WHERE (tbl.$userscolumn[uname] LIKE '0%'
+                          OR tbl.$userscolumn[uname] LIKE '1%'
+                          OR tbl.$userscolumn[uname] LIKE '2%'
+                          OR tbl.$userscolumn[uname] LIKE '3%'
+                          OR tbl.$userscolumn[uname] LIKE '4%'
+                          OR tbl.$userscolumn[uname] LIKE '5%'
+                          OR tbl.$userscolumn[uname] LIKE '6%'
+                          OR tbl.$userscolumn[uname] LIKE '7%'
+                          OR tbl.$userscolumn[uname] LIKE '8%'
+                          OR tbl.$userscolumn[uname] LIKE '9%'
+                          OR tbl.$userscolumn[uname] LIKE '-%'
+                          OR tbl.$userscolumn[uname] LIKE '.%'
+                          OR tbl.$userscolumn[uname] LIKE '@%'
+                          OR tbl.$userscolumn[uname] LIKE '$%') ";
+
+            // fifers: while this is not the most eloquent solution, it is
+            // cross database compatible.  We could do an if dbtype is mysql
+            // then do the regexp.  consider for performance enhancement.
+            //
+            // "WHERE $column[uname] REGEXP \"^\[1-9]\" "
+            // REGEX :D, although i think its MySQL only
+            // Will have to change this later.
+            // if you know a better way to match only the first char
+            // to be a number in uname, please change it and email
+            // sweede@gallatinriver.net the correction
+            // or go to post-nuke project page and post
+            // your correction there. Thanks, Bjorn.
+        } else {
+            $join  = '';
+            // or we are unknown or all..
+            $where = "WHERE tbl.$userscolumn[uid] != '1' ";
+            // this is to get rid of the annonymous registry
+        }
+
+    } else if (is_array($args['searchby'])) {
+        if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
+            // args.searchby is all => search_value to loop all the user attributes
+            /*
+            $dudfields = pnModAPIFunc('Profile', 'user', 'getallactive');
+            if (empty($dudfields)) {
+                return $items;
+            }
+            $attrids = array();
+            foreach ($dudfields as $dud) {
+                $attrids[] = "'$dud[attribute_name]'";
+            }
+            $attrids = implode(', ', $attrids);
+            // active duds can be retrieved better with weight > 0 AND dtype >= 0
+            */
+
+            $value = DataUtil::formatForStore($args['searchby']['all']);
+            //$where = "WHERE a.$datacolumn[attribute_name] IN ($attrids) AND a.$datacolumn[value] LIKE '%$value%' ";
+            $where = "WHERE b.$propcolumn[prop_weight] > '0' AND $propcolumn[prop_dtype] >= '0' AND a.$datacolumn[value] LIKE '%$value%' ";
+
+        } else {
+            // args.searchby is an array of the form prop_id => value
+            $where = array();
+            foreach ($args['searchby'] as $prop_id => $value) {
+                $prop_id = DataUtil::formatForStore($prop_id);
+                $value   = DataUtil::formatForStore($value);
+                $where[] = "(b.$propcolumn[prop_id] = '$prop_id' AND a.$datacolumn[value] LIKE '%$value%')";
+            }
+            // check if there where contitionals
+            if (!empty($where)) {
+                $where = 'WHERE '.implode(' AND ', $where).' ';
+            } else {
+                $where = '';
+            }
+        }
+
+    } else if (is_numeric($args['searchby'])) {
+        $where = "WHERE b.$propcolumn[prop_id] = '$args[searchby]' AND a.$datacolumn[value] LIKE '$args[letter]%' ";
+
+    } elseif (isset($propcolumn[$args['searchby']])) {
+        $where = "WHERE b.".$propcolumn[$args['searchby']]." LIKE '$args[letter]%' ";
     }
 
-    $sql    = $select . $where;
+    if (!$args['sorting'] && pnModGetVar('Profile', 'filterunverified')) {
+        $where .= " AND tbl.$userscolumn[activated] != '0'";
+    }
+
+    $groupby = " GROUP BY tbl.$userscolumn[uname] ";
+
+    $sql   .= $join . $where . $groupby;
     $result = $dbconn->Execute($sql);
 
     // Check for an error with the database code
