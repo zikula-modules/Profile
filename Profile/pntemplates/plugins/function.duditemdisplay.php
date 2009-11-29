@@ -165,9 +165,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // process the generics
     } elseif (empty($uservalue)) {
         $output = $default;
-        if (empty($output)) {
-            return '';
-        }
 
 
     // serialized data
@@ -182,6 +179,12 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // a string
     } else {
         $output .= __($uservalue, $dom);
+    }
+
+
+    // omit this field if is empty after the process
+    if (empty($output)) {
+        return '';
     }
 
     $render->assign('output', is_array($output) ? $output : array($output));
