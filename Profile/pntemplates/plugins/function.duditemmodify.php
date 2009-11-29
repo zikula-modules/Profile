@@ -71,7 +71,13 @@ function smarty_function_duditemmodify($params, &$smarty)
         $onregistrationform = true;
     }
 
-    // TODO: skip the field if not configured to be on the registration form 
+    // skip the field if not configured to be on the registration form 
+    if ($onregistrationform && !$item['prop_required']) {
+        $dudregshow = pnModGetVar('Profile', 'dudregshow', array());
+        if (!in_array($item['prop_id'], $dudregshow)) {
+            return '';
+        }
+    }
 
     $dom = ZLanguage::getModuleDomain('Profile');
 

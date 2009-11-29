@@ -11,36 +11,6 @@
         <div>
             <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
             <fieldset>
-                <legend><!--[gt text='Display settings']--></legend>
-                <div class="z-formrow">
-                    <label for="profile_displaygraphics"><!--[gt text="Display graphics in user's account panel"]--></label>
-                    <!--[if $pncore.Profile.displaygraphics eq 1]-->
-                    <input id="profile_displaygraphics" name="displaygraphics" type="checkbox" value="1" checked="checked" />
-                    <!--[else]-->
-                    <input id="profile_displaygraphics" name="displaygraphics" type="checkbox" value="1" />
-                    <!--[/if]-->
-                </div>
-                <div class="z-formrow">
-                    <label for="profile_itemsperpage"><!--[gt text='Links per page']--></label>
-                    <input id="profile_itemsperpage" type="text" name="itemsperpage" size="3" value="<!--[$pncore.Profile.itemsperpage|pnvarprepfordisplay]-->" />
-                </div>
-                <div class="z-formrow">
-                    <label for="profile_itemsperrow"><!--[gt text='Links per row']--></label>
-                    <input id="profile_itemsperrow" type="text" name="itemsperrow" size="3" value="<!--[$pncore.Profile.itemsperrow|pnvarprepfordisplay]-->" />
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend><!--[gt text='Dud fields global settings']--></legend>
-                <div class="z-formrow">
-                    <label for="profile_dudtextdisplaytags"><!--[gt text='Display allowed tags warning for textareas']--></label>
-                    <!--[if $pncore.Profile.dudtextdisplaytags|default:0 eq 1]-->
-                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" checked="checked" />
-                    <!--[else]-->
-                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" />
-                    <!--[/if]-->
-                </div>
-            </fieldset>
-            <fieldset>
                 <legend><!--[gt text='Members List']--></legend>
                 <div class="z-formrow">
                     <label for="profile_memberslistitemsperpage"><!--[gt text='Items per page on Members List page']--></label>
@@ -68,6 +38,32 @@
                         <input id="filterunverified0" type="radio" name="filterunverified" value="0" checked="checked" />
                         <label for="filterunverified0"><!--[gt text='No']--></label>
                         <!--[/if]-->
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><!--[gt text='DUD fields global settings']--></legend>
+                <div class="z-formrow">
+                    <label for="profile_dudtextdisplaytags"><!--[gt text='Display allowed tags warning for textareas']--></label>
+                    <!--[if $pncore.Profile.dudtextdisplaytags|default:0 eq 1]-->
+                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" checked="checked" />
+                    <!--[else]-->
+                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" />
+                    <!--[/if]-->
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><!--[gt text='DUD fields in the registration form']--></legend>
+                <p class="z-informationmsg"><!--[gt text="The enabled fields below will be shown in the registration form if the Users module is configured to show the account fields and Profile is the site's profile manager. Required fields will be shown always, the following list includes the non-required fields only."]--></p>
+                <div class="z-formrow">
+                    <label for="profile_dudregshow"><!--[gt text='DUD fields to show']--></label>
+                    <div id="profile_dudregshow">
+                        <!--[foreach from=$dudfields key='dudid' item='dudlabel']-->
+                        <div class="z-formlist">
+                            <input id="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->" type="checkbox" name="dudregshow[]" value="<!--[$dudid|pnvarprepfordisplay]-->"<!--[if in_array($dudid, $pncore.Profile.dudregshow)]--> checked="checked"<!--[/if]--> />
+                            <label for="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->"><!--[gt text=$dudlabel]--></label>
+                        </div>
+                        <!--[/foreach]-->
                     </div>
                 </div>
             </fieldset>

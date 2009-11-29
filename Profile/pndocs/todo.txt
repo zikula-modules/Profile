@@ -2,11 +2,5 @@
   THINGS TO DO
 
   Rework the view method + dud view templates
-  Style the warning, and margins for errors, etc
-  Hide some form fields for specific types
-    Checkbox prop_value with yes@no translatable values?
-    Checkbox can't be required
-  Think about external DUDs 
-  Deprecate dudtimezoneoffset
-  Do not set avatar in the update to empty....
-  API functions to be reviewed to check all functionality required by other modules can be provided.
+  Checkbox can't be required
+  Clean out any check that relies on the DUD label

@@ -26,7 +26,7 @@ function Profile_form_edit($args)
     }
 
     // The API function is called.
-    $items = pnModAPIFunc('Profile', 'user', 'getallactive');
+    $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
     // The return value of the function is checked here
     if ($items == false) {

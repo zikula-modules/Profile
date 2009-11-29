@@ -12,4 +12,4 @@
       type > 0 are deactivable
       type >= 0 are editable by the user
     Checkbox fields cannot be required.
-
+    New module configuration to set the fields to show in the registration form

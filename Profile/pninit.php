@@ -23,22 +23,12 @@ function Profile_init()
         return false;
     }
 
-    pnModSetVar('Profile', 'itemsperpage',    25);
-    pnModSetVar('Profile', 'itemsperrow',     5);
-    pnModSetVar('Profile', 'displaygraphics', 1);
-
     pnModSetVar('Profile', 'memberslistitemsperpage', 20);
     pnModSetVar('Profile', 'onlinemembersitemsperpage', 20);
     pnModSetVar('Profile', 'recentmembersitemsperpage', 10);
     pnModSetVar('Profile', 'filterunverified', 1);
     
     pnModSetVar('Profile', 'dudtextdisplaytags', 0);
-
-    // Set up module hooks  - currently this hook isn't present (markwest)
-    /*
-    if (!pnModRegisterHook('item', 'display', 'GUI', 'Profile', 'user', 'display')) {
-        return false;
-    }*/
 
     // create the default data for the module
     Profile_defaultdata();
@@ -71,9 +61,6 @@ function Profile_upgrade($oldversion)
     switch ($oldversion)
     {
         case '0.8':
-            pnModSetVar('Profile', 'itemsperpage',    25);
-            pnModSetVar('Profile', 'itemsperrow',     5);
-            pnModSetVar('Profile', 'displaygraphics', 1);
             // fix the data types of any existing properties
             DBUtil::executeSQL("UPDATE {$table} SET pn_prop_dtype = '1' WHERE pn_prop_dtype = '0'");
 
@@ -156,11 +143,12 @@ function Profile_upgrade($oldversion)
                 if (array_key_exists($prop_label, $mappingarray)) {
                     // old DUD found
                     $userprop['prop_attribute_name'] = $mappingarray[$prop_label];
-                    
+
                 } elseif (empty($userprop['prop_attribute_name']) || !in_array($userprop['prop_attribute_name'], $existing)) {
                     // seems to be user defined, dont touch it
                     $userprop['prop_attribute_name'] = $prop_label;
                 }
+
                 // set the types to 'Normal'
                 $userprop['prop_dtype'] = 1;
                 $newprops[] = $userprop;
@@ -168,6 +156,16 @@ function Profile_upgrade($oldversion)
 
             // store updated properties
             DBUtil::updateObjectArray($newprops, 'user_property', 'prop_id');
+
+            // clean some modvars
+            pnModDelVar('Profile', 'itemsperpage');
+            pnModDelVar('Profile', 'itemsperrow');
+            pnModDelVar('Profile', 'displaygraphics');
+
+            // set the active fields to display in the registration form
+            $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
+            pnModSetVar('Profile', 'dudregshow', array_keys($items));
+            unset($items);
 
         case '1.5':
             // future upgrade routines
@@ -217,7 +215,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_UREALNAME');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '1';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'realname';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -227,7 +225,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_UFAKEMAIL');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '2';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'publicemail';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -237,7 +235,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YOURHOMEPAGE');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '3';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'url';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -247,7 +245,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_TIMEZONEOFFSET');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '4';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'tzoffset';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -257,7 +255,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YOURAVATAR');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '5';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'avatar';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -267,7 +265,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YICQ');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '6';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'icq';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -277,7 +275,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YAIM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '7';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'aim';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -287,7 +285,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YYIM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '8';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'yim';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -297,7 +295,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YMSNM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '9';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'msnm';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -307,7 +305,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YLOCATION');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '10';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'city';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -317,7 +315,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YOCCUPATION');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '11';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"0";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'occupation';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -327,7 +325,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_SIGNATURE');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '12';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"1";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'signature';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -337,7 +335,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_EXTRAINFO');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '13';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"1";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'extrainfo';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -347,8 +345,12 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YINTERESTS');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '14';
-    $record['prop_validation']     = 'a:6:{s:8:"required";s:1:"0";s:6:"viewby";s:1:"0";s:11:"displaytype";s:1:"1";s:11:"listoptions";s:0:"";s:4:"note";s:0:"";s:10:"validation";s:0:"";}';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => '', 'validation' => ''));
     $record['prop_attribute_name'] = 'interests';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
+
+    // set realname, homepage, timezone offset, location and ocupation
+    // to be shown in the registration form by default
+    pnModSetVar('Profile', 'dudregshow', array(1, 3, 4, 10, 11));
 }
