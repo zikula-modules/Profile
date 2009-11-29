@@ -149,7 +149,7 @@ function Profile_memberslistapi_getall($args)
                 $attrids[] = "'$dud[attribute_name]'";
             }
             $attrids = implode(', ', $attrids);
-            // active duds can be retirved better with weight > 0 AND dtype >= 0
+            // active duds can be retrieved better with weight > 0 AND dtype >= 0
             */
 
             $value = DataUtil::formatForStore($args['searchby']['all']);

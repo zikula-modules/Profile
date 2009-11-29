@@ -2,5 +2,3 @@
   THINGS TO DO
 
   Checkbox can't be required
-  Clean out any check that relies on the DUD label
-  Make prop_attribute_name the default index in userapi.getallactive

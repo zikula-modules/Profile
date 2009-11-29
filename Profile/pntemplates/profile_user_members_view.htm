@@ -18,12 +18,12 @@
                 <div class="z-formnote">
                     <input id="profile_nickname" type="radio" name="searchby" value="uname" checked="checked" />
                     <label for="profile_nickname"><!--[gt text='User Name']--></label>
-                    <!--[ if isset($dudarray._UREALNAME) ]-->
-                    <input id="profile_realname" type="radio" name="searchby" value="<!--[$dudarray._UREALNAME]-->" />
+                    <!--[ if isset($dudarray.realname) ]-->
+                    <input id="profile_realname" type="radio" name="searchby" value="<!--[$dudarray.realname]-->" />
                     <label for="profile_realname"><!--[gt text='True name']--></label>
                     <!--[/if]-->
-                    <!--[ if isset($dudarray._YOURHOMEPAGE) ]-->
-                    <input id="profile_url" type="radio" name="searchby" value="<!--[$dudarray._YOURHOMEPAGE]-->" />
+                    <!--[ if isset($dudarray.url) ]-->
+                    <input id="profile_url" type="radio" name="searchby" value="<!--[$dudarray.url]-->" />
                     <label for="profile_url"><!--[gt text='URL']--></label>
                     <!--[/if]-->
                 </div>
@@ -40,13 +40,13 @@
         <tr>
             <th>&nbsp;</th>
             <th><!--[gt text='User Name']--></th>
-            <!--[ if isset($dudarray._UREALNAME) ]-->
+            <!--[ if isset($dudarray.realname) ]-->
             <th><!--[gt text='True name']--></th>
             <!--[/if]-->
             <!--[if $msgmodule]-->
             <th><!--[gt text='PM']--></th>
             <!--[/if]-->
-            <!--[ if isset($dudarray._YOURHOMEPAGE) ]-->
+            <!--[ if isset($dudarray.url) ]-->
             <th><!--[gt text='URL']--></th>
             <!--[/if]-->
             <!--[if $adminedit]-->
@@ -67,15 +67,15 @@
                 <!--[/if]-->
             </td>
             <td><strong><!--[$users[users].uname|userprofilelink]--></strong></td>
-            <!--[ if isset($dudarray._UREALNAME) ]-->
-            <td><!--[$users[users]._UREALNAME|pnvarprepfordisplay|default:"&nbsp;"]--></td>
+            <!--[ if isset($dudarray.realname) ]-->
+            <td><!--[$users[users].__ATTRIBUTES__.realname|pnvarprepfordisplay|default:"&nbsp;"]--></td>
             <!--[/if]-->
             <!--[if $msgmodule]-->
             <td><a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="mail_new.gif" __alt='Send private message' ]--></a></td>
             <!--[/if]-->
-            <!--[ if isset($dudarray._YOURHOMEPAGE) ]-->
+            <!--[ if isset($dudarray.url) ]-->
             <td>
-                <!--[if $users[users]._YOURHOMEPAGE eq '']-->
+                <!--[if $users[users].__ATTRIBUTES__.url eq '']-->
                 &nbsp;
                 <!--[else]-->
                 <a href="<!--[$users[users]._YOURHOMEPAGE|pnvarprepfordisplay]-->"><!--[pnimg modname=core set=icons/extrasmall src="agt_internet.gif" title=$users[users]._YOURHOMEPAGE alt=$users[users]._YOURHOMEPAGE]--></a>

@@ -17,13 +17,13 @@
  * Smarty function to display an editable dynamic user data field
  *
  * Example
- * <!--[duditemmodify proplabel="_YICQ"]-->
+ * <!--[duditemmodify propattribute='avatar']-->
  *
  * Example
- * <!--[duditemmodify proplabel="_YICQ" uid=$uid]-->
+ * <!--[duditemmodify propattribute='realname' uid=$uid]-->
  *
  * Example
- * <!--[duditemmodify propattribute="signature"]-->
+ * <!--[duditemmodify propattribute='signature']-->
  *
  * Example
  * <!--[duditemmodify item=$item]-->

@@ -9,13 +9,13 @@
             <th>&nbsp;</th>
             <th><!--[gt text='User Name']--></th>
             <th><!--[gt text='Registration Date']--></th>
-            <!--[ if @isset($dudarray._UREALNAME) ]-->
+            <!--[ if @isset($dudarray.realname) ]-->
             <th><!--[gt text='True name']--></th>
             <!--[/if]-->
             <!--[if $msgmodule]-->
             <th><!--[gt text='PM']--></th>
             <!--[/if]-->
-            <!--[ if @isset($dudarray._YOURHOMEPAGE) ]-->
+            <!--[ if @isset($dudarray.url) ]-->
             <th><!--[gt text='URL']--></th>
             <!--[/if]-->
             <!--[if $adminedit]-->
@@ -37,18 +37,18 @@
             </td>
             <td><strong><!--[$users[users].uname|userprofilelink]--></strong></td>
             <td><!--[$users[users].pn_user_regdate|pndate_format|default:"&nbsp;"]--></td>
-            <!--[ if @isset($dudarray._UREALNAME) ]-->
-            <td><!--[$users[users]._UREALNAME|default:"&nbsp;"]--></td>
+            <!--[ if @isset($dudarray.realname) ]-->
+            <td><!--[$users[users].__ATTRIBUTES__.realname|default:"&nbsp;"]--></td>
             <!--[/if]-->
             <!--[if $msgmodule]-->
             <td><a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="mail_new.gif" __alt='Send private message' ]--></a></td>
             <!--[/if]-->
-            <!--[ if @isset($dudarray._YOURHOMEPAGE) ]-->
+            <!--[ if @isset($dudarray.url) ]-->
             <td>
-                <!--[if $users[users]._YOURHOMEPAGE eq '']-->
+                <!--[if $users[users].__ATTRIBUTES__.url eq '']-->
                 &nbsp;
                 <!--[else]-->
-                <a href="<!--[$users[users]._YOURHOMEPAGE|pnvarprepfordisplay]-->"><!--[pnimg modname=core set=icons/extrasmall src="agt_internet.gif" title=$users[users]._YOURHOMEPAGE alt=$users[users]._YOURHOMEPAGE]--></a>
+                <a href="<!--[$users[users].__ATTRIBUTES__.url|pnvarprepfordisplay]-->"><!--[pnimg modname=core set=icons/extrasmall src="agt_internet.gif" title=$users[users].__ATTRIBUTES__.url alt=$users[users].__ATTRIBUTES__.url]--></a>
                 <!--[/if]-->
             </td>
             <!--[/if]-->

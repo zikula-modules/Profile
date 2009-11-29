@@ -144,7 +144,7 @@ function Profile_userapi_getallactive($args)
     }
 
     if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
-        $args['index'] = 'prop_label';
+        $args['index'] = 'prop_attribute_name';
     }
     if (!isset($args['get']) || !in_array($args['get'], array('editable', 'all'))) {
         $args['get'] = 'all';
@@ -255,7 +255,7 @@ function Profile_userapi_savedata($args)
 
     $fields = $args['dynadata'];
 
-    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('index' => 'prop_attribute_name', 'get' => 'editable'));
+    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
     foreach ($duds as $attrname => $dud)
     {

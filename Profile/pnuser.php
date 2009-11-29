@@ -72,7 +72,7 @@ function Profile_user_view($args)
     }
 
     // get all active profile fields
-    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive', array('index' => 'prop_attribute_name'));
+    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
     foreach ($activeduds as $dudattr => $activedud) {
         // check the access to this field
         if ($activedud['prop_viewby'] != 0) {
@@ -85,7 +85,7 @@ function Profile_user_view($args)
                 }
             }
         }
-        $dudarray[$dudattr] = $userinfo['__ATTRIBUTES__'][$activedud['prop_attribute_name']];
+        $dudarray[$dudattr] = $userinfo['__ATTRIBUTES__'][$dudattr];
     }
 
     // Create output object
@@ -138,15 +138,11 @@ function Profile_user_modify($args)
 
     // check if we get called form the update function in case of an error
     $uname    = FormUtil::getPassedValue('uname',    (isset($args['uname']) ? $args['uname'] : null),    'GET');
-    $errors   = FormUtil::getPassedValue('errors',   (isset($args['errors']) ? $args['errors'] : array()), 'GET');
     $dynadata = FormUtil::getPassedValue('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()), 'GET');
 
     // merge this temporary dynadata and the errors into the items array
-    foreach ($dynadata as $proplabel => $propdata) {
-        $items[$proplabel]['temp_propdata'] = $propdata;
-        if (array_key_exists($proplabel, $errors)) {
-            $items[$proplabel]['prop_error'] = $errors[$proplabel];
-        }
+    foreach ($dynadata as $propattr => $propdata) {
+        $items[$propattr]['temp_propdata'] = $propdata;
     }
 
     // Create output object
@@ -198,8 +194,6 @@ function Profile_user_update()
     // Building the sql and saving - The API function is called.
     $save = pnModAPIFunc('Profile', 'user', 'savedata',
                          array('uid'      => $uid,
-                               'pass'     => $pass,
-                               'vpass'    => $vpass,
                                'dynadata' => $dynadata));
 
     if ($save != true) {
@@ -318,10 +312,11 @@ function Profile_user_viewmembers($args)
     }
 
     // get all active profile fields
-    $activeduds  = pnModAPIfunc('Profile', 'user', 'getallactive');
-    foreach ($activeduds as $activedud) {
-        $dudarray[$activedud['prop_label']] = $activedud['prop_id'];
+    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
+    foreach ($activeduds as $attr => $activedud) {
+        $dudarray[$attr] = $activedud['prop_id'];
     }
+    unset($activeduds);
 
     $render->assign('dudarray',  $dudarray);
     $render->assign('users',     $pagedusers);
@@ -415,10 +410,9 @@ function Profile_user_recentmembers()
     $render->assign('msgmodule', pnModAPIFunc('Profile', 'memberslist', 'getmessagingmodule'));
 
     // get all active profile fields
-    $activeduds  = pnModAPIfunc('Profile', 'user', 'getallactive');
-    foreach ($activeduds as $activedud) {
-        $dudarray[] = $activedud['prop_label'];
-    }
+    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
+    $dudarray   = array_keys($activeduds);
+    unset($activeduds);
 
     $render->assign('dudarray',  $dudarray);
 
@@ -463,10 +457,9 @@ function Profile_user_onlinemembers()
     $render->assign('msgmodule', pnModAPIFunc('Profile', 'memberslist', 'getmessagingmodule'));
 
     // get all active profile fields
-    $activeduds  = pnModAPIfunc('Profile', 'user', 'getallactive');
-    foreach ($activeduds as $activedud) {
-        $dudarray[$activedud['prop_label']] = $activedud['prop_id'];
-    }
+    $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
+    $dudarray   = array_keys($activeduds);
+    unset($activeduds);
 
     $render->assign('dudarray', $dudarray);
 

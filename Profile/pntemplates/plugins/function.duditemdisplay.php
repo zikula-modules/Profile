@@ -14,10 +14,10 @@
  * Smarty function to display an editable dynamic user data field
  *
  * Example
- * <!--[duditemdisplay proplabel='_YICQ']-->
+ * <!--[duditemdisplay propattribute='avatar']-->
  *
  * Example
- * <!--[duditemdisplay proplabel='_YICQ' uid=$uid]-->
+ * <!--[duditemdisplay propattribute='realname' uid=$uid]-->
  *
  * Example
  * <!--[duditemdisplay propattribute='signature']-->

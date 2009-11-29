@@ -83,11 +83,11 @@ function Profile_form_search($args)
     }
 
     // unset the avatar and timezone fields
-    if (isset($items['_YOURAVATAR'])) {
-        unset($items['_YOURAVATAR']);
+    if (isset($items['avatar'])) {
+        unset($items['avatar']);
     }
-    if (isset($items['_TIMEZONEOFFSET'])) {
-        unset($items['_TIMEZONEOFFSET']);
+    if (isset($items['tzoffset'])) {
+        unset($items['tzoffset']);
     }
 
     // reset the 'required' flags
