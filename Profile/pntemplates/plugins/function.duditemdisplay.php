@@ -113,6 +113,8 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $template = 'profile_duddisplay_generic.htm';
     }
 
+    $output = '';
+
 
     // checks the different attributes and types
     // avatar
@@ -159,7 +161,9 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // url
     } elseif ($item['prop_attribute_name'] == 'url') {
-        $output = '<a href="'.DataUtil::formatForDisplay($uservalue).'" title="'.__f("%s's website URL", $userinfo['uname'], $dom).'" rel="nofollow">'.DataUtil::formatForDisplay($uservalue).'</a>';
+        if (!empty($uservalue) && $uservalue != 'http://') {
+            $output = '<a href="'.DataUtil::formatForDisplay($uservalue).'" title="'.__f("%s's website URL", $userinfo['uname'], $dom).'" rel="nofollow">'.DataUtil::formatForDisplay($uservalue).'</a>';
+        }
 
 
     // process the generics
