@@ -31,7 +31,7 @@
         </fieldset>
     </div>
     <div id="profile-alphafilter" class="z-center">
-        <strong>[<!--[pagerabc posvar='letter' forwardvars='sortby']-->]</strong>
+        <strong>[ &nbsp;<a href="<!--[pnmodurl modname='Profile' type='user' func='viewmembers']-->"><!--[gt text='All']--></a>&nbsp; | <!--[pagerabc posvar='letter' forwardvars='sortby']-->]</strong>
     </div>
 </form>
 
@@ -61,9 +61,9 @@
         <tr class="<!--[cycle values='z-odd,z-even']-->">
             <td>
                 <!--[if $users[users].onlinestatus eq 1]-->
-                <a href="<!--[pnmodurl modname=Profile type=user func=onlinemembers]-->"><!--[pnimg modname='core' src='greenled.gif' set='icons/extrasmall' __title='Online' __alt='Online' ]--></a>
+                <a href="<!--[pnmodurl modname=Profile type=user func=onlinemembers]-->"><!--[pnimg modname='core' src='greenled.gif' set='icons/extrasmall' __title='Online' __alt='Online']--></a>
                 <!--[else]-->
-                <!--[pnimg modname='core' src='redled.gif' set='icons/extrasmall' __title='Offline' __alt='Offline' ]-->
+                <!--[pnimg modname='core' src='redled.gif' set='icons/extrasmall' __title='Offline' __alt='Offline']-->
                 <!--[/if]-->
             </td>
             <td><strong><!--[$users[users].uname|userprofilelink]--></strong></td>
@@ -71,22 +71,22 @@
             <td><!--[$users[users].__ATTRIBUTES__.realname|pnvarprepfordisplay|default:"&nbsp;"]--></td>
             <!--[/if]-->
             <!--[if $msgmodule]-->
-            <td><a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="mail_new.gif" __alt='Send private message' ]--></a></td>
+            <td><a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="mail_new.gif" __alt='Send private message']--></a></td>
             <!--[/if]-->
             <!--[ if isset($dudarray.url) ]-->
             <td>
                 <!--[if $users[users].__ATTRIBUTES__.url eq '']-->
                 &nbsp;
                 <!--[else]-->
-                <a href="<!--[$users[users]._YOURHOMEPAGE|pnvarprepfordisplay]-->"><!--[pnimg modname=core set=icons/extrasmall src="agt_internet.gif" title=$users[users]._YOURHOMEPAGE alt=$users[users]._YOURHOMEPAGE]--></a>
+                <a href="<!--[$users[users].__ATTRIBUTES__.url|pnvarprepfordisplay]-->" rel="nofollow"><!--[pnimg modname=core set=icons/extrasmall src="agt_internet.gif" title=$users[users].__ATTRIBUTES__.url alt=$users[users].__ATTRIBUTES__.url]--></a>
                 <!--[/if]-->
             </td>
             <!--[/if]-->
             <!--[if $adminedit]-->
             <td>
-                <a href="<!--[pnmodurl modname=Users type=admin func=modify userid=$users[users].pn_uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="xedit.gif" __alt='Edit' ]--></a>
+                <a href="<!--[pnmodurl modname=Users type=admin func=modify userid=$users[users].pn_uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="xedit.gif" __alt='Edit']--></a>
                 <!--[if $admindelete]-->
-                <a href="<!--[pnmodurl modname=Users type=admin func=deleteusers userid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="14_layer_deletelayer.gif" __alt='Delete' ]--></a>
+                <a href="<!--[pnmodurl modname=Users type=admin func=deleteusers userid=$users[users].uid]-->"><!--[pnimg modname='core' set='icons/extrasmall' src="14_layer_deletelayer.gif" __alt='Delete']--></a>
                 <!--[/if]-->
             </td>
             <!--[/if]-->
