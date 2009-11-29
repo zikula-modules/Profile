@@ -293,7 +293,7 @@ function Profile_adminapi_deactivate($args)
     }
 
     // type validation
-    if ($item['prop_dtype'] <= 1) {
+    if ($item['prop_dtype'] < 1) {
         return LogUtil::registerError(__('Forbidden to deactivate this account property.', $dom), 404);
     }
 
