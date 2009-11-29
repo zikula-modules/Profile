@@ -65,10 +65,13 @@ function profile_displaytype_onchange()
     $('profile_help_type4').hide();
     $('profile_help_type7').hide();
     // needs to show the list_content textarea
-    if (state > 1) {
+    if (state >= 1) {
     	$('profile_content_wrapper').show();
     	// check which type help should be shown
-    	if (state&2) {
+    	if (state&1) {
+    		// checkbox
+    		$('profile_help_type2').show();
+    	} else if (state&2) {
     		// radio
     		$('profile_help_type3').show();
     	} else if (state&4) {

@@ -119,7 +119,17 @@ function smarty_function_duditemdisplay($params, &$smarty)
 	    $output = DataUtil::formatForDisplay($tzinfo[$uservalue]);
 
 
-    // date and extdate
+    // checkbox
+    } elseif ($item['prop_displaytype'] == 2) {
+        $default = array('No', 'Yes');
+        $output  = explode('@@', $item['prop_listoptions']);
+        if (!is_array($output) || count($output) < 2) {
+            $output = $default;
+        }
+        $output = isset($output[(int)$uservalue]) && !empty($output[(int)$uservalue]) ? __($output[(int)$uservalue], $dom) : __($default[(int)$uservalue], $dom);
+
+
+	// date and extdate
     } elseif (!empty($uservalue) && ($item['prop_displaytype'] == 5 || $item['prop_displaytype'] == 6)) {
         $output = DateUtil::getDatetime(strtotime($uservalue), 'datelong');
 

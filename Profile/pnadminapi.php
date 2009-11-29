@@ -134,8 +134,8 @@ function Profile_adminapi_update($args)
     $obj['prop_dtype']  = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
     $obj['prop_weight'] = (isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight']);
 
-    // assumes if required is set, all the validation info is
-    if (isset($args['required'])) {
+    // assumes if displaytype is set, all the validation info is
+    if (isset($args['displaytype'])) {
         // Produce the validation array
         $validationinfo = array('required'    => $args['required'],
                                 'viewby'      => $args['viewby'],
@@ -320,49 +320,6 @@ function Profile_adminapi_deactivate($args)
     }
 
     return true;
-}
-
-/**
- * Get type and validation for a specific field
- * @author FC
- * @param int $args['proplabel'] the proplabel of the item to be fetched
- * @return array validation, false on failure
- * TODO cleanup
- */
-function Profile_adminapi_getype($args)
-{
-    // Argument check
-    if (!isset($args['proplabel'])) {
-        return LogUtil::registerArgsError();
-    }
-
-    $dom = ZLanguage::getModuleDomain('Profile');
-
-    // Select the item
-    $vResult = DBUtil::selectFieldByID('user_property', 'prop_validation', $args['proplabel'], 'prop_label');
-
-    if ($vResult === false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom));
-    }
-
-    $validation = unserialize($vResult);
-    // check if it's a select
-    if ($validation['displaytype'] == 4)
-    {
-        $listoptions = explode('@@', $validation['listoptions']);
-        $listoptionvalues = 1;
-        foreach($listoptions as $option) {
-            $options[] = $option;
-            $optionvalue[] = $listoptionvalues;
-
-            $listoptionvalues++;
-        }
-
-        $validation['listoptions'] = $options;
-        $validation['listoptionsvalues'] = $optionvalues;
-    }
-
-    return $validation;
 }
 
 /**

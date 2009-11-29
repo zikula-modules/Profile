@@ -492,19 +492,15 @@ function Profile_admin_increase_weight($args)
         return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
     }
 
-    $new_weight = $item['prop_weight'] + 1;
+    // Security check
+    if (!SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT)) {
+        return LogUtil::registerPermissionError();
+    }
+
+    $res = DBUtil::incrementObjectFieldByID('user_property', 'prop_weight', $dudid, 'prop_id');
 
     // The return value of the function is checked here
-    if (pnModAPIFunc('Profile', 'admin', 'update',
-                    array('dudid'       => $dudid,
-                          'required'    => $item['prop_required'],
-                          'viewby'      => $item['prop_viewby'],
-                          'label'       => $item['prop_label'],
-                          'displaytype' => $item['prop_displaytype'],
-                          'prop_weight' => $new_weight,
-                          'listoptions' => str_replace("\n", '', $item['prop_listoptions']),
-                          'note'        => $item['prop_note'],
-                          'validation'  => $item['prop_validation']))) {
+    if ($res) {
         // Success
         LogUtil::registerStatus(__('Done! Account panel property updated.', $dom));
     }
@@ -531,25 +527,19 @@ function Profile_admin_decrease_weight($var)
         return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
     }
 
+    // Security check
+    if (!SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT)) {
+        return LogUtil::registerPermissionError();
+    }
+
     if ($item['prop_weight'] <= 1) {
         return LogUtil::registerError(__('Forbidden to decrease the weight of this account property.', $dom), 404);
     }
 
-    $new_weight = $item['prop_weight'] - 1;
+    $res = DBUtil::incrementObjectFieldByID('user_property', 'prop_weight', $dudid, 'prop_id', -1);
 
     // The return value of the function is checked here
-    if (pnModAPIFunc('Profile', 'admin', 'update',
-                    array('dudid'       => $dudid,
-                          'required'    => $item['prop_required'],
-                          'viewby'      => $item['prop_viewby'],
-                          'label'       => $item['prop_label'],
-                          'dtype'       => $item['prop_dtype'],
-                          'length'      => $item['prop_length'],
-                          'displaytype' => $item['prop_displaytype'],
-                          'prop_weight' => $new_weight,
-                          'listoptions' => str_replace("\n", '', $item['prop_listoptions']),
-                          'note'        => $item['prop_note'],
-                          'validation'  => $item['prop_validation']))) {
+    if ($res) {
         // Success
         LogUtil::registerStatus(__('Done! Account panel property updated.', $dom));
     }

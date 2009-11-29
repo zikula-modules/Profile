@@ -13,6 +13,7 @@
 
 /**
  * Get all Dynamic user data fields
+ * @author Mateo Tibaquira
  * @author Mark West
  * @param int args['startnum'] starting record number for request
  * @param int args['numitems'] number of records to retrieve
@@ -47,24 +48,26 @@ function Profile_userapi_getall($args)
     $where   = '';
     $orderBy = 'prop_weight';
 
-    $results = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems']);
+    $permFilter = array();
+    $permFilter[] = array('component_left'   =>  'Profile',
+                          'component_middle' =>  '',
+                          'component_right'  =>  '',
+                          'instance_left'    =>  'prop_label',
+                          'instance_middle'  =>  '',
+                          'instance_right'   =>  'prop_id',
+                          'level'            =>  ACCESS_READ);
+
+    $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], $args['index'], $permFilter);
 
     // Put items into result array.
-    foreach ($results as $item)
+    foreach (array_keys($items) as $k)
     {
-        if (SecurityUtil::checkPermission('Profile::', $item['prop_label'].'::'.$item['prop_id'], ACCESS_READ)) {
-            // Extract the validation info array
-            $validationinfo = @unserialize($item['prop_validation']);
+        $validationinfo = @unserialize($items[$k]['prop_validation']);
+        unset($items[$k]['prop_validation']);
 
-            // Create the item array
-            $item['prop_required']      = $validationinfo['required'];
-            $item['prop_viewby']        = $validationinfo['viewby'];
-            $item['prop_displaytype']   = $validationinfo['displaytype'];
-            $item['prop_listoptions']   = $validationinfo['listoptions'];
-            $item['prop_note']          = $validationinfo['note'];
-            $item['prop_validation']    = $validationinfo['validation'];
-
-            $items[$item[$args['index']]] = $item;
+        // Expand the item array
+        foreach ($validationinfo as $infolabel => $infofield) {
+            $items[$k]["prop_$infolabel"] = $infofield;
         }
     }
 
@@ -74,6 +77,7 @@ function Profile_userapi_getall($args)
 
 /**
  * Get a specific Dynamic user data item
+ * @author Mateo Tibaquira
  * @author Mark West
  * @param $args['propid'] id of property to get
  * @return mixed item array, or false on failure
@@ -87,37 +91,31 @@ function Profile_userapi_get($args)
 
     // Get item with where clause
     if (isset($args['propid'])) {
-        $result = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
+        $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
     } elseif (isset($args['proplabel'])) {
-        $result = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
+        $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
     } else {
-        $result = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
+        $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
     }
 
     // Check for no rows found, and if so return
-    if (!$result) {
+    if (!$item) {
         return false;
     }
 
     // Security check
-    if (!SecurityUtil::checkPermission('Profile::', $result['prop_label'].'::'.$result['prop_id'], ACCESS_READ)) {
+    if (!SecurityUtil::checkPermission('Profile::', "$item[prop_label]::$item[prop_id]", ACCESS_READ)) {
         return false;
     }
 
     // Extract the validation info array
-    $validationinfo = @unserialize($result['prop_validation']);
+    $validationinfo = @unserialize($item['prop_validation']);
+    unset($item['prop_validation']);
 
-    // Create the item array
-    $item = array('prop_id'             => $result['prop_id'],
-                  'prop_label'          => $result['prop_label'],
-                  'prop_weight'         => $result['prop_weight'],
-                  'prop_attribute_name' => $result['prop_attribute_name'],
-                  'prop_required'       => $validationinfo['required'],
-                  'prop_viewby'         => $validationinfo['viewby'],
-                  'prop_displaytype'    => $validationinfo['displaytype'],
-                  'prop_listoptions'    => $validationinfo['listoptions'],
-                  'prop_note'           => $validationinfo['note'],
-                  'prop_validation'     => $validationinfo['validation']);
+    // Expand the item array
+    foreach ($validationinfo as $infolabel => $infofield) {
+        $item["prop_$infolabel"] = $infofield;
+    }
 
     // Return the item array
     return $item;
@@ -125,7 +123,8 @@ function Profile_userapi_get($args)
 
 /**
  * Get all active Dynamic user data fields
- * @author Mark West - FC
+ * @author Mateo Tibaquira
+ * @author Mark West
  * @param int args['startnum'] starting record number for request
  * @param int args['numitems'] number of records to retrieve
  * @return mixed array of items, or false on failure
@@ -177,19 +176,15 @@ function Profile_userapi_getallactive($args)
 
         $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], 'prop_label', $permFilter);
 
-        foreach ($items as $k => $item)
+        foreach (array_keys($items) as $k)
         {
             // Extract the validation info array
-            $validationinfo = @unserialize($item['prop_validation']);
+            $validationinfo = @unserialize($items[$k]['prop_validation']);
+            unset($items[$k]['prop_validation']);
 
-            $item['prop_required']    = $validationinfo['required'];
-            $item['prop_viewby']      = $validationinfo['viewby'];
-            $item['prop_displaytype'] = $validationinfo['displaytype'];
-            $item['prop_listoptions'] = $validationinfo['listoptions'];
-            $item['prop_note']        = $validationinfo['note'];
-            $item['prop_validation']  = $validationinfo['validation'];
-
-            $items[$k] = $item;
+            foreach ($validationinfo as $infolabel => $infofield) {
+                $items[$k]["prop_$infolabel"] = $infofield;
+            }
         }
     }
 
