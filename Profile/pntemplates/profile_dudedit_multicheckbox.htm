@@ -3,7 +3,7 @@
 <div class="<!--[$class|default:'z-formrow']-->">
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
-        <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
+        <!--[if $required]--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
     </label>
     <div id="prop_<!--[$prop_attribute_name]-->">
         <!--[html_checkboxes name="dynadata[$prop_attribute_name]" labels=true options=$fields selected=$value assign='fields']-->

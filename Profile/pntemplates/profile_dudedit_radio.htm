@@ -1,7 +1,7 @@
 <!--[* $Id: profile_dudedit_radio.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
 
 <div class="<!--[$class|default:'z-formrow']-->">
-    <!--[if $required and $mode eq 'normal']-->
+    <!--[if $required]-->
     <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
         <!--[gt text='Error! Required profile item missing']-->
     </p>
@@ -9,7 +9,7 @@
 
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
-        <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
+        <!--[if $required]--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
     </label>
     <!--[html_radios name="dynadata[$prop_attribute_name]" values=$listoptions output=$listoutput checked=$value labels=false assign='listoptions']-->
     <!--[foreach from=$listoptions item='item']-->

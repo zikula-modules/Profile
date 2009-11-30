@@ -38,7 +38,6 @@
  * @param        string      $class             CSS class to assign to the table row/form row div (optional)
  * @param        string      $proplabel         Property label to display (optional overrides the preformated dud item $item)
  * @param        string      $propattribute     Property attribute to display
- * @param        string      $mode              Display mode: 'normal' = normal editing, 'simple' = simplified for search window
  * @return       string      the results of the module function
  */
 function smarty_function_duditemmodify($params, &$smarty)
@@ -86,12 +85,6 @@ function smarty_function_duditemmodify($params, &$smarty)
     if (!isset($class) || !is_string($class)) {
         $class = '';
     }
-    if (!isset($mode) || empty ($mode)) {
-        $mode = 'normal'; // alternative is 'simple'
-    }
-    if (!in_array($mode, array('normal', 'simple'))) {
-        return __f('Unknown \'%1$s\' value [%2$s] in duditem', array('mode', $mode), $dom);
-    }
 
     if (isset($item['temp_propdata'])) {
         $uservalue = $item['temp_propdata'];
@@ -104,8 +97,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         $output = pnModAPIFunc($item['prop_modname'], 'dud', 'edit',
                                array('item'      => $item,
                                      'uservalue' => $uservalue,
-                                     'class'     => $class,
-                                     'mode'      => $mode));
+                                     'class'     => $class));
         if ($output) {
             return $output;
         }
@@ -120,7 +112,6 @@ function smarty_function_duditemmodify($params, &$smarty)
     $render->assign('proplabeltext', $item['prop_label']);
     $render->assign('required',      $item['prop_required']);
     $render->assign('note',          $item['prop_note']);
-    $render->assign('mode',          $mode);
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
@@ -194,7 +185,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             break;
 
         case 1: // TEXTAREA
-            $type = ($mode == 'normal') ? 'textarea' : 'text';
+            $type = 'textarea';
             break;
 
         case 2: // CHECKBOX

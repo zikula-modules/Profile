@@ -4,9 +4,9 @@
 <div class="<!--[$class|default:'z-formrow']-->">
     <label for="prop_<!--[$prop_attribute_name]-->">
         <!--[gt text=$proplabeltext]--> 
-        <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
+        <!--[if $required]--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
     </label>
-    <select id="prop_<!--[$prop_attribute_name]-->" name="dynadata[<!--[$prop_attribute_name]-->]<!--[if $selectmultiple]-->[]<!--[/if]-->"<!--[$selectmultiple]--><!--[if $required and $mode eq 'normal']--> class="required"<!--[/if]-->>
+    <select id="prop_<!--[$prop_attribute_name]-->" name="dynadata[<!--[$prop_attribute_name]-->]<!--[if $selectmultiple]-->[]<!--[/if]-->"<!--[$selectmultiple]--><!--[if $required]--> class="required"<!--[/if]-->>
         <!--[html_options id=$prop_attribute_name values=$listoptions output=$listoutput selected=$value]-->
     </select>
 
