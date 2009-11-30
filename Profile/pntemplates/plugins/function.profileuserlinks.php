@@ -16,7 +16,6 @@
  * Example
  * <!--[profileuserlinks start='' end='' seperator='|' class='z-menuitem-title']-->
  *
- * @author       Mark West
  * @author       Mateo Tibaquira
  * @param        array       $params      All attributes passed to this function from the template
  * @param        object      &$smarty     Reference to the Smarty object

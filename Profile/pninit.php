@@ -145,6 +145,8 @@ function Profile_upgrade($oldversion)
                 $userprop['prop_dtype'] = 1;
                 $newprops[] = $userprop;
             }
+            unset($userprops);
+            unset($existing);
 
             // store updated properties
             DBUtil::updateObjectArray($newprops, 'user_property', 'prop_id');
@@ -158,6 +160,48 @@ function Profile_upgrade($oldversion)
             $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
             pnModSetVar('Profile', 'dudregshow', array_keys($items));
             unset($items);
+
+            // update the users' data to ids
+            pnModAPILoad('Profile', 'dud', true);
+            // updates the radio (3) and select (4) attribute names and data
+            $loop = array(3, 4);
+            foreach ($loop as $displaytype) {
+                // extract the listoptions of the properties
+                $where       = 'pn_prop_validation LIKE \'%s:11:"displaytype";s:1:"'.$displaytype.'"%\'';
+                $userprops   = DBUtil::selectFieldArray('user_property', 'prop_validation', $where, '', false, 'prop_attribute_name');
+
+                foreach (array_keys($userprops) as $k) {
+                    $userprops[$k] = pnModAPIFunc('Profile', 'dud', 'getoptions', array('field' => $userprops[$k]));
+                    $userprops[$k] = array_flip($userprops[$k]);
+                }
+
+                $where       = implode("', '", array_keys($userprops));
+                $where       = "oba_object_type = 'users' AND oba_attribute_name IN ('$where')";
+                $userdata    = DBUtil::selectObjectArray('objectdata_attributes', $where, 'id', -1, -1, '', null, null, array('id', 'value', 'attribute_name'));
+
+                foreach (array_keys($userdata) as $k)
+                {
+                    $v = $userdata[$k]['value'];
+                    $a = $userdata[$k]['attribute_name'];
+
+                    switch ($displaytype)
+                    {
+                        case 3: // RADIO
+                            $userdata[$k]['value'] = isset($userprops[$a][$v]) ? $userprops[$a][$v] : $v;
+                            break;
+
+                        case 4: // SELECT
+                            $v = @unserialize($v);
+                            $newvalues = array();
+                            foreach ($v as $value) {
+                                $newvalues[] = isset($userprops[$a][$value]) ? $userprops[$a][$value] : $value;
+                            }
+                            $userdata[$k]['value'] = serialize($newvalues);
+                            break;
+                    }
+                }
+                DBUtil::updateObjectArray($userdata, 'objectdata_attributes', 'id');
+            }
 
         case '1.5':
             // future upgrade routines

@@ -12,6 +12,7 @@
 
 /**
  * Register a dynamic user data field
+ *
  * @author Mateo Tibaquira
  * @param  string  $args['modname']         responsible module of the new field
  * @param  string  $args['label']           label for the new account property
@@ -99,6 +100,7 @@ function Profile_dudapi_register($args)
 
 /**
  * Unregister a specific Dynamic user data item
+ *
  * @author Mateo Tibaquira
  * @param  integer  $args['propid']         id of property to unregister
  * @param  string   $args['proplabel']      label of property to unregister
@@ -154,4 +156,151 @@ function Profile_dudapi_unregister($args)
 
     // Let the calling process know that we have finished successfully
     return true;
+}
+
+/**
+ * Update users data
+ *
+ * @author Mateo Tibaquira
+ * @param  string   $args['field']      serialized 'prop_validation' field of the DUD
+ * @param  array    $args['item']       array with the DUD information
+ * @param  string   $args['newfield']   serialized new 'prop_validation' field of the DUD
+ * @param  array    $args['newitem']    array with the new DUD information
+ * @param  string   $args['uservalue']  current user value
+ * @return string   updated user value if there were id changes in the listoptions
+ */
+function Profile_dudapi_updatedata($args)
+{
+    if (!isset($args['uservalue']) || empty($args['uservalue'])) {
+        return '';
+    }
+    $uservalue = $args['uservalue'];
+
+    if ((!isset($args['field']) || empty($args['field']))
+     && (!isset($args['item']) || empty($args['item']))) {
+        return $uservalue;
+    }
+
+    // get both option arrays
+    $oldoptions = Profile_dudapi_getoptions($args);
+    $params = array(
+        'field' => isset($args['newfield']) ? $args['newfield'] : null,
+        'item'  => isset($args['newitem'])  ? $args['newitem']  : null
+    );
+    $newoptions = Profile_dudapi_getoptions($params);
+    unset($params);
+    unset($args);
+
+    // get the old value(s) 
+    $value = $uservalue;
+    if (is_array($uservalue)) {
+        $value = array();
+        foreach ($uservalue as $v) {
+            // paranoic check
+            if (empty($v)) {
+                $value[] = $v;
+                continue;
+            }
+            $value[] = isset($oldoptions[$v]) ? $oldoptions[$v] : $v;
+        }
+    } elseif (!empty($value) && isset($oldoptions[$value])) {
+        $value = !empty($oldoptions[$value]) ? $oldoptions[$value] : $value;
+    }
+
+    // do not touch it if we do not get values
+    if (empty($value)) {
+        return $uservalue;
+    }
+
+    // flip the new options to have the new values as indexes
+    // this required to have different labels in the listoptions
+    $newoptions = array_flip($newoptions);
+
+    $newvalue = '';
+    if ($value) {
+        $newvalue = array();
+        foreach ($value as $v) {
+            // paranoic check
+            if (empty($v)) {
+                $value[] = $v;
+                continue;
+            }
+            $newvalue[] = isset($newoptions[$v]) ? $newoptions[$v] : $v;
+        }
+    } elseif (isset($newoptions[$value])) {
+        $newvalue = !empty($newoptions[$value]) ? $newoptions[$value] : $value;
+    }
+
+    // return the updated item
+    return $newvalue;
+}
+
+/**
+ * Get the options of a DUD field
+ *
+ * @author Mateo Tibaquira
+ * @param  string   $args['field']      serialized 'prop_validation' field of the DUD
+ * @param  array    $args['item']       array with the DUD information
+ * @return array    indexed id => label for the DUD field
+ */
+function Profile_dudapi_getoptions($args)
+{
+    if ((!isset($args['field']) || empty($args['field']))
+     && (!isset($args['item']) || empty($args['item']))) {
+        return array();
+    }
+
+    if (isset($args['field'])) {
+        $args['field'] = @unserialize($args['field']);
+        $args['item'] = array();
+        foreach ($args['field'] as $k => $v) {
+            $args['item']["prop_$k"] = $v;
+        }
+    }
+
+    $item = $args['item'];
+    unset($args);
+
+    $dom = ZLanguage::getModuleDomain('Profile');
+
+    $options = array();
+    switch ($item['prop_displaytype'])
+    {
+        case 3: // RADIO
+            // extract the options
+            $list = array_splice(explode('@@', $item['prop_listoptions']), 1);
+
+            // translate them if needed
+            foreach ($list as $id => $value) {
+                $value = explode('@', $value);
+                $id    = isset($value[1]) ? $value[1] : $id;
+                $options[$id] = !empty($value[0]) ? __($value[0], $dom) : '';
+            }
+            break;
+
+        case 4: // SELECT
+            $type = 'select';
+            $list = explode('@@', $item['prop_listoptions']);
+            $list = array_splice($list, 1);
+
+            // translate them if needed
+            foreach ($list as $id => $value) {
+                $value = explode('@', $value);
+                $id    = isset($value[1]) ? $value[1] : $id;
+                $options[$id] = !empty($value[0]) ? __($value[0], $dom) : '';
+            }
+            break;
+
+        case 7: // MULTICHECKBOX
+            $combos = explode(';', $item['prop_listoptions']);
+            $combos = array_filter($combos);
+
+            foreach ($combos as $combo) {
+                list($id, $value) = explode(',', $combo);
+                $options[$id] = !empty($value) ? __($value, $dom) : '';
+            }
+            break;
+    }
+
+    return $options;
 }

@@ -20,9 +20,6 @@
  * <!--[duditemdisplay propattribute='realname' uid=$uid]-->
  *
  * Example
- * <!--[duditemdisplay propattribute='signature']-->
- *
- * Example
  * <!--[duditemdisplay item=$item]-->
  *
  * @author       Mateo Tibaquira

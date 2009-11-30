@@ -23,14 +23,11 @@
  * <!--[duditemmodify propattribute='realname' uid=$uid]-->
  *
  * Example
- * <!--[duditemmodify propattribute='signature']-->
- *
- * Example
  * <!--[duditemmodify item=$item]-->
  *
  * @author       Mark West
- * @since         21/01/04
- * @see            function.exampleadminlinks.php::smarty_function_exampleadminlinks()
+ * @since        21/01/04
+ * @see          function.exampleadminlinks.php::smarty_function_exampleadminlinks()
  * @param        array       $params            All attributes passed to this function from the template
  * @param        object     &$smarty            Reference to the Smarty object
  * @param        string      $item              The Profile DUD item
