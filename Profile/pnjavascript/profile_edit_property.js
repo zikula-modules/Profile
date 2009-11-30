@@ -65,6 +65,7 @@ function profile_displaytype_onchange()
     $('profile_help_type3').hide();
     $('profile_help_type4').hide();
     $('profile_help_type7').hide();
+    $('profile_warn_ids').hide();
     // needs to show the list_content textarea
     if (state > 0) {
     	$('profile_content_wrapper').show();
@@ -75,9 +76,11 @@ function profile_displaytype_onchange()
     	} else if (state&4) {
     		// radio
     		$('profile_help_type3').show();
+    		$('profile_warn_ids').show();
     	} else if (state&8) {
     		// dropdown
     		$('profile_help_type4').show();
+    		$('profile_warn_ids').show();
     	} else if (state&16) {
     		// multibox
     		$('profile_help_type7').show();
