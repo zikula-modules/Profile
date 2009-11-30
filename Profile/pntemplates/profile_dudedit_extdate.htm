@@ -7,13 +7,19 @@
     </p>
     <!--[/if]-->
 
-    <label for="prop_<!--[$prop_attribute_name]-->">
-        <!--[gt text=$proplabeltext]--> 
+    <label>
+        <!--[gt text=$proplabeltext]-->
         <!--[if $required and $mode eq 'normal']--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
     </label>
-    <input type="text" id="prop_<!--[$prop_attribute_name]-->-year" name="dynadata[<!--[$prop_attribute_name]-->][year]" value="<!--[$value[0]]-->" size="5" maxlength="4" class="profile_l5input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" /> <!--[gt text='year']--> 
-    <input type="text" id="prop_<!--[$prop_attribute_name]-->-month" name="dynadata[<!--[$prop_attribute_name]-->][month]" value="<!--[$value[1]]-->" size="2" maxlength="2" class="profile_l2input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" /> <!--[gt text='month']--> 
-    <input type="text" id="prop_<!--[$prop_attribute_name]-->-day" name="dynadata[<!--[$prop_attribute_name]-->][day]" value="<!--[$value[2]]-->" size="2" maxlength="2" class="profile_l2input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" /> <!--[gt text='day']--> 
+
+    <div>
+        <input type="text" id="prop_<!--[$prop_attribute_name]-->-year" name="dynadata[<!--[$prop_attribute_name]-->][year]" value="<!--[$value[0]]-->" size="5" maxlength="4" class="profile_l5input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" />
+        <label for="prop_<!--[$prop_attribute_name]-->-year"><!--[gt text='year']--></label>
+        <input type="text" id="prop_<!--[$prop_attribute_name]-->-month" name="dynadata[<!--[$prop_attribute_name]-->][month]" value="<!--[$value[1]]-->" size="2" maxlength="2" class="profile_l2input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" />
+        <label for="prop_<!--[$prop_attribute_name]-->-month"><!--[gt text='month']--></label>
+        <input type="text" id="prop_<!--[$prop_attribute_name]-->-day" name="dynadata[<!--[$prop_attribute_name]-->][day]" value="<!--[$value[2]]-->" size="2" maxlength="2" class="profile_l2input<!--[if $required and $mode eq 'normal']--> required<!--[/if]-->" />
+        <label for="prop_<!--[$prop_attribute_name]-->-day"><!--[gt text='day']--></label>
+    </div>
 
     <!--[if $note neq '']-->
     <p class="z-formnote"><!--[gt text='Note']-->: <!--[$note]--></p>
