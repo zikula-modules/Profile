@@ -157,8 +157,9 @@ function Profile_upgrade($oldversion)
             pnModDelVar('Profile', 'displaygraphics');
 
             // set the active fields to display in the registration form
+            pnModAPILoad('Profile', 'user', true);
             $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
-            pnModSetVar('Profile', 'dudregshow', array_keys((array)$items));
+            pnModSetVar('Profile', 'dudregshow', array_keys($items));
             unset($items);
 
             // update the users' data to ids
