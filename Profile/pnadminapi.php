@@ -60,6 +60,7 @@ function Profile_adminapi_create($args)
     }
 
     // produce the validation array
+    $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
     $validationinfo = array('required'    => $args['required'],
                             'viewby'      => $args['viewby'],
                             'displaytype' => $args['displaytype'],
@@ -165,6 +166,7 @@ function Profile_adminapi_update($args)
         }
 
         // Produce the validation array
+        $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
         $validationinfo = array('required'    => $args['required'],
                                 'viewby'      => $args['viewby'],
                                 'displaytype' => $args['displaytype'],

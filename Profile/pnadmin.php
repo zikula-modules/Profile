@@ -319,6 +319,9 @@ function Profile_admin_modify($args)
     if (!SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$dudid", ACCESS_EDIT)) {
         return LogUtil::registerPermissionError();
     }
+    
+    // backward check to remove any 1.4- forbidden char in listoptions
+    $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
 
     // Create output object
     $render = & pnRender::getInstance('Profile', false);

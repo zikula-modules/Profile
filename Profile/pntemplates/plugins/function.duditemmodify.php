@@ -121,8 +121,6 @@ function smarty_function_duditemmodify($params, &$smarty)
     $render->assign('required',      $item['prop_required']);
     $render->assign('note',          $item['prop_note']);
     $render->assign('mode',          $mode);
-    $render->assign('properror',     isset($item['prop_error']) ? $item['prop_error'] : '');
-    $render->assign('tempdata',      isset($item['temp_propdata']) ? $item['temp_propdata'] : '');
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
@@ -147,6 +145,11 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         // only shows a link to the Avatar module if available
         if (pnModAvailable('Avatar')) {
+            // TODO Add a change-link to the admins
+            // only shows the link for the own user
+            if (pnUserGetVar('uid') != $uid) {
+                return '';
+            }
             $render->assign('linktext', __('Change your Avatar'));
             $render->assign('linkurl', pnModURL('Avatar'));
             $output = $render->fetch('profile_dudedit_link.htm');
@@ -200,39 +203,43 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         case 3: // RADIO
             $type = 'radio';
-            $item['prop_listoptions'] = str_replace(Chr(13), '', str_replace(Chr(13), '', $item['prop_listoptions']));
 
             // extract the options
             $list = array_splice(explode('@@', $item['prop_listoptions']), 1);
-            $render->assign('listoptions', $list);
 
             // translate them if needed
-            foreach ($list as $k => $value) {
-                $list[$k] = __($value, $dom);
+            $output = array();
+            foreach ($list as $id => $value) {
+                $value = explode('@', $value);
+                $id    = isset($value[1]) ? $value[1] : $id;
+                $output[$id] = !empty($value[0]) ? __($value[0], $dom) : '';
             }
-            $render->assign('listoutput', $list);
+            $render->assign('listoptions', array_keys($output));
+            $render->assign('listoutput', array_values($output));
             break;
 
         case 4: // SELECT
             $type = 'select';
-            $item['prop_listoptions'] = str_replace(Chr(13), '', $item['prop_listoptions']);
             $list = explode('@@', $item['prop_listoptions']);
 
             // multiple flag is the first field
-            $selectmultiple = $list[0] ? ' multiple="multiple"' : false;
-            if ($selectmultiple && DataUtil::is_serialized($uservalue)) {
+            $selectmultiple = $list[0] ? ' multiple="multiple"' : '';
+            if (DataUtil::is_serialized($uservalue)) {
                 $render->assign('value', unserialize($uservalue));
             }
             $render->assign('selectmultiple', $selectmultiple);
 
             $list = array_splice($list, 1);
-            $render->assign('listoptions', $list);
 
             // translate them if needed
-            foreach ($list as $k => $value) {
-                $list[$k] = __($value, $dom);
+            $output = array();
+            foreach ($list as $id => $value) {
+                $value = explode('@', $value);
+                $id    = isset($value[1]) ? $value[1] : $id;
+                $output[$id] = !empty($value[0]) ? __($value[0], $dom) : '';
             }
-            $render->assign('listoutput', $list);
+            $render->assign('listoptions', array_keys($output));
+            $render->assign('listoutput', array_values($output));
             break;
 
         case 5: // DATE
@@ -252,19 +259,16 @@ function smarty_function_duditemmodify($params, &$smarty)
             $type = 'multicheckbox';
             $render->assign('value', (array)unserialize($uservalue));
 
-            $first_break  = ';';
-            $second_break = ',';
-
-            $combos = explode($first_break, $item['prop_listoptions']);
+            $combos = explode(';', $item['prop_listoptions']);
             $combos = array_filter($combos);
 
-            $array = array();
+            $output = array();
             foreach ($combos as $combo) {
-                list($id, $value) = explode($second_break, $combo);
-                $array[$id] = __($value, $dom);
+                list($id, $value) = explode(',', $combo);
+                $output[$id] = !empty($value) ? __($value, $dom) : '';
             }
 
-            $render->assign('fields', $array);
+            $render->assign('fields', $output);
             break;
 
         default: // TEXT

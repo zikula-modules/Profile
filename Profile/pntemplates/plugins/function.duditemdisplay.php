@@ -63,6 +63,12 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     $dom = ZLanguage::getModuleDomain('Profile');
 
+    // check for a template set
+    if (!isset($tplset)) {
+        $tplset = 'profile_duddisplay';
+    }
+
+    // a default value if the user data is empty
     if (!isset($default)) {
         $default = '';
     }
@@ -108,9 +114,9 @@ function smarty_function_duditemdisplay($params, &$smarty)
     $render->assign('uservalue', $uservalue);
 
     // detects the template to use
-    $template = 'profile_duddisplay_'.$item['prop_id'].'.htm';
+    $template = $tplset.'_'.$item['prop_id'].'.htm';
     if (!$render->template_exists($template)) {
-        $template = 'profile_duddisplay_generic.htm';
+        $template = $tplset.'_generic.htm';
     }
 
     $output = '';
@@ -154,9 +160,73 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $output = isset($output[(int)$uservalue]) && !empty($output[(int)$uservalue]) ? __($output[(int)$uservalue], $dom) : __($default[(int)$uservalue], $dom);
 
 
+    // radio
+    } elseif ($item['prop_displaytype'] == 3) {
+        $list = explode('@@', $item['prop_listoptions']);
+        $list = array_splice($list, 1); // discard the first position
+
+        $options = array();
+        foreach ($list as $id => $value) {
+            $value = explode('@', $value);
+            $id    = isset($value[1]) ? $value[1] : $id;
+            $options[$id] = !empty($value[0]) ? __($value[0], $dom) : $default;
+        }
+        unset($list);
+
+        // process the user value and get the translated label
+        $output = isset($options[$id]) ? $options[$id] : $default;
+
+
+    // select
+    } elseif ($item['prop_displaytype'] == 4) {
+        $list = explode('@@', $item['prop_listoptions']);
+        $list = array_splice($list, 1); // discard the multiple flag
+
+        $options = array();
+        foreach ($list as $id => $value) {
+            $value = explode('@', $value);
+            $id    = isset($value[1]) ? $value[1] : $id;
+            $options[$id] = !empty($value[0]) ? __($value[0], $dom) : $default;
+        }
+        unset($list);
+
+        // process the user values and get the translated label
+        $uservalue = @unserialize($uservalue);
+
+        $output = array();
+        foreach ($uservalue as $id) {
+            if (isset($options[$id])) {
+                $output[] = $options[$id];
+            }
+        }
+
+
     // date and extdate
     } elseif (!empty($uservalue) && ($item['prop_displaytype'] == 5 || $item['prop_displaytype'] == 6)) {
         $output = DateUtil::getDatetime(strtotime($uservalue), 'datelong');
+
+
+    // multicheckbox
+    } elseif ($item['prop_displaytype'] == 7) {
+        $combos = explode(';', $item['prop_listoptions']);
+        $combos = array_filter($combos);
+
+        $options = array();
+        foreach ($combos as $combo) {
+            list($id, $value) = explode(',', $combo);
+            $options[$id] = !empty($value) ? __($value, $dom) : $default;
+        }
+        unset($combos);
+
+        // process the user values and get the translated label
+        $uservalue = @unserialize($uservalue);
+
+        $output = array();
+        foreach ($uservalue as $id) {
+            if (isset($options[$id])) {
+                $output[] = $options[$id];
+            }
+        }
 
 
     // url

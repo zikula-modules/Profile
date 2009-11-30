@@ -2,3 +2,4 @@
   THINGS TO DO
 
   Write a help page explaining the translatio customizations
+  Remove the edit mode parameter
