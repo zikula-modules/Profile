@@ -85,27 +85,19 @@ function Profile_upgrade($oldversion)
                 return '1.2';
             }
 
-            if (!DBUtil::changeTable('user_property')) {
-                return '1.2';
-            }
-
-            // finally drop the user_data table, its contents has been moved to attributes
-            // during the upgrade of the Users module
-            if (!DBUtil::dropTable('user_data')) {
-                return '1.2';
-            }
-
         case '1.3':
             pnModSetVar('Profile', 'dudtextdisplaytags', 0);
 
         case '1.4':
             // remove definitely the user_data table
+            // its contents has been moved to attributes
+            // during the upgrade of the Users module in Zk 1.2
             if (!DBUtil::dropTable('user_data')) {
-                return '1.2';
+                return '1.4';
             }
 
             if (!DBUtil::changeTable('user_property')) {
-                return $oldversion;
+                return '1.4';
             }
 
             // re-update the old DUDs
@@ -203,7 +195,6 @@ function Profile_delete()
  */
 function Profile_defaultdata()
 {
-    $dom = ZLanguage::getModuleDomain('Profile');
     // Make assumption that if were upgrading from 76x to 1.x
     // that user properties already exist and abort inserts.
     if (isset($_SESSION['_PNUpgrader']['_PNUpgradeFrom76x'])) {
