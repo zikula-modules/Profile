@@ -192,42 +192,27 @@ function smarty_function_duditemmodify($params, &$smarty)
         case 3: // RADIO
             $type = 'radio';
 
-            // extract the options
-            $list = array_splice(explode('@@', $item['prop_listoptions']), 1);
+            $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
-            // translate them if needed
-            $output = array();
-            foreach ($list as $id => $value) {
-                $value = explode('@', $value);
-                $id    = isset($value[1]) ? $value[1] : $id;
-                $output[$id] = !empty($value[0]) ? __($value[0], $dom) : '';
-            }
-            $render->assign('listoptions', array_keys($output));
-            $render->assign('listoutput', array_values($output));
+            $render->assign('listoptions', array_keys($options));
+            $render->assign('listoutput', array_values($options));
             break;
 
         case 4: // SELECT
             $type = 'select';
-            $list = explode('@@', $item['prop_listoptions']);
-
-            // multiple flag is the first field
-            $selectmultiple = $list[0] ? ' multiple="multiple"' : '';
             if (DataUtil::is_serialized($uservalue)) {
                 $render->assign('value', unserialize($uservalue));
             }
+
+            // multiple flag is the first field
+            $options = explode('@@', $item['prop_listoptions'], 2);
+            $selectmultiple = $options[0] ? ' multiple="multiple"' : '';
             $render->assign('selectmultiple', $selectmultiple);
 
-            $list = array_splice($list, 1);
+            $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
-            // translate them if needed
-            $output = array();
-            foreach ($list as $id => $value) {
-                $value = explode('@', $value);
-                $id    = isset($value[1]) ? $value[1] : $id;
-                $output[$id] = !empty($value[0]) ? __($value[0], $dom) : '';
-            }
-            $render->assign('listoptions', array_keys($output));
-            $render->assign('listoutput', array_values($output));
+            $render->assign('listoptions', array_keys($options));
+            $render->assign('listoutput', array_values($options));
             break;
 
         case 5: // DATE
@@ -247,16 +232,9 @@ function smarty_function_duditemmodify($params, &$smarty)
             $type = 'multicheckbox';
             $render->assign('value', (array)unserialize($uservalue));
 
-            $combos = explode(';', $item['prop_listoptions']);
-            $combos = array_filter($combos);
+            $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
-            $output = array();
-            foreach ($combos as $combo) {
-                list($id, $value) = explode(',', $combo);
-                $output[$id] = !empty($value) ? __($value, $dom) : '';
-            }
-
-            $render->assign('fields', $output);
+            $render->assign('fields', $options);
             break;
 
         default: // TEXT

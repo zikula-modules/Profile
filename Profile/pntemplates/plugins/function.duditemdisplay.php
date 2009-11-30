@@ -159,33 +159,15 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // radio
     } elseif ($item['prop_displaytype'] == 3) {
-        $list = explode('@@', $item['prop_listoptions']);
-        $list = array_splice($list, 1); // discard the first position
-
-        $options = array();
-        foreach ($list as $id => $value) {
-            $value = explode('@', $value);
-            $id    = isset($value[1]) ? $value[1] : $id;
-            $options[$id] = !empty($value[0]) ? __($value[0], $dom) : $default;
-        }
-        unset($list);
+        $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
         // process the user value and get the translated label
-        $output = isset($options[$id]) ? $options[$id] : $default;
+        $output = isset($options[$uservalue]) ? $options[$uservalue] : $default;
 
 
     // select
     } elseif ($item['prop_displaytype'] == 4) {
-        $list = explode('@@', $item['prop_listoptions']);
-        $list = array_splice($list, 1); // discard the multiple flag
-
-        $options = array();
-        foreach ($list as $id => $value) {
-            $value = explode('@', $value);
-            $id    = isset($value[1]) ? $value[1] : $id;
-            $options[$id] = !empty($value[0]) ? __($value[0], $dom) : $default;
-        }
-        unset($list);
+        $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
         // process the user values and get the translated label
         $uservalue = @unserialize($uservalue);
@@ -205,15 +187,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // multicheckbox
     } elseif ($item['prop_displaytype'] == 7) {
-        $combos = explode(';', $item['prop_listoptions']);
-        $combos = array_filter($combos);
-
-        $options = array();
-        foreach ($combos as $combo) {
-            list($id, $value) = explode(',', $combo);
-            $options[$id] = !empty($value) ? __($value, $dom) : $default;
-        }
-        unset($combos);
+        $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
         // process the user values and get the translated label
         $uservalue = @unserialize($uservalue);
