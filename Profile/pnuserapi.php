@@ -135,12 +135,8 @@ function Profile_userapi_getallactive($args)
     if (!isset($args['startnum'])) {
         $args['startnum'] = -1;
     }
-    if (!isset($args['numitems'])) {
-        $args['numitems'] = -1;
-    }
-
-    if (!isset($args['startnum']) || !isset($args['numitems'])) {
-        return LogUtil::registerArgsError();
+    if (!isset($args['numitems']) || $args['numitems'] <= 0) {
+        $args['numitems'] = 0;
     }
 
     if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
@@ -189,7 +185,11 @@ function Profile_userapi_getallactive($args)
     }
 
     // process the startnum and numitems
-    $items = array_splice($items, $args['startnum']+1, $args['numitems']);
+    if ($args['numitems']) {
+        $items = array_splice($items, $args['startnum']+1, $args['numitems']);
+    } else {
+        $items = array_splice($items, $args['startnum']+1);
+    }
 
     // Put items into result array and filter if needed
     $result = array();
@@ -270,9 +270,14 @@ function Profile_userapi_savedata($args)
         if (isset($fields[$attrname])) {
             // Combining fields, TODO: Extend to other types than only EXTDATE
             if (is_array($fields[$attrname])) {
-                // Must check type, if EXTDATE { implode } else { serialize }
+                // Ols stuff: validates the EXTDATE data
                 if ($dud['prop_displaytype'] == 6) {
+                    $fields[$attrname]['month'] = $fields[$attrname]['month'] < 10 ? '0'.$fields[$attrname]['month'] : $fields[$attrname]['month'];
+                    $fields[$attrname]['day']   = $fields[$attrname]['day'] < 10   ? '0'.$fields[$attrname]['day']   : $fields[$attrname]['day'];
                     $fieldvalue = implode('-', $fields[$attrname]);
+                    if (strlen($fieldvalue) != 10) {
+                        $fieldvalue = '';
+                    }
                 } else {
                     $fieldvalue = serialize(array_values($fields[$attrname]));
                 }
