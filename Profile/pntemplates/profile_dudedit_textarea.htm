@@ -2,16 +2,16 @@
 
 <div class="<!--[$class|default:'z-formrow']-->">
     <!--[if $required]-->
-    <p id="advice-required-prop_<!--[$prop_attribute_name]-->" class="custom-advice z-formnote" style="display:none">
+    <p id="advice-required-prop_<!--[$attributename]-->" class="custom-advice z-formnote" style="display:none">
         <!--[gt text='Error! Required profile item missing']-->
     </p>
     <!--[/if]-->
 
-    <label for="prop_<!--[$prop_attribute_name]-->">
+    <label for="prop_<!--[$attributename]-->">
         <!--[gt text=$proplabeltext]--> 
         <!--[if $required]--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
     </label>
-    <textarea id="prop_<!--[$prop_attribute_name]-->" cols="40" rows="5" name="dynadata[<!--[$prop_attribute_name]-->]"<!--[if $required]--> class="required"<!--[/if]-->><!--[$value]--></textarea><br />
+    <textarea id="prop_<!--[$attributename]-->" cols="40" rows="5" name="dynadata[<!--[$attributename]-->]"<!--[if $required]--> class="required"<!--[/if]-->><!--[$value]--></textarea><br />
 
     <!--[if $note neq '']-->
     <em class="z-sub z-formnote"><!--[gt text='Note']-->: <!--[$note]--></em>

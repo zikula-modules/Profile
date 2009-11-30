@@ -105,7 +105,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     // assign the default values for the control
     $render->assign('class',         $class);
     $render->assign('value',         DataUtil::formatForDisplay($uservalue));
-    $render->assign('prop_attribute_name', DataUtil::formatforDisplay($item['prop_attribute_name']));
+    $render->assign('attributename', DataUtil::formatforDisplay($item['prop_attribute_name']));
     $render->assign('proplabeltext', $item['prop_label']);
     $render->assign('required',      $item['prop_required']);
     $render->assign('note',          $item['prop_note']);

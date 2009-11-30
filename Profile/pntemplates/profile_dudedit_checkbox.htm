@@ -1,11 +1,11 @@
 <!--[* $Id: profile_dudedit_checkbox.htm 370 2009-11-25 10:44:01Z mateo $ *]-->
 
 <div class="<!--[$class|default:'z-formrow']-->">
-    <label for="prop_<!--[$prop_attribute_name]-->">
+    <label for="prop_<!--[$attributename]-->">
         <!--[gt text=$proplabeltext]--> 
         <span class="z-mandatorysym"><!--[gt text='*']--></span>
     </label>
-    <input id="prop_<!--[$prop_attribute_name]-->" type="checkbox" name="dynadata[<!--[$prop_attribute_name]-->]" value="1"<!--[if $value]--> checked="checked"<!--[/if]--> />
+    <input id="prop_<!--[$attributename]-->" type="checkbox" name="dynadata[<!--[$attributename]-->]" value="1"<!--[if $value]--> checked="checked"<!--[/if]--> />
 
     <!--[if $note neq '']-->
     <em class="z-sub z-formnote"><!--[gt text='Note']-->: <!--[$note]--></em>
