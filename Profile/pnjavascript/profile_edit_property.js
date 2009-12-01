@@ -46,42 +46,54 @@ function profile_displaytype_onchange()
         backup_required[1] = true;
         $('profile_required').value = "0";
         $('profile_required').disable();
-        state += 2;
+        state += 1;
     }
     // radio
     if ($('profile_displaytype').value == '3') {
-        state += 4;
+        state += 2;
     }
     // dropdown
     if ($('profile_displaytype').value == '4') {
+        state += 4;
+    }
+    // date
+    if ($('profile_displaytype').value == '5') {
         state += 8;
+    }
+    // extdate
+    if ($('profile_displaytype').value == '6') {
+        state += 16;
     }
     // multibox
     if ($('profile_displaytype').value == '7') {
-        state += 16;
+        state += 32;
     }
 
     $('profile_help_type2').hide();
     $('profile_help_type3').hide();
     $('profile_help_type4').hide();
+    $('profile_help_type5').hide();
     $('profile_help_type7').hide();
     $('profile_warn_ids').hide();
     // needs to show the list_content textarea
     if (state > 0) {
     	$('profile_content_wrapper').show();
     	// check which type help should be shown
-    	if (state&2) {
+    	if (state&1) {
     		// checkbox
     		$('profile_help_type2').show();
-    	} else if (state&4) {
+    	} else if (state&2) {
     		// radio
     		$('profile_help_type3').show();
     		$('profile_warn_ids').show();
-    	} else if (state&8) {
+    	} else if (state&4) {
     		// dropdown
     		$('profile_help_type4').show();
     		$('profile_warn_ids').show();
-    	} else if (state&16) {
+    	} else if (state&8 || state&16) {
+    		// date or extdate
+    		$('profile_help_type5').show();
+    	} else if (state&32) {
     		// multibox
     		$('profile_help_type7').show();
     	}

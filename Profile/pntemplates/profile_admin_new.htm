@@ -49,6 +49,7 @@
                     <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Preceed the output options by <strong>@@</strong>. For example: <strong>@@No@@Yes</strong>, <strong>@@Disabled@@Enabled</strong>. <br />Note the order of both options, and are susceptible to be translated.<br />If you want to use a different label in the edit form, you can use the following format: <strong>EditLabel@@DisplayNo@@DisplayYes</strong>"]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Use the following format for each option: <strong>@@label@id</strong>. For example: <strong>@@radio 1@id1@@radio 2@id2@@radio 3@id3</strong>. The options are susceptible to be translated."]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Use the following format for each option: <strong>@@label@id</strong>. For example: <br />a simple list: <strong>@@option 1@id1@@option 2@id2@@option 3@id3</strong>, <br />and a multiple select: <strong>1@@option 1@id1@@option 2@id2@@option 3@id3</strong>. <br />The options are susceptible to be translated."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="You can define here the date format to use. You can use the core shortcuts: datelong, datebrief, datestring, datestring2, datetimebrief, datetimelong, timebrief, timelong; or a custom format like <strong>%b %d of %Y</strong> using the <a href="http://www.php.net/manual/en/function.strftime.php">available options</a>, and that can be translatable."]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Use the following format for each option: <strong>id,label;</strong>. For example: <strong>id1,label1;id2,label2;id3,label3</strong>. Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (','). The labels are susceptible to be translated."]--></p>
                     <div class="z-formnote z-warningmsg" id="profile_warn_ids">
                         <!--[gt text="It's recommended to use unique and stable ids always. If an id is not defined, Profile will use the option position starting from 0."]-->
@@ -56,7 +57,7 @@
                 </div>
                 <div class="z-formrow">
                     <label for="profile_note"><!--[gt text='Note']--></label>
-                    <textarea id="profile_note" cols="50" rows="5" name="note"></textarea>
+                    <textarea id="profile_note" cols="50" rows="3" name="note"></textarea>
                 </div>
                 <div class="z-formrow">
                     <label for="profile_validation"><!--[gt text='Validation']--></label>

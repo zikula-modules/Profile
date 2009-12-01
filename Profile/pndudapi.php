@@ -291,6 +291,22 @@ function Profile_dudapi_getoptions($args)
             }
             break;
 
+        case 5: // DATE
+        case 6: // EXTDATE
+            $options = $item['prop_listoptions'];
+
+            // validate the option against core and %strftime options
+            $coreformats = array('datelong', 'datebrief', 'datestring', 'datestring2', 'datetimebrief', 'datetimelong', 'timebrief', 'timelong');
+            if (empty($options) || !in_array($options, $coreformats)) {
+                // check if it's a custom format and translate it
+                if (!empty($options) && strpos($options, '%') !== false) {
+                    $options = __($options, $dom);
+                } else {
+                    $options = '%B %e, %Y';
+                }
+            }
+            break;
+
         case 7: // MULTICHECKBOX
             $combos = explode(';', $item['prop_listoptions']);
             $combos = array_filter($combos);

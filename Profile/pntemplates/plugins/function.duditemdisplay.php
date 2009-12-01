@@ -128,7 +128,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
             $uservalue = 'blank.gif';
         }
 
-        // TODO build the avatar IMG
         $output = "<img alt=\"\" src=\"{$baseurl}{$avatarpath}/{$uservalue}\" />";
 
 
@@ -179,7 +178,9 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // date and extdate
     } elseif (!empty($uservalue) && ($item['prop_displaytype'] == 5 || $item['prop_displaytype'] == 6)) {
-        $output = DateUtil::getDatetime(strtotime($uservalue), 'datelong');
+        $format = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+
+        $output = DateUtil::getDatetime(strtotime($uservalue), $format);
 
 
     // multicheckbox
