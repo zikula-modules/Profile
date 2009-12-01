@@ -105,10 +105,10 @@ function smarty_function_duditemmodify($params, &$smarty)
     // assign the default values for the control
     $render->assign('class',         $class);
     $render->assign('value',         DataUtil::formatForDisplay($uservalue));
-    $render->assign('attributename', DataUtil::formatforDisplay($item['prop_attribute_name']));
+    $render->assign('attributename', $item['prop_attribute_name']);
     $render->assign('proplabeltext', $item['prop_label']);
-    $render->assign('required',      $item['prop_required']);
     $render->assign('note',          $item['prop_note']);
+    $render->assign('required',      (bool)$item['prop_required']);
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
@@ -187,6 +187,11 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         case 2: // CHECKBOX
             $type = 'checkbox';
+
+            $editlabel = array_splice(explode('@@', $item['prop_listoptions']), 0, 1);
+            if (!empty($editlabel[0])) {
+                $render->assign('proplabeltext', __($editlabel[0], $dom));
+            }
             break;
 
         case 3: // RADIO

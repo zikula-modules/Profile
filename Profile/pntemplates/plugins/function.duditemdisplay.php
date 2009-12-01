@@ -147,7 +147,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // checkbox
     } elseif ($item['prop_displaytype'] == 2) {
         $default = array('No', 'Yes');
-        $output  = explode('@@', $item['prop_listoptions']);
+        $output  = array_splice(explode('@@', $item['prop_listoptions']), 1);
         if (!is_array($output) || count($output) < 2) {
             $output = $default;
         }
