@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Zikula component\n"
+"Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-04 10:00-0500\n"
+"POT-Creation-Date: 2009-12-01 10:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,194 +16,282 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: pnform.php:25 pnform.php:74 pnform.php:122
-msgid "You can't access to the form functions directly."
-msgstr ""
-
-#: pnadmin.php:51 pnadmin.php:200 pnadmin.php:506
-msgid "String"
-msgstr ""
-
-#: pnadmin.php:52 pnadmin.php:201 pnadmin.php:515
-msgid "Text"
-msgstr ""
-
-#: pnadmin.php:53 pnadmin.php:202 pnadmin.php:520
-msgid "Float"
-msgstr ""
-
-#: pnadmin.php:54 pnadmin.php:203 pnadmin.php:525
-msgid "Integer"
-msgstr ""
-
-#: pnadmin.php:56 pnadmin.php:191
-msgid "Text box"
-msgstr ""
-
-#: pnadmin.php:57 pnadmin.php:192
-msgid "Text area"
-msgstr ""
-
-#: pnadmin.php:58 pnadmin.php:193
-msgid "Checkbox"
-msgstr ""
-
-#: pnadmin.php:59 pnadmin.php:194
-msgid "Radio button"
-msgstr ""
-
-#: pnadmin.php:60 pnadmin.php:195
-msgid "Dropdown list"
-msgstr ""
-
-#: pnadmin.php:61 pnadmin.php:196
-msgid "Calendar"
-msgstr ""
-
-#: pnadmin.php:62 pnadmin.php:197
-msgid "Date (extended)"
-msgstr ""
-
-#: pnadmin.php:63 pnadmin.php:198
-msgid "Combo box (text)"
-msgstr ""
-
-#: pnadmin.php:65 pnadmin.php:205
-#: pntemplates/profile_admin_modifyconfig.htm:64
-#: pntemplates/profile_admin_modifyconfig.htm:69
-msgid "No"
-msgstr ""
-
-#: pnadmin.php:66 pnadmin.php:206
-#: pntemplates/profile_admin_modifyconfig.htm:62
-#: pntemplates/profile_admin_modifyconfig.htm:67
-msgid "Yes"
-msgstr ""
-
-#: pnadmin.php:68 pnadmin.php:208
-msgid "Everyone"
-msgstr ""
-
-#: pnadmin.php:69 pnadmin.php:209
-msgid "Registered users only"
-msgstr ""
-
-#: pnadmin.php:70 pnadmin.php:210
-msgid "Admins only"
-msgstr ""
-
-#: pnadmin.php:112
-msgid "Error! The property must have an label, such as: _MYINT"
-msgstr ""
-
-#: pnadmin.php:116
-msgid "Error! The property must have an internal name, such as: myint"
-msgstr ""
-
-#: pnadmin.php:120
-msgid "Error! This property label already exists"
-msgstr ""
-
-#: pnadmin.php:124
-msgid "Error! This internal name already exists"
-msgstr ""
-
-#: pnadmin.php:144
-msgid "Done! Account panel property created."
-msgstr ""
-
-#: pnadmin.php:177 pnadmin.php:299 pnadmin.php:340 pnadmin.php:392
-#: pnadminapi.php:97 pnadminapi.php:155 pnadminapi.php:317
-msgid "No such account panel property found."
-msgstr ""
-
-#: pnadmin.php:276 pnadmin.php:318 pnadmin.php:359
-msgid "Done! Account panel property updated."
-msgstr ""
-
-#: pnadmin.php:425
-msgid "Done! Account panel property deleted."
-msgstr ""
-
-#: pnadmin.php:471 pntemplates/profile_admin_modify.htm:24
-#: pntemplates/profile_admin_new.htm:27
+#: pnadmin.php:73 pnadmin.php:103 pnadmin.php:107 pnadmin.php:112
+#: pntemplates/profile_admin_new.htm:29
+#: pntemplates/profile_admin_modify.htm:29
 msgid "Required"
 msgstr ""
 
-#: pnadmin.php:481 pntemplates/profile_admin_view.htm:59
+#: pnadmin.php:83 pntemplates/profile_admin_view.htm:57
 msgid "Deactivate"
 msgstr ""
 
-#: pnadmin.php:490 pntemplates/profile_admin_view.htm:60
+#: pnadmin.php:92 pntemplates/profile_admin_view.htm:58
 msgid "Activate"
 msgstr ""
 
-#: pnadmin.php:496
-msgid "Mandatory"
+#: pnadmin.php:99
+msgid "Third party (non-editable)"
 msgstr ""
 
-#: pnadmin.php:497 pnadmin.php:502 pnadmin.php:516 pnadmin.php:521
-#: pnadmin.php:526
-msgid "N/A"
+#: pnadmin.php:103 pnadmin.php:112
+msgid "Third party"
 msgstr ""
 
-#: pnadmin.php:501
-msgid "Core"
+#: pnadmin.php:107
+msgid "Normal"
 msgstr ""
 
-#: pnadmin.php:501
-msgid "Core, Required"
-msgstr ""
-
-#: pnadmin.php:506
-msgid "String, Required"
-msgstr ""
-
-#: pnadmin.php:515
-msgid "Text, Required"
-msgstr ""
-
-#: pnadmin.php:520
-msgid "Float, Required"
-msgstr ""
-
-#: pnadmin.php:525
-msgid "Integer, Required"
-msgstr ""
-
-#: pnadmin.php:540 pntemplates/profile_user_members_recent.htm:57
+#: pnadmin.php:123 pntemplates/profile_user_members_recent.htm:57
 #: pntemplates/profile_user_members_view.htm:87
 msgid "Edit"
 msgstr ""
 
-#: pnadmin.php:546
+#: pnadmin.php:129
 msgid "Up"
 msgstr ""
 
-#: pnadmin.php:553
+#: pnadmin.php:136
 msgid "Down"
 msgstr ""
 
-#: pnadmin.php:560 pntemplates/profile_user_members_recent.htm:59
+#: pnadmin.php:143 pntemplates/profile_user_members_recent.htm:59
 #: pntemplates/profile_admin_delete.htm:20
 #: pntemplates/profile_user_members_view.htm:89
 msgid "Delete"
 msgstr ""
 
-#: pnadmin.php:661
-msgid "Done! Module configuration updated."
+#: pnadmin.php:189 pnadmin.php:332
+msgid "Text box"
 msgstr ""
 
-#: pnadmin.php:684 pnadmin.php:717
+#: pnadmin.php:190 pnadmin.php:333
+msgid "Text area"
+msgstr ""
+
+#: pnadmin.php:191 pnadmin.php:334
+msgid "Checkbox"
+msgstr ""
+
+#: pnadmin.php:192 pnadmin.php:335
+msgid "Radio button"
+msgstr ""
+
+#: pnadmin.php:193 pnadmin.php:336
+msgid "Dropdown list"
+msgstr ""
+
+#: pnadmin.php:194 pnadmin.php:337
+msgid "Calendar"
+msgstr ""
+
+#: pnadmin.php:195 pnadmin.php:338
+msgid "Date (extended)"
+msgstr ""
+
+#: pnadmin.php:196 pnadmin.php:339
+msgid "Multi checkbox"
+msgstr ""
+
+#: pnadmin.php:198 pnadmin.php:341
+#: pntemplates/profile_admin_modifyconfig.htm:34
+#: pntemplates/profile_admin_modifyconfig.htm:39
+msgid "No"
+msgstr ""
+
+#: pnadmin.php:199 pnadmin.php:342
+#: pntemplates/profile_admin_modifyconfig.htm:32
+#: pntemplates/profile_admin_modifyconfig.htm:37
+msgid "Yes"
+msgstr ""
+
+#: pnadmin.php:201 pnadmin.php:344
+msgid "Everyone"
+msgstr ""
+
+#: pnadmin.php:202 pnadmin.php:345
+msgid "Registered users only"
+msgstr ""
+
+#: pnadmin.php:203 pnadmin.php:346
+msgid "Admins only"
+msgstr ""
+
+#: pnadmin.php:246
+msgid "Error! The property must have an label, such as: _MYDUDLABEL."
+msgstr ""
+
+#: pnadmin.php:250
+msgid "Error! The property must have an internal name, such as: mydudfield."
+msgstr ""
+
+#: pnadmin.php:254
+msgid "Error! This property label already exists."
+msgstr ""
+
+#: pnadmin.php:258
+msgid "Error! This internal name already exists."
+msgstr ""
+
+#: pnadmin.php:264
+msgid ""
+"Error! The property label was changed to avoid special characters or blanks."
+msgstr ""
+
+#: pnadmin.php:282
+msgid "Done! Account panel property created."
+msgstr ""
+
+#: pnadmin.php:315 pnadmin.php:439 pnadmin.php:495 pnadmin.php:530
+#: pnadminapi.php:115 pnadminapi.php:221 pnadminapi.php:311
+msgid "No such account panel property found."
+msgstr ""
+
+#: pnadmin.php:405 pnadmin.php:508 pnadmin.php:547
+msgid "Done! Account panel property updated."
+msgstr ""
+
+#: pnadmin.php:472
+msgid "Done! Account panel property deleted."
+msgstr ""
+
+#: pnadmin.php:539
+msgid "Forbidden to decrease the weight of this account property."
+msgstr ""
+
+#: pnadmin.php:570 pnadmin.php:600
 msgid "Done! Item updated."
 msgstr ""
 
-#: pnblocks/membersonline.php:37
-msgid "Members Online"
+#: pnadmin.php:690
+msgid "Done! Module configuration updated."
 msgstr ""
 
-#: pnblocks/membersonline.php:38
-msgid "Show Members Online"
+#: pnajax.php:25 pnajax.php:76
+msgid "No authorization to access this module."
+msgstr ""
+
+#: pnajax.php:29
+msgid ""
+"Invalid authorisation key ('authkey'). This is probably either because you "
+"pressed the 'Back' button to return to a page which does not allow that, or "
+"else because the page's authorisation key expired due to prolonged "
+"inactivity. Please refresh the page and try again."
+msgstr ""
+
+#: pnajax.php:36 pndudapi.php:56
+#, php-format
+msgid "Invalid %s passed."
+msgstr ""
+
+#: pnajax.php:57 pnajax.php:95 pnadminapi.php:189
+msgid "Error! Update attempt failed."
+msgstr ""
+
+#: pnversion.php:17
+msgid "Profile Module"
+msgstr ""
+
+#: pnversion.php:18
+msgid ""
+"Provides a personal account control panel for each registered user, an "
+"interface to administer the information items displayed in it, and a members "
+"list functionality. Works in close unison with the Users module."
+msgstr ""
+
+#. ! module name that appears in URL
+#: pnversion.php:20
+msgid "profile"
+msgstr ""
+
+#: pndudapi.php:50
+#, php-format
+msgid "The specified module (%s) does not exists."
+msgstr ""
+
+#: pndudapi.php:67 pnadminapi.php:46 pnadminapi.php:135
+#, php-format
+msgid "An account panel property already has the label '%s'."
+msgstr ""
+
+#: pndudapi.php:71 pnadminapi.php:50
+#, php-format
+msgid "An account panel property already has the attribute name '%s'."
+msgstr ""
+
+#: pndudapi.php:91 pnadminapi.php:82
+msgid "Error! Creation attempt failed."
+msgstr ""
+
+#: pndudapi.php:145 pndudapi.php:151 pnadminapi.php:243 pnadminapi.php:249
+msgid "Error! Deletion attempt failed."
+msgstr ""
+
+#: pntemplates/plugins/function.duditemmodify.php:141
+msgid "Change your Avatar"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:68
+#: pntemplates/plugins/function.profileuserlinks.php:105
+#: pntemplates/plugins/function.profileuserlinks.php:140
+msgid "User Account Panel"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:71 pnaccountapi.php:42
+#: pntemplates/profile_admin_modifyconfig.htm:14
+#: pntemplates/profile_user_members_view.htm:2
+msgid "Members List"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:74
+#: pntemplates/profile_user_members_recent.htm:2
+#, php-format
+msgid "Last %s registered users"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:77
+#: pntemplates/profile_user_members_online.htm:2
+msgid "Current members online"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:109
+#: pntemplates/profile_user_modify.htm:2
+msgid "Edit Personal Info"
+msgstr ""
+
+#. ! account panel link
+#: pntemplates/plugins/function.profileuserlinks.php:113 pnaccountapi.php:36
+msgid "Personal Info"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:120
+msgid "Send PM"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:142
+#, php-format
+msgid "Show contacts of %s"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:144
+msgid "Edit contact"
+msgstr ""
+
+#: pntemplates/plugins/function.profileuserlinks.php:146
+msgid "Add as contact"
+msgstr ""
+
+#: pntemplates/plugins/function.duditemdisplay.php:206
+#, php-format
+msgid "%s's website URL"
+msgstr ""
+
+#: pnblocks/lastseen.php:35
+msgid "Recently seen users"
+msgstr ""
+
+#: pnblocks/lastseen.php:36
+msgid "Show recently seen users"
 msgstr ""
 
 #: pnblocks/lastxusers.php:37
@@ -222,414 +310,159 @@ msgstr ""
 msgid "Show Featured User"
 msgstr ""
 
-#: pnblocks/lastseen.php:35
-msgid "Recently seen users"
+#: pnblocks/membersonline.php:37
+msgid "Members Online"
 msgstr ""
 
-#: pnblocks/lastseen.php:36
-msgid "Show recently seen users"
+#: pnblocks/membersonline.php:38
+msgid "Show Members Online"
 msgstr ""
 
-#: pnuser.php:57 pnuser.php:65 pnuser.php:102
-msgid "Unidentified user."
+#: pnuser.php:54 pnuser.php:61
+msgid "User not found."
 msgstr ""
 
-#: pnuser.php:128
+#: pnuser.php:110
+#, php-format
+msgid "Profile page (%s) not found."
+msgstr ""
+
+#: pnuser.php:136
 msgid "Error! Could not load the account panel properties"
 msgstr ""
 
-#: pnuser.php:181
+#: pnuser.php:185
 #, php-format
 msgid "Error! Required profile item [%s] missing"
 msgstr ""
 
-#: pnuser.php:202
+#: pnuser.php:204
 msgid "Done! Personal information saved."
 msgstr ""
 
-#: pnversion.php:17
-msgid "Profile Module"
+#: pnform.php:25 pnform.php:74 pnform.php:122
+msgid "You can't access to the form functions directly."
 msgstr ""
 
-#: pnversion.php:18
-msgid ""
-"Provides a personal account control panel for each registered user, an "
-"interface to administer the information items (controls) displayed in it, "
-"and a members list functionality. Works in close unison with the Users "
-"module."
+#: pnadminapi.php:226
+msgid "Forbidden to delete this account property."
 msgstr ""
 
-#. ! module name that appears in URL
-#: pnversion.php:20
-msgid "profile"
-msgstr ""
-
-#: pnajax.php:25 pnajax.php:72
-msgid "No authorization to access this module."
-msgstr ""
-
-#: pnajax.php:29 pnajax.php:76
-msgid ""
-"Invalid authorisation key ('authkey'). This is probably either because you "
-"pressed the 'Back' button to return to a page which does not allow that, or "
-"else because the page's authorisation key expired due to prolonged "
-"inactivity. Please refresh the page and try again."
-msgstr ""
-
-#: pnajax.php:53 pnajax.php:91 pnadminapi.php:202
-msgid "Error! Update attempt failed."
-msgstr ""
-
-#: pnadminapi.php:64
-msgid "Error! Creation attempt failed."
-msgstr ""
-
-#: pnadminapi.php:114 pnadminapi.php:120
-msgid "Error! Deletion attempt failed."
-msgstr ""
-
-#: pnadminapi.php:239
+#: pnadminapi.php:286
 msgid "Error! Activation failed"
 msgstr ""
 
-#: pnadminapi.php:274 pnadminapi.php:291
+#: pnadminapi.php:316
+msgid "Forbidden to deactivate this account property."
+msgstr ""
+
+#: pnadminapi.php:327 pnadminapi.php:344
 msgid "Error! Deactivation failed"
 msgstr ""
 
-#: pnadminapi.php:351
+#: pnadminapi.php:364
 msgid "Account Panel Properties List"
 msgstr ""
 
-#: pnadminapi.php:354
+#: pnadminapi.php:368
 msgid "Create Account Panel Property"
 msgstr ""
 
-#: pnadminapi.php:357
+#: pnadminapi.php:372
 msgid "Account Panel Manager Settings"
 msgstr ""
 
-#. ! account panel link
-#: pnaccountapi.php:37 pntemplates/plugins/function.profileuserlinks.php:110
-#: pntemplates/profile_user_view.htm:2
-msgid "Personal Info"
-msgstr ""
-
-#: pnaccountapi.php:43 pntemplates/plugins/function.profileuserlinks.php:67
-#: pntemplates/profile_admin_modifyconfig.htm:44
-#: pntemplates/profile_user_members_view.htm:2
-msgid "Members List"
-msgstr ""
-
-#: pnmemberslistapi.php:205 pnmemberslistapi.php:299 pnmemberslistapi.php:343
-#: pnmemberslistapi.php:394 pnmemberslistapi.php:445 pnmemberslistapi.php:498
-#: pnmemberslistapi.php:565
-msgid "Error! Could not load data."
-msgstr ""
-
-#: pntemplates/plugins/function.dudoptionalitemmodify.php:82
-#, php-format
-msgid "Unknown '%1$s' value [%2$s] in duditem"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:64
-#: pntemplates/plugins/function.profileuserlinks.php:102
-msgid "User Account Panel"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:70
-#: pntemplates/profile_user_members_recent.htm:2
-#, php-format
-msgid "Last %s registered users"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:73
-#: pntemplates/profile_user_members_online.htm:2
-msgid "Current members online"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:106
-#: pntemplates/profile_user_modify.htm:2
-msgid "Edit Personal Info"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:117
-msgid "Send PM"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:131
-#, php-format
-msgid "Show contacts of %s"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:133
-msgid "Edit contact"
-msgstr ""
-
-#: pntemplates/plugins/function.profileuserlinks.php:135
-msgid "Add as contact"
-msgstr ""
-
-#: pninit.php:105
+#: pninit.php:84
 msgid ""
 "Users module has to be upgraded to v1.10 before you can upgrade the Profile "
 "module!"
 msgstr ""
 
-#: pninit.php:216
+#: pninit.php:251
 msgid "_UREALNAME"
 msgstr ""
 
-#: pninit.php:227
+#: pninit.php:261
 msgid "_UFAKEMAIL"
 msgstr ""
 
-#: pninit.php:238
+#: pninit.php:271
 msgid "_YOURHOMEPAGE"
 msgstr ""
 
-#: pninit.php:249
+#: pninit.php:281
 msgid "_TIMEZONEOFFSET"
 msgstr ""
 
-#: pninit.php:260
+#: pninit.php:291
 msgid "_YOURAVATAR"
 msgstr ""
 
-#: pninit.php:271
+#: pninit.php:301
 msgid "_YICQ"
 msgstr ""
 
-#: pninit.php:282
+#: pninit.php:311
 msgid "_YAIM"
 msgstr ""
 
-#: pninit.php:293
+#: pninit.php:321
 msgid "_YYIM"
 msgstr ""
 
-#: pninit.php:304
+#: pninit.php:331
 msgid "_YMSNM"
 msgstr ""
 
-#: pninit.php:315
+#: pninit.php:341
 msgid "_YLOCATION"
 msgstr ""
 
-#: pninit.php:326
+#: pninit.php:351
 msgid "_YOCCUPATION"
 msgstr ""
 
-#: pninit.php:337
+#: pninit.php:361
 msgid "_SIGNATURE"
 msgstr ""
 
-#: pninit.php:348
+#: pninit.php:371
 msgid "_EXTRAINFO"
 msgstr ""
 
-#: pninit.php:359 pntemplates/profile_block_featureduser.htm:15
+#: pninit.php:381
 msgid "_YINTERESTS"
 msgstr ""
 
-#: pntemplates/profile_admin_menu.htm:5
-msgid "Account Panel Manager"
+#: pnmemberslistapi.php:205 pnmemberslistapi.php:377 pnmemberslistapi.php:422
+#: pnmemberslistapi.php:474 pnmemberslistapi.php:525 pnmemberslistapi.php:579
+#: pnmemberslistapi.php:647
+msgid "Error! Could not load data."
 msgstr ""
 
-#: pntemplates/profile_admin_modify.htm:3
-msgid "Modify Property"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:17
-msgid "Existing Property"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:19
-#: pntemplates/profile_admin_new.htm:17
-msgid "Property label"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:21
-#: pntemplates/profile_admin_new.htm:19
-msgid ""
-"Reminder: After you create a new property label above (such as _MYINT), you "
-"must add the msgid to your 'module_profile.pot' (you need two lines msgid "
-"'_MYINT' then on line after that msgstr '', generate the PO file and "
-"translate it to provide a display string for the new property label."
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:30
-#: pntemplates/profile_admin_new.htm:33
-msgid "Viewable by"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:37
-#: pntemplates/profile_admin_view.htm:21 pntemplates/profile_admin_new.htm:39
-msgid "Data type"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:46
-#: pntemplates/profile_admin_view.htm:22 pntemplates/profile_admin_new.htm:45
-msgid "Length"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:48
-#: pntemplates/profile_admin_new.htm:47
-msgid ""
-"Reminder: The 'Length' setting above is for strings only. Leave empty for "
-"other types. Acceptable value: 1-255."
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:51
-#: pntemplates/profile_admin_new.htm:50
-msgid "Display type"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:57
-#: pntemplates/profile_admin_new.htm:56
-msgid "List content"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:60
-#: pntemplates/profile_admin_new.htm:59
-msgid ""
-"Reminder: Precede each option by @@. For combo boxes: id1,label1;id2,label2;"
-"id3,label3;... Separate each individual property with a semicolon (';'). "
-"Separate the ID and label of each property with a comma (',')."
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:62
-#: pntemplates/profile_user_duddate.htm:9
-#: pntemplates/profile_user_duddate.htm:24
-#: pntemplates/profile_user_dudradio.htm:8
-#: pntemplates/profile_user_dudradio.htm:24
-#: pntemplates/profile_user_dudtextarea.htm:14
-#: pntemplates/profile_user_dudtextarea.htm:33
-#: pntemplates/profile_user_dudcombotext.htm:14
-#: pntemplates/profile_user_dudcombotext.htm:27
-#: pntemplates/profile_user_dudselect.htm:9
-#: pntemplates/profile_user_dudselect.htm:26
-#: pntemplates/profile_user_dudcheckbox.htm:6
-#: pntemplates/profile_user_dudcheckbox.htm:12
-#: pntemplates/profile_user_dudtext.htm:7
-#: pntemplates/profile_user_dudtext.htm:21
-#: pntemplates/profile_user_dudextdate.htm:9
-#: pntemplates/profile_user_dudextdate.htm:25
-#: pntemplates/profile_admin_new.htm:61
-msgid "Note"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:66
-#: pntemplates/profile_admin_new.htm:65
-msgid "Validation"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:74
-msgid "Update Configuration"
-msgstr ""
-
-#: pntemplates/profile_admin_modify.htm:75
-#: pntemplates/profile_admin_modifyconfig.htm:79
-#: pntemplates/profile_user_modify.htm:20 pntemplates/profile_admin_new.htm:74
-#: pntemplates/profile_admin_delete.htm:21
-msgid "Cancel"
-msgstr ""
-
-#: pntemplates/profile_user_duddate.htm:6
-#: pntemplates/profile_user_duddate.htm:20
-#: pntemplates/profile_user_dudradio.htm:5
-#: pntemplates/profile_user_dudradio.htm:20
-#: pntemplates/profile_user_dudtextarea.htm:5
-#: pntemplates/profile_user_dudtextarea.htm:23
-#: pntemplates/profile_user_dudcombotext.htm:5
-#: pntemplates/profile_user_dudcombotext.htm:19
-#: pntemplates/profile_user_dudselect.htm:6
-#: pntemplates/profile_user_dudselect.htm:22
-#: pntemplates/profile_user_dudcheckbox.htm:5
-#: pntemplates/profile_user_dudcheckbox.htm:11
-#: pntemplates/profile_user_dudtext.htm:5
-#: pntemplates/profile_user_dudtext.htm:18
-#: pntemplates/profile_user_dudextdate.htm:5
-#: pntemplates/profile_user_dudextdate.htm:20
+#: pntemplates/profile_dudedit_select.htm:7
+#: pntemplates/profile_dudedit_radio.htm:12
+#: pntemplates/profile_dudedit_text.htm:12
+#: pntemplates/profile_dudedit_multicheckbox.htm:6
+#: pntemplates/profile_dudedit_extdate.htm:12
+#: pntemplates/profile_dudedit_checkbox.htm:6
+#: pntemplates/profile_dudedit_date.htm:12
+#: pntemplates/profile_dudedit_textarea.htm:12
 msgid "*"
 msgstr ""
 
-#: pntemplates/profile_user_duddate.htm:11
-#: pntemplates/profile_user_duddate.htm:26
-#: pntemplates/profile_user_dudradio.htm:11
-#: pntemplates/profile_user_dudradio.htm:27
-#: pntemplates/profile_user_dudtextarea.htm:8
-#: pntemplates/profile_user_dudtextarea.htm:27
-#: pntemplates/profile_user_dudtext.htm:9
-#: pntemplates/profile_user_dudtext.htm:23
-#: pntemplates/profile_user_dudextdate.htm:11
-#: pntemplates/profile_user_dudextdate.htm:27
-msgid "Error! Required profile item missing"
-msgstr ""
-
-#: pntemplates/profile_block_lastxusers_modify.htm:4
-msgid "Amount of recently registered users to display"
-msgstr ""
-
-#: pntemplates/profile_block_featureduser.htm:17
-#, php-format
-msgid "Registered on %s"
-msgstr ""
-
-#: pntemplates/profile_user_main.htm:2
-msgid "Account Panel"
-msgstr ""
-
-#: pntemplates/profile_block_lastseen_modify.htm:5
-msgid "Saving of last login date is disabled so this block cannot be utilised."
-msgstr ""
-
-#: pntemplates/profile_block_lastseen_modify.htm:10
-msgid "Amount of recently seen users to display"
-msgstr ""
-
-#: pntemplates/profile_admin_view.htm:3
-msgid "View Properties"
-msgstr ""
-
-#: pntemplates/profile_admin_view.htm:16
-msgid ""
-"Tip: You can arrange the order of the individual properties, using drag and "
-"drop. The display order will be saved when you drop the property at the "
-"desired place."
-msgstr ""
-
-#: pntemplates/profile_admin_view.htm:19
-msgid "Property Label"
-msgstr ""
-
-#: pntemplates/profile_admin_view.htm:20 pntemplates/profile_admin_new.htm:22
-msgid "Internal name"
-msgstr ""
-
-#: pntemplates/profile_admin_view.htm:23
-msgid "Status"
-msgstr ""
-
-#: pntemplates/profile_admin_view.htm:24
-msgid "Actions"
-msgstr ""
-
-#: pntemplates/profile_block_featureduser_modify.htm:4
-#: pntemplates/profile_user_members_online.htm:8
-#: pntemplates/profile_user_members_recent.htm:10
-#: pntemplates/profile_user_view.htm:23
-#: pntemplates/profile_user_members_view.htm:20
-#: pntemplates/profile_user_members_view.htm:42
-msgid "User Name"
-msgstr ""
-
-#: pntemplates/profile_user_dudtextarea.htm:17
-#: pntemplates/profile_user_dudtextarea.htm:36
-msgid "Permitted HTML tags:"
-msgstr ""
-
-#: pntemplates/profile_block_membersonline_modify.htm:4
-msgid "Maximum characters displayed"
+#: pntemplates/profile_dudedit_select.htm:20
+#: pntemplates/profile_dudedit_radio.htm:20
+#: pntemplates/profile_admin_new.htm:58
+#: pntemplates/profile_dudedit_text.htm:17
+#: pntemplates/profile_dudedit_multicheckbox.htm:16
+#: pntemplates/profile_dudedit_extdate.htm:24
+#: pntemplates/profile_dudedit_link.htm:7
+#: pntemplates/profile_dudedit_checkbox.htm:11
+#: pntemplates/profile_admin_modify.htm:60
+#: pntemplates/profile_dudedit_date.htm:18
+#: pntemplates/profile_dudedit_textarea.htm:17
+msgid "Note"
 msgstr ""
 
 #: pntemplates/profile_admin_modifyconfig.htm:6
@@ -637,54 +470,213 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: pntemplates/profile_admin_modifyconfig.htm:14
-msgid "Display settings"
-msgstr ""
-
 #: pntemplates/profile_admin_modifyconfig.htm:16
-msgid "Display graphics in user's account panel"
-msgstr ""
-
-#: pntemplates/profile_admin_modifyconfig.htm:24
-msgid "Links per page"
-msgstr ""
-
-#: pntemplates/profile_admin_modifyconfig.htm:28
-msgid "Links per row"
-msgstr ""
-
-#: pntemplates/profile_admin_modifyconfig.htm:33
-msgid "Dud fields global settings"
-msgstr ""
-
-#: pntemplates/profile_admin_modifyconfig.htm:35
-msgid "Display allowed tags warning for textareas"
-msgstr ""
-
-#: pntemplates/profile_admin_modifyconfig.htm:46
 msgid "Items per page on Members List page"
 msgstr ""
 
-#: pntemplates/profile_admin_modifyconfig.htm:50
+#: pntemplates/profile_admin_modifyconfig.htm:20
 msgid "Items per page on Members Online page"
 msgstr ""
 
-#: pntemplates/profile_admin_modifyconfig.htm:54
+#: pntemplates/profile_admin_modifyconfig.htm:24
 msgid "Items per page on Recent Members page"
 msgstr ""
 
-#: pntemplates/profile_admin_modifyconfig.htm:58
+#: pntemplates/profile_admin_modifyconfig.htm:28
 msgid "Filter unverified users from the Members list"
 msgstr ""
 
-#: pntemplates/profile_admin_modifyconfig.htm:78
-#: pntemplates/profile_user_modify.htm:19
+#: pntemplates/profile_admin_modifyconfig.htm:45
+msgid "DUD fields global settings"
+msgstr ""
+
+#: pntemplates/profile_admin_modifyconfig.htm:47
+msgid "Display allowed tags warning for textareas"
+msgstr ""
+
+#: pntemplates/profile_admin_modifyconfig.htm:56
+msgid "DUD fields in the registration form"
+msgstr ""
+
+#: pntemplates/profile_admin_modifyconfig.htm:57
+msgid ""
+"The enabled fields below will be shown in the registration form if the Users "
+"module is configured to show the account fields and Profile is the site's "
+"profile manager. Required fields will be shown always, the following list "
+"includes the non-required fields only."
+msgstr ""
+
+#: pntemplates/profile_admin_modifyconfig.htm:59
+msgid "DUD fields to show"
+msgstr ""
+
+#: pntemplates/profile_admin_modifyconfig.htm:74
+#: pntemplates/profile_user_modify.htm:17
 msgid "OK"
 msgstr ""
 
-#: pntemplates/profile_form_display.htm:17
+#: pntemplates/profile_admin_modifyconfig.htm:75
+#: pntemplates/profile_admin_new.htm:71 pntemplates/profile_user_modify.htm:18
+#: pntemplates/profile_admin_modify.htm:73
+#: pntemplates/profile_admin_delete.htm:21
+msgid "Cancel"
+msgstr ""
+
+#: pntemplates/profile_dudedit_radio.htm:6
+#: pntemplates/profile_dudedit_text.htm:6
+#: pntemplates/profile_dudedit_extdate.htm:6
+#: pntemplates/profile_dudedit_date.htm:6
+#: pntemplates/profile_dudedit_textarea.htm:6
+msgid "Error! Required profile item missing"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:3
+msgid "Create profile property"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:16
+msgid "New Property"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:17
+#: pntemplates/profile_admin_modify.htm:18
+msgid ""
+"No special characters nor blanks are allowed in the label or internal name."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:19
+#: pntemplates/profile_admin_modify.htm:20
+msgid "Property label"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:21
+#: pntemplates/profile_admin_modify.htm:22
+msgid ""
+"Reminder: After you create a new property label above (such as _MYDUDLABEL), "
+"you must add the msgid to your '/module/Profile/locale/module_profile."
+"pot' (you need two lines msgid '_MYDUDLABEL' then one line after the msgstr "
+"'', generate the PO file for a specific language and translate it to provide "
+"a display string for the new property label."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:24
+#: pntemplates/profile_admin_modify.htm:25
+#: pntemplates/profile_admin_view.htm:20
+msgid "Internal name"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:26
+msgid ""
+"The internal name, called 'attribute', cannot be changed afterwards, so "
+"select it carefully!"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:35
+#: pntemplates/profile_admin_modify.htm:35
+msgid "Viewable by"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:41
+#: pntemplates/profile_admin_modify.htm:42
+msgid "Display type"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:47
+#: pntemplates/profile_admin_modify.htm:48
+msgid "List content"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:49
+#: pntemplates/profile_admin_modify.htm:50
+msgid ""
+"Separate the output options by <strong>@@</strong>. For example: "
+"<strong>No@@Yes</strong>, <strong>Disabled@@Enabled</strong>. <br />Note the "
+"order of both options, and are susceptible to be translated."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:50
+#: pntemplates/profile_admin_modify.htm:51
+msgid ""
+"Use the following format for each option: <strong>@@label@id</strong>. For "
+"example: <strong>@@radio 1@id1@@radio 2@id2@@radio 3@id3</strong>. The "
+"options are susceptible to be translated."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:51
+#: pntemplates/profile_admin_modify.htm:52
+msgid ""
+"Use the following format for each option: <strong>@@label@id</strong>. For "
+"example: <br />a simple list: <strong>@@option 1@id1@@option 2@id2@@option "
+"3@id3</strong>, <br />and a multiple select: <strong>1@@option 1@id1@@option "
+"2@id2@@option 3@id3</strong>. <br />The options are susceptible to be "
+"translated."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:52
+#: pntemplates/profile_admin_modify.htm:53
+msgid ""
+"Use the following format for each option: <strong>id,label;</strong>. For "
+"example: <strong>id1,label1;id2,label2;id3,label3</strong>. Separate each "
+"individual property with a semicolon (';'). Separate the ID and label of "
+"each property with a comma (','). The labels are susceptible to be "
+"translated."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:54
+msgid ""
+"It's recommended to use unique and stable ids always. If an id is not "
+"defined, Profile will use the option position starting from 0."
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:62
+#: pntemplates/profile_admin_modify.htm:64
+msgid "Validation"
+msgstr ""
+
+#: pntemplates/profile_admin_new.htm:70
+msgid "Create"
+msgstr ""
+
+#: pntemplates/profile_block_featureduser.htm:18
 #, php-format
-msgid "%s's website"
+msgid "Registered on %s"
+msgstr ""
+
+#: pntemplates/profile_block_membersonline_modify.htm:4
+msgid "Maximum characters displayed"
+msgstr ""
+
+#: pntemplates/profile_user_main.htm:2
+msgid "Account Panel"
+msgstr ""
+
+#: pntemplates/profile_block_featureduser_modify.htm:4
+#: pntemplates/profile_user_members_online.htm:8
+#: pntemplates/profile_user_members_recent.htm:10
+#: pntemplates/profile_user_view.htm:20
+#: pntemplates/profile_user_members_view.htm:20
+#: pntemplates/profile_user_members_view.htm:42
+msgid "User Name"
+msgstr ""
+
+#: pntemplates/profile_block_featureduser_modify.htm:9
+msgid "Information to show"
+msgstr ""
+
+#: pntemplates/profile_block_featureduser_modify.htm:21
+msgid "Show registration date"
+msgstr ""
+
+#: pntemplates/profile_dudedit_extdate.htm:16
+msgid "year"
+msgstr ""
+
+#: pntemplates/profile_dudedit_extdate.htm:18
+msgid "month"
+msgstr ""
+
+#: pntemplates/profile_dudedit_extdate.htm:20
+msgid "day"
 msgstr ""
 
 #: pntemplates/profile_user_members_online.htm:9
@@ -719,8 +711,12 @@ msgstr ""
 msgid "There are no users online."
 msgstr ""
 
-#: pntemplates/profile_form_edit.htm:4
-msgid "Enter additional information for the account profile"
+#: pntemplates/profile_block_lastseen_modify.htm:5
+msgid "Saving of last login date is disabled so this block cannot be utilised."
+msgstr ""
+
+#: pntemplates/profile_block_lastseen_modify.htm:10
+msgid "Amount of recently seen users to display"
 msgstr ""
 
 #: pntemplates/profile_user_modify.htm:7
@@ -752,46 +748,68 @@ msgstr ""
 msgid "No users found."
 msgstr ""
 
-#: pntemplates/profile_user_view.htm:19
+#: pntemplates/profile_admin_modify.htm:3
+msgid "Modify Property"
+msgstr ""
+
+#: pntemplates/profile_admin_modify.htm:17
+msgid "Existing Property"
+msgstr ""
+
+#: pntemplates/profile_admin_modify.htm:55
+msgid ""
+"Warning! If you want to change the <strong>id</strong> without don't want to "
+"lost user's data, change it but do not change the <strong>label</strong>. "
+"The next time you will be able to change the label if you want. Also, be "
+"sure to use different ids and labels for the integrity of the user's data."
+msgstr ""
+
+#: pntemplates/profile_admin_modify.htm:56
+msgid ""
+"It's recommended to use unique and stable ids always. If an id is not "
+"defined, Profile will use the option position starting from 0. If you do not "
+"use an id and insert a new option, do not touch the existing ones when "
+"update the field."
+msgstr ""
+
+#: pntemplates/profile_admin_modify.htm:72
+msgid "Update Configuration"
+msgstr ""
+
+#: pntemplates/profile_admin_view.htm:3
+msgid "View Properties"
+msgstr ""
+
+#: pntemplates/profile_admin_view.htm:16
+msgid ""
+"Tip: You can arrange the order of the individual properties, using drag and "
+"drop. The display order will be saved when you drop the property at the "
+"desired place."
+msgstr ""
+
+#: pntemplates/profile_admin_view.htm:19
+msgid "Property Label"
+msgstr ""
+
+#: pntemplates/profile_admin_view.htm:21
+msgid "Dud type"
+msgstr ""
+
+#: pntemplates/profile_admin_view.htm:22
+msgid "Status"
+msgstr ""
+
+#: pntemplates/profile_admin_view.htm:23
+msgid "Actions"
+msgstr ""
+
+#: pntemplates/profile_user_view.htm:4
 #, php-format
 msgid "%s's personal information"
 msgstr ""
 
-#: pntemplates/profile_user_view.htm:53
-msgid "Website URL"
-msgstr ""
-
-#: pntemplates/profile_user_dudextdate.htm:6
-#: pntemplates/profile_user_dudextdate.htm:22
-msgid "year"
-msgstr ""
-
-#: pntemplates/profile_user_dudextdate.htm:7
-#: pntemplates/profile_user_dudextdate.htm:23
-msgid "month"
-msgstr ""
-
-#: pntemplates/profile_user_dudextdate.htm:8
-#: pntemplates/profile_user_dudextdate.htm:24
-msgid "day"
-msgstr ""
-
-#: pntemplates/profile_admin_new.htm:2
-msgid "Create profile property"
-msgstr ""
-
-#: pntemplates/profile_admin_new.htm:15
-msgid "New Property"
-msgstr ""
-
-#: pntemplates/profile_admin_new.htm:24
-msgid ""
-"The internal name, called 'attribute', cannot be changed afterwards, so "
-"select it carefully!"
-msgstr ""
-
-#: pntemplates/profile_admin_new.htm:73
-msgid "Create"
+#: pntemplates/profile_admin_menu.htm:5
+msgid "Account Panel Manager"
 msgstr ""
 
 #: pntemplates/profile_block_membersonline.htm:11
@@ -832,6 +850,10 @@ msgstr ""
 msgid "There are %1$s unlogged users and %2$s registered users online."
 msgstr ""
 
+#: pntemplates/profile_form_edit.htm:4
+msgid "Enter additional information for the account profile"
+msgstr ""
+
 #: pntemplates/profile_admin_delete.htm:2
 msgid "Delete property"
 msgstr ""
@@ -844,12 +866,20 @@ msgstr ""
 msgid "Confirmation Prompt"
 msgstr ""
 
+#: pntemplates/profile_block_lastxusers_modify.htm:4
+msgid "Amount of recently registered users to display"
+msgstr ""
+
 #: pntemplates/profile_user_members_view.htm:11
 msgid "Search"
 msgstr ""
 
 #: pntemplates/profile_user_members_view.htm:14
 msgid "Submit"
+msgstr ""
+
+#: pntemplates/profile_user_members_view.htm:34
+msgid "All"
 msgstr ""
 
 #: pntemplates/profile_user_members_view.htm:102
@@ -862,4 +892,8 @@ msgstr ""
 
 #: pntemplates/profile_user_members_view.htm:106
 msgid "Newest User"
+msgstr ""
+
+#: pntemplates/profile_dudedit_textarea.htm:20
+msgid "Permitted HTML tags"
 msgstr ""
