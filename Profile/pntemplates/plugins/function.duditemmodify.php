@@ -116,9 +116,9 @@ function smarty_function_duditemmodify($params, &$smarty)
             $uservalue = pnUserGetVar('tzoffset') ? pnUserGetVar('tzoffset') : pnConfigGetVar('timezone_offset');
         }
 
-        $tzinfo = pnModGetVar(PN_CONFIG_MODULE, 'timezone_info');
+        $tzinfo = DateUtil::getTimezones();
 
-        $render->assign('value',          isset($tzinfo[$uservalue]) ? $uservalue : null);
+        $render->assign('value',          isset($tzinfo["$uservalue"]) ? "$uservalue" : null);
         $render->assign('selectmultiple', '');
         $render->assign('listoptions',    array_keys($tzinfo));
         $render->assign('listoutput',     array_values($tzinfo));

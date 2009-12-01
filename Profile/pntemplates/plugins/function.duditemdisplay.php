@@ -137,14 +137,11 @@ function smarty_function_duditemdisplay($params, &$smarty)
         if (empty($uservalue)) {
             $uservalue = pnUserGetVar('tzoffset') ? pnUserGetVar('tzoffset') : pnConfigGetVar('timezone_offset');
         }
-        $tzinfo = pnModGetVar(PN_CONFIG_MODULE, 'timezone_info');
 
-        if (!isset($tzinfo[$uservalue])) {
+        $output = DateUtil::getTimezoneText($uservalue);
+        if (!$output) {
             return '';
         }
-
-        // FIXME DateUtil::getTimezoneName($uservalue); in 1.2.1
-        $output = DataUtil::formatForDisplay($tzinfo[$uservalue]);
 
 
     // checkbox
