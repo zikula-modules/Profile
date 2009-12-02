@@ -38,8 +38,8 @@ function Profile_user_view($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Get parameters from whatever input we need.
-    $uname = FormUtil::getPassedValue('uname', isset($args['uname']) ? $args['uname'] : null, 'GET');
     $uid   = (int)FormUtil::getPassedValue('uid', isset($args['uid']) ? $args['uid'] : null, 'GET');
+    $uname = FormUtil::getPassedValue('uname', isset($args['uname']) ? $args['uname'] : null, 'GET');
     $page  = FormUtil::getPassedValue('page', isset($args['page']) ? $args['page'] : null, 'GET');
 
     // Getting uid by uname
@@ -89,7 +89,7 @@ function Profile_user_view($args)
     }
 
     // Create output object
-    $render = & pnRender::getInstance('Profile', false. null, true);
+    $render = & pnRender::getInstance('Profile', false, null, true);
 
     $render->assign('dudarray', $dudarray);
     $render->assign('fields',   $activeduds);
@@ -109,9 +109,9 @@ function Profile_user_view($args)
         } else {
             return LogUtil::registerError(__f('Profile page (%s) not found.', DataUtil::formatForDisplay($page), $dom), 404);
         }
-    } else {
-        return $render->fetch('profile_user_view.htm', $uid);
     }
+
+    return $render->fetch('profile_user_view.htm', $uid);
 }
 
 /**

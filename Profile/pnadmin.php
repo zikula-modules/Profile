@@ -674,6 +674,10 @@ function Profile_admin_updateconfig()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Update module variables.
+    $viewregdate = (bool)FormUtil::getPassedValue('viewregdate', 0, 'POST');
+    pnModSetVar('Profile', 'viewregdate', $viewregdate);
+
+
     $memberslistitemsperpage = (int)FormUtil::getPassedValue('memberslistitemsperpage', 20, 'POST');
     pnModSetVar('Profile', 'memberslistitemsperpage', $memberslistitemsperpage);
 

@@ -25,6 +25,11 @@
             <!--[duditemdisplay item=$field userinfo=$userinfo]-->
         <!--[/if]-->
         <!--[/foreach]-->
+        <!--[if $pncore.Profile.viewregdate|default:1 and $userinfo.user_regdate neq '1970-01-01 00:00:00']-->
+        <div class="z-formrow">
+            <span class="z-formnote"><!--[gt text='Registered on %s' tag1=$userinfo.user_regdate|pndate_format:'datebrief']--></span>
+        </div>
+        <!--[/if]-->
     </div>
 
     <!--[pnmodurl modname='Profile' func='view' uid=$userinfo.uid assign='returnurl']-->
