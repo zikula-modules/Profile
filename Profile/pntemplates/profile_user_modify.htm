@@ -4,10 +4,10 @@
 
 <!--[include file='profile_user_menu.htm']-->
 
-<em><!--[gt text="The items that are marked with an asterisk ('*') are required entries."]--></em>
 <form id="modifyprofileform" class="z-form" action="<!--[pnmodurl modname='Profile' type='user' func='update']-->" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset>
         <legend><!--[$templatetitle]--></legend>
+        <p><!--[gt text="The items that are marked with an asterisk ('*') are required entries."]--></p>
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
         <!--[foreach from=$duditems item=item]-->
         <!--[duditemmodify item=$item]-->

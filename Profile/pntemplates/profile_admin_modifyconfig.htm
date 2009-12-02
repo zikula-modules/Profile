@@ -72,10 +72,10 @@
                         <!--[foreach from=$dudfields key='dudid' item='dudlabel']-->
                         <div class="z-formlist">
                             <!--[if in_array($dudid, $pncore.Profile.dudregshow)]-->
-							<input id="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->" type="checkbox" name="dudregshow[]" value="<!--[$dudid|pnvarprepfordisplay]-->" checked="checked" />
-							<!--[else]-->
-							<input id="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->" type="checkbox" name="dudregshow[]" value="<!--[$dudid|pnvarprepfordisplay]-->" />
-							<!--[/if]-->
+                            <input id="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->" type="checkbox" name="dudregshow[]" value="<!--[$dudid|pnvarprepfordisplay]-->" checked="checked" />
+                            <!--[else]-->
+                            <input id="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->" type="checkbox" name="dudregshow[]" value="<!--[$dudid|pnvarprepfordisplay]-->" />
+                            <!--[/if]-->
                             <label for="profile_dudregshow_<!--[$dudid|pnvarprepfordisplay]-->"><!--[gt text=$dudlabel]--></label>
                         </div>
                         <!--[/foreach]-->
