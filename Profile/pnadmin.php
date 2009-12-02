@@ -235,7 +235,6 @@ function Profile_admin_create($args)
     $displaytype = isset($args['displaytype'])   ? $args['displaytype']   : FormUtil::getPassedValue('displaytype', null, 'POST');
     $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : FormUtil::getPassedValue('listoptions', null, 'POST');
     $note        = isset($args['note'])          ? $args['note']          : FormUtil::getPassedValue('note', null, 'POST');
-    $validation  = isset($args['validation'])    ? $args['validation']    : FormUtil::getPassedValue('validation', null, 'POST');
 
     $dom = ZLanguage::getModuleDomain('Profile');
 
@@ -273,8 +272,7 @@ function Profile_admin_create($args)
                                 'dtype'          => 1,
                                 'displaytype'    => $displaytype,
                                 'listoptions'    => $listoptions,
-                                'note'           => $note,
-                                'validation'     => $validation));
+                                'note'           => $note));
 
     // The return value of the function is checked here
     if ($dudid != false) {
@@ -382,7 +380,6 @@ function Profile_admin_update($args)
     $displaytype = FormUtil::getPassedValue('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null), 'POST');
     $listoptions = FormUtil::getPassedValue('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null), 'POST');
     $note        = FormUtil::getPassedValue('note',          (isset($args['note']) ? $args['note'] : null), 'POST');
-    $validation  = FormUtil::getPassedValue('validation',    (isset($args['validation']) ? $args['validation'] : null), 'POST');
 
     // At this stage we check to see if we have been passed $objectid
     if (!empty($objectid)) {
@@ -399,8 +396,7 @@ function Profile_admin_update($args)
                           'label'       => $label,
                           'displaytype' => $displaytype,
                           'listoptions' => str_replace("\n", "", $listoptions),
-                          'note'        => $note,
-                          'validation'  => $validation))) {
+                          'note'        => $note))) {
         // Success
         LogUtil::registerStatus(__('Done! Account panel property updated.', $dom));
     }

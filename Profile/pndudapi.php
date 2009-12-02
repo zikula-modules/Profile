@@ -24,7 +24,6 @@
  *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 6: extdate, 7: multi checkbox}
  *                   'listoptions' => options for the new field
  *                   'note'        => note to show in edit mode
- *                   'validation'  => [not used yet]
  *                   and any other required data
  * @return true on success or false on failure
  */

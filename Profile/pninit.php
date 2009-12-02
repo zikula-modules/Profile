@@ -251,7 +251,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_UREALNAME');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '1';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'realname';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -261,7 +261,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_UFAKEMAIL');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '2';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'publicemail';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -271,7 +271,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YOURHOMEPAGE');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '3';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'url';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -281,7 +281,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_TIMEZONEOFFSET');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '4';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'tzoffset';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -291,7 +291,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YOURAVATAR');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '5';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'avatar';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -301,7 +301,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YICQ');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '6';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'icq';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -311,7 +311,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YAIM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '7';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'aim';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -321,7 +321,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YYIM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '8';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'yim';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -331,7 +331,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YMSNM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '9';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'msnm';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -341,7 +341,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YLOCATION');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '10';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'city';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -351,7 +351,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YOCCUPATION');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '11';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'occupation';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -361,7 +361,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_SIGNATURE');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '12';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'signature';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -371,7 +371,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_EXTRAINFO');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '13';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'extrainfo';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
@@ -381,7 +381,7 @@ function Profile_defaultdata()
     $record['prop_label']          = no__('_YINTERESTS');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '14';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => '', 'validation' => ''));
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
     $record['prop_attribute_name'] = 'interests';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');

@@ -15,16 +15,16 @@
  * create a new dynamic user data item
  * @author Mark West
  * @param string $args['label'] the name of the item to be created
- * @param string $args['dtype'] the data type of the item to be created
- * @param string $args['validation'] data validation string for the item
+ * @param string $args['attribute_name'] the attribute name of the item to be created
+ * @param string $args['dtype'] the DUD type of the item to be created
  * @return mixed dud item ID on success, false on failure
  */
 function Profile_adminapi_create($args)
 {
     // Argument check
-    if ((!isset($args['label'])) || empty($args['label']) ||
-       ((!isset($args['attribute_name'])) || empty($args['attribute_name'])) ||
-        (!isset($args['dtype'])) || empty($args['dtype'])) {
+    if ((!isset($args['label']) || empty($args['label'])) ||
+        (!isset($args['attribute_name']) || empty($args['attribute_name'])) ||
+        (!isset($args['dtype']) || !is_numeric($args['dtype']))) {
         return LogUtil::registerArgsError();
     }
 
@@ -65,8 +65,7 @@ function Profile_adminapi_create($args)
                             'viewby'      => $args['viewby'],
                             'displaytype' => $args['displaytype'],
                             'listoptions' => $args['listoptions'],
-                            'note'        => $args['note'],
-                            'validation'  => $args['validation']);
+                            'note'        => $args['note']);
 
     $obj = array();
     $obj['prop_label']          = $args['label'];
@@ -94,8 +93,6 @@ function Profile_adminapi_create($args)
  * @author Mark West
  * @param int $args['dudid'] the id of the item to be updated
  * @param string $args['label'] the name of the item to be updated
- * @param string $args['dtype'] the data type of the item to be updated
- * @param string $args['validation'] data validation string for the item
  * @return bool true on success, false on failure
  */
 function Profile_adminapi_update($args)
@@ -171,8 +168,7 @@ function Profile_adminapi_update($args)
                                 'viewby'      => $args['viewby'],
                                 'displaytype' => $args['displaytype'],
                                 'listoptions' => $args['listoptions'],
-                                'note'        => $args['note'],
-                                'validation'  => $args['validation']);
+                                'note'        => $args['note']);
 
         $obj['prop_validation'] = serialize($validationinfo);
     }
