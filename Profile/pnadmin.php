@@ -19,7 +19,7 @@
 function Profile_admin_main()
 {
     // Security check
-    if (!SecurityUtil::checkPermission('Profile::item', '::', ACCESS_EDIT)) {
+    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -28,6 +28,25 @@ function Profile_admin_main()
 
     // Return the output
     return $render->fetch('profile_admin_main.htm');;
+}
+
+/**
+ * The Profile help page
+ *
+ * @return string HTML string
+ */
+function Profile_admin_help()
+{
+    // Security check
+    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
+        return LogUtil::registerPermissionError();
+    }
+
+    // Create output object
+    $render = & pnRender::getInstance('Profile');
+
+    // Return the output
+    return $render->fetch('profile_admin_help.htm');;
 }
 
 /**
@@ -61,96 +80,93 @@ function Profile_admin_view()
     $duditems = array();
     foreach ($items as $item)
     {
-        if (SecurityUtil::checkPermission('Profile::', "$item[prop_label]::$item[prop_id]", ACCESS_READ))
+        // display the proper icom and link to enable or disable the field
+        switch (true)
         {
-            // display the proper icom and link to enable or disable the field
-            switch (true)
-            {
-                // 0 >= DUD types can't be disabled
-                case ($item['prop_dtype'] <= 0):
-                    $statusval = 1;
-                    $status = array('url' => '',
-                                    'image' => 'greenled.gif',  'title' => __('Required', $dom));
-                    break;
+            // 0 >= DUD types can't be disabled
+            case ($item['prop_dtype'] <= 0):
+                $statusval = 1;
+                $status = array('url' => '',
+                                'image' => 'greenled.gif',  'title' => __('Required', $dom));
+                break;
 
-                case ($item['prop_weight'] <> 0):
-                    $statusval = 1;
-                    $status = array('url'   => pnModURL('Profile', 'admin', 'deactivate',
-                                                        array('dudid'    => $item['prop_id'],
-                                                              'weight'   => $item['prop_weight'],
-                                                              'authid'   => $authid)),
-                                    'image' => 'greenled.gif',
-                                    'title' => __('Deactivate', $dom));
-                    break;
+            case ($item['prop_weight'] <> 0):
+                $statusval = 1;
+                $status = array('url'   => pnModURL('Profile', 'admin', 'deactivate',
+                                                    array('dudid'    => $item['prop_id'],
+                                                          'weight'   => $item['prop_weight'],
+                                                          'authid'   => $authid)),
+                                'image' => 'greenled.gif',
+                                'title' => __('Deactivate', $dom));
+                break;
 
-                default:
-                    $statusval = 0;
-                    $status = array('url'   => pnModURL('Profile', 'admin', 'activate',
-                                                        array('dudid'    => $item['prop_id'],
-                                                              'authid'   => $authid)),
-                                    'image' => 'redled.gif',
-                                    'title' => __('Activate', $dom));
-            }
-
-            // analizes the DUD type
-            switch ($item['prop_dtype'])
-            {
-                case '-1': // Third party (non-editable)
-                    $data_type_text = __('Third party (non-editable)', $dom);
-                    break;
-
-                case '0': // Third party (mandatory)
-                    $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
-                    break;
-
-                case '1': // Normal property
-                    $data_type_text = __('Normal', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
-                    break;
-
-                case '2': // Third party (normal field)
-                default:
-                    $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
-                    break;
-            }
-
-            // Options for the item.
-            $options = array();
-            if (SecurityUtil::checkPermission('Profile::', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT))
-            {
-                $options[] = array('url' => pnModURL('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])),
-                                   'image' => 'xedit.gif',
-                                   'class' => '',
-                                   'title' => __('Edit', $dom));
-
-                if ($item['prop_weight'] > 1) {
-                    $options[] = array('url' => pnModURL('Profile', 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])),
-                                       'image' => '2uparrow.gif',
-                                       'class' => 'profile_up',
-                                       'title' => __('Up', $dom));
-                }
-
-                if ($x < $itmcount) {
-                    $options[] = array('url' => pnModURL('Profile', 'admin', 'increase_weight', array('dudid' => $item['prop_id'])),
-                                       'image' => '2downarrow.gif',
-                                       'class' => 'profile_down',
-                                       'title' => __('Down', $dom));
-                }
-
-                if (SecurityUtil::checkPermission('Profile::', "$item[prop_label]::$item[prop_id]", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
-                    $options[] = array('url' => pnModURL('Profile', 'admin', 'delete', array('dudid' => $item['prop_id'])),
-                                       'image' => '14_layer_deletelayer.gif',
-                                       'class' => '',
-                                       'title' => __('Delete', $dom));
-                }
-            }
-
-            $item['status']    = $status;
-            $item['statusval'] = $statusval;
-            $item['options']   = $options;
-            $item['dtype']     = $data_type_text;
-            $duditems[] = $item;
-            $x++;
+            default:
+                $statusval = 0;
+                $status = array('url'   => pnModURL('Profile', 'admin', 'activate',
+                                                    array('dudid'    => $item['prop_id'],
+                                                          'authid'   => $authid)),
+                                'image' => 'redled.gif',
+                                'title' => __('Activate', $dom));
         }
+
+        // analizes the DUD type
+        switch ($item['prop_dtype'])
+        {
+            case '-1': // Third party (non-editable)
+                $data_type_text = __('Third party (non-editable)', $dom);
+                break;
+
+            case '0': // Third party (mandatory)
+                $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
+                break;
+
+            case '1': // Normal property
+                $data_type_text = __('Normal', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
+                break;
+
+            case '2': // Third party (normal field)
+            default:
+                $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
+                break;
+        }
+
+        // Options for the item.
+        $options = array();
+        if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT))
+        {
+            $options[] = array('url' => pnModURL('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])),
+                               'image' => 'xedit.gif',
+                               'class' => '',
+                               'title' => __('Edit', $dom));
+
+            if ($item['prop_weight'] > 1) {
+                $options[] = array('url' => pnModURL('Profile', 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])),
+                                   'image' => '2uparrow.gif',
+                                   'class' => 'profile_up',
+                                   'title' => __('Up', $dom));
+            }
+
+            if ($x < $itmcount) {
+                $options[] = array('url' => pnModURL('Profile', 'admin', 'increase_weight', array('dudid' => $item['prop_id'])),
+                                   'image' => '2downarrow.gif',
+                                   'class' => 'profile_down',
+                                   'title' => __('Down', $dom));
+            }
+
+            if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
+                $options[] = array('url' => pnModURL('Profile', 'admin', 'delete', array('dudid' => $item['prop_id'])),
+                                   'image' => '14_layer_deletelayer.gif',
+                                   'class' => '',
+                                   'title' => __('Delete', $dom));
+            }
+        }
+
+        $item['status']    = $status;
+        $item['statusval'] = $statusval;
+        $item['options']   = $options;
+        $item['dtype']     = $data_type_text;
+        $duditems[] = $item;
+        $x++;
     }
 
     // Create output object
@@ -177,7 +193,7 @@ function Profile_admin_view()
 function Profile_admin_new()
 {
     // Security check
-    if (!SecurityUtil::checkPermission('Profile::item', '::', ACCESS_ADD)) {
+    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -192,7 +208,7 @@ function Profile_admin_new()
                                               3 => DataUtil::formatForDisplay(__('Radio button', $dom)),
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
                                               5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
-                                              6 => DataUtil::formatForDisplay(__('Date (extended)', $dom)),
+                                              6 => DataUtil::formatForDisplay(__('Date (old)', $dom)),
                                               7 => DataUtil::formatForDisplay(__('Multi checkbox', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),
@@ -333,7 +349,7 @@ function Profile_admin_modify($args)
                                               3 => DataUtil::formatForDisplay(__('Radio button', $dom)),
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
                                               5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
-                                              6 => DataUtil::formatForDisplay(__('Date (extended)', $dom)),
+                                              6 => DataUtil::formatForDisplay(__('Date (old)', $dom)),
                                               7 => DataUtil::formatForDisplay(__('Multi checkbox', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),

@@ -51,7 +51,7 @@ function Profile_userapi_getall($args)
     $permFilter = array();
     $permFilter[] = array('component_left'   =>  'Profile',
                           'component_middle' =>  '',
-                          'component_right'  =>  '',
+                          'component_right'  =>  'item',
                           'instance_left'    =>  'prop_label',
                           'instance_middle'  =>  '',
                           'instance_right'   =>  'prop_id',

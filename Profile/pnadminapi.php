@@ -357,15 +357,19 @@ function Profile_adminapi_getlinks()
 
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'view'),
-                         'text' => __('Account Panel Properties List', $dom));
+                         'text' => __('Account Properties List', $dom));
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'new'),
-                         'text' => __('Create Account Panel Property', $dom));
+                         'text' => __('Create an Account Property', $dom));
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'modifyconfig'),
-                         'text' => __('Account Panel Manager Settings', $dom));
+                         'text' => __('Settings', $dom));
+    }
+    if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
+        $links[] = array('url'  => pnModURL('Profile', 'admin', 'help'),
+                         'text' => __('Help page', $dom));
     }
 
     return $links;
