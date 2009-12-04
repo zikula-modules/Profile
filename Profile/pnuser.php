@@ -51,14 +51,14 @@ function Profile_user_view($args)
 
     // check for an invalid uid (uid = 1 is the anonymous user)
     if ($uid < 2) {
-        return LogUtil::registerError(__('User not found.', $dom), 404);
+        return LogUtil::registerError(__('Error! Could not find this user.', $dom), 404);
     }
 
     // Get all the user data
     $userinfo = pnUserGetVars($uid);
 
     if (!$userinfo) {
-        return LogUtil::registerError(__('User not found.', $dom), 404);
+        return LogUtil::registerError(__('Error! Could not find this user.', $dom), 404);
     }
 
     // Check if the user is watching its own profile or if he is admin
@@ -107,7 +107,7 @@ function Profile_user_view($args)
         if ($render->template_exists("profile_user_view_{$page}.htm")) {
             return $render->fetch("profile_user_view_{$page}.htm", $uid);
         } else {
-            return LogUtil::registerError(__f('Profile page (%s) not found.', DataUtil::formatForDisplay($page), $dom), 404);
+            return LogUtil::registerError(__f('Error! Could not find profile page [%s].', DataUtil::formatForDisplay($page), $dom), 404);
         }
     }
 
@@ -133,7 +133,7 @@ function Profile_user_modify($args)
 
     // The return value of the function is checked here
     if ($items == false) {
-        return LogUtil::registerError(__('Error! Could not load the account panel properties', $dom));
+        return LogUtil::registerError(__('Error! Could not load personal info items.', $dom));
     }
 
     // check if we get called form the update function in case of an error
@@ -182,7 +182,7 @@ function Profile_user_update()
     $checkrequired = pnModAPIFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
 
     if ($checkrequired['result'] == true) {
-        LogUtil::registerError(__f('Error! Required profile item [%s] missing', $checkrequired['translatedFieldsStr']));
+        LogUtil::registerError(__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
 
         // we do not send the passwords here!
         $params = array('uname'    => $uname,
@@ -201,7 +201,7 @@ function Profile_user_update()
     }
  
     // This function generated no output, we redirect the user
-    LogUtil::registerStatus(__('Done! Personal information saved.', $dom));
+    LogUtil::registerStatus(__('Done! Saved your changes to your personal information.', $dom));
 
     return pnRedirect(pnModUrl('Profile', 'user', 'view', array('uname' => pnUserGetVar('uname'))));
 }

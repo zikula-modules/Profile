@@ -81,7 +81,7 @@ function Profile_upgrade($oldversion)
             // dependencies do not work during upgrade yet so we check it manually
             $usersmod = pnModGetInfo(pnModGetIDFromName('Users'));
             if (version_compare($usersmod['version'], '1.9', '<=')) {
-                LogUtil::registerError(__('Users module has to be upgraded to v1.10 before you can upgrade the Profile module!', $dom));
+                LogUtil::registerError(__('Error! The \'Users\' module must be upgraded to version 1.10 before you can upgrade the \'Profile\' module.', $dom));
                 return '1.2';
             }
 
@@ -104,14 +104,14 @@ function Profile_upgrade($oldversion)
             // this array maps old DUDs to new attributes
             $mappingarray = array('_UREALNAME'      => 'realname',
                                   '_UFAKEMAIL'      => 'publicemail',
-                                  '_YOURHOMEPAGE'   => 'url',
+                                  '_YOURSITE'       => 'ysite',
                                   '_TIMEZONEOFFSET' => 'tzoffset',
                                   '_YOURAVATAR'     => 'avatar',
                                   '_YLOCATION'      => 'city',
-                                  '_YICQ'           => 'icq',
-                                  '_YAIM'           => 'aim',
-                                  '_YYIM'           => 'yim',
-                                  '_YMSNM'          => 'msnm',
+                                  '_YWLM'           => 'wlmid',
+                                  '_YYIM'           => 'yimid',
+                                  '_YSKYPE'         => 'skypeid',
+                                  '_YICQ'           => 'icqnumber',
                                   '_YOCCUPATION'    => 'occupation',
                                   '_SIGNATURE'      => 'signature',
                                   '_EXTRAINFO'      => 'extrainfo',
@@ -266,13 +266,13 @@ function Profile_defaultdata()
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
 
-    // _YOURHOMEPAGE
+    // _YOURSITE
     $record = array();
-    $record['prop_label']          = no__('_YOURHOMEPAGE');
+    $record['prop_label']          = no__('_YOURSITE');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '3';
     $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-    $record['prop_attribute_name'] = 'url';
+    $record['prop_attribute_name'] = 'ysite';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
 
@@ -298,21 +298,11 @@ function Profile_defaultdata()
 
     // _YICQ
     $record = array();
-    $record['prop_label']          = no__('_YICQ');
+    $record['prop_label']          = no__('_YWLM');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '6';
     $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-    $record['prop_attribute_name'] = 'icq';
-
-    DBUtil::insertObject($record, 'user_property', 'prop_id');
-
-    // _YAIM
-    $record = array();
-    $record['prop_label']          = no__('_YAIM');
-    $record['prop_dtype']          = '1';
-    $record['prop_weight']         = '7';
-    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-    $record['prop_attribute_name'] = 'aim';
+    $record['prop_attribute_name'] = 'wlmid';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
 
@@ -320,19 +310,29 @@ function Profile_defaultdata()
     $record = array();
     $record['prop_label']          = no__('_YYIM');
     $record['prop_dtype']          = '1';
-    $record['prop_weight']         = '8';
+    $record['prop_weight']         = '7';
     $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-    $record['prop_attribute_name'] = 'yim';
+    $record['prop_attribute_name'] = 'yimid';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
 
-    // _YMSNM
+    // _YSKYPE
     $record = array();
-    $record['prop_label']          = no__('_YMSNM');
+    $record['prop_label']          = no__('_YSKYPE');
+    $record['prop_dtype']          = '1';
+    $record['prop_weight']         = '8';
+    $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+    $record['prop_attribute_name'] = 'skypeid';
+
+    DBUtil::insertObject($record, 'user_property', 'prop_id');
+
+    // _YICQ
+    $record = array();
+    $record['prop_label']          = no__('_YICQ');
     $record['prop_dtype']          = '1';
     $record['prop_weight']         = '9';
     $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-    $record['prop_attribute_name'] = 'msnm';
+    $record['prop_attribute_name'] = 'icqnumber';
 
     DBUtil::insertObject($record, 'user_property', 'prop_id');
 

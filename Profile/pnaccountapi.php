@@ -33,13 +33,13 @@ function Profile_accountapi_getall($args)
         $items['0'] = array('url'     => pnModURL('Profile', 'user', 'view', array('uid' => $uid)),
                             'module'  => 'Profile',
                             //! account panel link
-                            'title'   => __('Personal Info', $dom),
+                            'title'   => __('Personal info', $dom),
                             'icon'    => 'admin.gif');
 
         if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
             $items['1'] = array('url'     => pnModURL('Profile', 'user', 'viewmembers'),
                                 'module'  => 'Profile',
-                                'title'   => __('Members List', $dom),
+                                'title'   => __('Registered users list', $dom),
                                 'icon'    => 'members.gif');
         }
     }

@@ -14,8 +14,8 @@ $dom = ZLanguage::getModuleDomain('Profile');
 
 $modversion['name']           = 'Profile';
 $modversion['oldnames']       = array('Your_Account', 'Members_List');
-$modversion['displayname']    = __('Profile Module', $dom);
-$modversion['description']    = __('Provides a personal account control panel for each registered user, an interface to administer the information items displayed in it, and a members list functionality. Works in close unison with the Users module.', $dom);
+$modversion['displayname']    = __('Account panel manager', $dom);
+$modversion['description']    = __('Provides a personal account control panel for each registered user, an interface to administer the personal information items displayed within it, and a registered users list functionality. Works in close unison with the \'Users\' module.', $dom);
 //! module name that appears in URL
 $modversion['url']            = __('profile', $dom);
 $modversion['version']        = '1.5';

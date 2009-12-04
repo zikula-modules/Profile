@@ -113,11 +113,11 @@ function Profile_admin_view()
         switch ($item['prop_dtype'])
         {
             case '-1': // Third party (non-editable)
-                $data_type_text = __('Third party (non-editable)', $dom);
+                $data_type_text = __('Third-party (not editable)', $dom);
                 break;
 
             case '0': // Third party (mandatory)
-                $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
+                $data_type_text = __('Third-party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                 break;
 
             case '1': // Normal property
@@ -126,7 +126,7 @@ function Profile_admin_view()
 
             case '2': // Third party (normal field)
             default:
-                $data_type_text = __('Third party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
+                $data_type_text = __('Third-party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                 break;
         }
 
@@ -209,7 +209,7 @@ function Profile_admin_new()
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
                                               5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
                                               6 => DataUtil::formatForDisplay(__('Date (old)', $dom)),
-                                              7 => DataUtil::formatForDisplay(__('Multi checkbox', $dom))));
+                                              7 => DataUtil::formatForDisplay(__('Multiple checkbox set', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),
                                               1 => DataUtil::formatForDisplay(__('Yes', $dom))));
@@ -258,25 +258,25 @@ function Profile_admin_create($args)
 
     // Validates and check if empty or already existing...
     if (empty($label)) {
-        return LogUtil::registerError(__('Error! The property must have an label, such as: _MYDUDLABEL.', $dom), null, $returnurl);
+        return LogUtil::registerError(__('Error! The personal info item must have a label. An example of an acceptable label is: \'_MYDUDLABEL\'.', $dom), null, $returnurl);
     }
 
     if (empty($attrname)) {
-        return LogUtil::registerError(__('Error! The property must have an internal name, such as: mydudfield.', $dom), null, $returnurl);
+        return LogUtil::registerError(__('Error! The personal info item must have an attribute name. An example of an acceptable attribute name is: \'mydudfield\'.', $dom), null, $returnurl);
     }
 
     if (pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $label))) {
-        return LogUtil::registerError(__('Error! This property label already exists.', $dom), null, $returnurl);
+        return LogUtil::registerError(__('Error! There is already an personal info item label with this naming.', $dom), null, $returnurl);
     }
 
     if (pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
-        return LogUtil::registerError(__('Error! This internal name already exists.', $dom), null, $returnurl);
+        return LogUtil::registerError(__('Error! There is already an attribute name with this naming.', $dom), null, $returnurl);
     }
 
     $permalinkssep = pnConfigGetVar('shorturlsseparator');
     $filteredlabel = str_replace($permalinkssep, '', DataUtil::formatPermalink($label));
     if ($label != $filteredlabel) {
-        LogUtil::registerStatus(__('Error! The property label was changed to avoid special characters or blanks.', $dom), null, $returnurl);
+        LogUtil::registerStatus(__('Warning! The personal info item label has been accepted, but was filtered and altered to ensure it contains no special characters or spaces in its naming.', $dom), null, $returnurl);
     }
 
     // The API function is called.
@@ -293,7 +293,7 @@ function Profile_admin_create($args)
     // The return value of the function is checked here
     if ($dudid != false) {
         // Success
-        LogUtil::registerStatus(__('Done! Account panel property created.', $dom));
+        LogUtil::registerStatus(__('Done! Created new personal info item.', $dom));
     }
 
     // This function generated no output
@@ -326,7 +326,7 @@ function Profile_admin_modify($args)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom), 404);
     }
 
     // Security check
@@ -350,7 +350,7 @@ function Profile_admin_modify($args)
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
                                               5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
                                               6 => DataUtil::formatForDisplay(__('Date (old)', $dom)),
-                                              7 => DataUtil::formatForDisplay(__('Multi checkbox', $dom))));
+                                              7 => DataUtil::formatForDisplay(__('Multiple checkbox set', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),
                                               1 => DataUtil::formatForDisplay(__('Yes', $dom))));
@@ -414,7 +414,7 @@ function Profile_admin_update($args)
                           'listoptions' => str_replace("\n", "", $listoptions),
                           'note'        => $note))) {
         // Success
-        LogUtil::registerStatus(__('Done! Account panel property updated.', $dom));
+        LogUtil::registerStatus(__('Done! Saved your changes.', $dom));
     }
 
     // This function generated no output
@@ -448,7 +448,7 @@ function Profile_admin_delete($args)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom), 404);
     }
 
     // Security check
@@ -481,7 +481,7 @@ function Profile_admin_delete($args)
     // The API function is called.
     if (pnModAPIFunc('Profile', 'admin', 'delete', array('dudid' => $dudid))) {
         // Success
-        LogUtil::registerStatus(__('Done! Account panel property deleted.', $dom));
+        LogUtil::registerStatus(__('Done! Deleted the personal info item.', $dom));
     }
 
     // This function generated no output
@@ -504,7 +504,7 @@ function Profile_admin_increase_weight($args)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom), 404);
     }
 
     // Security check
@@ -517,7 +517,7 @@ function Profile_admin_increase_weight($args)
     // The return value of the function is checked here
     if ($res) {
         // Success
-        LogUtil::registerStatus(__('Done! Account panel property updated.', $dom));
+        LogUtil::registerStatus(__('Done! Saved your changes.', $dom));
     }
 
     return pnRedirect(pnModURL('Profile', 'admin', 'view'));
@@ -539,7 +539,7 @@ function Profile_admin_decrease_weight($var)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom), 404);
     }
 
     // Security check
@@ -548,7 +548,7 @@ function Profile_admin_decrease_weight($var)
     }
 
     if ($item['prop_weight'] <= 1) {
-        return LogUtil::registerError(__('Forbidden to decrease the weight of this account property.', $dom), 404);
+        return LogUtil::registerError(__('Error! You cannot decrease the weight of this account property.', $dom), 404);
     }
 
     $res = DBUtil::incrementObjectFieldByID('user_property', 'prop_weight', $dudid, 'prop_id', -1);
@@ -556,7 +556,7 @@ function Profile_admin_decrease_weight($var)
     // The return value of the function is checked here
     if ($res) {
         // Success
-        LogUtil::registerStatus(__('Done! Account panel property updated.', $dom));
+        LogUtil::registerStatus(__('Done! Saved your changes.', $dom));
     }
 
     return pnRedirect(pnModURL('Profile', 'admin', 'view'));
@@ -579,7 +579,7 @@ function Profile_admin_activate($args)
     // The API function is called.
     if (pnModAPIFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
         // Success
-        LogUtil::registerStatus(__('Done! Item updated.', $dom));
+        LogUtil::registerStatus(__('Done! Saved your changes.', $dom));
     }
 
     // This function generated no output
@@ -609,7 +609,7 @@ function Profile_admin_deactivate($args)
     // The API function is called.
     if (pnModAPIFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
         // Success
-        LogUtil::registerStatus(__('Done! Item updated.', $dom));
+        LogUtil::registerStatus(__('Done! Saved your changes.', $dom));
     }
 
     // Let any other modules know that the modules configuration has been updated
@@ -703,7 +703,7 @@ function Profile_admin_updateconfig()
     pnModCallHooks('module', 'updateconfig', 'Profile', array('module' => 'Profile'));
 
     // the module configuration has been updated successfuly
-    LogUtil::registerStatus(__('Done! Module configuration updated.', $dom));
+    LogUtil::registerStatus(__('Done! Saved your settings changes.', $dom));
 
     // This function generated no output
     return pnRedirect(pnModURL('Profile', 'admin', 'view'));

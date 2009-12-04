@@ -22,7 +22,7 @@ function Profile_ajax_changeprofileweight()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-        AjaxUtil::error(__('No authorization to access this module.', $dom));
+        AjaxUtil::error(__('Sorry! You do not have authorisation for this module.', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
@@ -33,7 +33,7 @@ function Profile_ajax_changeprofileweight()
     $startnum = FormUtil::getPassedValue('startnum');
 
     if ($startnum < 0) {
-        AjaxUtil::error(__f('Invalid %s passed.', 'startnum', $dom));
+        AjaxUtil::error(__f('Error! Invalid \'%s\' passed.', 'startnum', $dom));
     }
 
     // update the items with the new weights
@@ -54,7 +54,7 @@ function Profile_ajax_changeprofileweight()
     $res = DBUtil::updateObjectArray($items, 'user_property', 'prop_id');
 
     if (!$res) {
-        AjaxUtil::error(__('Error! Update attempt failed.', $dom));
+        AjaxUtil::error(__('Error! Could not save your changes.', $dom));
     }
 
     return array('result' => true);
@@ -73,7 +73,7 @@ function Profile_ajax_changeprofilestatus()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-        AjaxUtil::error(__('No authorization to access this module.', $dom));
+        AjaxUtil::error(__('Sorry! You do not have authorisation for this module.', $dom));
     }
 /*
     if (!SecurityUtil::confirmAuthKey()) {
@@ -92,7 +92,7 @@ function Profile_ajax_changeprofilestatus()
 
     $res = pnModAPIFunc('Profile', 'admin', $func, array('dudid' => $prop_id));
     if (!$res) {
-        AjaxUtil::error(__('Error! Update attempt failed.', $dom));
+        AjaxUtil::error(__('Error! Could not save your changes.', $dom));
     }
 
     return array('result' => true,

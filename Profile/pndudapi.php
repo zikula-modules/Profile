@@ -46,13 +46,13 @@ function Profile_dudapi_register($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     if (!pnModGetIDFromName($args['modname'])) {
-        return LogUtil::registerError(__f('The specified module (%s) does not exists.', DataUtil::formatForDisplay($args['modname']), $dom));
+        return LogUtil::registerError(__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname']), $dom));
     }
 
     // parses the DUD type
     $dtypes = array(-1 => 'noneditable', 0 => 'mandatory', 2 => 'normal');
     if (!in_array($args['dtype'], $dtypes)) {
-        return LogUtil::registerError(__f('Invalid %s passed.', 'dtype', $dom));
+        return LogUtil::registerError(__f('Error! Invalid \'%s\' passed.', 'dtype', $dom));
     }
 
     // Clean the label
@@ -63,11 +63,11 @@ function Profile_dudapi_register($args)
     // Check if the label or attribute name already exists
     $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
     if ($item) {
-        return LogUtil::registerError(__("An account panel property already has the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
+        return LogUtil::registerError(__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
     }
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
     if ($item) {
-        return LogUtil::registerError(__("An account panel property already has the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
+        return LogUtil::registerError(__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
     }
 
     // Determine the new weight
@@ -87,7 +87,7 @@ function Profile_dudapi_register($args)
 
     // Check for an error with the database
     if (!$obj) {
-        return LogUtil::registerError(__('Error! Creation attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not create the new personal info item.', $dom));
     }
 
     // Let any hooks know that we have created a new item.
@@ -141,13 +141,13 @@ function Profile_dudapi_unregister($args)
 
     $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
     if (!$res) {
-        return LogUtil::registerError(__('Error! Deletion attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not delete the personal info item.', $dom));
     }
 
     // delete the property
     $res = DBUtil::deleteObjectByID('user_property', $item['prop_id'], 'prop_id');
     if (!$res) {
-        return LogUtil::registerError(__('Error! Deletion attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not delete the personal info item.', $dom));
     }
 
     // Let any hooks know that we have deleted an item.

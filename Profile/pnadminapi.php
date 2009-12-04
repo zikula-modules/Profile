@@ -43,11 +43,11 @@ function Profile_adminapi_create($args)
     // Check if the label or attribute name already exists
     $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
     if ($item) {
-        return LogUtil::registerError(__("An account panel property already has the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
+        return LogUtil::registerError(__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
     }
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
     if ($item) {
-        return LogUtil::registerError(__("An account panel property already has the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
+        return LogUtil::registerError(__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']), $dom));
     }
 
     // Determine the new weight
@@ -78,7 +78,7 @@ function Profile_adminapi_create($args)
 
     // Check for an error with the database
     if (!$res) {
-        return LogUtil::registerError(__('Error! Creation attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not create new attribute.', $dom));
     }
 
     // Let any hooks know that we have created a new item.
@@ -109,7 +109,7 @@ function Profile_adminapi_update($args)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom));
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom));
     }
 
     // Clean the label
@@ -129,7 +129,7 @@ function Profile_adminapi_update($args)
     if ($args['label'] <> $item['prop_label']) {
         $vitem = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
         if ($vitem) {
-            return LogUtil::registerError(__("An account panel property already has the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
+            return LogUtil::registerError(__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']), $dom));
         }
     }
 
@@ -182,7 +182,7 @@ function Profile_adminapi_update($args)
 
     // Check for an error with the database code
     if (!$res) {
-        return LogUtil::registerError(__('Error! Update attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not save your changes.', $dom));
     }
 
     // New hook functions
@@ -214,12 +214,12 @@ function Profile_adminapi_delete($args)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom));
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom));
     }
 
     // normal type validation
     if ((int)$item['prop_dtype'] != 1) {
-        return LogUtil::registerError(__('Forbidden to delete this account property.', $dom), 404);
+        return LogUtil::registerError(__('Error! You cannot delete this personal info item.', $dom), 404);
     }
 
     // Security check
@@ -236,13 +236,13 @@ function Profile_adminapi_delete($args)
 
     $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
     if (!$res) {
-        return LogUtil::registerError(__('Error! Deletion attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not delete the personal info item.', $dom));
     }
 
     // delete the property
     $res = DBUtil::deleteObjectByID('user_property', $dudid, 'prop_id');
     if (!$res) {
-        return LogUtil::registerError(__('Error! Deletion attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not delete the personal info item.', $dom));
     }
 
     // Let any hooks know that we have deleted an item.
@@ -279,7 +279,7 @@ function Profile_adminapi_activate($args)
 
     // Check for an error with the database code
     if (!$res) {
-        return LogUtil::registerError(__('Error! Activation failed', $dom));
+        return LogUtil::registerError(__('Error! Activation failed.', $dom));
     }
 
     return true;
@@ -304,12 +304,12 @@ function Profile_adminapi_deactivate($args)
     $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
     if ($item == false) {
-        return LogUtil::registerError(__('No such account panel property found.', $dom), 404);
+        return LogUtil::registerError(__('Error! No such personal info item found.', $dom), 404);
     }
 
     // type validation
     if ($item['prop_dtype'] < 1) {
-        return LogUtil::registerError(__('Forbidden to deactivate this account property.', $dom), 404);
+        return LogUtil::registerError(__('Error! You cannot deactivate this personal info item.', $dom), 404);
     }
 
     // Update the item
@@ -320,7 +320,7 @@ function Profile_adminapi_deactivate($args)
 
     // Check for an error with the database code
     if (!$res) {
-        return LogUtil::registerError(__('Error! Deactivation failed', $dom));
+        return LogUtil::registerError(__('Error! Could not deactivate the personal info item.', $dom));
     }
 
     // Get database setup
@@ -337,7 +337,7 @@ function Profile_adminapi_deactivate($args)
 
     // Check for an error with the database code
     if (!$res) {
-        return LogUtil::registerError(__('Error! Deactivation failed', $dom));
+        return LogUtil::registerError(__('Error! Could not deactivate the personal info item.', $dom));
     }
 
     return true;
@@ -357,19 +357,26 @@ function Profile_adminapi_getlinks()
 
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'view'),
-                         'text' => __('Account Properties List', $dom));
+
+                         'text' => __('Personal info items list', $dom));
+
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'new'),
-                         'text' => __('Create an Account Property', $dom));
+
+                         'text' => __('Create new personal info item', $dom));
+
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'modifyconfig'),
-                         'text' => __('Settings', $dom));
+
+                         'text' => __('User account panel settings', $dom));
+
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'help'),
-                         'text' => __('Help page', $dom));
+                         'text' => __('Help', $dom));
+
     }
 
     return $links;

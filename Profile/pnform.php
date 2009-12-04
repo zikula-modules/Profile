@@ -22,7 +22,7 @@ function Profile_form_edit($args)
 
     // can't use this function directly
     if (pnModGetName() == 'Profile') {
-        return LogUtil::registerError(__("You can't access to the form functions directly.", $dom), null, pnModURL('Profile'));
+        return LogUtil::registerError(__("Error! You cannot access form functions directly.", $dom), null, pnModURL('Profile'));
     }
 
     // The API function is called.
@@ -71,7 +71,7 @@ function Profile_form_search($args)
 
     // can't use this function directly
     if (pnModGetName() == 'Profile') {
-        return LogUtil::registerError(__("You can't access to the form functions directly.", $dom), null, pnModURL('Profile'));
+        return LogUtil::registerError(__("Error! You cannot access form functions directly.", $dom), null, pnModURL('Profile'));
     }
 
     // The API function is called.
@@ -119,7 +119,7 @@ function Profile_form_display($args)
 
     // can't use this function directly
     if (pnModGetName() == 'Profile') {
-        return LogUtil::registerError(__("You can't access to the form functions directly.", $dom), null, pnModURL('Profile'));
+        return LogUtil::registerError(__("Error! You cannot access form functions directly.", $dom), null, pnModURL('Profile'));
     }
 
     // The API function is called.
