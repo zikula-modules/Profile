@@ -34,8 +34,8 @@ function Profile_featureduserblock_info()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     return array('module'          => 'Profile',
-                 'text_type'       => DataUtil::formatForDisplay(__('Featured User', $dom)),
-                 'text_type_long'  => DataUtil::formatForDisplay(__('Show Featured User', $dom)),
+                 'text_type'       => DataUtil::formatForDisplay(__('Featured user', $dom)),
+                 'text_type_long'  => DataUtil::formatForDisplay(__('Show featured user', $dom)),
                  'allow_multiple'  => true,
                  'form_content'    => false,
                  'form_refresh'    => false,
