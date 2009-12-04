@@ -169,7 +169,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $uservalue = @unserialize($uservalue);
 
         $output = array();
-        foreach ($uservalue as $id) {
+        foreach ((array)$uservalue as $id) {
             if (isset($options[$id])) {
                 $output[] = $options[$id];
             }
@@ -191,7 +191,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $uservalue = @unserialize($uservalue);
 
         $output = array();
-        foreach ($uservalue as $id) {
+        foreach ((array)$uservalue as $id) {
             if (isset($options[$id])) {
                 $output[] = $options[$id];
             }
@@ -214,7 +214,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
     } elseif (DataUtil::is_serialized($uservalue) || is_array($uservalue)) {
         $uservalue = !is_array($uservalue) ? unserialize($uservalue) : $uservalue;
         $output = array();
-        foreach ($uservalue as $option) {
+        foreach ((array)$uservalue as $option) {
             $output[] = __($option, $dom);
         }
 

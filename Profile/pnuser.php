@@ -85,7 +85,7 @@ function Profile_user_view($args)
                 }
             }
         }
-        $dudarray[$dudattr] = $userinfo['__ATTRIBUTES__'][$dudattr];
+        $dudarray[$dudattr] = isset($userinfo['__ATTRIBUTES__'][$dudattr]) ? $userinfo['__ATTRIBUTES__'][$dudattr] : '';
     }
 
     // Create output object
