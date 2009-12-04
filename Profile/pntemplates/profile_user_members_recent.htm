@@ -7,19 +7,19 @@
     <thead>
         <tr>
             <th>&nbsp;</th>
-            <th><!--[gt text='User Name']--></th>
-            <th><!--[gt text='Registration Date']--></th>
+            <th><!--[gt text='User name']--></th>
+            <th><!--[gt text='Registration date']--></th>
             <!--[ if @isset($dudarray.realname) ]-->
-            <th><!--[gt text='True name']--></th>
+            <th><!--[gt text='Real name']--></th>
             <!--[/if]-->
             <!--[if $msgmodule]-->
-            <th><!--[gt text='PM']--></th>
+            <th><!--[gt text='Private message']--></th>
             <!--[/if]-->
             <!--[ if @isset($dudarray.url) ]-->
-            <th><!--[gt text='URL']--></th>
+            <th><!--[gt text='Site']--></th>
             <!--[/if]-->
             <!--[if $adminedit]-->
-            <th><!--[gt text='Options']--></th>
+            <th><!--[gt text='Actions']--></th>
             <!--[/if]-->
         </tr>
     </thead>
@@ -30,9 +30,9 @@
         <tr class="<!--[cycle values='z-odd,z-even']-->">
             <td>
                 <!--[if $users[users].onlinestatus eq 1]-->
-                <a href="<!--[pnmodurl modname='Profile' type='user' func='onlinemembers']-->"><!--[pnimg modname='core' src='greenled.gif' set='icons/extrasmall' __title='Online' __alt='Online']--></a>
+                <a href="<!--[pnmodurl modname='Profile' type='user' func='onlinemembers']-->"><!--[pnimg modname='core' src='greenled.gif' set='icons/extrasmall' __title='On-line' __alt='On-line']--></a>
                 <!--[else]-->
-                <!--[pnimg modname='core' src='redled.gif' set='icons/extrasmall' __title='Offline' __alt='Offline' ]-->
+                <!--[pnimg modname='core' src='redled.gif' set='icons/extrasmall' __title='Off-line' __alt='Off-line' ]-->
                 <!--[/if]-->
             </td>
             <td><strong><!--[$users[users].uname|userprofilelink]--></strong></td>
@@ -62,7 +62,7 @@
             <!--[/if]-->
         </tr>
         <!--[sectionelse]-->
-        <tr class="z-datatableempty"><td colspan="7"><!--[gt text='No users found.']--></td></tr>
+        <tr class="z-datatableempty"><td colspan="7"><!--[gt text='No recently-registered users found.']--></td></tr>
         <!--[/section]-->
     </tbody>
 </table>

@@ -1,7 +1,7 @@
 <!--[*  $Id: profile_user_view.htm 368 2009-11-23 23:35:31Z mateo $  *]-->
 <!--[array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name']-->
 <!--[if !$name]--><!--[assign var='name' value=$uname]--><!--[/if]-->
-<!--[gt text="%s's personal information" tag1=$name|@ucwords|pnvarprepfordisplay assign='templatetitle']-->
+<!--[gt text="Personal info for %s" tag1=$name|@ucwords|pnvarprepfordisplay assign='templatetitle']-->
 
 <!--[include file='profile_user_menu.htm']-->
 
@@ -17,7 +17,7 @@
 
     <div class="z-form">
         <div class="z-formrow">
-            <strong class="z-label"><!--[gt text='User Name']--></strong>
+            <strong class="z-label"><!--[gt text='User name:']--></strong>
             <div><!--[$uname|pnvarprepfordisplay]--></div>
         </div>
         <!--[foreach from=$fields item='field']-->

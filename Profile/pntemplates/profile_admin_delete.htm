@@ -1,5 +1,5 @@
 <!--[*  $Id: profile_admin_delete.htm 335 2009-11-09 06:52:03Z drak $  *]-->
-<!--[gt text="Delete property" assign=templatetitle]-->
+<!--[gt text="Delete personal info item" assign=templatetitle]-->
 
 <!--[include file=profile_admin_menu.htm]-->
 
@@ -8,14 +8,14 @@
 
     <h2><!--[$templatetitle]--></h2>
 
-    <p class="z-warningmsg"><!--[gt text='Do you really want to delete this property?']--></p>
+    <p class="z-warningmsg"><!--[gt text='Do you really want to delete this personal info item?']--></p>
     <form class="z-form" action="<!--[pnmodurl modname='Profile' type='admin' func='delete']-->" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
             <input type="hidden" name="confirmation" value="1" />
             <input type="hidden" name="dudid" value="<!--[$dudid]-->" />
             <fieldset>
-                <legend><!--[gt text='Confirmation Prompt']--></legend>
+                <legend><!--[gt text='Confirmation prompt']--></legend>
                 <div class="z-formbuttons">
                     <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='Delete' __title='Delete']-->
                     <a href="<!--[pnmodurl modname='Profile' type='admin' func='view']-->"><!--[pnimg modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel']--></a>

@@ -10,7 +10,7 @@
         <!--[if $user.uid eq $uid]-->
         (<a href="<!--[$messageslink|pnvarprephtmldisplay]-->" title="<!--[gt text='unread' domain='module_profile']-->"><!--[$messages.totalin]--></a> | <a href="<!--[$messageslink|pnvarprephtmldisplay]-->" title="<!--[gt text='total' domain='module_profile']-->"><!--[$messages.unread]--></a>)
         <!--[/if]-->
-        <a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$user.uid]-->" title="<!--[gt text='PM' domain='module_profile']--><!--[$user.uname|pnvarprephtmldisplay]-->"><!--[pnimg modname='core' set='icons/extrasmall' src='mail_new.gif' __alt='Send private message' style='vertical-align:middle; margin-left:2px;']--></a>
+        <a href="<!--[pnmodurl modname=$msgmodule func='newpm' uid=$user.uid]-->" title="<!--[gt text='Send private message' domain='module_profile']--><!--[$user.uname|pnvarprephtmldisplay]-->"><!--[pnimg modname='core' set='icons/extrasmall' src='mail_new.gif' __alt='Send private message' style='vertical-align:middle; margin-left:2px;']--></a>
         <!--[/if]-->
     </li>
     <!--[/foreach]-->
@@ -18,16 +18,16 @@
 <!--[/if]-->
 <p>
     <!--[if $anonymoussessions eq 0 and $membonline eq 0]-->
-    <!--[gt text='There are %s registered users online.' tag1=$membonline domain='module_profile']-->
+    <!--[gt text='%s registered users on-line.' tag1=$membonline domain='module_profile']-->
     <!--[elseif $anonymoussessions eq 0 and $membonline neq 0]-->
-    <!--[gt text='There is %s registered user online.' tag1=$membonline domain='module_profile']-->
+    <!--[gt text='%s registered user on-line.' tag1=$membonline domain='module_profile']-->
     <!--[elseif $anononline neq 1 and $membonline eq 1]-->
-    <!--[gt text='There are %1$s unlogged users and %2$s registered user online.' tag1=$anononline tag2=$membonline domain='module_profile']-->
+    <!--[gt text='%2$s registered user and %1$s anonymous guests on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
     <!--[elseif $anononline eq 1 and $membonline neq 1]-->
-    <!--[gt text='There is %1$s unlogged user and %2$s registered users online.' tag1=$anononline tag2=$membonline domain='module_profile']-->
+    <!--[gt text='%2$s registered users and %1$s anonymous guest on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
     <!--[elseif $anononline eq 1 and $membonline eq 1]-->
-    <!--[gt text='There is %1$s unlogged user and %2$s registered user online.' tag1=$anononline tag2=$membonline domain='module_profile']-->
+    <!--[gt text='%2$s registered users and %1$s anonymous guest on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
     <!--[else]-->
-    <!--[gt text='There are %1$s unlogged users and %2$s registered users online.' tag1=$anononline tag2=$membonline domain='module_profile']-->
+    <!--[gt text='%2$s registered users and %1$s anonymous guests on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
     <!--[/if]-->
 </p>

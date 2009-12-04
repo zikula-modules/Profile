@@ -1,5 +1,5 @@
 <!--[*  $Id: profile_user_modify.htm 335 2009-11-09 06:52:03Z drak $  *]-->
-<!--[gt text='Edit Personal Info' assign='templatetitle']-->
+<!--[gt text='Edit personal info' assign='templatetitle']-->
 <!--[pnajaxheader validation=true]-->
 
 <!--[include file='profile_user_menu.htm']-->
@@ -7,7 +7,7 @@
 <form id="modifyprofileform" class="z-form" action="<!--[pnmodurl modname='Profile' type='user' func='update']-->" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset>
         <legend><!--[$templatetitle]--></legend>
-        <p><!--[gt text="The items that are marked with an asterisk ('*') are required entries."]--></p>
+        <p><!--[gt text="Items marked with an asterisk ('*') are required entries."]--></p>
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
         <!--[foreach from=$duditems item=item]-->
         <!--[duditemmodify item=$item]-->

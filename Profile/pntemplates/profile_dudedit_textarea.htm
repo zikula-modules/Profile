@@ -3,7 +3,7 @@
 <div class="<!--[$class|default:'z-formrow']-->">
     <!--[if $required]-->
     <p id="advice-required-prop_<!--[$attributename]-->" class="custom-advice z-formnote" style="display:none">
-        <!--[gt text='Error! Required profile item missing']-->
+        <!--[gt text='Sorry! A required personal info item is missing. Please correct and try again.']-->
     </p>
     <!--[/if]-->
 
@@ -14,9 +14,9 @@
     <textarea id="prop_<!--[$attributename]-->" cols="40" rows="5" name="dynadata[<!--[$attributename]-->]"<!--[if $required]--> class="required"<!--[/if]-->><!--[$value]--></textarea><br />
 
     <!--[if $note neq '']-->
-    <em class="z-sub z-formnote"><!--[gt text='Note']-->: <!--[$note]--></em>
+    <em class="z-sub z-formnote"><!--[gt text='Notice:']-->: <!--[$note]--></em>
     <!--[/if]-->
     <!--[if $pncore.Profile.dudtextdisplaytags|default:0 eq 1]-->
-    <p class="z-formnote"><!--[gt text="Permitted HTML tags"]-->: <!--[allowedhtml]--></p>
+    <p class="z-formnote"><!--[gt text="Permitted HTML tags:"]--> <!--[allowedhtml]--></p>
     <!--[/if]-->
 </div>

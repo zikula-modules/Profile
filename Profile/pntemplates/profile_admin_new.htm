@@ -1,6 +1,6 @@
 <!--[*  $Id: profile_admin_new.htm 370 2009-11-25 10:44:01Z mateo $  *]-->
 <!--[pnajaxheader modname='Profile' filename='profile_edit_property.js' nobehaviour=true noscriptaculous=true]-->
-<!--[gt text='Create profile property' assign='templatetitle']-->
+<!--[gt text='Create new personal info item' assign='templatetitle']-->
 
 <!--[include file='profile_admin_menu.htm']-->
 
@@ -13,33 +13,35 @@
         <div>
             <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
             <fieldset>
-                <legend><!--[gt text='New Property']--></legend>
-                <div class="z-formnote z-warningmsg"><!--[gt text="No special characters nor blanks are allowed in the label or internal name."]--></div>
+                <legend><!--[gt text='Personal info item']--></legend>
+                <div class="z-formnote z-warningmsg"><!--[gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."]--></div>
                 <div class="z-formrow">
-                    <label for="profile_label"><!--[gt text='Property label']--></label>
+                    <label for="profile_label"><!--[gt text='Label']--></label>
                     <input id="profile_label" name="label" type="text" size="20" maxlength="255" />
+
                     <!--[pnmodurl modname='Profile' type='admin' func='help' fqurl=true assign='helpurl']-->
                     <div class="z-formnote z-informationmsg"><!--[gt text="Check the <a href=\"%s\">help page</a> to get more information about labels and translatable stuff." tag1=$helpurl]--></div>
+
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_attributename"><!--[gt text='Internal name']--></label>
+                    <label for="profile_attributename"><!--[gt text='Attribute name']--></label>
                     <input id="profile_attributename" name="attributename" type="text" size="20" maxlength="80" />
-                    <div class="z-formnote z-warningmsg"><!--[gt text="The internal name, called 'attribute', cannot be changed afterwards, so select it carefully!"]--></div>
+                    <div class="z-formnote z-warningmsg"><!--[gt text="Notice: The attribute name you enter cannot be changed afterwards, so you should choose it carefully."]--></div>
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_required"><!--[gt text='Required']--></label>
+                    <label for="profile_required"><!--[gt text='Make this a \'Required\' item']--></label>
                     <select id="profile_required" name="required">
                         <!--[html_options options=$requiredoptions]-->
                     </select>
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_viewby"><!--[gt text='Viewable by']--></label>
+                    <label for="profile_viewby"><!--[gt text='Visibility']--></label>
                     <select id="profile_viewby" name="viewby">
                         <!--[html_options options=$viewbyoptions]-->
                     </select>
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_displaytype"><!--[gt text='Display type']--></label>
+                    <label for="profile_displaytype"><!--[gt text='Type of control to display']--></label>
                     <select id="profile_displaytype" name="displaytype">
                         <!--[html_options options=$displaytypes]-->
                     </select>
@@ -47,17 +49,19 @@
                 <div class="z-formrow" id="profile_content_wrapper">
                     <label for="profile_listoptions"><!--[gt text='List content']--></label>
                     <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions"></textarea>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Preceed the output options by <strong>@@</strong>. For example: <strong>@@No@@Yes</strong>, <strong>@@Disabled@@Enabled</strong>. <br />Note the order of both options. Also, if you want to use a different label in the edit form, you can use the following format: <strong>EditLabel@@DisplayNo@@DisplayYes</strong>; all is susceptible to be translated"]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Use the following format for each option: <strong>@@label@id</strong>. For example: <strong>@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3</strong>. The options are susceptible to be translated."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Use the following format for each option: <strong>@@label@id</strong>. For example: <br />a simple list: <strong>@@option 1@id1@@option 2@id2@@option 3@id3</strong>, <br />and a multiple select: <strong>1@@option 1@id1@@option 2@id2@@option 3@id3</strong>. <br />The options are susceptible to be translated."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="You can define here the date format to use. You can use the core shortcuts: datelong, datebrief, datestring, datestring2, datetimebrief, datetimelong, timebrief, timelong; or a custom format like <strong>%b %d of %Y</strong> using the <a href=\"http://www.php.net/manual/en/function.strftime.php\">available options</a>, and that can be translatable."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Use the following format for each option: <strong>id,label;</strong>. For example: <strong>id1,label1;id2,label2;id3,label3</strong>. Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (','). The labels are susceptible to be translated."]--></p>
+
+                    <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. You will probably want to provide 'gettext' strings to display for each option. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio 1@id1@@radio 2@id2@@radio 3@id3'. You will probably want to provide 'gettext' strings to display for each option."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example for a simple list: '@@option 1@id1@@option 2@id2@@option 3@id3'. Example for a multiple checkbox set: '1@@option 1@id1@@option 2@id2@@option 3@id3'. You will probably want to provide 'gettext' strings to display for each option."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="Notice: You can specify the date format to use, either via Zikula core templating variables ('datelong', 'datebrief', 'datestring', 'datestring2', 'datetimebrief', 'datetimelong', 'timebrief' or 'timelong'), or via a custom format such as '%b %d of %Y', possibly using PHP options (see the <a href="http://www.php.net/manual/en/function.strftime.php">PHP documentation</a> for more information). You will probably want to provide 'gettext' strings to display for each option."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Notice: Use the following format for each option: 'id,label;'. Example: 'id1,label1;id2,label2;id3,label3'. Each property should be separated with a semicolon (';'). The ID and label of each property should be separated by a comma (','). You will probably want to provide 'gettext' strings to display for each label."]--></p>
+
                     <div class="z-formnote z-warningmsg" id="profile_warn_ids">
-                        <!--[gt text="It's recommended to use unique and stable ids always. If an id is not defined, Profile will use the option position starting from 0."]-->
+                        <!--[gt text="Notice: Entering an ID is optional. If you do not specify an ID, the option position will be used for the ID (starting from zero), instead of the user-defined ID you can enter here. You are recommended to choose an ID that is unique, and to avoid subsequently modifying it."]-->
                     </div>
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_note"><!--[gt text='Note']--></label>
+                    <label for="profile_note"><!--[gt text='Notice to display with personal info item']--></label>
                     <textarea id="profile_note" cols="50" rows="2" name="note"></textarea>
                 </div>
             </fieldset>
@@ -65,7 +69,7 @@
             <!--[pnmodcallhooks hookobject='item' hookaction='new' module='Profile']-->
 
             <div class="z-formbuttons">
-                <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='Create' __title='Create']-->
+                <!--[pnbutton src='button_ok.gif' set='icons/small' __alt='Save' __title='Save']-->
                 <a href="<!--[pnmodurl modname='Profile' type='admin' func='view']-->"><!--[pnimg modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel']--></a>
             </div>
         </div>

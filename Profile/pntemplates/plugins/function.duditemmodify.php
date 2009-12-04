@@ -138,7 +138,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             if (pnUserGetVar('uid') != $uid) {
                 return '';
             }
-            $render->assign('linktext', __('Change your Avatar'));
+            $render->assign('linktext', __('Avatar manager'));
             $render->assign('linkurl', pnModURL('Avatar'));
             $output = $render->fetch('profile_dudedit_link.htm');
             // add a hidden input if this is required

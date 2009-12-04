@@ -3,7 +3,7 @@
 <div class="<!--[$class|default:'z-formrow']-->">
     <!--[if $required]-->
     <p id="advice-required-prop_<!--[$attributename]-->" class="custom-advice z-formnote" style="display:none">
-        <!--[gt text='Error! Required profile item missing']-->
+        <!--[gt text='Sorry! A required personal info item is missing. Please correct and try again.']-->
     </p>
     <!--[/if]-->
 
@@ -15,6 +15,6 @@
     <!--[pncalendarinput objectname='' htmlname="prop_$attributename" dateformat='%Y-%m-%d' defaultdate=''|pndate_format:'%Y-%m-%d']-->
 
     <!--[if $note neq '']-->
-    <em class="z-sub z-formnote"><!--[gt text='Note']-->: <!--[$note]--></em>
+    <em class="z-sub z-formnote"><!--[gt text='Notice:']--> <!--[$note]--></em>
     <!--[/if]-->
 </div>

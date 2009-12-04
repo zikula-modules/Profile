@@ -1,6 +1,6 @@
 <!--[*  $Id: profile_admin_view.htm 370 2009-11-25 10:44:01Z mateo $  *]-->
 <!--[pnajaxheader modname='Profile' filename='profile.js']-->
-<!--[gt text='View Properties' assign='templatetitle']-->
+<!--[gt text='Personal info items list' assign='templatetitle']-->
 
 <!--[include file='profile_admin_menu.htm']-->
 
@@ -13,12 +13,12 @@
         <div>
             <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
             <input type="hidden" id="startnum" name="startnum" value="<!--[$startnum]-->" />
-            <div id="profilehint" class="z-informationmsg" style="display:none"><!--[gt text="Tip: You can arrange the order of the individual properties, using drag and drop. The display order will be saved when you drop the property at the desired place."]--></div>
+            <div id="profilehint" class="z-informationmsg" style="display:none"><!--[gt text="Notice: Use drag and drop to arrange the arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place."]--></div>
             <ol id="profilelist">
                 <li class="profilelistheader z-clearfix">
-                    <span style="width:25%"><strong><!--[gt text='Property Label']--></strong></span>
+                    <span style="width:25%"><strong><!--[gt text='Label']--></strong></span>
                     <span><strong><!--[gt text='Internal name']--></strong></span>
-                    <span><strong><!--[gt text='Dud type']--></strong></span>
+                    <span><strong><!--[gt text='Type']--></strong></span>
                     <span><strong><!--[gt text='Status']--></strong></span>
                     <span style="width:7%"><strong><!--[gt text='Actions']--></strong></span>
                 </li>
