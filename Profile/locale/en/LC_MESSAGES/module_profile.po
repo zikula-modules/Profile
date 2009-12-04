@@ -5,7 +5,7 @@ msgstr ""
 "POT-Creation-Date: 2009-12-04 16:58+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: David Nelson <commerce@traduction.biz>\n"
-"Language-Team: Zikula Development Team <drak@zikula.org>\n"
+"Language-Team: Zikula Team <drak@zikula.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -439,7 +439,7 @@ msgstr "Real name"
 
 #: pninit.php:261
 msgid "_UFAKEMAIL"
-msgstr "Public e-mail address"
+msgstr "Publicly-displayed e-mail address"
 
 #: pninit.php:271
 msgid "_YOURSITE"
@@ -684,7 +684,7 @@ msgstr ""
 
 #: pntemplates/profile_admin_new.htm:50
 #: pntemplates/profile_admin_modify.htm:51
-msgid "List content"
+msgid "Content"
 msgstr ""
 
 #: pntemplates/profile_admin_new.htm:53

@@ -48,31 +48,21 @@
                     </select>
                 </div>
                 <div class="z-formrow" id="profile_content_wrapper">
-                    <label for="profile_listoptions"><!--[gt text='List content']--></label>
+                    <label for="profile_listoptions"><!--[gt text='Content']--></label>
                     <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions"><!--[$item.prop_listoptions|pnvarprepfordisplay]--></textarea>
-<<<<<<< .mine
+
                     <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. You will probably want to provide 'gettext' strings to display for each option. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'."]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio 1@id1@@radio 2@id2@@radio 3@id3'. You will probably want to provide 'gettext' strings to display for each option."]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example for a simple list: '@@option 1@id1@@option 2@id2@@option 3@id3'. Example for a multiple checkbox set: '1@@option 1@id1@@option 2@id2@@option 3@id3'. You will probably want to provide 'gettext' strings to display for each option."]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="Notice: You can specify the date format to use, either via Zikula core templating variables ('datelong', 'datebrief', 'datestring', 'datestring2', 'datetimebrief', 'datetimelong', 'timebrief' or 'timelong'), or via a custom format such as '%b %d of %Y', possibly using PHP options (see the <a href="http://www.php.net/manual/en/function.strftime.php">PHP documentation</a> for more information). You will probably want to provide 'gettext' strings to display for each option."]--></p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Notice: Use the following format for each option: 'id,label;'. Example: 'id1,label1;id2,label2;id3,label3'. Each property should be separated with a semicolon (';'). The ID and label of each property should be separated by a comma (','). You will probably want to provide 'gettext' strings to display for each label."]--></p>
 
-=======
-                    <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Preceed the output options by <strong>@@</strong>. For example: <strong>@@No@@Yes</strong>, <strong>@@Disabled@@Enabled</strong>. <br />Note the order of both options. Also, if you want to use a different label in the edit form, you can use the following format: <strong>EditLabel@@DisplayNo@@DisplayYes</strong>; all is susceptible to be translated"]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Use the following format for each option: <strong>@@label@id</strong>. For example: <strong>@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3</strong>. The options are susceptible to be translated."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Use the following format for each option: <strong>@@label@id</strong>. For example: <br />a simple list: <strong>@@option 1@id1@@option 2@id2@@option 3@id3</strong>, <br />and a multiple select: <strong>1@@option 1@id1@@option 2@id2@@option 3@id3</strong>. <br />The options are susceptible to be translated."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="You can define here the date format to use. You can use the core shortcuts: datelong, datebrief, datestring, datestring2, datetimebrief, datetimelong, timebrief, timelong; or a custom format like <strong>%b %d of %Y</strong> using the <a href=\"http://www.php.net/manual/en/function.strftime.php\">available options</a>, and that can be translatable."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Use the following format for each option: <strong>id,label;</strong>. For example: <strong>id1,label1;id2,label2;id3,label3</strong>. Separate each individual property with a semicolon (';'). Separate the ID and label of each property with a comma (','). The labels are susceptible to be translated."]--></p>
->>>>>>> .r57
                     <div class="z-formnote z-warningmsg" id="profile_warn_ids">
-<<<<<<< .mine
+
                         <!--[gt text="Warning! If you want to edit an personal info item without losing associated user data in the database, then the ID and the label should not be renamed simultaneously. For instance, if you rename the ID then do not rename the label before saving your changes. If you rename the label then do not rename the ID before saving your changes. Also, do not assign IDs and labels the same naming. You are recommended to give each ID a unique name, and to try to avoid renaming an ID once it has been created."]--><br />
 
                         <!--[gt text="If you do not specify an attribute name, the option position will be used for the attribute name (starting from zero), instead of the user-defined attribute name you can enter here. If you do not specify an attribute name and you subsequently insert a new option, then you should not alter the existing options before you save the edited field definition."]-->
-=======
-                        <!--[gt text="Warning! If you want to change the <strong>id</strong> without lose the user's data, change it but do not change the <strong>label</strong>. The next time you will be able to change the label if you want. Also, be sure to use different labels for the integrity of the user's data."]--><br />
-                        <!--[gt text="It's recommended to use unique and stable ids always. If an id is not defined, Profile will use the option position starting from 0. If you do not use an id and insert a new option, do not touch the existing options when update the field."]-->
->>>>>>> .r57
+
                     </div>
                 </div>
                 <div class="z-formrow">

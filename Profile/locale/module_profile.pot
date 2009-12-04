@@ -691,7 +691,7 @@ msgstr ""
 
 #: pntemplates/profile_admin_new.htm:50
 #: pntemplates/profile_admin_modify.htm:51
-msgid "List content"
+msgid "Content"
 msgstr ""
 
 #: pntemplates/profile_admin_new.htm:53
