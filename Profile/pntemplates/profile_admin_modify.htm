@@ -19,12 +19,10 @@
                 <div class="z-formrow">
                     <label for="profile_label"><!--[gt text='Label']--></label>
                     <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="<!--[$item.prop_label|pnvarprepfordisplay]-->" />
-<<<<<<< .mine
-                    <div class="z-formnote z-warningmsg"><!--[gt text="Notice: After you enter a new label, you will want to provide a natural-language 'gettext' string to display within pages, for each language used on the site. Until you do so, the label you enter here will be shown instead. Example: enter the label '_MYDUDLABEL' in the 'Label' field. Then, at the end of the file '/module/Profile/locale/module_profile.pot', enter the text <strong>msgid \"_MYDUDLABEL\"</strong>. Then, on the next line, enter the text <strong>msgstr \"\"</strong>. Then generate a '.po' file for each language used on the site. Then translate the '.po' files so as to provide a display string for the new personal info item label in each language."]--></div>
-=======
+
                     <!--[pnmodurl modname='Profile' type='admin' func='help' fqurl=true assign='helpurl']-->
-                    <div class="z-formnote z-informationmsg"><!--[gt text="Check the <a href=\"%s\">help page</a> to get more information about labels and translatable stuff." tag1=$helpurl]--></div>
->>>>>>> .r57
+                    <div class="z-formnote z-informationmsg"><!--[gt text="Check the <a href=\"%s\">help page</a> to get more information about labels and translatable items." tag1=$helpurl]--></div>
+
                 </div>
                 <div class="z-formrow">
                     <label for="profile_attributename"><!--[gt text='Attribute name']--></label>
