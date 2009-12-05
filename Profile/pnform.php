@@ -4,7 +4,7 @@
  *
  * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
- * @version $Id: pnform.php 362 2009-11-22 20:15:32Z mateo $
+ * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Zikula_System_Modules
  * @subpackage Profile

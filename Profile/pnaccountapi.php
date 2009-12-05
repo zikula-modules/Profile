@@ -4,7 +4,7 @@
  *
  * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
- * @version $Id: pnaccountapi.php 365 2009-11-23 16:18:55Z mateo $
+ * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Zikula_System_Modules
  * @subpackage Profile

@@ -4,7 +4,7 @@
  *
  * @copyright (c), Zikula Development Team
  * @link http://www.zikula.org
- * @version $Id: pnadminapi.php 370 2009-11-25 10:44:01Z mateo $
+ * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Zikula_System_Modules
  * @subpackage Profile
@@ -176,6 +176,13 @@ function Profile_adminapi_update($args)
     // let to modify the label for normal fields only
     if ($item['prop_dtype'] == 1) {
         $obj['prop_label'] = $args['label'];
+    }
+
+    // before update it search for option ID change
+    // to update the respective user's data
+    if ($obj['prop_validation'] != $item['prop_validation']) {
+        // TODO check if they are the listoptions
+        
     }
 
     $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');

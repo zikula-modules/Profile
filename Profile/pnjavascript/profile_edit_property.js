@@ -3,7 +3,7 @@
  *
  * @copyright (c), Zikula Development Team
  * @link http://www.zikula.com
- * @version $Id: profile_edit_property.js 367 2009-11-23 22:16:28Z mateo $
+ * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Zikula_System_Modules
  * @subpackage Profile
