@@ -316,7 +316,14 @@ function Profile_userapi_checkrequired($args)
     foreach ($items as $item)
     {
         if ($item['prop_required'] == 1) {
-            if (is_array($args['dynadata'][$item['prop_attribute_name']])) {
+            // exclude the checkboxes from required check
+            if (in_array($item['prop_displaytype'], array(2, 7))) {
+                continue;
+            } elseif (!isset($args['dynadata'][$item['prop_attribute_name']])) {
+                $error['result'] = true;
+                $error['fields'][] = $item['prop_attribute_name'];
+                $error['translatedFields'][] = __($item['prop_label'], $dom);
+            } elseif (is_array($args['dynadata'][$item['prop_attribute_name']])) {
                 while (list(,$value) = each($args['dynadata'][$item['prop_attribute_name']]))
                 {
                     if (_ProfileIsEmptyValue($value)) {

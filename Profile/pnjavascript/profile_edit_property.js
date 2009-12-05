@@ -22,7 +22,7 @@ function profile_modifyconfig_init()
 
     // initialized the backup of the required selector
     backup_required[0] = $F('profile_required');
-    if ($('profile_displaytype').value == '2') {
+    if ($('profile_displaytype').value == '2' || $('profile_displaytype').value == '7') {
     	$('profile_required').value = "0";
     	$('profile_required').disable();
     	backup_required[1] = true;
@@ -40,12 +40,16 @@ function profile_displaytype_onchange()
 
     var state = 0;
 
-    // checkbox
-    if ($('profile_displaytype').value == '2') {
+    // disable the required for checkbox and multiple checkbox
+    if ($('profile_displaytype').value == '2' || $('profile_displaytype').value == '7') {
         backup_required[0] = $F('profile_required');
         backup_required[1] = true;
         $('profile_required').value = "0";
         $('profile_required').disable();
+    }
+
+    // checkbox
+    if ($('profile_displaytype').value == '2') {
         state += 1;
     }
     // radio
