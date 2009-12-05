@@ -6,7 +6,7 @@
 <ul>
 <!--[foreach from=$section item='item']-->
     <li>
-        <a href="<!--[$item.url|pnvarprepfordisplay]-->"><!--[$item.subject|pnvarprepfordisplay]--></a><br />
+        <a href="<!--[$item.url|pnvarprepfordisplay]-->"><!--[if $item.subject]--><!--[$item.subject|pnvarprepfordisplay]--><!--[else]--><!--[$item.comment|pnvarprepfordisplay|truncate:50]--><!--[/if]--></a><br />
         <span class="z-sub"><!--[gt text='On %s' tag1=$item.date|pndate_format:'datelong']--></span>
     </li>
 <!--[/foreach]-->
