@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula component\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-05 01:48-0500\n"
+"POT-Creation-Date: 2009-12-05 08:23-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,49 +80,49 @@ msgstr ""
 msgid "Error! Could not create new attribute."
 msgstr ""
 
-#: pnadminapi.php:112 pnadminapi.php:217 pnadminapi.php:307 pnadmin.php:329
+#: pnadminapi.php:112 pnadminapi.php:224 pnadminapi.php:314 pnadmin.php:329
 #: pnadmin.php:451 pnadmin.php:507 pnadmin.php:542
 msgid "Error! No such personal info item found."
 msgstr ""
 
-#: pnadminapi.php:185 pnajax.php:57 pnajax.php:95
+#: pnadminapi.php:192 pnajax.php:57 pnajax.php:95
 msgid "Error! Could not save your changes."
 msgstr ""
 
-#: pnadminapi.php:222
+#: pnadminapi.php:229
 msgid "Error! You cannot delete this personal info item."
 msgstr ""
 
-#: pnadminapi.php:239 pnadminapi.php:245 pndudapi.php:144 pndudapi.php:150
+#: pnadminapi.php:246 pnadminapi.php:252 pndudapi.php:144 pndudapi.php:150
 msgid "Error! Could not delete the personal info item."
 msgstr ""
 
-#: pnadminapi.php:282
+#: pnadminapi.php:289
 msgid "Error! Activation failed."
 msgstr ""
 
-#: pnadminapi.php:312
+#: pnadminapi.php:319
 msgid "Error! You cannot deactivate this personal info item."
 msgstr ""
 
-#: pnadminapi.php:323 pnadminapi.php:340
+#: pnadminapi.php:330 pnadminapi.php:347
 msgid "Error! Could not deactivate the personal info item."
 msgstr ""
 
-#: pnadminapi.php:360 pntemplates/profile_admin_view.htm:3
+#: pnadminapi.php:367 pntemplates/profile_admin_view.htm:3
 msgid "Personal info items list"
 msgstr ""
 
-#: pnadminapi.php:364 pntemplates/profile_admin_new.htm:3
+#: pnadminapi.php:371 pntemplates/profile_admin_new.htm:3
 msgid "Create new personal info item"
 msgstr ""
 
-#: pnadminapi.php:368 pntemplates/profile_admin_modifyconfig.htm:6
+#: pnadminapi.php:375 pntemplates/profile_admin_modifyconfig.htm:6
 #: pntemplates/profile_admin_modifyconfig.htm:8
 msgid "User account panel settings"
 msgstr ""
 
-#: pnadminapi.php:372
+#: pnadminapi.php:379
 msgid "Help"
 msgstr ""
 
@@ -177,6 +177,62 @@ msgstr ""
 msgid ""
 "Error! The 'Users' module must be upgraded to version 1.10 before you can "
 "upgrade the 'Profile' module."
+msgstr ""
+
+#: pninit.php:251
+msgid "_UREALNAME"
+msgstr ""
+
+#: pninit.php:261
+msgid "_UFAKEMAIL"
+msgstr ""
+
+#: pninit.php:271
+msgid "_YOURHOMEPAGE"
+msgstr ""
+
+#: pninit.php:281
+msgid "_TIMEZONEOFFSET"
+msgstr ""
+
+#: pninit.php:291
+msgid "_YOURAVATAR"
+msgstr ""
+
+#: pninit.php:301
+msgid "_YICQ"
+msgstr ""
+
+#: pninit.php:311
+msgid "_YAIM"
+msgstr ""
+
+#: pninit.php:321
+msgid "_YYIM"
+msgstr ""
+
+#: pninit.php:331
+msgid "_YMSNM"
+msgstr ""
+
+#: pninit.php:341
+msgid "_YLOCATION"
+msgstr ""
+
+#: pninit.php:351
+msgid "_YOCCUPATION"
+msgstr ""
+
+#: pninit.php:361
+msgid "_SIGNATURE"
+msgstr ""
+
+#: pninit.php:371
+msgid "_EXTRAINFO"
+msgstr ""
+
+#: pninit.php:381
+msgid "_YINTERESTS"
 msgstr ""
 
 #: pnmemberslistapi.php:205 pnmemberslistapi.php:377 pnmemberslistapi.php:422
@@ -251,7 +307,7 @@ msgstr ""
 msgid "Error! You cannot access form functions directly."
 msgstr ""
 
-#: pnajax.php:25 pnajax.php:76
+#: pnajax.php:25 pnajax.php:76 pnajax.php:117
 msgid "Sorry! You do not have authorisation for this module."
 msgstr ""
 
@@ -261,6 +317,10 @@ msgid ""
 "pressed the 'Back' button to return to a page which does not allow that, or "
 "else because the page's authorisation key expired due to prolonged "
 "inactivity. Please refresh the page and try again."
+msgstr ""
+
+#: pnajax.php:134
+msgid "Error! Could not load the section."
 msgstr ""
 
 #: pnadmin.php:90 pnadmin.php:120 pnadmin.php:124 pnadmin.php:129
@@ -787,6 +847,11 @@ msgstr ""
 msgid "day"
 msgstr ""
 
+#: pntemplates/profile_user_view_example.htm:4
+#, php-format
+msgid "Latest submissions of %s"
+msgstr ""
+
 #: pntemplates/profile_user_members_online.htm:35
 msgid "No registered users are currently on-line."
 msgstr ""
@@ -943,6 +1008,7 @@ msgid "Latest comments of %s"
 msgstr ""
 
 #: pntemplates/sections/profile_section_ezcomments.htm:10
+#: pntemplates/sections/profile_section_news.htm:10
 #, php-format
 msgid "On %s"
 msgstr ""
@@ -951,58 +1017,11 @@ msgstr ""
 msgid "No recent commets found."
 msgstr ""
 
-#: pninit.php:251
-msgid "_UREALNAME"
+#: pntemplates/sections/profile_section_news.htm:5
+#, php-format
+msgid "Latest articles of %s"
 msgstr ""
 
-#: pninit.php:261
-msgid "_UFAKEMAIL"
-msgstr ""
-
-#: pninit.php:271
-msgid "_YOURHOMEPAGE"
-msgstr ""
-
-#: pninit.php:281
-msgid "_TIMEZONEOFFSET"
-msgstr ""
-
-#: pninit.php:291
-msgid "_YOURAVATAR"
-msgstr ""
-
-#: pninit.php:301
-msgid "_YICQ"
-msgstr ""
-
-#: pninit.php:311
-msgid "_YAIM"
-msgstr ""
-
-#: pninit.php:321
-msgid "_YYIM"
-msgstr ""
-
-#: pninit.php:331
-msgid "_YMSNM"
-msgstr ""
-
-#: pninit.php:341
-msgid "_YLOCATION"
-msgstr ""
-
-#: pninit.php:351
-msgid "_YOCCUPATION"
-msgstr ""
-
-#: pninit.php:361
-msgid "_SIGNATURE"
-msgstr ""
-
-#: pninit.php:371
-msgid "_EXTRAINFO"
-msgstr ""
-
-#: pninit.php:381
-msgid "_YINTERESTS"
+#: pntemplates/sections/profile_section_news.htm:17
+msgid "No recent articles found."
 msgstr ""
