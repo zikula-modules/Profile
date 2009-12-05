@@ -21,15 +21,14 @@
                     <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="<!--[$item.prop_label|pnvarprepfordisplay]-->" />
 
                     <!--[pnmodurl modname='Profile' type='admin' func='help' fqurl=true assign='helpurl']-->
-                    <div class="z-formnote z-informationmsg"><!--[gt text="Check the <a href=\"%s\">help page</a> to get more information about labels and translatable items." tag1=$helpurl]--></div>
-
+                    <div class="z-formnote z-informationmsg"><!--[gt text='Check the <a href="%s">help page</a> to get more information about labels and translatable stuff.' tag1=$helpurl]--></div>
                 </div>
                 <div class="z-formrow">
                     <label for="profile_attributename"><!--[gt text='Attribute name']--></label>
                     <span id="profile_attributename"><!--[$item.prop_attribute_name]--></span>
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_required"><!--[gt text='Make this a \'Required\' item']--></label>
+                    <label for="profile_required"><!--[gt text="Make this a 'Required' item"]--></label>
                     <select id="profile_required" name="required">
                         <!--[html_options options=$requiredoptions selected=$item.prop_required]-->
                     </select>
@@ -51,18 +50,15 @@
                     <label for="profile_listoptions"><!--[gt text='Content']--></label>
                     <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions"><!--[$item.prop_listoptions|pnvarprepfordisplay]--></textarea>
 
-                    <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. You will probably want to provide 'gettext' strings to display for each option. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio 1@id1@@radio 2@id2@@radio 3@id3'. You will probably want to provide 'gettext' strings to display for each option."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example for a simple list: '@@option 1@id1@@option 2@id2@@option 3@id3'. Example for a multiple checkbox set: '1@@option 1@id1@@option 2@id2@@option 3@id3'. You will probably want to provide 'gettext' strings to display for each option."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="Notice: You can specify the date format to use, either via Zikula core templating variables ('datelong', 'datebrief', 'datestring', 'datestring2', 'datetimebrief', 'datetimelong', 'timebrief' or 'timelong'), or via a custom format such as '%b %d of %Y', possibly using PHP options (see the <a href=\"http://www.php.net/manual/en/function.strftime.php\">PHP documentation</a> for more information). You will probably want to provide 'gettext' strings to display for each option."]--></p>
-                    <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Notice: Use the following format for each option: 'id,label;'. Example: 'id1,label1;id2,label2;id3,label3'. Each property should be separated with a semicolon (';'). The ID and label of each property should be separated by a comma (','). You will probably want to provide 'gettext' strings to display for each label."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type2"><!--[gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. The order is important. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'. All the values are translatable."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type3"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3'. The options are translatable."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type4"><!--[gt text="Notice: Use the following format for each option: '@@label@id'. Example for a simple list: '@@option 1@id1@@option 2@id2@@option 3@id3'. Example for a multiple checkbox set: '1@@option 1@id1@@option 2@id2@@option 3@id3'. The options are translatable."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type5"><!--[gt text="Notice: You can specify the date format to use, either via Zikula core templating variables ('datelong', 'datebrief', 'datestring', 'datestring2', 'datetimebrief', 'datetimelong', 'timebrief' or 'timelong'), or via a custom format such as '%b %d of %Y', possibly using PHP options (see the <a href=\"http://www.php.net/manual/en/function.strftime.php\">PHP documentation</a> for more information). The format is translatable."]--></p>
+                    <p class="z-formnote z-informationmsg" id="profile_help_type7"><!--[gt text="Notice: Use the following format for each option: 'id,label;'. Example: 'id1,label1;id2,label2;id3,label3'. Each property should be separated with a semicolon (';'). The ID and label of each property should be separated by a comma (','). The labels are translatable."]--></p>
 
                     <div class="z-formnote z-warningmsg" id="profile_warn_ids">
-
-                        <!--[gt text="Warning! If you want to edit an personal info item without losing associated user data in the database, then the ID and the label should not be renamed simultaneously. For instance, if you rename the ID then do not rename the label before saving your changes. If you rename the label then do not rename the ID before saving your changes. Also, do not assign IDs and labels the same naming. You are recommended to give each ID a unique name, and to try to avoid renaming an ID once it has been created."]--><br />
-
-                        <!--[gt text="If you do not specify an attribute name, the option position will be used for the attribute name (starting from zero), instead of the user-defined attribute name you can enter here. If you do not specify an attribute name and you subsequently insert a new option, then you should not alter the existing options before you save the edited field definition."]-->
-
+                        <!--[gt text="Warning! If you want to edit the ID of an option without losing associated user data in the database, its label must not be renamed simultaneously. Also, do not assign IDs and labels the same naming. You are recommended to give each option an unique ID and a unique name, and to try to avoid renaming an ID once it has been created."]--><br />
+                        <!--[gt text="Notice: Entering an ID is optional. If you do not specify an ID, the option position will be used for the ID (starting from zero), instead of the user-defined ID you can enter here. You are recommended to choose an ID that is unique, and to avoid subsequently modifying it."]-->
                     </div>
                 </div>
                 <div class="z-formrow">

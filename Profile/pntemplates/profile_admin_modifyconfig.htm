@@ -25,19 +25,19 @@
             <fieldset>
                 <legend><!--[gt text='Registered users list']--></legend>
                 <div class="z-formrow">
-                    <label for="profile_memberslistitemsperpage"><!--[gt text='Users per page in \'Registered users list\'']--></label>
+                    <label for="profile_memberslistitemsperpage"><!--[gt text="Users per page in 'Registered users list'"]--></label>
                     <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="<!--[$pncore.Profile.memberslistitemsperpage|pnvarprepfordisplay]-->" />
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_onlinemembersitemsperpage"><!--[gt text='Users per page in \'Users currently on-line\' page']--></label>
+                    <label for="profile_onlinemembersitemsperpage"><!--[gt text="Users per page in 'Users currently on-line' page"]--></label>
                     <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="<!--[$pncore.Profile.onlinemembersitemsperpage|pnvarprepfordisplay]-->" />
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_recentmembersitemsperpage"><!--[gt text='Users per page in \'Recent registrations\' page']--></label>
+                    <label for="profile_recentmembersitemsperpage"><!--[gt text="Users per page in 'Recent registrations' page"]--></label>
                     <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="<!--[$pncore.Profile.recentmembersitemsperpage|pnvarprepfordisplay]-->" />
                 </div>
                 <div class="z-formrow">
-                    <label for="profile_filterunverified"><!--[gt text='Filter unverified users from \'Registered users list\'']--></label>
+                    <label for="profile_filterunverified"><!--[gt text="Filter unverified users from 'Registered users list'"]--></label>
                     <div id="profile_filterunverified">
                         <!--[if $pncore.Profile.filterunverified eq 1]-->
                         <input id="filterunverified1" type="radio" name="filterunverified" value="1" checked="checked" />
@@ -56,7 +56,7 @@
             <fieldset>
                 <legend><!--[gt text='Personal info item settings']--></legend>
                 <div class="z-formrow">
-                    <label for="profile_dudtextdisplaytags"><!--[gt text='Display \'Allowed HTML tags\' notice with each personal info item that is a \'textarea\'']--></label>
+                    <label for="profile_dudtextdisplaytags"><!--[gt text="Display 'Allowed HTML tags' notice with each personal info item that is a 'textarea'"]--></label>
                     <!--[if $pncore.Profile.dudtextdisplaytags|default:0 eq 1]-->
                     <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" checked="checked" />
                     <!--[else]-->
@@ -66,7 +66,7 @@
             </fieldset>
             <fieldset>
                 <legend><!--[gt text='User registration form settings']--></legend>
-                <p class="z-informationmsg"><!--[gt text="The personal info items that you activate below will be displayed in the user registration form if the 'Users manager' is configured to display personal info items during user registration, and if the 'Profile' module is specified in the 'General settings manager' as the module to provide the site's user profile management functionality. Personal info items that are configured as 'Required' will always be displayed in the user registration form. The list below only includes properties that are not 'Required' items."]--></p>
+                <p class="z-informationmsg"><!--[gt text="The personal info items that you activate below will be displayed in the user registration form if the 'Users' module is configured to display personal info items during user registration, and if the 'Profile' module is specified in the 'General settings manager' as the module to provide the site's user profile management functionality. Personal info items that are configured as 'Required' will always be displayed in the user registration form. The list below only includes properties that are not 'Required' items."]--></p>
                 <div class="z-formrow">
                     <label for="profile_dudregshow"><!--[gt text='Personal info items to include in user registration form']--></label>
                     <div id="profile_dudregshow">

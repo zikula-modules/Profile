@@ -199,7 +199,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
 
     // url
-    } elseif ($item['prop_attribute_name'] == 'ysite') {
+    } elseif ($item['prop_attribute_name'] == 'url') {
         if (!empty($uservalue) && $uservalue != 'http://') {
             $output = '<a href="'.DataUtil::formatForDisplay($uservalue).'" title="'.__f("%s's site", $userinfo['uname'], $dom).'" rel="nofollow">'.DataUtil::formatForDisplay($uservalue).'</a>';
         }

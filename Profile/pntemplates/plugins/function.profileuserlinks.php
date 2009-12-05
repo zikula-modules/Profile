@@ -141,7 +141,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
         }
         $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(pnModURL('ContactList', 'user', 'display', array('uid' => $smarty->_tpl_vars['uid']))) . '">' . __f('Show %s\'s contacts', $smarty->_tpl_vars['uname'], $dom) . '</a>';
         if ($buddystatus) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(pnModURL('ContactList', 'user', 'edit', array('id' => $buddystatus))) . '">' . __('Edit contact settings', $dom) . '</a>';
+            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(pnModURL('ContactList', 'user', 'edit', array('id' => $buddystatus))) . '">' . __('Edit contact', $dom) . '</a>';
         } else {
             $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(pnModURL('ContactList', 'user', 'create', array('uid' => $smarty->_tpl_vars['uid']))) . '">' . __('Add as contact', $dom) . '</a>';
         }

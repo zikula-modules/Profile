@@ -258,11 +258,11 @@ function Profile_admin_create($args)
 
     // Validates and check if empty or already existing...
     if (empty($label)) {
-        return LogUtil::registerError(__('Error! The personal info item must have a label. An example of an acceptable label is: \'_MYDUDLABEL\'.', $dom), null, $returnurl);
+        return LogUtil::registerError(__("Error! The personal info item must have a label. An example of a recommended label is: '_MYDUDLABEL'.", $dom), null, $returnurl);
     }
 
     if (empty($attrname)) {
-        return LogUtil::registerError(__('Error! The personal info item must have an attribute name. An example of an acceptable attribute name is: \'mydudfield\'.', $dom), null, $returnurl);
+        return LogUtil::registerError(__("Error! The personal info item must have an attribute name. An example of an acceptable name is: 'mydudfield'.", $dom), null, $returnurl);
     }
 
     if (pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $label))) {

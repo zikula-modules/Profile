@@ -33,7 +33,7 @@ function Profile_ajax_changeprofileweight()
     $startnum = FormUtil::getPassedValue('startnum');
 
     if ($startnum < 0) {
-        AjaxUtil::error(__f('Error! Invalid \'%s\' passed.', 'startnum', $dom));
+        AjaxUtil::error(__f("Error! Invalid '%s' passed.", 'startnum', $dom));
     }
 
     // update the items with the new weights

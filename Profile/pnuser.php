@@ -182,7 +182,7 @@ function Profile_user_update()
     $checkrequired = pnModAPIFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
 
     if ($checkrequired['result'] == true) {
-        LogUtil::registerError(__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
+        LogUtil::registerError(__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr'], $dom));
 
         // we do not send the passwords here!
         $params = array('uname'    => $uname,

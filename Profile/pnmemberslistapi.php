@@ -501,7 +501,7 @@ function Profile_memberslistapi_isonline($args)
     }
 
     // Get database setup
-    $dbconn = pnDBGetConn(true);
+    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // get active time based on security settings
@@ -510,7 +510,7 @@ function Profile_memberslistapi_isonline($args)
     // It's good practice to name the table and column definitions you are
     // getting - $table and $column don't cut it in more complex modules
     $sessioninfocolumn = $pntable['session_info_column'];
-    $sessioninfotable = $pntable['session_info'];
+    $sessioninfotable  = $pntable['session_info'];
 
     // Get items
     $sql = "SELECT DISTINCT $sessioninfocolumn[uid]

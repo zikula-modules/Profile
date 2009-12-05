@@ -52,7 +52,7 @@ function Profile_dudapi_register($args)
     // parses the DUD type
     $dtypes = array(-1 => 'noneditable', 0 => 'mandatory', 2 => 'normal');
     if (!in_array($args['dtype'], $dtypes)) {
-        return LogUtil::registerError(__f('Error! Invalid \'%s\' passed.', 'dtype', $dom));
+        return LogUtil::registerError(__f("Error! Invalid '%s' passed.", 'dtype', $dom));
     }
 
     // Clean the label

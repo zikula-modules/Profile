@@ -357,26 +357,19 @@ function Profile_adminapi_getlinks()
 
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'view'),
-
                          'text' => __('Personal info items list', $dom));
-
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'new'),
-
                          'text' => __('Create new personal info item', $dom));
-
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'modifyconfig'),
-
                          'text' => __('User account panel settings', $dom));
-
     }
     if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
         $links[] = array('url'  => pnModURL('Profile', 'admin', 'help'),
                          'text' => __('Help', $dom));
-
     }
 
     return $links;
