@@ -28,5 +28,8 @@
     Any translation used in the function or API, should be included in the custom POT catalog
     in /config/locale/module_profile.pot as the admin help page indicates.
 
-    Enjoy!
+    This Section API also includes an interface to load a section through AJAX.
+    The URL of the function is /ajax.php?module=Profile&func=profilesection
+    and needs the following parameters: $uid, $name and optionally an array of arguments ($args).
 
+    Enjoy!

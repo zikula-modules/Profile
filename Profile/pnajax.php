@@ -99,3 +99,54 @@ function Profile_ajax_changeprofilestatus()
                  'dudid' => $prop_id,
                  'newstatus' => !$oldstatus);
 }
+
+/**
+ * get a profile section for an user
+ *
+ * @author Mateo Tibaquira
+ * @param  uid   id of the user to query
+ * @param  name  name of the section to retrieve
+ * @param  args  [optional] arguments to the API
+ * @return array output or Ajax error
+ */
+function Profile_ajax_profilesection()
+{
+    $dom = ZLanguage::getModuleDomain('Profile');
+
+    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
+        AjaxUtil::error(__('Sorry! You do not have authorisation for this module.', $dom));
+    }
+
+    $uid  = FormUtil::getPassedValue('uid');
+    $name = FormUtil::getPassedValue('name');
+    $args = FormUtil::getPassedValue('args');
+
+    if (empty($uid) || !is_numeric($uid) || empty($name)) {
+        return array('result' => false);
+    }
+    if (empty($args) || !is_array($args)) {
+        $args = array();
+    }
+
+    // update the item status
+    $section = pnModAPIFunc('Profile', 'section', $name, array_merge($args, array('uid' => $uid)));
+    if (!$section) {
+        AjaxUtil::error(__('Error! Could not load the section.', $dom));
+    }
+
+    // build the output
+    $render = & pnRender::getInstance('Profile', false, null, true);
+
+    // check the tmeplate existance
+    $template = "sections/profile_section_{$name}.htm";
+    if (!$render->template_exists($template)) {
+        return array('result' => false);
+    }
+
+    // assign and render the output
+    $render->assign('section', $section);
+
+    return array('result' => $render->fetch($template, $uid),
+                 'name'   => $name,
+                 'uid'    => $uid);
+}
