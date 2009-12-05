@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Profile 1.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-05 01:05-0500\n"
-"PO-Revision-Date: 2009-12-05 01:15-0500\n"
+"POT-Creation-Date: 2009-12-05 01:48-0500\n"
+"PO-Revision-Date: 2009-12-05 01:50-0500\n"
 "Last-Translator: Mateo Tibaquirá <mateo@zikula.org>\n"
 "Language-Team: Zikula Team <drak@zikula.org>\n"
 "MIME-Version: 1.0\n"
@@ -753,9 +753,7 @@ msgid "User name:"
 msgstr ""
 
 #: pntemplates/profile_user_view.htm:30
-#: pntemplates/profile_block_featureduser.htm:18
-#, php-format
-msgid "Registered on %s"
+msgid "Registration date:"
 msgstr ""
 
 #: pntemplates/profile_dudedit_extdate.htm:16
@@ -868,6 +866,11 @@ msgstr ""
 
 #: pntemplates/profile_admin_help.htm:27
 msgid "Each option can be added in the catalog to be translated. Also, if you use a custom date format that needs translation, it can be added to the catalog too.<br />Enjoy!"
+msgstr ""
+
+#: pntemplates/profile_block_featureduser.htm:18
+#, php-format
+msgid "Registered on %s"
 msgstr ""
 
 #: pntemplates/profile_user_modify.htm:10
