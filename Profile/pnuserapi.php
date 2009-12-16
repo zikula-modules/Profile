@@ -23,7 +23,7 @@ function Profile_userapi_getall($args)
 {
     // Optional arguments.
     if (!isset($args['startnum'])) {
-        $args['startnum'] = 0;
+        $args['startnum'] = 1;
     }
     if (!isset($args['numitems'])) {
         $args['numitems'] = -1;
@@ -57,7 +57,7 @@ function Profile_userapi_getall($args)
                           'instance_right'   =>  'prop_id',
                           'level'            =>  ACCESS_READ);
 
-    $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum'], $args['numitems'], $args['index'], $permFilter);
+    $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum']-1, $args['numitems'], $args['index'], $permFilter);
 
     // Put items into result array.
     foreach (array_keys($items) as $k)
