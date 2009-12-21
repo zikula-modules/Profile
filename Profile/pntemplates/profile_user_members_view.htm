@@ -18,15 +18,19 @@
                 <div class="z-formnote">
                     <input id="profile_nickname" type="radio" name="searchby" value="uname" checked="checked" />
                     <label for="profile_nickname"><!--[gt text='Search in user names']--></label>
-                    <!--[ if isset($dudarray.realname) ]-->
+                </div>
+                <!--[ if isset($dudarray.realname) ]-->
+                <div class="z-formnote">
                     <input id="profile_realname" type="radio" name="searchby" value="<!--[$dudarray.realname]-->" />
                     <label for="profile_realname"><!--[gt text='Search in real names']--></label>
-                    <!--[/if]-->
-                    <!--[ if isset($dudarray.url) ]-->
+                </div>
+                <!--[/if]-->
+                <!--[ if isset($dudarray.url) ]-->
+                <div class="z-formnote">
                     <input id="profile_url" type="radio" name="searchby" value="<!--[$dudarray.url]-->" />
                     <label for="profile_url"><!--[gt text='Site']--></label>
-                    <!--[/if]-->
                 </div>
+                <!--[/if]-->
             </div>
         </fieldset>
     </div>
