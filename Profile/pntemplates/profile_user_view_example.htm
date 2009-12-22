@@ -8,10 +8,10 @@
 <div id="profile_wrapper">
     <!--[if isset($dudarray.avatar)]-->
     <!--[if $dudarray.avatar eq '' or $dudarray.avatar eq 'blank.gif']-->
-        <!--[pnimg modname='core' src='personal.gif' set='icons/large' class='profileavatar']-->
+    <!--[pnimg modname='core' src='personal.gif' set='icons/large' class='profileavatar']-->
     <!--[else]-->
-        <!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
-        <img src="<!--[$avatarpath]-->/<!--[$dudarray.avatar|pnvarprepfordisplay]-->" alt="" class="profileavatar" />
+    <!--[pnmodgetvar module='Users' name='avatarpath' assign='avatarpath']-->
+    <img src="<!--[$avatarpath]-->/<!--[$dudarray.avatar|pnvarprepfordisplay]-->" alt="" class="profileavatar" />
     <!--[/if]-->
     <!--[/if]-->
 

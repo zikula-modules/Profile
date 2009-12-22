@@ -21,7 +21,7 @@
                     <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="<!--[$item.prop_label|pnvarprepfordisplay]-->" />
 
                     <!--[pnmodurl modname='Profile' type='admin' func='help' fqurl=true assign='helpurl']-->
-                    <div class="z-formnote z-informationmsg"><!--[gt text='Check the <a href="%s">help page</a> to get more information about labels and translatable stuff.' tag1=$helpurl]--></div>
+                    <div class="z-formnote z-informationmsg"><!--[gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|pnvarprepfordisplay]--></div>
                 </div>
                 <div class="z-formrow">
                     <label for="profile_attributename"><!--[gt text='Attribute name']--></label>
