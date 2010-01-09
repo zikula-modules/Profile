@@ -16,17 +16,15 @@
 </ul>
 <!--[/if]-->
 <p>
-    <!--[if $anonymoussessions eq 0 and $membonline eq 0]-->
-    <!--[gt text='%s registered users on-line.' tag1=$membonline domain='module_profile']-->
-    <!--[elseif $anonymoussessions eq 0 and $membonline neq 0]-->
-    <!--[gt text='%s registered user on-line.' tag1=$membonline domain='module_profile']-->
-    <!--[elseif $anononline neq 1 and $membonline eq 1]-->
-    <!--[gt text='%2$s registered user and %1$s anonymous guests on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
-    <!--[elseif $anononline eq 1 and $membonline neq 1]-->
-    <!--[gt text='%2$s registered users and %1$s anonymous guest on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
-    <!--[elseif $anononline eq 1 and $membonline eq 1]-->
-    <!--[gt text='%2$s registered users and %1$s anonymous guest on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
+    <!--[if $anonymoussessions eq 0]-->
+    <!--[gt text='%s registered user' plural='%s registered users' count=$membonline tag1=$membonline domain='module_profile' assign='blockstring']-->
+    <!--[gt text='%s on-line.' tag1=$blockstring domain='module_profile']-->
+    <!--[elseif $membonline eq 0]-->
+    <!--[gt text='%s anonymous guest' plural='%s anonymous guests' count=$anononline tag1=$anononline domain='module_profile' assign='blockstring']-->
+    <!--[gt text='%s on-line.' tag1=$blockstring domain='module_profile']-->
     <!--[else]-->
-    <!--[gt text='%2$s registered users and %1$s anonymous guests on-line.' tag1=$anononline tag2=$membonline domain='module_profile']-->
+    <!--[gt text='no registered users' plural='%s registered users' count=$membonline tag1=$membonline domain='module_profile' assign='nummeb']-->
+    <!--[gt text='no anonymous guests' plural='%s anonymous guests' count=$anononline tag1=$anononline domain='module_profile' assign='numanon']-->
+    <!--[gt text='%1$s and %2$s online.' tag1=$nummeb tag2=$numanon assign='blockstring' domain='module_profile']-->
     <!--[/if]-->
 </p>
