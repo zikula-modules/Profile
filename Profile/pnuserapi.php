@@ -66,7 +66,7 @@ function Profile_userapi_getall($args)
         unset($items[$k]['prop_validation']);
 
         // Expand the item array
-        foreach ($validationinfo as $infolabel => $infofield) {
+        foreach ((array)$validationinfo as $infolabel => $infofield) {
             $items[$k]["prop_$infolabel"] = $infofield;
         }
     }
@@ -113,7 +113,7 @@ function Profile_userapi_get($args)
     unset($item['prop_validation']);
 
     // Expand the item array
-    foreach ($validationinfo as $infolabel => $infofield) {
+    foreach ((array)$validationinfo as $infolabel => $infofield) {
         $item["prop_$infolabel"] = $infofield;
     }
 
@@ -178,7 +178,7 @@ function Profile_userapi_getallactive($args)
             $validationinfo = @unserialize($items[$k]['prop_validation']);
             unset($items[$k]['prop_validation']);
 
-            foreach ($validationinfo as $infolabel => $infofield) {
+            foreach ((array)$validationinfo as $infolabel => $infofield) {
                 $items[$k]["prop_$infolabel"] = $infofield;
             }
         }
