@@ -91,7 +91,7 @@ function Profile_form_search($args)
     }
 
     // reset the 'required' flags
-    foreach ($items as $k => $item) {
+    foreach (array_keys($items) as $k) {
         $items[$k]['prop_required'] = false;
     }
 

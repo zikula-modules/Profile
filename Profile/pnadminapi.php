@@ -181,8 +181,7 @@ function Profile_adminapi_update($args)
     // before update it search for option ID change
     // to update the respective user's data
     if ($obj['prop_validation'] != $item['prop_validation']) {
-        // TODO check if they are the listoptions
-        
+        pnModAPIFunc('Profile', 'dud', 'updatedata', array('item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']));
     }
 
     $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');

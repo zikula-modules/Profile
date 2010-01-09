@@ -113,6 +113,8 @@ function Profile_dudapi_unregister($args)
         return LogUtil::registerArgsError();
     }
 
+    $dom = ZLanguage::getModuleDomain('Profile');
+
     // Get item with where clause
     if (isset($args['propid'])) {
         $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
@@ -278,7 +280,6 @@ function Profile_dudapi_getoptions($args)
             break;
 
         case 4: // SELECT
-            $type = 'select';
             $list = explode('@@', $item['prop_listoptions']);
             $list = array_splice($list, 1);
 

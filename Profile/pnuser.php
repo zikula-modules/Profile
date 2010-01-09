@@ -172,8 +172,6 @@ function Profile_user_update()
 
     // Get parameters from whatever input we need.
     $uname    = FormUtil::getPassedValue('uname',    null, 'POST');
-    $pass     = FormUtil::getPassedValue('cpass',    null, 'POST');
-    $vpass    = FormUtil::getPassedValue('cvpass',   null, 'POST');
     $dynadata = FormUtil::getPassedValue('dynadata', null, 'POST');
 
     $uid = pnUserGetVar('uid');
@@ -252,7 +250,7 @@ function Profile_user_viewmembers($args)
 
     // Create output object
     $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
-    $render  = & pnRender::getInstance('Profile', true, $cache_id);
+    $render  = & pnRender::getInstance('Profile', true, $cacheid);
 /*
     // check out if the contents are cached.
     if ($render->is_cached('profile_user_members_view.htm')) {
@@ -286,26 +284,18 @@ function Profile_user_viewmembers($args)
     $render->assign('adminedit', $edit);
     $render->assign('admindelete', $delete);
 
-    $pagedusers = array();
     foreach ($users as $userid => $user)
     {
         //$user = array_merge(pnUserGetVars($userid['uid']), $userid);
-        $isonline = pnModAPIFunc('Profile', 'memberslist', 'isonline', array('userid' => $user['uid']));
+        $isonline = pnModAPIFunc('Profile', 'memberslist', 'isonline', array('userid' => $userid));
 
         // is this user online
-        if ($isonline){
-            $user['onlinestatus'] = 1;
-        } else {
-            $user['onlinestatus'] = 0;
-        }
+        $users[$userid]['onlinestatus'] = $isonline ? 1 : 0;
 
         // filter out any dummy url's
-        if (isset($user['url']) && (!$user['url'] || $user['url'] == 'http://' || $user['url'] == 'http:///'))  {
-            $user['url'] = '';
+        if (isset($user['url']) && (!$user['url'] || in_array($user['url'], array('http://', 'http:///')))) {
+            $users[$userid]['url'] = '';
         }
-
-        // add user to results array
-        $pagedusers[] =  $user;
     }
 
     // get all active profile fields
@@ -316,7 +306,7 @@ function Profile_user_viewmembers($args)
     unset($activeduds);
 
     $render->assign('dudarray',  $dudarray);
-    $render->assign('users',     $pagedusers);
+    $render->assign('users',     $users);
     $render->assign('letter',    $letter);
     $render->assign('sortby',    $sortby);
     $render->assign('sortorder', $sortorder);
@@ -362,8 +352,8 @@ function Profile_user_recentmembers()
 
     // get last x user id's
     $users = pnModAPIFunc('Profile', 'memberslist', 'getall',
-                          array('sortby' => 'user_regdate',
-                                'numitems' => $modvars['recentmembersitemsperpage'],
+                          array('sortby'    => 'user_regdate',
+                                'numitems'  => $modvars['recentmembersitemsperpage'],
                                 'sortorder' => 'DESC'));
 
     // Is current user online
@@ -373,35 +363,28 @@ function Profile_user_recentmembers()
     $render->assign($modvars);
 
     // get some permissions to use in the cache id and later to filter template output
+    $edit   = false;
+    $delete = false;
     if (SecurityUtil::checkPermission('Users::', '::', ACCESS_DELETE) ) {
-        $edit = true;
+        $edit   = true;
         $delete = true;
     } elseif (SecurityUtil::checkPermission('Users::', '::', ACCESS_EDIT) ) {
         $edit = true;
-        $delete = false;
-    } else {
-        $edit = false;
-        $delete = false;
     }
 
     // check if we should show the extra admin column
     $render->assign('adminedit', $edit);
     $render->assign('admindelete', $delete);
 
-    $pagedusers = array();
-    foreach ($users as $userid => $user)
+    foreach (array_keys($users) as $userid)
     {
-        $isonline = pnModAPIFunc('Profile', 'memberslist', 'isonline', array('userid' => $user['uid']));
+        $isonline = pnModAPIFunc('Profile', 'memberslist', 'isonline', array('userid' => $userid));
 
         // display online status
-        if ($isonline){
-            $user['onlinestatus'] = 1;
-        } else {
-            $user['onlinestatus'] = 0;
-        }
-        $pagedusers[] = $user;
+        $users[$userid]['onlinestatus'] = $isonline ? 1 : 0;
     }
-    $render->assign('users', $pagedusers);
+
+    $render->assign('users', $users);
 
     // check which messaging module is available and add the necessary info
     $render->assign('msgmodule', pnModAPIFunc('Profile', 'memberslist', 'getmessagingmodule'));

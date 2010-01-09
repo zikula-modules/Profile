@@ -37,7 +37,6 @@ function Profile_userapi_getall($args)
     }
 
     $items   = array();
-    $results = array();
 
     // Security check
     if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
