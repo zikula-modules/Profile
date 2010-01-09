@@ -243,18 +243,27 @@ function Profile_memberslistapi_countitems($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Optional arguments.
+    if (!isset($args['searchby']) || empty($args['searchby'])) {
+        $args['searchby'] = 'uname';
+    }
     if (!isset($args['letter'])) {
         $args['letter'] = null;
     }
 
+    // Security check
+    if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
+        return 0;
+    }
+
     // Sanitize the args used in queries
-    $args['letter'] = DataUtil::formatForStore($args['letter']);
+    $args['letter']   = DataUtil::formatForStore($args['letter']);
+    $args['searchby'] = DataUtil::formatForStore($args['searchby']);
 
     // load the database information for the users module
     pnModDBInfoLoad('Users');
 
     // Get database setup
-    $dbconn = pnDBGetConn(true);
+    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // It's good practice to name column definitions you are getting
