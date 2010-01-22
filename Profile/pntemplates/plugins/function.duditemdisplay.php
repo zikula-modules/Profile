@@ -176,11 +176,11 @@ function smarty_function_duditemdisplay($params, &$smarty)
         }
 
 
-    // date and extdate
-    } elseif (!empty($uservalue) && ($item['prop_displaytype'] == 5 || $item['prop_displaytype'] == 6)) {
+    // date
+    } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
         $format = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
-        $output = DateUtil::getDatetime(strtotime($uservalue), $format);
+        $output = DateUtil::getDatetime(strtotime($uservalue), ($format? $format : null));
 
 
     // multicheckbox

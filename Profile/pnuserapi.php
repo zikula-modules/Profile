@@ -267,19 +267,12 @@ function Profile_userapi_savedata($args)
 
         $fieldvalue = '';
         if (isset($fields[$attrname])) {
-            // Combining fields, TODO: Extend to other types than only EXTDATE
-            if (is_array($fields[$attrname])) {
-                // Ols stuff: validates the EXTDATE data
-                if ($dud['prop_displaytype'] == 6) {
-                    $fields[$attrname]['month'] = $fields[$attrname]['month'] < 10 ? '0'.$fields[$attrname]['month'] : $fields[$attrname]['month'];
-                    $fields[$attrname]['day']   = $fields[$attrname]['day'] < 10   ? '0'.$fields[$attrname]['day']   : $fields[$attrname]['day'];
-                    $fieldvalue = implode('-', $fields[$attrname]);
-                    if (strlen($fieldvalue) != 10) {
-                        $fieldvalue = '';
-                    }
-                } else {
-                    $fieldvalue = serialize(array_values($fields[$attrname]));
-                }
+            // Process the Date DUD separately
+            if ($dud['prop_displaytype'] == 5) {
+                $fieldvalue = DateUtil::parseUIDate($fields[$attrname]);
+                $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
+            } elseif (is_array($fields[$attrname])) {
+                $fieldvalue = serialize(array_values($fields[$attrname]));
             } else {
                 $fieldvalue = $fields[$attrname];
             }

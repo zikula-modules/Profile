@@ -21,7 +21,7 @@
  * @param  array   $args['validationinfo']  validation info for the new field with the following fields:
  *                   'required'    => {0: no, 1: mandatory}
  *                   'viewby'      => viewable by {0: Everyone, 1: Registered users only, 2: Admins only}
- *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 6: extdate, 7: multi checkbox}
+ *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 7: multi checkbox}
  *                   'listoptions' => options for the new field
  *                   'note'        => note to show in edit mode
  *                   and any other required data
@@ -292,7 +292,7 @@ function Profile_dudapi_getoptions($args)
             break;
 
         case 5: // DATE
-        case 6: // EXTDATE
+        case 6: // EXTDATE (deprecated)
             $options = $item['prop_listoptions'];
 
             // validate the option against core and %strftime options

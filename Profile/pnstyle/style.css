@@ -85,7 +85,7 @@ p.profile_usererror {
 .z-form .z-formrow .z-formnote label input[type="checkbox"] {
     margin-right: 0.5em;
 }
-.z-form .z-formrow input.profile_dateinput {
+.z-form div.z-formrow .profile_dateinput {
     width: 10em;
 }
 .z-form .z-formrow input.profile_l2input {

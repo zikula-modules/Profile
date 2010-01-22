@@ -204,6 +204,15 @@ function Profile_upgrade($oldversion)
                 DBUtil::updateObjectArray($userdata, 'objectdata_attributes', 'id');
             }
 
+        case '1.4.1':
+            // checkpoint to deprecate the extdate field (6)
+            $tables = pnDBGetTables();
+            $sql    = "UPDATE $tables[user_property] SET pn_prop_validation = REPLACE(pn_prop_validation, '\"displaytype\";s:1:\"6\"', '\"displaytype\";s:1:\"5\"') WHERE pn_prop_validation LIKE '%s:11:\"displaytype\";s:1:\"6\"%'";
+            if (!DBUtil::executeSQL($sql)) {
+                LogUtil::registerError(__('Error! Could not update table.', $dom));
+                return '1.4.1';
+            }
+
         case '1.5':
             // future upgrade routines
     }

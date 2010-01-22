@@ -222,15 +222,21 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         case 5: // DATE
             $type = 'date';
+
+            if (isset($item['temp_propdata'])) {
+                $timestamp = DateUtil::parseUIDate($item['temp_propdata']);
+                $uservalue = DateUtil::transformInternalDate($timestamp);
+            } else {
+                $timestamp = DateUtil::makeTimestamp($uservalue);
+            }
+
+            $render->assign('value',     $uservalue);
+            $render->assign('timestamp', $timestamp);
             break;
 
-        case 6: // EXTDATE
-            $type = 'extdate';
-            $dateArray = explode('-', $uservalue);
-            if ($dateArray[0] == '') {
-                $dateArray = array(0 => '', 1 => '', 2 => '');
-            }
-            $render->assign('value', $dateArray);
+        case 6: // EXTDATE (deprecated)
+            // TODO [deprecate completely]
+            $type = 'hidden';
             break;
 
         case 7: // MULTICHECKBOX

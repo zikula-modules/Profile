@@ -132,7 +132,7 @@ function Profile_user_modify($args)
     $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
     // The return value of the function is checked here
-    if ($items == false) {
+    if ($items === false) {
         return LogUtil::registerError(__('Error! Could not load personal info items.', $dom));
     }
 
@@ -197,7 +197,7 @@ function Profile_user_update()
     if ($save != true) {
         return pnRedirect(pnModUrl('Profile', 'user', 'view'));
     }
- 
+
     // This function generated no output, we redirect the user
     LogUtil::registerStatus(__('Done! Saved your changes to your personal information.', $dom));
 

@@ -64,10 +64,6 @@ function profile_displaytype_onchange()
     if ($('profile_displaytype').value == '5') {
         state += 8;
     }
-    // extdate
-    if ($('profile_displaytype').value == '6') {
-        state += 16;
-    }
     // multibox
     if ($('profile_displaytype').value == '7') {
         state += 32;
@@ -94,8 +90,8 @@ function profile_displaytype_onchange()
     		// dropdown
     		$('profile_help_type4').show();
     		$('profile_warn_ids').show();
-    	} else if (state&8 || state&16) {
-    		// date or extdate
+    	} else if (state&8) {
+    		// date
     		$('profile_help_type5').show();
     	} else if (state&32) {
     		// multibox
