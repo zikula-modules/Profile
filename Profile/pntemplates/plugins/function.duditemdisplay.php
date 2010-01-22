@@ -179,8 +179,10 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // date
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
         $format = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        //! This is from the core domain (datebrief)
+        $format = !empty($format) ? $format : __('%b %d, %Y');
 
-        $output = DateUtil::getDatetime(strtotime($uservalue), ($format? $format : null));
+        $output = DateUtil::getDatetime(strtotime($uservalue), $format);
 
 
     // multicheckbox

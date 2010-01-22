@@ -223,6 +223,47 @@ function smarty_function_duditemmodify($params, &$smarty)
         case 5: // DATE
             $type = 'date';
 
+            // gets the format to use
+            $format = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            
+            switch (trim(strtolower($format)))
+            {
+                case 'datelong':
+                    //! This is from the core domain (datelong)
+                    $format = __('%A, %B %d, %Y');
+                    break;
+                case 'datebrief':
+                    //! This is from the core domain (datebrief)
+                    $format = __('%b %d, %Y');
+                    break;
+                case 'datestring':
+                    //! This is from the core domain (datestring)
+                    $format = __('%A, %B %d @ %H:%M:%S');
+                    break;
+                case 'datestring2':
+                    //! This is from the core domain (datestring2)
+                    $format = __('%A, %B %d');
+                    break;
+                case 'datetimebrief':
+                    //! This is from the core domain (datetimebrief)
+                    $format = __('%b %d, %Y - %I:%M %p');
+                    break;
+                case 'datetimelong':
+                    //! This is from the core domain (datetimelong)
+                    $format = __('%A, %B %d, %Y - %I:%M %p');
+                    break;
+                case 'timebrief':
+                    //! This is from the core domain (timebrief)
+                    $format = __('%I:%M %p');
+                    break;
+                case 'timelong':
+                    //! This is from the core domain (timelong)
+                    $format = __('%T %p');
+                    break;
+            }
+            $format = !empty($format) ? $format : __('%b %d, %Y');
+
+            // process the temporal data if any
             if (isset($item['temp_propdata'])) {
                 $timestamp = DateUtil::parseUIDate($item['temp_propdata']);
                 $uservalue = DateUtil::transformInternalDate($timestamp);
@@ -232,6 +273,7 @@ function smarty_function_duditemmodify($params, &$smarty)
 
             $render->assign('value',     $uservalue);
             $render->assign('timestamp', $timestamp);
+            $render->assign('dudformat', $format);
             break;
 
         case 6: // EXTDATE (deprecated)
