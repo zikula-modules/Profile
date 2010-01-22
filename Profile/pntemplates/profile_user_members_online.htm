@@ -14,9 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        <!--[counter start=0 skip=1 assign='row']-->
         <!--[foreach from=$users item='user']-->
-        <!--[counter assign='row']-->
         <tr class="<!--[cycle values='z-odd,z-even']-->">
             <td><strong><!--[$user.uname|userprofilelink]--></strong></td>
             <td><!--[$user.__ATTRIBUTES__.realname|default:'&nbsp;']--></td>
