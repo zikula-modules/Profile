@@ -12,7 +12,7 @@
         <!--[if $required]--><span class="z-mandatorysym"><!--[gt text='*']--></span><!--[/if]-->
     </label>
 
-    <!--[gt text='%Y-%m-%d' domain='zikula' comment="This is from the core domain" assign='duddateformat']-->
+    <!--[gt text='%b %d, %Y' domain='zikula' comment="This is from the core domain" assign='duddateformat']-->
     <input<!--[if $required]--> class="required"<!--[/if]--> id="prop_<!--[$attributename]-->" type="hidden" name="dynadata[<!--[$attributename]-->]" value="<!--[dateformat datetime=$timestamp|default:'-' format=$duddateformat]-->" size="30" />
 
     <span class="z-formnote">

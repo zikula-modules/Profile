@@ -302,7 +302,7 @@ function Profile_dudapi_getoptions($args)
                 if (!empty($options) && strpos($options, '%') !== false) {
                     $options = __($options, $dom);
                 } else {
-                    $options = '%B %e, %Y';
+                    $options = __('%b %d, %Y', $dom);
                 }
             }
             break;
