@@ -4,43 +4,13 @@
 /* Adminlist
 /*******************************************************************************/
 
-ol#profilelist {
-    border: 1px solid #ccc;
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}
-ol#profilelist li {
-    line-height: 2em;
-    margin: 0.5em;
-    padding: 0.2em;
-    border: 1px dotted #999999;
-}
-ol#profilelist li:hover {
-    background-color: #CFCFCF;
-}
-ol#profilelist li.profilelistheader {
-    padding-left: 30px;
-    background:#CFCFCF;
-}
-ol#profilelist li.sortable {
-    background-image: url(../../../images/icons/extrasmall/move.gif);
-    background-position: 5px 50%;
-    background-repeat: no-repeat;
-    padding-left: 30px;
-}
-ol#profilelist span {
-    width: 15%;
-    float: left;
-    text-align: left;
-}
 ol#profilelist .profilestatus_0:hover,
 ol#profilelist .profilestatus_1:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 ol#profilelist .profilestatus_0 b,
 ol#profilelist .profilestatus_1 b {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 /*******************************************************************************/

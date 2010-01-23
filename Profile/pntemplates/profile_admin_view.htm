@@ -14,20 +14,20 @@
             <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Profile']-->" />
             <input type="hidden" id="startnum" name="startnum" value="<!--[$startnum]-->" />
             <div id="profilehint" class="z-informationmsg" style="display:none"><!--[gt text="Notice: Use drag and drop to arrange the arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place."]--></div>
-            <ol id="profilelist">
-                <li class="profilelistheader z-clearfix">
-                    <span style="width:25%"><strong><!--[gt text='Label']--></strong></span>
-                    <span><strong><!--[gt text='Attribute name']--></strong></span>
-                    <span><strong><!--[gt text='Type']--></strong></span>
-                    <span><strong><!--[gt text='Status']--></strong></span>
-                    <span style="width:7%"><strong><!--[gt text='Actions']--></strong></span>
+            <ol id="profilelist" class="z-itemlist">
+                <li class="z-itemheader z-itemsortheader z-clearfix">
+                    <span class="z-itemcell z-w25"><!--[gt text='Label']--></span>
+                    <span class="z-itemcell z-w25"><!--[gt text='Attribute name']--></span>
+                    <span class="z-itemcell z-w15"><!--[gt text='Type']--></span>
+                    <span class="z-itemcell z-w15"><!--[gt text='Status']--></span>
+                    <span class="z-itemcell z-w10"><!--[gt text='Actions']--></span>
                 </li>
                 <!--[foreach from=$duditems item='duditem']-->
-                <li id="profile_<!--[$duditem.prop_id]-->" class="<!--[cycle values='z-odd,z-even']--> z-sortable z-clearfix">
-                    <span id="profiledrag_<!--[$duditem.prop_id]-->" style="width: 25%"><!--[$duditem.prop_label|pnvarprephtmldisplay]--> (<!--[gt text=$duditem.prop_label]-->)</span>
-                    <span><!--[$duditem.prop_attribute_name]--></span>
-                    <span><!--[$duditem.dtype|pnvarprephtmldisplay]--></span>
-                    <span>
+                <li id="profile_<!--[$duditem.prop_id]-->" class="<!--[cycle values='z-odd,z-even']--> z-itemsort z-sortable z-clearfix">
+                    <span class="z-itemcell z-w25" id="profiledrag_<!--[$duditem.prop_id]-->"><!--[$duditem.prop_label|pnvarprephtmldisplay]--> (<!--[gt text=$duditem.prop_label]-->)</span>
+                    <span class="z-itemcell z-w25"><!--[$duditem.prop_attribute_name]--></span>
+                    <span class="z-itemcell z-w15"><!--[$duditem.dtype|pnvarprephtmldisplay]--></span>
+                    <span class="z-itemcell z-w15">
                         <!--[if $duditem.status.url ne '']-->
                         <a href="<!--[$duditem.status.url|pnvarprepfordisplay]-->" id="profilestatus_<!--[$duditem.prop_id]-->" class="profilestatus_<!--[$duditem.statusval]-->">
                             <!--[pnimg modname='core' set='icons/extrasmall' src=$duditem.status.image alt=$duditem.status.title title=$duditem.status.title]-->
@@ -37,7 +37,7 @@
                         <!--[pnimg modname='core' set='icons/extrasmall' src=$duditem.status.image alt=$duditem.status.title title=$duditem.status.title]-->
                         <!--[/if]-->
                     </span>
-                    <span style="width:7%;">
+                    <span class="z-itemcell z-w10">
                         <!--[assign var='options' value=$duditem.options]-->
                         <!--[section name='options' loop=$options]-->
                         <a href="<!--[$options[options].url|pnvarprepfordisplay]-->"<!--[if $options[options].class]--> class="<!--[$options[options].class|pnvarprepfordisplay]-->"<!--[/if]-->><!--[pnimg modname='core' set='icons/extrasmall' src=$options[options].image alt=$options[options].title title=$options[options].title]--></a>
