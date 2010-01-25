@@ -181,7 +181,9 @@ function Profile_adminapi_update($args)
     // before update it search for option ID change
     // to update the respective user's data
     if ($obj['prop_validation'] != $item['prop_validation']) {
-        pnModAPIFunc('Profile', 'dud', 'updatedata', array('item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']));
+        pnModAPIFunc('Profile', 'dud', 'updatedata',
+                     array('item'    => $item['prop_validation'],
+                           'newitem' => $obj['prop_validation']));
     }
 
     $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
@@ -331,6 +333,7 @@ function Profile_adminapi_deactivate($args)
 
     // Get database setup
     $pntable = pnDBGetTables();
+
     $propertytable  = $pntable['user_property'];
     $propertycolumn = $pntable['user_property_column'];
 

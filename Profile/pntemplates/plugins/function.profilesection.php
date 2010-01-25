@@ -41,6 +41,7 @@ function smarty_function_profilesection($params, &$smarty)
 
     // extract the items to list
     $section = pnModAPIFunc('Profile', 'section', $params['name'], $params);
+
     if ($section === false) {
         return '';
     }
@@ -50,6 +51,7 @@ function smarty_function_profilesection($params, &$smarty)
 
     // check the tmeplate existance
     $template = "sections/profile_section_{$params['name']}.htm";
+
     if (!$render->template_exists($template)) {
         return '';
     }

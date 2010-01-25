@@ -34,8 +34,8 @@ function Profile_featureduserblock_info()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     return array('module'          => 'Profile',
-                 'text_type'       => DataUtil::formatForDisplay(__('Featured user', $dom)),
-                 'text_type_long'  => DataUtil::formatForDisplay(__('Show featured user', $dom)),
+                 'text_type'       => __('Featured user', $dom),
+                 'text_type_long'  => __('Show featured user', $dom),
                  'allow_multiple'  => true,
                  'form_content'    => false,
                  'form_refresh'    => false,
@@ -93,6 +93,7 @@ function Profile_featureduserblock_display($blockinfo)
 
     // get all active profile fields
     $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive', array('index' => 'prop_label'));
+
     foreach ($activeduds as $dudlabel => $activedud)
     {
         // check if the attribute is set to be shown in the block
@@ -115,6 +116,8 @@ function Profile_featureduserblock_display($blockinfo)
                 }
             }
         }
+
+        // add it to the viewable properties
         $dudarray[$dudlabel] = $userinfo['__ATTRIBUTES__'][$activedud['prop_attribute_name']];
     }
     unset($activeduds);
@@ -161,6 +164,7 @@ function Profile_featureduserblock_modify($blockinfo)
 
     // get all active profile fields
     $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
+
     foreach ($activeduds as $attr => $activedud) {
         $dudarray[$attr] = __($activedud['prop_label'], $dom);
     }

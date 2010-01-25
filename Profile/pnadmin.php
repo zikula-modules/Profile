@@ -72,8 +72,8 @@ function Profile_admin_view()
                           array('startnum' => $startnum,
                                 'numitems' => $numitems));
 
-    $count        = pnModAPIFunc('Profile', 'user', 'countitems');
-    $authid       = SecurityUtil::generateAuthKey();
+    $count  = pnModAPIFunc('Profile', 'user', 'countitems');
+    $authid = SecurityUtil::generateAuthKey();
 
     $x = 1;
     $duditems = array();
@@ -82,7 +82,7 @@ function Profile_admin_view()
         // display the proper icom and link to enable or disable the field
         switch (true)
         {
-            // 0 >= DUD types can't be disabled
+            // 0 <= DUD types can't be disabled
             case ($item['prop_dtype'] <= 0):
                 $statusval = 1;
                 $status = array('url' => '',
@@ -123,12 +123,12 @@ function Profile_admin_view()
                 $data_type_text = __('Third-party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                 break;
 
+            default:
             case '1': // Normal property
                 $data_type_text = __('Normal', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                 break;
 
             case '2': // Third party (normal field)
-            default:
                 $data_type_text = __('Third-party', $dom) . ($item['prop_required'] ? ', '.__('Required', $dom) : '');
                 break;
         }
@@ -174,8 +174,8 @@ function Profile_admin_view()
 
     // Create output object
     $render = & pnRender::getInstance('Profile', false);
-    $render->assign('startnum', $startnum);
 
+    $render->assign('startnum', $startnum);
     $render->assign('duditems', $duditems);
 
     // assign the values for the smarty plugin to produce a pager in case of there
@@ -211,7 +211,6 @@ function Profile_admin_new()
                                               3 => DataUtil::formatForDisplay(__('Radio button', $dom)),
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
                                               5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
-                                              6 => DataUtil::formatForDisplay(__('Date (old)', $dom)),
                                               7 => DataUtil::formatForDisplay(__('Multiple checkbox set', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),
@@ -352,7 +351,6 @@ function Profile_admin_modify($args)
                                               3 => DataUtil::formatForDisplay(__('Radio button', $dom)),
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
                                               5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
-                                              6 => DataUtil::formatForDisplay(__('Date (old)', $dom)),
                                               7 => DataUtil::formatForDisplay(__('Multiple checkbox set', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),

@@ -261,6 +261,7 @@ function smarty_function_duditemmodify($params, &$smarty)
                     $format = __('%T %p');
                     break;
             }
+            //! This is from the core domain (datebrief)
             $format = !empty($format) ? $format : __('%b %d, %Y');
 
             // process the temporal data if any

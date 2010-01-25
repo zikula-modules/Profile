@@ -34,8 +34,8 @@ function Profile_membersonlineblock_info()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     return array('module'          => 'Profile',
-                 'text_type'       => DataUtil::formatForDisplay(__('Users on-line', $dom)),
-                 'text_type_long'  => DataUtil::formatForDisplay(__('Show which registered users are currently on-line', $dom)),
+                 'text_type'       => __('Users on-line', $dom),
+                 'text_type_long'  => __('Show which registered users are currently on-line', $dom),
                  'allow_multiple'  => true,
                  'form_content'    => false,
                  'form_refresh'    => false,

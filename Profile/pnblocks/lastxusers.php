@@ -34,8 +34,8 @@ function Profile_lastxusersblock_info()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     return array('module'          => 'Profile',
-                 'text_type'       => DataUtil::formatForDisplay(__('Last X registered users', $dom)),
-                 'text_type_long'  => DataUtil::formatForDisplay(__('Show last X registered users', $dom)),
+                 'text_type'       => __('Last X registered users', $dom),
+                 'text_type_long'  => __('Show last X registered users', $dom),
                  'allow_multiple'  => true,
                  'form_content'    => false,
                  'form_refresh'    => false,

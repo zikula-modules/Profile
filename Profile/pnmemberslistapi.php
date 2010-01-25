@@ -70,7 +70,6 @@ function Profile_memberslistapi_getall($args)
     pnModDBInfoLoad('Users');
 
     // Get database setup
-    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // It's good practice to name column definitions you are getting
@@ -197,11 +196,11 @@ function Profile_memberslistapi_getall($args)
 
     $sql .= $join . $where . $groupby . $sort;
 
-    $result = $dbconn->SelectLimit($sql, $args['numitems'], $args['startnum']-1);
+    $result = DBUtil::executeSQL($sql, $args['startnum']-1, $args['numitems']);
 
     // Check for an error with the database code, and if so set an appropriate
     // error message and return
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         LogUtil::registerError(__('Error! Could not load data.', $dom));
 
         if (is_object($result)) {
@@ -263,7 +262,6 @@ function Profile_memberslistapi_countitems($args)
     pnModDBInfoLoad('Users');
 
     // Get database setup
-    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // It's good practice to name column definitions you are getting
@@ -379,10 +377,10 @@ function Profile_memberslistapi_countitems($args)
     $groupby = " GROUP BY tbl.$userscolumn[uname] ";
 
     $sql   .= $join . $where . $groupby;
-    $result = $dbconn->Execute($sql);
+    $result = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         return LogUtil::registerError(__('Error! Could not load data.', $dom));
     }
 
@@ -408,7 +406,6 @@ function Profile_memberslistapi_getregisteredonline($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Get database setup
-    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // It's good practice to name the table and column definitions you are
@@ -423,11 +420,11 @@ function Profile_memberslistapi_getregisteredonline($args)
             WHERE $sessioninfocolumn[uid] != 0 AND $sessioninfocolumn[lastused] > '$activetime'
             GROUP BY $sessioninfocolumn[uid]";
 
-    $result = $dbconn->Execute($sql);
+    $result = DBUtil::executeSQL($sql);
 
      // Check for an error with the database code, and if so set an appropriate
     // error message and return
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         return LogUtil::registerError(__('Error! Could not load data.', $dom));
     }
 
@@ -456,7 +453,6 @@ function Profile_memberslistapi_getlatestuser($args)
     pnModDBInfoLoad('Users');
 
     // Get database setup
-    $dbconn = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // It's good practice to name the table and column definitions you are
@@ -475,11 +471,11 @@ function Profile_memberslistapi_getlatestuser($args)
             WHERE $userscolumn[uname] NOT LIKE 'Anonymous' $where
             ORDER BY $userscolumn[uid] DESC";
 
-    $result = $dbconn->Execute($sql);
+    $result = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code, and if so set an appropriate
     // error message and return
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         return LogUtil::registerError(__('Error! Could not load data.', $dom));
     }
 
@@ -510,7 +506,6 @@ function Profile_memberslistapi_isonline($args)
     }
 
     // Get database setup
-    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // get active time based on security settings
@@ -526,11 +521,11 @@ function Profile_memberslistapi_isonline($args)
             FROM $sessioninfotable
             WHERE $sessioninfocolumn[uid] = $args[userid] and $sessioninfocolumn[lastused] > '$activetime'";
 
-    $result = $dbconn->Execute($sql);
+    $result = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code, and if so set an appropriate
     // error message and return
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         return LogUtil::registerError(__('Error! Could not load data.', $dom));
     }
 
@@ -560,7 +555,6 @@ function Profile_memberslistapi_whosonline($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Get database setup
-    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // define the array to hold the resultant items
@@ -580,11 +574,11 @@ function Profile_memberslistapi_whosonline($args)
             AND $sessioninfocolumn[lastused] > '$activetime'
             GROUP BY $sessioninfocolumn[uid]";
 
-    $result = $dbconn->Execute($sql);
+    $result = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code, and if so set an appropriate
     // error message and return
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         return LogUtil::registerError(__('Error! Could not load data.', $dom));
     }
 
@@ -616,7 +610,6 @@ function Profile_memberslistapi_getallonline($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // Get database setup
-    $dbconn  = pnDBGetConn(true);
     $pntable = pnDBGetTables();
 
     // define the array to hold the resultant items
@@ -648,11 +641,11 @@ function Profile_memberslistapi_getallonline($args)
             GROUP BY $sessioninfocolumn[ipaddr], $sessioninfotable.$sessioninfocolumn[uid]
             ORDER BY $usercol[uname]";
 
-    $result = $dbconn->Execute($sql);
+    $result = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code, and if so set an appropriate
     // error message and return
-    if ($dbconn->ErrorNo() != 0) {
+    if ($result === false) {
         return LogUtil::registerError(__('Error! Could not load data.', $dom));
     }
 

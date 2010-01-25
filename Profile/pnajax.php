@@ -30,7 +30,7 @@ function Profile_ajax_changeprofileweight()
     }
 
     $profilelist = FormUtil::getPassedValue('profilelist');
-    $startnum = FormUtil::getPassedValue('startnum');
+    $startnum    = FormUtil::getPassedValue('startnum');
 
     if ($startnum < 0) {
         AjaxUtil::error(__f("Error! Invalid '%s' passed.", 'startnum', $dom));
@@ -91,6 +91,7 @@ function Profile_ajax_changeprofilestatus()
     $func = ($oldstatus ? 'deactivate' : 'activate');
 
     $res = pnModAPIFunc('Profile', 'admin', $func, array('dudid' => $prop_id));
+
     if (!$res) {
         AjaxUtil::error(__('Error! Could not save your changes.', $dom));
     }
@@ -130,6 +131,7 @@ function Profile_ajax_profilesection()
 
     // update the item status
     $section = pnModAPIFunc('Profile', 'section', $name, array_merge($args, array('uid' => $uid)));
+
     if (!$section) {
         AjaxUtil::error(__('Error! Could not load the section.', $dom));
     }
@@ -139,6 +141,7 @@ function Profile_ajax_profilesection()
 
     // check the tmeplate existance
     $template = "sections/profile_section_{$name}.htm";
+
     if (!$render->template_exists($template)) {
         return array('result' => false);
     }

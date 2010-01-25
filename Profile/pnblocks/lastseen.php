@@ -32,8 +32,8 @@ function Profile_lastseenblock_info()
     $dom = ZLanguage::getModuleDomain('Profile');
 
     return array('module'          => 'Profile',
-                 'text_type'       => DataUtil::formatForDisplay(__('Recent visitors', $dom)),
-                 'text_type_long'  => DataUtil::formatForDisplay(__('Show registered users having visited the site recently', $dom)),
+                 'text_type'       => __('Recent visitors', $dom),
+                 'text_type_long'  => __('Show registered users having visited the site recently', $dom),
                  'allow_multiple'  => true,
                  'form_content'    => false,
                  'form_refresh'    => false,

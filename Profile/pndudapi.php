@@ -302,7 +302,8 @@ function Profile_dudapi_getoptions($args)
                 if (!empty($options) && strpos($options, '%') !== false) {
                     $options = __($options, $dom);
                 } else {
-                    $options = __('%b %d, %Y', $dom);
+                    //! This is from the core domain (datebrief)
+                    $options = __('%b %d, %Y');
                 }
             }
             break;
