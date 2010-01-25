@@ -20,12 +20,18 @@ function Profile_accountapi_getall($args)
 {
     $dom = ZLanguage::getModuleDomain('Profile');
 
+    $items = array();
+
+    // do not show the account links if Profile is not the Profile manager
+    $profilemodule = pnConfigGetVar('profilemodule', '');
+    if ($profilemodule != 'Profile') {
+        return $items;
+    }
+
     $uname = isset($args['uname']) ? $args['uname'] : null;
     if (!$uname && pnUserloggedIn()) {
         $uname = pnUserGetVar('uname');
     }
-
-    $items = array();
 
     // Create an array of links to return
     if (!empty($uname)) {
