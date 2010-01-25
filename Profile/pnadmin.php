@@ -210,7 +210,7 @@ function Profile_admin_new()
                                               2 => DataUtil::formatForDisplay(__('Checkbox', $dom)),
                                               3 => DataUtil::formatForDisplay(__('Radio button', $dom)),
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
-                                              5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
+                                              5 => DataUtil::formatForDisplay(__('Date', $dom)),
                                               7 => DataUtil::formatForDisplay(__('Multiple checkbox set', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),
@@ -350,7 +350,7 @@ function Profile_admin_modify($args)
                                               2 => DataUtil::formatForDisplay(__('Checkbox', $dom)),
                                               3 => DataUtil::formatForDisplay(__('Radio button', $dom)),
                                               4 => DataUtil::formatForDisplay(__('Dropdown list', $dom)),
-                                              5 => DataUtil::formatForDisplay(__('Calendar', $dom)),
+                                              5 => DataUtil::formatForDisplay(__('Date', $dom)),
                                               7 => DataUtil::formatForDisplay(__('Multiple checkbox set', $dom))));
 
     $render->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay(__('No', $dom)),
