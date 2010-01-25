@@ -79,12 +79,12 @@ function Profile_memberslistapi_getall($args)
     $propcolumn  = $pntable['user_property_column'];
 
     // Builds the sql query
-    $sql = "SELECT     $userscolumn[uid] as uid
-            FROM       $pntable[users] as tbl
-            LEFT JOIN  $pntable[objectdata_attributes] as a
-            ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A' ";
-    $join = "LEFT JOIN $pntable[user_property] as b
-            ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
+    $sql  = "SELECT     $userscolumn[uid] as uid
+             FROM       $pntable[users] as tbl ";
+    $join = "LEFT JOIN  $pntable[objectdata_attributes] as a
+             ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A'
+             LEFT JOIN $pntable[user_property] as b
+             ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
 
     // treat a single character as from the alpha filter and everything else as from the search input
     if (strlen($args['letter']) > 1) {
@@ -93,13 +93,12 @@ function Profile_memberslistapi_getall($args)
 
     $where = '';
     if ($args['searchby'] == 'uname') {
+        $join  = '';
         if (!empty($args['letter']) && preg_match('/[a-z]/i', $args['letter'])) {
-            $join  = '';
             // are we listing all or "other" ?
             $where = "WHERE UPPER(tbl.$userscolumn[uname]) LIKE '".strtoupper($args['letter'])."%' AND tbl.$userscolumn[uid] != '1' ";
             // I guess we are not..
         } else if (!empty($args['letter'])) {
-            $join  = '';
             // But other are numbers ?
             $where = "WHERE (tbl.$userscolumn[uname] LIKE '0%'
                           OR tbl.$userscolumn[uname] LIKE '1%'
@@ -129,7 +128,6 @@ function Profile_memberslistapi_getall($args)
             // or go to post-nuke project page and post
             // your correction there. Thanks, Bjorn.
         } else {
-            $join  = '';
             // or we are unknown or all..
             $where = "WHERE tbl.$userscolumn[uid] != '1' ";
             // this is to get rid of the annonymous registry
@@ -271,12 +269,12 @@ function Profile_memberslistapi_countitems($args)
     $propcolumn  = $pntable['user_property_column'];
 
     // Builds the sql query
-    $sql = "SELECT     COUNT(1)
-            FROM       $pntable[users] as tbl
-            LEFT JOIN  $pntable[objectdata_attributes] as a
-            ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A' ";
-    $join = "LEFT JOIN $pntable[user_property] as b
-            ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
+    $sql   = "SELECT     COUNT(DISTINCT tbl.$userscolumn[uname])
+              FROM       $pntable[users] as tbl ";
+    $join  = "LEFT JOIN  $pntable[objectdata_attributes] as a
+              ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A'
+              LEFT JOIN $pntable[user_property] as b
+              ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
 
     // treat a single character as from the alpha filter and everything else as from the search input
     if (strlen($args['letter']) > 1) {
@@ -285,13 +283,12 @@ function Profile_memberslistapi_countitems($args)
 
     $where = '';
     if ($args['searchby'] == 'uname') {
+        $join = '';
         if (!empty($args['letter']) && preg_match('/[a-z]/i', $args['letter'])) {
-            $join  = '';
             // are we listing all or "other" ?
             $where = "WHERE UPPER(tbl.$userscolumn[uname]) LIKE '".strtoupper($args['letter'])."%' AND tbl.$userscolumn[uid] != '1' ";
             // I guess we are not..
         } else if (!empty($args['letter'])) {
-            $join  = '';
             // But other are numbers ?
             $where = "WHERE (tbl.$userscolumn[uname] LIKE '0%'
                           OR tbl.$userscolumn[uname] LIKE '1%'
@@ -321,7 +318,6 @@ function Profile_memberslistapi_countitems($args)
             // or go to post-nuke project page and post
             // your correction there. Thanks, Bjorn.
         } else {
-            $join  = '';
             // or we are unknown or all..
             $where = "WHERE tbl.$userscolumn[uid] != '1' ";
             // this is to get rid of the annonymous registry
@@ -374,9 +370,8 @@ function Profile_memberslistapi_countitems($args)
         $where .= " AND tbl.$userscolumn[activated] != '0'";
     }
 
-    $groupby = " GROUP BY tbl.$userscolumn[uname] ";
+    $sql   .= $join . $where;
 
-    $sql   .= $join . $where . $groupby;
     $result = DBUtil::executeSQL($sql);
 
     // Check for an error with the database code
