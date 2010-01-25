@@ -372,12 +372,19 @@ function Profile_userapi_insertdyndata($args)
     $dynadata = isset($args['dynadata']) ? $args['dynadata'] : FormUtil::getPassedValue('dynadata');
 
     // Validate if there's any dynamic data
-    if (empty($dynadata)) {
+    if (empty($dynadata) || !isset($args['uid'])) {
+        return false;
+    }
+
+    // Needs to merge the existing attributes to not delete any of them
+    $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
+
+    if (!$user || !isset($user['__ATTRIBUTES__'])) {
         return false;
     }
 
     // attach the dynadata as attributes to the user object
-    return array('__ATTRIBUTES__' => $dynadata);
+    return array('__ATTRIBUTES__' => array_merge($user['__ATTRIBUTES__'], $dynadata));
 }
 
 /**
