@@ -70,12 +70,8 @@ function Profile_membersonlineblock_display($blockinfo)
         $vars['lengthmax'] = 30;
     }
 
-    $membonline = 0;
-    $anononline = 0;
-    $uid = pnUserGetVar('uid');
-
-    $users = pnModAPIFunc('Profile', 'memberslist', 'getallonline');
-
+    $uid         = pnUserGetVar('uid');
+    $users       = pnModAPIFunc('Profile', 'memberslist', 'getallonline');
     $usersonline = array();
 
     if ($users) {
@@ -88,19 +84,18 @@ function Profile_membersonlineblock_display($blockinfo)
 
     // check which messaging module is available and add the necessary info
     $msgmodule = pnModAPIFunc('Profile', 'memberslist', 'getmessagingmodule');
-    $render->assign('msgmodule', $msgmodule);
     if (!empty($msgmodule) && pnUserLoggedIn()) {
         $render->assign('messages', pnModAPIFunc($msgmodule, 'user', 'getmessagecount'));
     }
 
-    $render->assign('maxLength',         $vars['lengthmax']);
-    $render->assign('usersonline',       $usersonline);
-    $render->assign('membonline',        $users['numusers']);
-    $render->assign('anononline',        $users['numguests']);
-    $render->assign('uid',               $uid);
-    $render->assign('anonymoussessions', pnConfigGetVar('anonymoussessions'));
+    $render->assign('msgmodule',   $msgmodule);
+    $render->assign('maxLength',   $vars['lengthmax']);
+    $render->assign('usersonline', $usersonline);
+    $render->assign('membonline',  $users['numusers']);
+    $render->assign('anononline',  $users['numguests']);
+    $render->assign('uid',         $uid);
 
-    $blockinfo['content'] = $render->fetch('profile_block_membersonline.htm', $membonline . $anononline);
+    $blockinfo['content'] = $render->fetch('profile_block_membersonline.htm', $users['numusers'] . $users['numguests']);
 
     return pnBlockThemeBlock($blockinfo);
 }
