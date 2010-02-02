@@ -4,7 +4,7 @@
 <ul>
     <!--[foreach item='user' from=$usersonline]-->
     <li>
-        <!--[$user.uname|userprofilelink:$maxLength]-->
+        <!--[$user.uname|userprofilelink:'':'':$maxLength]-->
         <!--[pnmodurl modname=$msgmodule func='inbox' assign="messageslink"]-->
         <!--[if $msgmodule AND $user.uid eq $uid]-->
         (<a href="<!--[$messageslink|pnvarprephtmldisplay]-->" title="<!--[gt text='unread' domain='module_profile']-->"><!--[$messages.unread]--></a> | <a href="<!--[$messageslink|pnvarprephtmldisplay]-->" title="<!--[gt text='total' domain='module_profile']-->"><!--[$messages.totalin]--></a>)
