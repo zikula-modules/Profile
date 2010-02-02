@@ -70,7 +70,7 @@ function Profile_membersonlineblock_display($blockinfo)
         $vars['lengthmax'] = 30;
     }
 
-    $uid         = pnUserGetVar('uid');
+    $uid         = (int)pnUserGetVar('uid');
     $users       = pnModAPIFunc('Profile', 'memberslist', 'getallonline');
     $usersonline = array();
 
@@ -81,6 +81,7 @@ function Profile_membersonlineblock_display($blockinfo)
     }
 
     $render = & pnRender::getInstance('Profile', false);
+    $render->cache_id = $uid;
 
     // check which messaging module is available and add the necessary info
     $msgmodule = pnModAPIFunc('Profile', 'memberslist', 'getmessagingmodule');
@@ -95,7 +96,7 @@ function Profile_membersonlineblock_display($blockinfo)
     $render->assign('anononline',  $users['numguests']);
     $render->assign('uid',         $uid);
 
-    $blockinfo['content'] = $render->fetch('profile_block_membersonline.htm', $users['numusers'] . $users['numguests']);
+    $blockinfo['content'] = $render->fetch('profile_block_membersonline.htm');
 
     return pnBlockThemeBlock($blockinfo);
 }
