@@ -371,7 +371,7 @@ function Profile_userapi_insertdyndata($args)
 {
     $dynadata = isset($args['dynadata']) ? $args['dynadata'] : FormUtil::getPassedValue('dynadata');
 
-    // Validate if there's any dynadata
+    // Validate if there's no dynadata
     // do not touch the __ATTRIBUTES__ field
     if (empty($dynadata)) {
         return array();
