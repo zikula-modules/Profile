@@ -18,7 +18,7 @@ $modversion['displayname']    = __('Profile manager', $dom);
 $modversion['description']    = __("Provides a personal account control panel for each registered user, an interface to administer the personal information items displayed within it, and a registered users list functionality. Works in close unison with the 'Users' module.", $dom);
 //! module name that appears in URL
 $modversion['url']            = __('profile', $dom);
-$modversion['version']        = '1.5';
+$modversion['version']        = '1.5.1';
 
 $modversion['credits']        = 'pndocs/credits.txt';
 $modversion['help']           = 'pndocs/help.txt';
