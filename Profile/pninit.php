@@ -214,6 +214,8 @@ function Profile_upgrade($oldversion)
             }
 
         case '1.5':
+        case '1.5.1':
+        case '1.5.2':
             // future upgrade routines
     }
 
