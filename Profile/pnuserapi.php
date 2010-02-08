@@ -139,7 +139,7 @@ function Profile_userapi_getallactive($args)
     if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
         $args['index'] = 'prop_attribute_name';
     }
-    if (!isset($args['get']) || !in_array($args['get'], array('editable', 'all'))) {
+    if (!isset($args['get']) || !in_array($args['get'], array('editable', 'viewable', 'all'))) {
         $args['get'] = 'all';
     }
     if (!isset($args['uid']) || !is_numeric($args['uid'])) {
@@ -208,18 +208,29 @@ function Profile_userapi_getallactive($args)
                     break;
                 }
             case 'viewable':
+                $isallowed = true;
                 // check the item visibility
-                if ($item['prop_viewby'] != 0) {
-                    // not to everyone, checks members only or higher
-                    if (!($item['prop_viewby'] == 1 && pnUserLoggedIn())) {
-                        // check for the account owner or admin
-                        if (!($item['prop_viewby'] == 2 && ($isowner || $isadmin))) {
-                            // lastly check for admin
-                            if (!($item['prop_viewby'] == 3 && $isadmin)) {
-                                break;
-                            }
-                        }
-                    }
+                switch ($item['prop_viewby'])
+                {
+                    // everyone, do nothing
+                    case '0':
+                        break;
+                    // members only or higher
+                    case '1':
+                        $isallowed = $ismember;
+                        break;
+                    // account owner or admin
+                    case '2':
+                        $isallowed = ($isowner || $isadmin);
+                        break;
+                    // admins only
+                    case '3':
+                        $isallowed = $isadmin;
+                        break;
+                }
+                // break if it's not viewable
+                if (!$isallowed) {
+                    break;
                 }
             case 'all':
                 $result[$item[$args['index']]] = $item;
