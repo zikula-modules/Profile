@@ -36,11 +36,9 @@ function Profile_userapi_getall($args)
         return LogUtil::registerArgsError();
     }
 
-    $items   = array();
-
     // Security check
     if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
-        return $items;
+        return array();
     }
 
     // We now generate a where-clause
@@ -144,13 +142,16 @@ function Profile_userapi_getallactive($args)
     if (!isset($args['get']) || !in_array($args['get'], array('editable', 'all'))) {
         $args['get'] = 'all';
     }
-
-    static $items;
+    if (!isset($args['uid']) || !is_numeric($args['uid'])) {
+        $args['uid'] = -1;
+    }
 
     // Security check
     if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
         return array();
     }
+
+    static $items;
 
     if (!isset($items)) {
         // Get datbase setup
@@ -191,14 +192,34 @@ function Profile_userapi_getallactive($args)
     }
 
     // Put items into result array and filter if needed
-    $result = array();
+    $currentuser = (int)pnUserGetVar('uid');
+    $ismember    = ($currentuser >= 2);
+    $isowner     = ($currentuser == (int)$args['uid']);
+    $isadmin     = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
+
+    $result  = array();
     foreach ($items as $item)
     {
         switch ($args['get'])
         {
             case 'editable':
+                // check the display type
                 if ($item['prop_dtype'] < 0) {
                     break;
+                }
+            case 'viewable':
+                // check the item visibility
+                if ($item['prop_viewby'] != 0) {
+                    // not to everyone, checks members only or higher
+                    if (!($item['prop_viewby'] == 1 && pnUserLoggedIn())) {
+                        // check for the account owner or admin
+                        if (!($item['prop_viewby'] == 2 && ($isowner || $isadmin))) {
+                            // lastly check for admin
+                            if (!($item['prop_viewby'] == 3 && $isadmin)) {
+                                break;
+                            }
+                        }
+                    }
                 }
             case 'all':
                 $result[$item[$args['index']]] = $item;
