@@ -265,10 +265,11 @@ function smarty_function_duditemmodify($params, &$smarty)
             $format = !empty($format) ? $format : __('%b %d, %Y');
 
             // process the temporal data if any
+            $timestamp = null;
             if (isset($item['temp_propdata'])) {
                 $timestamp = DateUtil::parseUIDate($item['temp_propdata']);
                 $uservalue = DateUtil::transformInternalDate($timestamp);
-            } else {
+            } elseif (!empty($uservalue)) {
                 $timestamp = DateUtil::makeTimestamp($uservalue);
             }
 

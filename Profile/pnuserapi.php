@@ -300,7 +300,7 @@ function Profile_userapi_savedata($args)
         $fieldvalue = '';
         if (isset($fields[$attrname])) {
             // Process the Date DUD separately
-            if ($dud['prop_displaytype'] == 5) {
+            if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
                 $fieldvalue = DateUtil::parseUIDate($fields[$attrname]);
                 $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
             } elseif (is_array($fields[$attrname])) {
