@@ -207,6 +207,7 @@ function Profile_userapi_getallactive($args)
                 if ($item['prop_dtype'] < 0) {
                     break;
                 }
+                $result[$item[$args['index']]] = $item;
             case 'viewable':
                 $isallowed = true;
                 // check the item visibility
@@ -232,6 +233,7 @@ function Profile_userapi_getallactive($args)
                 if (!$isallowed) {
                     break;
                 }
+                $result[$item[$args['index']]] = $item;
             case 'all':
                 $result[$item[$args['index']]] = $item;
         }
