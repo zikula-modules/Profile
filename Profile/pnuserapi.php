@@ -234,6 +234,7 @@ function Profile_userapi_getallactive($args)
                     break;
                 }
                 $result[$item[$args['index']]] = $item;
+                break;
             case 'all':
                 $result[$item[$args['index']]] = $item;
         }
