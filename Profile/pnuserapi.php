@@ -291,7 +291,7 @@ function Profile_userapi_savedata($args)
 
     $fields = $args['dynadata'];
 
-    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
+    $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
 
     foreach ($duds as $attrname => $dud)
     {
