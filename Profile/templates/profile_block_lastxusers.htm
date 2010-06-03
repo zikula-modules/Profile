@@ -1,0 +1,10 @@
+{* $Id: profile_block_lastxusers.htm 121 2010-06-03 05:02:54Z drak $ *}
+{if $users}
+<ul>
+    {foreach from=$users item='user'}
+    {usergetvar name='uname' uid=$user.uid assign='uname'}
+    {usergetvar name='user_regdate' uid=$user.uid assign='regdate'}
+    <li>{$uname|userprofilelink} ({$regdate|date_format})</li>
+    {/foreach}
+</ul>
+{/if}

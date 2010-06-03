@@ -1,0 +1,8 @@
+{*  $Id: profile_form_edit.htm 121 2010-06-03 05:02:54Z drak $  *}
+
+<fieldset>
+    <legend>{gt text='Personal info' domain='module_profile'}</legend>
+    {foreach from=$duditems item='item'}
+    {duditemmodify item=$item uid=$userid}
+    {/foreach}
+</fieldset>
