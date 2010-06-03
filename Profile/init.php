@@ -23,12 +23,12 @@ function Profile_init()
         return false;
     }
 
-    pnModSetVar('Profile', 'memberslistitemsperpage', 20);
-    pnModSetVar('Profile', 'onlinemembersitemsperpage', 20);
-    pnModSetVar('Profile', 'recentmembersitemsperpage', 10);
-    pnModSetVar('Profile', 'filterunverified', 1);
+    ModUtil::setVar('Profile', 'memberslistitemsperpage', 20);
+    ModUtil::setVar('Profile', 'onlinemembersitemsperpage', 20);
+    ModUtil::setVar('Profile', 'recentmembersitemsperpage', 10);
+    ModUtil::setVar('Profile', 'filterunverified', 1);
     
-    pnModSetVar('Profile', 'dudtextdisplaytags', 0);
+    ModUtil::setVar('Profile', 'dudtextdisplaytags', 0);
 
     // create the default data for the module
     Profile_defaultdata();
@@ -65,28 +65,28 @@ function Profile_upgrade($oldversion)
             DBUtil::executeSQL("UPDATE {$table} SET pn_prop_dtype = '1' WHERE pn_prop_dtype = '0'");
 
         case '1.1':
-            pnModSetVar('Profile', 'memberslistitemsperpage',   pnModGetVar('Members_List', 'memberslistitemsperpage', 20));
-            pnModSetVar('Profile', 'onlinemembersitemsperpage', pnModGetVar('Members_List', 'onlinemembersitemsperpage', 20));
-            pnModSetVar('Profile', 'recentmembersitemsperpage', pnModGetVar('Members_List', 'recentmembersitemsperpage', 10));
-            pnModSetVar('Profile', 'filterunverified',          pnModGetVar('Members_List', 'filterunverified', 1));
-            pnModDelVar('Members_List');
+            ModUtil::setVar('Profile', 'memberslistitemsperpage',   ModUtil::getVar('Members_List', 'memberslistitemsperpage', 20));
+            ModUtil::setVar('Profile', 'onlinemembersitemsperpage', ModUtil::getVar('Members_List', 'onlinemembersitemsperpage', 20));
+            ModUtil::setVar('Profile', 'recentmembersitemsperpage', ModUtil::getVar('Members_List', 'recentmembersitemsperpage', 10));
+            ModUtil::setVar('Profile', 'filterunverified',          ModUtil::getVar('Members_List', 'filterunverified', 1));
+            ModUtil::delVar('Members_List');
 
             // upgrade blocks table to migrate Members_List blocks to Profile
             $btable = DBUtil::getLimitedTablename('blocks');
-            $oldModuleID = pnModGetIDFromName('Members_List');
-            $newModuleID = pnModGetIDFromName('Profile');
+            $oldModuleID = ModUtil::getIdFromName('Members_List');
+            $newModuleID = ModUtil::getIdFromName('Profile');
             DBUtil::executeSQL("UPDATE {$btable} SET pn_mid = '{$newModuleID}' WHERE pn_mid = '{$oldModuleID}'");
 
         case '1.2':
             // dependencies do not work during upgrade yet so we check it manually
-            $usersmod = pnModGetInfo(pnModGetIDFromName('Users'));
+            $usersmod = ModUtil::getInfo(ModUtil::getIdFromName('Users'));
             if (version_compare($usersmod['version'], '1.9', '<=')) {
                 LogUtil::registerError(__("Error! The 'Users' module must be upgraded to version 1.10 before you can upgrade the 'Profile' module.", $dom));
                 return '1.2';
             }
 
         case '1.3':
-            pnModSetVar('Profile', 'dudtextdisplaytags', 0);
+            ModUtil::setVar('Profile', 'dudtextdisplaytags', 0);
 
         case '1.4':
             // remove definitely the user_data table
@@ -152,18 +152,18 @@ function Profile_upgrade($oldversion)
             DBUtil::updateObjectArray($newprops, 'user_property', 'prop_id');
 
             // clean some modvars
-            pnModDelVar('Profile', 'itemsperpage');
-            pnModDelVar('Profile', 'itemsperrow');
-            pnModDelVar('Profile', 'displaygraphics');
+            ModUtil::delVar('Profile', 'itemsperpage');
+            ModUtil::delVar('Profile', 'itemsperrow');
+            ModUtil::delVar('Profile', 'displaygraphics');
 
             // set the active fields to display in the registration form
-            pnModAPILoad('Profile', 'user', true);
-            $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
-            pnModSetVar('Profile', 'dudregshow', array_keys($items));
+            ModUtil::loadApi('Profile', 'user', true);
+            $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
+            ModUtil::setVar('Profile', 'dudregshow', array_keys($items));
             unset($items);
 
             // update the users' data to ids
-            pnModAPILoad('Profile', 'dud', true);
+            ModUtil::loadApi('Profile', 'dud', true);
             // updates the radio (3) and select (4) attribute names and data
             $loop = array(3, 4);
             foreach ($loop as $displaytype) {
@@ -172,7 +172,7 @@ function Profile_upgrade($oldversion)
                 $userprops   = DBUtil::selectFieldArray('user_property', 'prop_validation', $where, '', false, 'prop_attribute_name');
 
                 foreach (array_keys($userprops) as $k) {
-                    $userprops[$k] = pnModAPIFunc('Profile', 'dud', 'getoptions', array('field' => $userprops[$k]));
+                    $userprops[$k] = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('field' => $userprops[$k]));
                     $userprops[$k] = array_flip($userprops[$k]);
                 }
 
@@ -206,7 +206,7 @@ function Profile_upgrade($oldversion)
 
         case '1.4.1':
             // checkpoint to deprecate the extdate field (6)
-            $tables = pnDBGetTables();
+            $tables = System::dbGetTables();
             $sql    = "UPDATE $tables[user_property] SET pn_prop_validation = REPLACE(pn_prop_validation, '\"displaytype\";s:1:\"6\"', '\"displaytype\";s:1:\"5\"') WHERE pn_prop_validation LIKE '%s:11:\"displaytype\";s:1:\"6\"%'";
             if (!DBUtil::executeSQL($sql)) {
                 LogUtil::registerError(__('Error! Could not update table.', $dom));
@@ -236,7 +236,7 @@ function Profile_delete()
     }
 
     // Delete any module variables
-    pnModDelVar('Profile');
+    ModUtil::delVar('Profile');
 
     // Deletion successful
     return true;
@@ -399,5 +399,5 @@ function Profile_defaultdata()
 
     // set realname, homepage, timezone offset, location and ocupation
     // to be shown in the registration form by default
-    pnModSetVar('Profile', 'dudregshow', array(1, 3, 4, 10, 11));
+    ModUtil::setVar('Profile', 'dudregshow', array(1, 3, 4, 10, 11));
 }
