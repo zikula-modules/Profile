@@ -11,7 +11,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html
  */
 
-class Profile_Api_User extends AbstractApi
+class Profile_Api_User extends Zikula_Api
 {
     /**
      * Get all Dynamic user data fields

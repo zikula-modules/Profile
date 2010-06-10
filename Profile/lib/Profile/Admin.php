@@ -11,7 +11,7 @@
  * @author Mark West
  */
 
-class Profile_Admin extends AbstractController
+class Profile_Admin extends Zikula_Controller
 {
     /**
      * The main administration function
@@ -63,7 +63,7 @@ class Profile_Admin extends AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        
+
 
         // Get parameters from whatever input we need.
         $startnum = (int)FormUtil::getPassedValue('startnum', null, 'GET');
@@ -202,7 +202,7 @@ class Profile_Admin extends AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        
+
 
         // Create output object
         $render = & pnRender::getInstance('Profile', false);
@@ -257,7 +257,7 @@ class Profile_Admin extends AbstractController
         $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : FormUtil::getPassedValue('listoptions', null, 'POST');
         $note        = isset($args['note'])          ? $args['note']          : FormUtil::getPassedValue('note', null, 'POST');
 
-        
+
 
         $returnurl = pnModURL('Profile', 'admin', 'view');
 
@@ -325,7 +325,7 @@ class Profile_Admin extends AbstractController
             $dudid = $objectid;
         }
 
-        
+
 
         // The user API function is called.
         $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -407,7 +407,7 @@ class Profile_Admin extends AbstractController
             $dudid = $objectid;
         }
 
-        
+
 
         // The return value of the function is checked here
         if (pnModAPIFunc('Profile', 'admin', 'update',
@@ -447,7 +447,7 @@ class Profile_Admin extends AbstractController
             $dudid = $objectid;
         }
 
-        
+
 
         // The user API function is called.
         $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -502,7 +502,7 @@ class Profile_Admin extends AbstractController
      */
     public function increase_weight($args)
     {
-        
+
 
         $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
 
@@ -537,7 +537,7 @@ class Profile_Admin extends AbstractController
      */
     public function decrease_weight($var)
     {
-        
+
 
         $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
 
@@ -576,7 +576,7 @@ class Profile_Admin extends AbstractController
      */
     public function activate($args)
     {
-        
+
 
         // Get parameters from whatever input we need.
         $dudid  = (int)FormUtil::getPassedValue('dudid', (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
@@ -601,7 +601,7 @@ class Profile_Admin extends AbstractController
      */
     public function deactivate($args)
     {
-        
+
 
         // Get parameters from whatever input we need.
         $dudid  = (int)FormUtil::getPassedValue('dudid',  (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
@@ -676,7 +676,7 @@ class Profile_Admin extends AbstractController
             return LogUtil::registerAuthidError(pnModURL('Profile', 'admin', 'view'));
         }
 
-        
+
 
         // Update module variables.
         $viewregdate = (bool)FormUtil::getPassedValue('viewregdate', 0, 'POST');

@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Block_Lastseen extends AbstractBlock
+class Profile_Block_Lastseen extends Zikula_Block
 {
     /**
      * initialise block

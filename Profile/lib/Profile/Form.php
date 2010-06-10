@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Form extends AbstractController
+class Profile_Form extends Zikula_Controller
 {
     /**
      * display the dynadata section of the register form

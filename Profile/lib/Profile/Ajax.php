@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Ajax extends AbstractController
+class Profile_Ajax extends Zikula_Controller
 {
     /**
      * change the weight of a profile item
@@ -21,7 +21,7 @@ class Profile_Ajax extends AbstractController
      */
     public function changeprofileweight()
     {
-        
+
 
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));

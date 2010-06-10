@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Api_Memberslist extends AbstractApi
+class Profile_Api_Memberslist extends Zikula_Api
 {
     /**
      * Get all users

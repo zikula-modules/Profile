@@ -11,7 +11,7 @@
  */
 
 // Ported from : i-Block [Members Online 2.5] - MagicX - Portalzine.de
-class Profile_Block_Membersonline extends AbstractBlock
+class Profile_Block_Membersonline extends Zikula_Block
 {
     /**
      * initialise block
@@ -152,4 +152,3 @@ class Profile_Block_Membersonline extends AbstractBlock
         return $blockinfo;
     }
 
-    
