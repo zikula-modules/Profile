@@ -38,22 +38,22 @@ class Profile_Api_Account extends Zikula_Api
 
 
         // Clean the label
-        $permsep = pnConfigGetVar('shorturlsseparator', '-');
+        $permsep = System::getVar('shorturlsseparator', '-');
         $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
         $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
 
         // Check if the label or attribute name already exists
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
         if ($item) {
             return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']) ));
         }
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
             return LogUtil::registerError($this->__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']) ));
         }
 
         // Determine the new weight
-        $weightlimits = pnModAPIFunc('Profile', 'user', 'getweightlimits');
+        $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
 
         // a checkbox can't be required
@@ -84,7 +84,7 @@ class Profile_Api_Account extends Zikula_Api
         }
 
         // Let any hooks know that we have created a new item.
-        pnModCallHooks('item', 'create', $obj['prop_id'], array('module' => 'Profile'));
+        ModUtil::callHooks('item', 'create', $obj['prop_id'], array('module' => 'Profile'));
 
         // Return the id of the newly created item to the calling process
         return $obj['prop_id'];
@@ -108,14 +108,14 @@ class Profile_Api_Account extends Zikula_Api
 
 
         // The user API function is called.
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.' ));
         }
 
         // Clean the label
-        $permsep = pnConfigGetVar('shorturlsseparator');
+        $permsep = System::getVar('shorturlsseparator');
         $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
 
         // Security check
@@ -129,7 +129,7 @@ class Profile_Api_Account extends Zikula_Api
 
         // If there's a new label, check if it already exists
         if ($args['label'] <> $item['prop_label']) {
-            $vitem = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+            $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
             if ($vitem) {
                 return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']) ));
             }
@@ -142,7 +142,7 @@ class Profile_Api_Account extends Zikula_Api
                 $result  = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
                 $result['prop_weight'] = $item['prop_weight'];
 
-                $pntable = pnDBGetTables();
+                $pntable = System::dbGetTables();
                 $column  = $pntable['user_property_column'];
                 $where   = "$column[prop_weight] =  '$args[prop_weight]'
                         AND $column[prop_id] <> '$args[dudid]'";
@@ -183,7 +183,7 @@ class Profile_Api_Account extends Zikula_Api
         // before update it search for option ID change
         // to update the respective user's data
         if ($obj['prop_validation'] != $item['prop_validation']) {
-            pnModAPIFunc('Profile', 'dud', 'updatedata',
+            ModUtil::apiFunc('Profile', 'dud', 'updatedata',
                     array('item'    => $item['prop_validation'],
                     'newitem' => $obj['prop_validation']));
         }
@@ -196,7 +196,7 @@ class Profile_Api_Account extends Zikula_Api
         }
 
         // New hook functions
-        pnModCallHooks('item', 'update', $args['dudid'], array('module' => 'Profile'));
+        ModUtil::callHooks('item', 'update', $args['dudid'], array('module' => 'Profile'));
 
         // Let the calling process know that we have finished successfully
         return true;
@@ -221,7 +221,7 @@ class Profile_Api_Account extends Zikula_Api
 
 
         // The user API function is called.
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.' ));
@@ -238,7 +238,7 @@ class Profile_Api_Account extends Zikula_Api
         }
 
         // delete the property data aka attributes
-        $pntables       = pnDBGetTables();
+        $pntables       = System::dbGetTables();
         $objattr_column = $pntables['objectdata_attributes_column'];
 
         $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
@@ -256,7 +256,7 @@ class Profile_Api_Account extends Zikula_Api
         }
 
         // Let any hooks know that we have deleted an item.
-        pnModCallHooks('item', 'delete', $dudid, array('module' => 'Profile'));
+        ModUtil::callHooks('item', 'delete', $dudid, array('module' => 'Profile'));
 
         // Let the calling process know that we have finished successfully
         return true;
@@ -279,7 +279,7 @@ class Profile_Api_Account extends Zikula_Api
 
 
         // The API function is called.
-        $weightlimits = pnModAPIFunc('Profile', 'user', 'getweightlimits');
+        $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
 
         // Update the item
         $obj = array('prop_id' => (int)$args['dudid'],
@@ -311,7 +311,7 @@ class Profile_Api_Account extends Zikula_Api
 
 
 
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.' ), 404);
@@ -334,7 +334,7 @@ class Profile_Api_Account extends Zikula_Api
         }
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         $propertytable  = $pntable['user_property'];
         $propertycolumn = $pntable['user_property_column'];
@@ -367,19 +367,19 @@ class Profile_Api_Account extends Zikula_Api
         $links = array();
 
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url'  => pnModURL('Profile', 'admin', 'view'),
+            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'view'),
                     'text' => $this->__('Personal info items list' ));
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
-            $links[] = array('url'  => pnModURL('Profile', 'admin', 'newdud'),
+            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'newdud'),
                     'text' => $this->__('Create new personal info item' ));
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            $links[] = array('url'  => pnModURL('Profile', 'admin', 'modifyconfig'),
+            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'modifyconfig'),
                     'text' => $this->__('User account panel settings' ));
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url'  => pnModURL('Profile', 'admin', 'help'),
+            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'help'),
                     'text' => $this->__('Help' ));
         }
 

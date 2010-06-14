@@ -31,5 +31,5 @@ function Profile_sectionapi_ezcomments($args)
     // only approved comments
     $args['status'] = 0;
 
-    return pnModAPIFunc('EZComments', 'user', 'getall', $args);
+    return ModUtil::apiFunc('EZComments', 'user', 'getall', $args);
 }

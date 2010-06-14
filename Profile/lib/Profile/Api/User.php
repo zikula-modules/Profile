@@ -157,7 +157,7 @@ class Profile_Api_User extends Zikula_Api
 
         if (!isset($items)) {
             // Get datbase setup
-            $pntable = pnDBGetTables();
+            $pntable = System::dbGetTables();
             $column  = $pntable['user_property_column'];
             $where   = "WHERE $column[prop_weight] > '0'
                     AND   $column[prop_dtype] >= '0'";
@@ -194,7 +194,7 @@ class Profile_Api_User extends Zikula_Api
         }
 
         // Put items into result array and filter if needed
-        $currentuser = (int)pnUserGetVar('uid');
+        $currentuser = (int)UserUtil::getVar('uid');
         $ismember    = ($currentuser >= 2);
         $isowner     = ($currentuser == (int)$args['uid']);
         $isadmin     = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
@@ -266,7 +266,7 @@ class Profile_Api_User extends Zikula_Api
     public function getweightlimits()
     {
         // Get datbase setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
         $column  = $pntable['user_property_column'];
 
         $where = "WHERE $column[prop_weight] <> 0";
@@ -293,12 +293,12 @@ class Profile_Api_User extends Zikula_Api
 
         $fields = $args['dynadata'];
 
-        $duds = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
+        $duds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
 
         foreach ($duds as $attrname => $dud)
         {
             // exclude avatar update when Avatar module is present
-            if ($attrname == 'avatar' && pnModAvailable('Avatar')) {
+            if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
             }
 
@@ -314,7 +314,7 @@ class Profile_Api_User extends Zikula_Api
                     $fieldvalue = $fields[$attrname];
                 }
             }
-            pnUserSetVar($attrname, $fieldvalue, $args['uid']);
+            UserUtil::setVar($attrname, $fieldvalue, $args['uid']);
         }
 
         // Return the result (true = success, false = failure
@@ -337,7 +337,7 @@ class Profile_Api_User extends Zikula_Api
 
 
         // The API function is called.
-        $items = pnModAPIFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
 
         // Initializing Error check
         $error = false;
@@ -451,7 +451,7 @@ class Profile_Api_User extends Zikula_Api
             $params = array('searchby' => $dynadata, 'returnUids' => true);
 
         } else {
-            $duditems = pnModAPIFunc('Profile', 'user', 'getall');
+            $duditems = ModUtil::apiFunc('Profile', 'user', 'getall');
 
             $params = array('searchby' => array(), 'returnUids' => true);
             foreach ($duditems as $item) {
@@ -462,7 +462,7 @@ class Profile_Api_User extends Zikula_Api
         }
 
         if (!empty($params['searchby'])) {
-            $uids = pnModAPIFunc('Profile', 'memberslist', 'getall', $params);
+            $uids = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $params);
         }
 
         return $uids;

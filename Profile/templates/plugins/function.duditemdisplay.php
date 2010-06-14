@@ -40,15 +40,15 @@ function smarty_function_duditemdisplay($params, &$smarty)
     extract($params);
     unset($params);
 
-    if (!pnModAvailable('Profile')) {
+    if (!ModUtil::available('Profile')) {
         return;
     }
 
     if (!isset($item)) {
         if (isset($proplabel)) {
-            $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $proplabel));
+            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $proplabel));
         } else if (isset($propattribute)) {
-            $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
+            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
         } else {
             return;
         }
@@ -71,11 +71,11 @@ function smarty_function_duditemdisplay($params, &$smarty)
     }
 
     if (!isset($uid)) {
-        $uid = pnUserGetVar('uid');
+        $uid = UserUtil::getVar('uid');
     }
 
     if (!isset($userinfo)) {
-        $userinfo = pnUserGetVars($uid);
+        $userinfo = UserUtil::getVars($uid);
     }
 
     // get the value of this field from the userinfo array
@@ -93,7 +93,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // try to get the DUD output if it's Third Party
     if ($item['prop_dtype'] != 1) {
-        $output = pnModAPIFunc($item['prop_modname'], 'dud', 'edit',
+        $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit',
                                array('item'      => $item,
                                      'userinfo'  => $userinfo,
                                      'uservalue' => $uservalue,
@@ -122,8 +122,8 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // checks the different attributes and types
     // avatar
     if ($item['prop_attribute_name'] == 'avatar') {
-        $baseurl = pnGetBaseURL();
-        $avatarpath = pnModGetVar('Users', 'avatarpath', 'images/avatar');
+        $baseurl = System::getBaseUrl();
+        $avatarpath = ModUtil::getVar('Users', 'avatarpath', 'images/avatar');
         if (empty($uservalue)) {
             $uservalue = 'blank.gif';
         }
@@ -134,7 +134,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // timezone
     } elseif ($item['prop_attribute_name'] == 'tzoffset') {
         if (empty($uservalue)) {
-            $uservalue = pnUserGetVar('tzoffset') ? pnUserGetVar('tzoffset') : pnConfigGetVar('timezone_offset');
+            $uservalue = UserUtil::getVar('tzoffset') ? UserUtil::getVar('tzoffset') : System::getVar('timezone_offset');
         }
 
         $output = DateUtil::getTimezoneText($uservalue);
@@ -155,7 +155,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // radio
     } elseif ($item['prop_displaytype'] == 3) {
-        $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
         // process the user value and get the translated label
         $output = isset($options[$uservalue]) ? $options[$uservalue] : $default;
@@ -163,7 +163,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // select
     } elseif ($item['prop_displaytype'] == 4) {
-        $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
         // process the user values and get the translated label
         $uservalue = @unserialize($uservalue);
@@ -178,7 +178,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // date
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
-        $format = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $format = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
         //! This is from the core domain (datebrief)
         $format = !empty($format) ? $format : __('%b %d, %Y');
 
@@ -187,7 +187,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // multicheckbox
     } elseif ($item['prop_displaytype'] == 7) {
-        $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
         // process the user values and get the translated label
         $uservalue = @unserialize($uservalue);

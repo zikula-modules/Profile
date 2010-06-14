@@ -40,7 +40,7 @@ function smarty_function_profilesection($params, &$smarty)
     $params['name'] = strtolower($params['name']);
 
     // extract the items to list
-    $section = pnModAPIFunc('Profile', 'section', $params['name'], $params);
+    $section = ModUtil::apiFunc('Profile', 'section', $params['name'], $params);
 
     if ($section === false) {
         return '';

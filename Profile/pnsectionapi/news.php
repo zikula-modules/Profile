@@ -40,5 +40,5 @@ function Profile_sectionapi_news($args)
     if (isset($args['to']))    unset($args['to']);
     if (isset($args['query'])) unset($args['query']);
 
-    return pnModAPIFunc('News', 'user', 'getall', $args);
+    return ModUtil::apiFunc('News', 'user', 'getall', $args);
 }

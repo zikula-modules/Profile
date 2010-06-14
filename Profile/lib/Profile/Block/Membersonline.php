@@ -52,7 +52,7 @@ class Profile_Block_Membersonline extends Zikula_Block
     public function display($blockinfo)
     {
         // Check if the Profile module is available.
-        if (!pnModAvailable('Profile')) {
+        if (!ModUtil::available('Profile')) {
             return false;
         }
 
@@ -62,15 +62,15 @@ class Profile_Block_Membersonline extends Zikula_Block
         }
 
         // Get variables from content block
-        $vars = pnBlockVarsFromContent($blockinfo['content']);
+        $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // Defaults
         if (empty($vars['lengthmax'])) {
             $vars['lengthmax'] = 30;
         }
 
-        $uid         = (int)pnUserGetVar('uid');
-        $users       = pnModAPIFunc('Profile', 'memberslist', 'getallonline');
+        $uid         = (int)UserUtil::getVar('uid');
+        $users       = ModUtil::apiFunc('Profile', 'memberslist', 'getallonline');
         $usersonline = array();
 
         if ($users) {
@@ -83,9 +83,9 @@ class Profile_Block_Membersonline extends Zikula_Block
         $render->cache_id = $uid;
 
         // check which messaging module is available and add the necessary info
-        $msgmodule = pnModAPIFunc('Profile', 'memberslist', 'getmessagingmodule');
-        if (!empty($msgmodule) && pnUserLoggedIn()) {
-            $render->assign('messages', pnModAPIFunc($msgmodule, 'user', 'getmessagecount'));
+        $msgmodule = ModUtil::apiFunc('Profile', 'memberslist', 'getmessagingmodule');
+        if (!empty($msgmodule) && UserUtil::isLoggedIn()) {
+            $render->assign('messages', ModUtil::apiFunc($msgmodule, 'user', 'getmessagecount'));
         }
 
         $render->assign('msgmodule',   $msgmodule);
@@ -97,7 +97,7 @@ class Profile_Block_Membersonline extends Zikula_Block
 
         $blockinfo['content'] = $render->fetch('profile_block_membersonline.htm');
 
-        return pnBlockThemeBlock($blockinfo);
+        return BlockUtil::themeBlock($blockinfo);
     }
 
     /**
@@ -110,7 +110,7 @@ class Profile_Block_Membersonline extends Zikula_Block
     public function modify($blockinfo)
     {
         // Get current content
-        $vars = pnBlockVarsFromContent($blockinfo['content']);
+        $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // Defaults
         if (empty($vars['lengthmax'])) {
@@ -137,13 +137,13 @@ class Profile_Block_Membersonline extends Zikula_Block
     public function update($blockinfo)
     {
         // Get current content
-        $vars = pnBlockVarsFromContent($blockinfo['content']);
+        $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // alter the corresponding variable
         $vars['lengthmax'] = (int)FormUtil::getPassedValue('lengthmax', null, 'REQUEST');
 
         // write back the new contents
-        $blockinfo['content'] = pnBlockVarsToContent($vars);
+        $blockinfo['content'] = BlockUtil::varsToContent($vars);
 
         // clear the block cache
         $render = & pnRender::getInstance('Profile');

@@ -54,7 +54,7 @@ class Profile_Block_Featureduser extends Zikula_Block
     public function display($blockinfo)
     {
         // Check if the Profile module is available.
-        if (!pnModAvailable('Profile')) {
+        if (!ModUtil::available('Profile')) {
             return false;
         }
 
@@ -64,7 +64,7 @@ class Profile_Block_Featureduser extends Zikula_Block
         }
 
         // Get variables from content block
-        $vars = pnBlockVarsFromContent($blockinfo['content']);
+        $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // If there's no user to show, nothing to do
         if (!isset($vars['username']) || empty($vars['username'])) {
@@ -80,10 +80,10 @@ class Profile_Block_Featureduser extends Zikula_Block
             $vars['showregdate'] = '';
         }
 
-        $userinfo = pnUserGetVars(pnUserGetIDFromName($vars['username']));
+        $userinfo = UserUtil::getVars(UserUtil::getIdFromName($vars['username']));
 
         // Check if the user is watching its own profile or if he is admin
-        $currentuser = pnUserGetVar('uid');
+        $currentuser = UserUtil::getVar('uid');
         $ismember    = ($currentuser >= 2);
         $sameuser    = ($currentuser == $userinfo['uid']);
 
@@ -93,7 +93,7 @@ class Profile_Block_Featureduser extends Zikula_Block
         }
 
         // get all active profile fields
-        $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive', array('index' => 'prop_label'));
+        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('index' => 'prop_label'));
 
         foreach ($activeduds as $dudlabel => $activedud)
         {
@@ -133,7 +133,7 @@ class Profile_Block_Featureduser extends Zikula_Block
 
         $blockinfo['content'] = $render->fetch('profile_block_featureduser.htm');
 
-        return pnBlockThemeBlock($blockinfo);
+        return BlockUtil::themeBlock($blockinfo);
     }
 
     /**
@@ -146,7 +146,7 @@ class Profile_Block_Featureduser extends Zikula_Block
     public function modify($blockinfo)
     {
         // Get current content
-        $vars = pnBlockVarsFromContent($blockinfo['content']);
+        $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // Defaults
         if (!isset($vars['username']) || empty($vars['username'])) {
@@ -162,7 +162,7 @@ class Profile_Block_Featureduser extends Zikula_Block
         }
 
         // get all active profile fields
-        $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
+        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
 
         foreach ($activeduds as $attr => $activedud) {
             $dudarray[$attr] = $this->__($activedud['prop_label'], $dom);
@@ -191,7 +191,7 @@ class Profile_Block_Featureduser extends Zikula_Block
     public function update($blockinfo)
     {
         // Get current content
-        $vars = pnBlockVarsFromContent($blockinfo['content']);
+        $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // alter the corresponding variables
         $vars['username']     = FormUtil::getPassedValue('username', null, 'POST');
@@ -204,7 +204,7 @@ class Profile_Block_Featureduser extends Zikula_Block
 
         // validate the passed duds
         if (!empty($vars['fieldstoshow'])) {
-            $activeduds = pnModAPIfunc('Profile', 'user', 'getallactive');
+            $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
             $activeduds = array_keys($activeduds);
 
             foreach ($vars['fieldstoshow'] as $k => $v) {
@@ -215,7 +215,7 @@ class Profile_Block_Featureduser extends Zikula_Block
         }
 
         // write back the new contents
-        $blockinfo['content'] = pnBlockVarsToContent($vars);
+        $blockinfo['content'] = BlockUtil::varsToContent($vars);
 
         // clear the block cache
         $render = & pnRender::getInstance('Profile');

@@ -68,11 +68,11 @@ class Profile_Api_Memberslist extends Zikula_Api
         $args['searchby'] = DataUtil::formatForStore($args['searchby']);
 
         // load the database information for the users module
-        pnModDBInfoLoad('ObjectData');
-        pnModDBInfoLoad('Users');
+        ModUtil::dbInfoLoad('ObjectData');
+        ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // It's good practice to name column definitions you are getting
         // $column don't cut it in more complex modules
@@ -139,7 +139,7 @@ class Profile_Api_Memberslist extends Zikula_Api
             if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
                 // args.searchby is all => search_value to loop all the user attributes
                 /*
-            $dudfields = pnModAPIFunc('Profile', 'user', 'getallactive');
+            $dudfields = ModUtil::apiFunc('Profile', 'user', 'getallactive');
             if (empty($dudfields)) {
                 return $items;
             }
@@ -178,7 +178,7 @@ class Profile_Api_Memberslist extends Zikula_Api
             $where = "WHERE b.".$propcolumn[$args['searchby']]." LIKE '$args[letter]%' ";
         }
 
-        if (!$args['sorting'] && pnModGetVar('Profile', 'filterunverified')) {
+        if (!$args['sorting'] && ModUtil::getVar('Profile', 'filterunverified')) {
             $where .= " AND tbl.$userscolumn[activated] != '0'";
         }
 
@@ -214,7 +214,7 @@ class Profile_Api_Memberslist extends Zikula_Api
             list($uid) = $result->fields;
             if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
                 if (!$args['returnUids']) {
-                    $items[$uid] = pnUserGetVars($uid);
+                    $items[$uid] = UserUtil::getVars($uid);
                 } else {
                     $items[] = $uid;
                 }
@@ -259,10 +259,10 @@ class Profile_Api_Memberslist extends Zikula_Api
         $args['searchby'] = DataUtil::formatForStore($args['searchby']);
 
         // load the database information for the users module
-        pnModDBInfoLoad('Users');
+        ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // It's good practice to name column definitions you are getting
         // $column don't cut it in more complex modules
@@ -329,7 +329,7 @@ class Profile_Api_Memberslist extends Zikula_Api
             if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
                 // args.searchby is all => search_value to loop all the user attributes
                 /*
-            $dudfields = pnModAPIFunc('Profile', 'user', 'getallactive');
+            $dudfields = ModUtil::apiFunc('Profile', 'user', 'getallactive');
             if (empty($dudfields)) {
                 return $items;
             }
@@ -368,7 +368,7 @@ class Profile_Api_Memberslist extends Zikula_Api
             $where = "WHERE b.".$propcolumn[$args['searchby']]." LIKE '$args[letter]%' ";
         }
 
-        if (!$args['sorting'] && pnModGetVar('Profile', 'filterunverified')) {
+        if (!$args['sorting'] && ModUtil::getVar('Profile', 'filterunverified')) {
             $where .= " AND tbl.$userscolumn[activated] != '0'";
         }
 
@@ -403,14 +403,14 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
         $sessioninfocolumn = $pntable['session_info_column'];
         $sessioninfotable  = $pntable['session_info'];
 
-        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (pnConfigGetVar('secinactivemins') * 60));
+        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
 
         // Get items
         $sql = "SELECT DISTINCT $sessioninfocolumn[uid] FROM $sessioninfotable
@@ -447,10 +447,10 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // load the database information for the users module
-        pnModDBInfoLoad('Users');
+        ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
@@ -458,7 +458,7 @@ class Profile_Api_Memberslist extends Zikula_Api
 
         // filter out unverified users
         $where = '';
-        if (pnModGetVar('Profile', 'filterunverified')) {
+        if (ModUtil::getVar('Profile', 'filterunverified')) {
             $where = " AND $userscolumn[activated] = '1'";
         }
 
@@ -503,10 +503,10 @@ class Profile_Api_Memberslist extends Zikula_Api
         }
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // get active time based on security settings
-        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (pnConfigGetVar('secinactivemins') * 60));
+        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
@@ -552,7 +552,7 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // define the array to hold the resultant items
         $items = array();
@@ -562,7 +562,7 @@ class Profile_Api_Memberslist extends Zikula_Api
         $sessioninfotable  = $pntable['session_info'];
 
         // get active time based on security settings
-        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (pnConfigGetVar('secinactivemins') * 60));
+        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
 
         // Get items
         $sql = "SELECT DISTINCT $sessioninfocolumn[uid]
@@ -585,7 +585,7 @@ class Profile_Api_Memberslist extends Zikula_Api
         // Put items into result array.
         for (; !$result->EOF; $result->MoveNext()) {
             list($uid) = $result->fields;
-            $items[$uid] = pnUserGetVars($uid);
+            $items[$uid] = UserUtil::getVars($uid);
         }
 
         // All successful database queries produce a result set, and that result
@@ -607,7 +607,7 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // Get database setup
-        $pntable = pnDBGetTables();
+        $pntable = System::dbGetTables();
 
         // define the array to hold the resultant items
         $items = array();
@@ -620,10 +620,10 @@ class Profile_Api_Memberslist extends Zikula_Api
         // get active time based on security
 
         // TODO: this adodb_ function is deprecated -refactored ro strftime but might need review.
-        $activetime = strftime('%Y-%m-%d %H:%M:%S', time() - (pnConfigGetVar('secinactivemins') * 60));
+        $activetime = strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
 
         // Check if anonymous session are on
-        if (pnConfigGetVar('anonymoussessions')) {
+        if (System::getVar('anonymoussessions')) {
             $anonwhere = "AND $sessioninfotable.$sessioninfocolumn[uid] >= '0' ";
         } else {
             $anonwhere = "AND $sessioninfotable.$sessioninfocolumn[uid] > '0'";
@@ -681,8 +681,8 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function getmessagingmodule()
     {
-        $msgmodule = pnConfigGetVar('messagemodule', '');
-        if (!pnModAvailable($msgmodule)) {
+        $msgmodule = System::getVar('messagemodule', '');
+        if (!ModUtil::available($msgmodule)) {
             $msgmodule = '';
         }
 

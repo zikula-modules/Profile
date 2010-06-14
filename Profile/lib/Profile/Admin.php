@@ -70,11 +70,11 @@ class Profile_Admin extends Zikula_Controller
         $numitems = 20;
 
         // The user API function is called.
-        $items = pnModAPIFunc('Profile', 'user', 'getall',
+        $items = ModUtil::apiFunc('Profile', 'user', 'getall',
                 array('startnum' => $startnum,
                 'numitems' => $numitems));
 
-        $count  = pnModAPIFunc('Profile', 'user', 'countitems');
+        $count  = ModUtil::apiFunc('Profile', 'user', 'countitems');
         $authid = SecurityUtil::generateAuthKey();
 
         $x = 1;
@@ -93,7 +93,7 @@ class Profile_Admin extends Zikula_Controller
 
                 case ($item['prop_weight'] <> 0):
                     $statusval = 1;
-                    $status = array('url'   => pnModURL('Profile', 'admin', 'deactivate',
+                    $status = array('url'   => ModUtil::url('Profile', 'admin', 'deactivate',
                             array('dudid'    => $item['prop_id'],
                             'weight'   => $item['prop_weight'],
                             'authid'   => $authid)),
@@ -103,7 +103,7 @@ class Profile_Admin extends Zikula_Controller
 
                 default:
                     $statusval = 0;
-                    $status = array('url'   => pnModURL('Profile', 'admin', 'activate',
+                    $status = array('url'   => ModUtil::url('Profile', 'admin', 'activate',
                             array('dudid'    => $item['prop_id'],
                             'authid'   => $authid)),
                             'image' => 'redled.gif',
@@ -139,27 +139,27 @@ class Profile_Admin extends Zikula_Controller
             $options = array();
             if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT))
             {
-                $options[] = array('url' => pnModURL('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])),
+                $options[] = array('url' => ModUtil::url('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])),
                         'image' => 'xedit.gif',
                         'class' => '',
                         'title' => $this->__('Edit'));
 
                 if ($item['prop_weight'] > 1) {
-                    $options[] = array('url' => pnModURL('Profile', 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])),
+                    $options[] = array('url' => ModUtil::url('Profile', 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])),
                             'image' => '2uparrow.gif',
                             'class' => 'profile_up',
                             'title' => $this->__('Up'));
                 }
 
                 if ($x < $count) {
-                    $options[] = array('url' => pnModURL('Profile', 'admin', 'increase_weight', array('dudid' => $item['prop_id'])),
+                    $options[] = array('url' => ModUtil::url('Profile', 'admin', 'increase_weight', array('dudid' => $item['prop_id'])),
                             'image' => '2downarrow.gif',
                             'class' => 'profile_down',
                             'title' => $this->__('Down'));
                 }
 
                 if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
-                    $options[] = array('url' => pnModURL('Profile', 'admin', 'delete', array('dudid' => $item['prop_id'])),
+                    $options[] = array('url' => ModUtil::url('Profile', 'admin', 'delete', array('dudid' => $item['prop_id'])),
                             'image' => '14_layer_deletelayer.gif',
                             'class' => '',
                             'title' => $this->__('Delete'));
@@ -240,7 +240,7 @@ class Profile_Admin extends Zikula_Controller
     {
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(pnModURL('Profile', 'admin', 'view'));
+            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
         }
 
         // Security check
@@ -259,7 +259,7 @@ class Profile_Admin extends Zikula_Controller
 
 
 
-        $returnurl = pnModURL('Profile', 'admin', 'view');
+        $returnurl = ModUtil::url('Profile', 'admin', 'view');
 
         // Validates and check if empty or already existing...
         if (empty($label)) {
@@ -270,22 +270,22 @@ class Profile_Admin extends Zikula_Controller
             return LogUtil::registerError($this->__("Error! The personal info item must have an attribute name. An example of an acceptable name is: 'mydudfield'."), null, $returnurl);
         }
 
-        if (pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $label))) {
+        if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label))) {
             return LogUtil::registerError($this->__('Error! There is already an personal info item label with this naming.'), null, $returnurl);
         }
 
-        if (pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
+        if (ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
             return LogUtil::registerError($this->__('Error! There is already an attribute name with this naming.'), null, $returnurl);
         }
 
-        $permalinkssep = pnConfigGetVar('shorturlsseparator');
+        $permalinkssep = System::getVar('shorturlsseparator');
         $filteredlabel = str_replace($permalinkssep, '', DataUtil::formatPermalink($label));
         if ($label != $filteredlabel) {
             LogUtil::registerStatus($this->__('Warning! The personal info item label has been accepted, but was filtered and altered to ensure it contains no special characters or spaces in its naming.'), null, $returnurl);
         }
 
         // The API function is called.
-        $dudid = pnModAPIFunc('Profile', 'admin', 'create',
+        $dudid = ModUtil::apiFunc('Profile', 'admin', 'create',
                 array('label'          => $filteredlabel,
                 'attribute_name' => $attrname,
                 'required'       => $required,
@@ -302,7 +302,7 @@ class Profile_Admin extends Zikula_Controller
         }
 
         // This function generated no output
-        return pnRedirect($returnurl);
+        return System::redirect($returnurl);
     }
 
     /**
@@ -328,7 +328,7 @@ class Profile_Admin extends Zikula_Controller
 
 
         // The user API function is called.
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
@@ -388,7 +388,7 @@ class Profile_Admin extends Zikula_Controller
     {
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(pnModURL('Profile', 'admin', 'view'));
+            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
         }
 
         // Get parameters from whatever input we need.
@@ -410,7 +410,7 @@ class Profile_Admin extends Zikula_Controller
 
 
         // The return value of the function is checked here
-        if (pnModAPIFunc('Profile', 'admin', 'update',
+        if (ModUtil::apiFunc('Profile', 'admin', 'update',
         array('dudid'       => $dudid,
         'required'    => $required,
         'viewby'      => $viewby,
@@ -423,7 +423,7 @@ class Profile_Admin extends Zikula_Controller
         }
 
         // This function generated no output
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 
     /**
@@ -450,7 +450,7 @@ class Profile_Admin extends Zikula_Controller
 
 
         // The user API function is called.
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
@@ -480,17 +480,17 @@ class Profile_Admin extends Zikula_Controller
 
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(pnModURL('Profile', 'admin', 'view'));
+            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
         }
 
         // The API function is called.
-        if (pnModAPIFunc('Profile', 'admin', 'delete', array('dudid' => $dudid))) {
+        if (ModUtil::apiFunc('Profile', 'admin', 'delete', array('dudid' => $dudid))) {
             // Success
             LogUtil::registerStatus($this->__('Done! Deleted the personal info item.'));
         }
 
         // This function generated no output
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 
     /**
@@ -506,7 +506,7 @@ class Profile_Admin extends Zikula_Controller
 
         $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
 
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
@@ -525,7 +525,7 @@ class Profile_Admin extends Zikula_Controller
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
 
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 
     /**
@@ -541,7 +541,7 @@ class Profile_Admin extends Zikula_Controller
 
         $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
 
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
@@ -564,7 +564,7 @@ class Profile_Admin extends Zikula_Controller
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
 
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 
     /**
@@ -582,13 +582,13 @@ class Profile_Admin extends Zikula_Controller
         $dudid  = (int)FormUtil::getPassedValue('dudid', (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
 
         // The API function is called.
-        if (pnModAPIFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
+        if (ModUtil::apiFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
             // Success
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
 
         // This function generated no output
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 
     /**
@@ -608,20 +608,20 @@ class Profile_Admin extends Zikula_Controller
 
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(pnModURL('Profile', 'admin', 'view'));
+            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
         }
 
         // The API function is called.
-        if (pnModAPIFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
+        if (ModUtil::apiFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
             // Success
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
 
         // Let any other modules know that the modules configuration has been updated
-        pnModCallHooks('module','updateconfig','Profile', array('module' => 'Profile'));
+        ModUtil::callHooks('module','updateconfig','Profile', array('module' => 'Profile'));
 
         // This function generated no output
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 
     /**
@@ -637,7 +637,7 @@ class Profile_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
 
-        $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
 
         foreach ($items as $k => $item) {
             if ($item['prop_required']) {
@@ -673,44 +673,44 @@ class Profile_Admin extends Zikula_Controller
 
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(pnModURL('Profile', 'admin', 'view'));
+            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
         }
 
 
 
         // Update module variables.
         $viewregdate = (bool)FormUtil::getPassedValue('viewregdate', 0, 'POST');
-        pnModSetVar('Profile', 'viewregdate', $viewregdate);
+        ModUtil::setVar('Profile', 'viewregdate', $viewregdate);
 
 
         $memberslistitemsperpage = (int)FormUtil::getPassedValue('memberslistitemsperpage', 20, 'POST');
-        pnModSetVar('Profile', 'memberslistitemsperpage', $memberslistitemsperpage);
+        ModUtil::setVar('Profile', 'memberslistitemsperpage', $memberslistitemsperpage);
 
         $onlinemembersitemsperpage = (int)FormUtil::getPassedValue('onlinemembersitemsperpage', 20, 'POST');
-        pnModSetVar('Profile', 'onlinemembersitemsperpage', $onlinemembersitemsperpage);
+        ModUtil::setVar('Profile', 'onlinemembersitemsperpage', $onlinemembersitemsperpage);
 
         $recentmembersitemsperpage = (int)FormUtil::getPassedValue('recentmembersitemsperpage', 10, 'POST');
-        pnModSetVar('Profile', 'recentmembersitemsperpage', $recentmembersitemsperpage);
+        ModUtil::setVar('Profile', 'recentmembersitemsperpage', $recentmembersitemsperpage);
 
         $filterunverified = (bool)FormUtil::getPassedValue('filterunverified', false, 'POST');
-        pnModSetVar('Profile', 'filterunverified', $filterunverified);
+        ModUtil::setVar('Profile', 'filterunverified', $filterunverified);
 
 
         $dudtextdisplaytags = (bool)FormUtil::getPassedValue('dudtextdisplaytags', 0, 'POST');
-        pnModSetVar('Profile', 'dudtextdisplaytags', $dudtextdisplaytags);
+        ModUtil::setVar('Profile', 'dudtextdisplaytags', $dudtextdisplaytags);
 
 
         $dudregshow = FormUtil::getPassedValue('dudregshow', array(), 'POST');
-        pnModSetVar('Profile', 'dudregshow', $dudregshow);
+        ModUtil::setVar('Profile', 'dudregshow', $dudregshow);
 
 
         // Let any other modules know that the modules configuration has been updated
-        pnModCallHooks('module', 'updateconfig', 'Profile', array('module' => 'Profile'));
+        ModUtil::callHooks('module', 'updateconfig', 'Profile', array('module' => 'Profile'));
 
         // the module configuration has been updated successfuly
         LogUtil::registerStatus($this->__('Done! Saved your settings changes.'));
 
         // This function generated no output
-        return pnRedirect(pnModURL('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
 }

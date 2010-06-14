@@ -25,27 +25,27 @@ class Profile_Api_Account extends Zikula_Api
         $items = array();
 
         // do not show the account links if Profile is not the Profile manager
-        $profilemodule = pnConfigGetVar('profilemodule', '');
+        $profilemodule = System::getVar('profilemodule', '');
         if ($profilemodule != 'Profile') {
             return $items;
         }
 
         $uname = isset($args['uname']) ? $args['uname'] : null;
-        if (!$uname && pnUserloggedIn()) {
-            $uname = pnUserGetVar('uname');
+        if (!$uname && UserUtil::isLoggedIn()) {
+            $uname = UserUtil::getVar('uname');
         }
 
         // Create an array of links to return
         if (!empty($uname)) {
-            $uid = pnUserGetIDFromName($uname);
-            $items['0'] = array('url'     => pnModURL('Profile', 'user', 'view', array('uid' => $uid)),
+            $uid = UserUtil::getIdFromName($uname);
+            $items['0'] = array('url'     => ModUtil::url('Profile', 'user', 'view', array('uid' => $uid)),
                     'module'  => 'Profile',
                     //! account panel link
                     'title'   => $this->__('Personal info'),
                     'icon'    => 'admin.gif');
 
             if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
-                $items['1'] = array('url'     => pnModURL('Profile', 'user', 'viewmembers'),
+                $items['1'] = array('url'     => ModUtil::url('Profile', 'user', 'viewmembers'),
                         'module'  => 'Profile',
                         'title'   => $this->__('Registered users list'),
                         'icon'    => 'members.gif');

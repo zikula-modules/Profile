@@ -42,15 +42,15 @@ function smarty_function_duditemmodify($params, &$smarty)
     extract($params);
     unset($params);
 
-    if (!pnModAvailable('Profile')) {
+    if (!ModUtil::available('Profile')) {
         return;
     }
 
     if (!isset($item)) {
         if (isset($proplabel)) {
-            $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $proplabel));
+            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $proplabel));
         } else if (isset($propattribute)) {
-            $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
+            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
         } else {
             return;
         }
@@ -62,13 +62,13 @@ function smarty_function_duditemmodify($params, &$smarty)
     // detect if we are in the registration form
     $onregistrationform = false;
     $func = FormUtil::getPassedValue('func', 'main');
-    if (pnModGetName() == 'Users' && $func == 'register') {
+    if (ModUtil::getName() == 'Users' && $func == 'register') {
         $onregistrationform = true;
     }
 
     // skip the field if not configured to be on the registration form 
     if ($onregistrationform && !$item['prop_required']) {
-        $dudregshow = pnModGetVar('Profile', 'dudregshow', array());
+        $dudregshow = ModUtil::getVar('Profile', 'dudregshow', array());
         if (!in_array($item['prop_id'], $dudregshow)) {
             return '';
         }
@@ -77,7 +77,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     if (!isset($uid)) {
-        $uid = pnUserGetVar('uid');
+        $uid = UserUtil::getVar('uid');
     }
     if (!isset($class) || !is_string($class)) {
         $class = '';
@@ -86,12 +86,12 @@ function smarty_function_duditemmodify($params, &$smarty)
     if (isset($item['temp_propdata'])) {
         $uservalue = $item['temp_propdata'];
     } elseif ($uid >= 0) {
-        $uservalue = pnUserGetVar($item['prop_attribute_name'], $uid); // ($alias, $uid);
+        $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid); // ($alias, $uid);
     }
 
     // try to get the DUD output if it's Third Party
     if ($item['prop_dtype'] != 1) {
-        $output = pnModAPIFunc($item['prop_modname'], 'dud', 'edit',
+        $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit',
                                array('item'      => $item,
                                      'uservalue' => $uservalue,
                                      'class'     => $class));
@@ -113,7 +113,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
         if (empty($uservalue)) {
-            $uservalue = pnUserGetVar('tzoffset') ? pnUserGetVar('tzoffset') : pnConfigGetVar('timezone_offset');
+            $uservalue = UserUtil::getVar('tzoffset') ? UserUtil::getVar('tzoffset') : System::getVar('timezone_offset');
         }
 
         $tzinfo = DateUtil::getTimezones();
@@ -132,14 +132,14 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
 
         // only shows a link to the Avatar module if available
-        if (pnModAvailable('Avatar')) {
+        if (ModUtil::available('Avatar')) {
             // TODO Add a change-link to the admins
             // only shows the link for the own user
-            if (pnUserGetVar('uid') != $uid) {
+            if (UserUtil::getVar('uid') != $uid) {
                 return '';
             }
             $render->assign('linktext', __('Go to the Avatar manager', $dom));
-            $render->assign('linkurl', pnModURL('Avatar'));
+            $render->assign('linkurl', ModUtil::url('Avatar'));
             $output = $render->fetch('profile_dudedit_link.htm');
             // add a hidden input if this is required
             if ($item['prop_required']) {
@@ -154,7 +154,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
         $render->assign('value', DataUtil::formatForDisplay($uservalue));
 
-        $filelist = FileUtil::getFiles(pnModGetVar('Users', 'avatarpath', 'images/avatar'), false, true, array('gif', 'jpg', 'png'), 'f');
+        $filelist = FileUtil::getFiles(ModUtil::getVar('Users', 'avatarpath', 'images/avatar'), false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
 
         $listoutput = $listoptions = $filelist;
@@ -197,7 +197,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         case 3: // RADIO
             $type = 'radio';
 
-            $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
             $render->assign('listoptions', array_keys($options));
             $render->assign('listoutput', array_values($options));
@@ -214,7 +214,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $selectmultiple = $options[0] ? ' multiple="multiple"' : '';
             $render->assign('selectmultiple', $selectmultiple);
 
-            $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
             $render->assign('listoptions', array_keys($options));
             $render->assign('listoutput', array_values($options));
@@ -224,7 +224,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $type = 'date';
 
             // gets the format to use
-            $format = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $format = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
             
             switch (trim(strtolower($format)))
             {
@@ -287,7 +287,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $type = 'multicheckbox';
             $render->assign('value', (array)unserialize($uservalue));
 
-            $options = pnModAPIFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
             $render->assign('fields', $options);
             break;

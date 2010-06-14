@@ -92,7 +92,7 @@ class Profile_Ajax extends Zikula_Controller
         // update the item status
         $func = ($oldstatus ? 'deactivate' : 'activate');
 
-        $res = pnModAPIFunc('Profile', 'admin', $func, array('dudid' => $prop_id));
+        $res = ModUtil::apiFunc('Profile', 'admin', $func, array('dudid' => $prop_id));
 
         if (!$res) {
             AjaxUtil::error($this->__('Error! Could not save your changes.'));
@@ -132,7 +132,7 @@ class Profile_Ajax extends Zikula_Controller
         }
 
         // update the item status
-        $section = pnModAPIFunc('Profile', 'section', $name, array_merge($args, array('uid' => $uid)));
+        $section = ModUtil::apiFunc('Profile', 'section', $name, array_merge($args, array('uid' => $uid)));
 
         if (!$section) {
             AjaxUtil::error($this->__('Error! Could not load the section.'));

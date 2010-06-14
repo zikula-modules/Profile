@@ -23,12 +23,12 @@ class Profile_Form extends Zikula_Controller
 
 
         // can't use this function directly
-        if (pnModGetName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, pnModURL('Profile'));
+        if (ModUtil::getName() == 'Profile') {
+            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
         }
 
         // The API function is called.
-        $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
         // The return value of the function is checked here
         if ($items == false) {
@@ -72,12 +72,12 @@ class Profile_Form extends Zikula_Controller
 
 
         // can't use this function directly
-        if (pnModGetName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, pnModURL('Profile'));
+        if (ModUtil::getName() == 'Profile') {
+            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
         }
 
         // The API function is called.
-        $items = pnModAPIFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
 
         // The return value of the function is checked here
         if ($items == false) {
@@ -120,12 +120,12 @@ class Profile_Form extends Zikula_Controller
 
 
         // can't use this function directly
-        if (pnModGetName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, pnModURL('Profile'));
+        if (ModUtil::getName() == 'Profile') {
+            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
         }
 
         // The API function is called.
-        $items = pnModAPIFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
 
         // The return value of the function is checked here
         if ($items == false) {

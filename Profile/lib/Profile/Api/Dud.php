@@ -47,7 +47,7 @@ class Profile_Api_Dud extends Zikula_Api
 
 
 
-        if (!pnModGetIDFromName($args['modname'])) {
+        if (!ModUtil::getIdFromName($args['modname'])) {
             return LogUtil::registerError($this->$this->$this->$this->$this->$this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
         }
 
@@ -58,22 +58,22 @@ class Profile_Api_Dud extends Zikula_Api
         }
 
         // Clean the label
-        $permsep = pnConfigGetVar('shorturlsseparator', '-');
+        $permsep = System::getVar('shorturlsseparator', '-');
         $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
         $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
 
         // Check if the label or attribute name already exists
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
         if ($item) {
             return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
         }
-        $item = pnModAPIFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
+        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
             return LogUtil::registerError($this->__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
         }
 
         // Determine the new weight
-        $weightlimits = pnModAPIFunc('Profile', 'user', 'getweightlimits');
+        $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
 
         // insert the new field
@@ -93,7 +93,7 @@ class Profile_Api_Dud extends Zikula_Api
         }
 
         // Let any hooks know that we have created a new item.
-        pnModCallHooks('item', 'create', $obj['prop_id'], array('module' => 'Profile'));
+        ModUtil::callHooks('item', 'create', $obj['prop_id'], array('module' => 'Profile'));
 
         // Return the id of the newly created item to the calling process
         return $obj['prop_id'];
@@ -137,7 +137,7 @@ class Profile_Api_Dud extends Zikula_Api
         }
 
         // delete the property data aka attributes
-        $pntables       = pnDBGetTables();
+        $pntables       = System::dbGetTables();
         $objattr_column = $pntables['objectdata_attributes_column'];
 
         $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
@@ -155,7 +155,7 @@ class Profile_Api_Dud extends Zikula_Api
         }
 
         // Let any hooks know that we have deleted an item.
-        pnModCallHooks('item', 'delete', $item['prop_id'], array('module' => 'Profile'));
+        ModUtil::callHooks('item', 'delete', $item['prop_id'], array('module' => 'Profile'));
 
         // Let the calling process know that we have finished successfully
         return true;
