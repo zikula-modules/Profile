@@ -1,4 +1,3 @@
-{* $Id: profile_block_featureduser.htm 121 2010-06-03 05:02:54Z drak $ *}
 {modgetvar module='Users' name='avatarpath' assign='avatarpath'}
 
 <div class="profile-block-featureduser">
@@ -12,9 +11,9 @@
         {/if}
     </p>
     {foreach from=$dudarray key='dudlabel' item='dudvalue'}
-        <p><strong>{gt text=$dudlabel domain='module_profile'}</strong><br />{$dudvalue|varprephtmldisplay}</p>
+        <p><strong>{gt text=$dudlabel}</strong><br />{$dudvalue|varprephtmldisplay}</p>
     {/foreach}
     {if $showregdate}
-        <span>{gt text='Registered on %s' tag1=$userinfo.user_regdate|date_format:'datebrief' domain='module_profile'}</span>
+        <span>{gt text='Registered on %s' tag1=$userinfo.user_regdate|date_format:'datebrief'}</span>
     {/if}
 </div>

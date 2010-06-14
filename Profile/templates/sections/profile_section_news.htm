@@ -1,15 +1,13 @@
-{* $Id: profile_section_news.htm 121 2010-06-03 05:02:54Z drak $ *}
-
 {if $section}
 
 <h4>{gt text='Latest articles of %s' tag1=$userinfo.uname}</h4>
 <ul>
-{foreach from=$section item='item'}
+    {foreach from=$section item='item'}
     <li>
         <a href="{modurl modname='News' func='display' title=$item.urltitle sid=$item.sid}">{$item.title|varprepfordisplay}</a><br />
         <span class="z-sub">{gt text='On %s' tag1=$item.time|date_format:'datelong'}</span>
     </li>
-{/foreach}
+    {/foreach}
 </ul>
 
 {else}

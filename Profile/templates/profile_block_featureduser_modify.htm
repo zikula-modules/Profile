@@ -1,12 +1,10 @@
-{* $Id: profile_block_featureduser_modify.htm 121 2010-06-03 05:02:54Z drak $ *}
-
 <div class="z-formrow">
-    <label for="profile_featured_username">{gt text='User name' domain='module_profile'}</label>
+    <label for="profile_featured_username">{gt text='User name'}</label>
     <input id="profile_featured_username" type="text" name="username" value="{$username|varprephtmldisplay}" size="20" maxlength="255" />
 </div>
 
 <div class="z-formrow">
-    <label for="profile_block_fields">{gt text='Information to show' domain='module_profile'}</label>
+    <label for="profile_block_fields">{gt text='Information to show'}</label>
     <div id="profile_block_fields">
         {foreach from=$dudarray key='dud_label' item='dud_display'}
         <div class="z-formlist">
@@ -18,6 +16,6 @@
 </div>
 
 <div class="z-formrow">
-    <label for="profile_featured_regdate">{gt text='Show registration date' domain='module_profile'}</label>
+    <label for="profile_featured_regdate">{gt text='Show registration date'}</label>
     <input id="profile_featured_regdate" type="checkbox" name="showregdate" value="1"{if $showregdate} checked="checked"{/if} />
 </div>

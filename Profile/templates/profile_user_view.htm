@@ -1,4 +1,3 @@
-{*  $Id: profile_user_view.htm 121 2010-06-03 05:02:54Z drak $  *}
 {array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
 {if !$name}{assign var='name' value=$uname}{/if}
 {gt text="Personal info for %s" tag1=$name|@ucwords|varprepfordisplay assign='templatetitle'}

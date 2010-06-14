@@ -1,4 +1,3 @@
-{*  $Id: profile_admin_delete.htm 121 2010-06-03 05:02:54Z drak $  *}
 {gt text="Delete personal info item" assign=templatetitle}
 
 {include file=profile_admin_menu.htm}
@@ -16,9 +15,9 @@
             <input type="hidden" name="dudid" value="{$dudid}" />
             <fieldset>
                 <legend>{gt text='Confirmation prompt'}</legend>
-                <div class="z-formbuttons">
-                    {button src='button_ok.gif' set='icons/small' __alt='Delete' __title='Delete'}
-                    <a href="{modurl modname='Profile' type='admin' func='view'}">{img modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel'}</a>
+                <div class="z-formbuttons z-buttons">
+                    {button class="z-btgreen" src='button_ok.gif' set='icons/small' __alt='Delete' __title='Delete' __text='Delete'}
+                    <a class="z-btred" href="{modurl modname='Profile' type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
                 </div>
             </fieldset>
         </div>

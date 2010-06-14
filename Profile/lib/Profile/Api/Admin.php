@@ -368,19 +368,19 @@ class Profile_Api_Admin extends Zikula_Api
 
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'view'),
-                    'text' => $this->__('Personal info items list' ));
+                    'text' => $this->__('Personal info items list'), 'class' => 'z-icon-es-list');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
             $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'newdud'),
-                    'text' => $this->__('Create new personal info item' ));
+                    'text' => $this->__('Create new personal info item'), 'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'modifyconfig'),
-                    'text' => $this->__('User account panel settings' ));
+                    'text' => $this->__('User account panel settings'), 'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'help'),
-                    'text' => $this->__('Help' ));
+                    'text' => $this->__('Help'), 'class' => 'z-icon-es-help');
         }
 
         return $links;
