@@ -20,8 +20,6 @@ class Profile_Form extends Zikula_Controller
      */
     public function edit($args)
     {
-
-
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
             return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
@@ -50,15 +48,15 @@ class Profile_Form extends Zikula_Controller
         }
 
         // Create output object
-        $render = & pnRender::getInstance('Profile', false, null, true);
+        $this->renderer->setCaching(false)->add_core_data();
 
         // Assign the items to the template
-        $render->assign('duditems', $items);
+        $this->renderer->assign('duditems', $items);
 
-        $render->assign('userid', $userid);
+        $this->renderer->assign('userid', $userid);
 
         // Return the dynamic data section
-        return $render->fetch('profile_form_edit.htm');
+        return $this->renderer->fetch('profile_form_edit.htm');
     }
 
     /**
@@ -69,8 +67,6 @@ class Profile_Form extends Zikula_Controller
      */
     public function search($args)
     {
-
-
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
             return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
@@ -98,15 +94,12 @@ class Profile_Form extends Zikula_Controller
         }
 
         // Create output object
-        $render = & pnRender::getInstance('Profile', false);
-
-        // Assign the items to the template
-        $render->assign('duditems', $items);
-
-        $render->assign('userid', 1);
+        $this->renderer->setCaching(false)
+                ->assign('duditems', $items)
+                ->assign('userid', 1);
 
         // Return the dynamic data section
-        return $render->fetch('profile_form_edit.htm');
+        return $this->renderer->fetch('profile_form_edit.htm');
     }
 
     /**
@@ -117,8 +110,6 @@ class Profile_Form extends Zikula_Controller
      */
     public function display($args)
     {
-
-
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
             return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
@@ -135,14 +126,11 @@ class Profile_Form extends Zikula_Controller
         $userinfo = isset($args['userinfo']) ? $args['userinfo'] : array();
 
         // Create output object
-        $render = & pnRender::getInstance('Profile', false);
-
-        // Assign the items to the template
-        $render->assign('duditems', $items);
-
-        $render->assign('userinfo', $userinfo);
+        $this->renderer->setCaching(false)
+                ->assign('duditems', $items)
+                ->assign('userinfo', $userinfo);
 
         // Return the dynamic data rows
-        return $render->fetch('profile_form_display.htm');
+        return $this->renderer->fetch('profile_form_display.htm');
     }
 }

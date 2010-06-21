@@ -25,12 +25,12 @@ class Profile_Installer extends Zikula_Installer
             return false;
         }
 
-        ModUtil::setVar('Profile', 'memberslistitemsperpage', 20);
-        ModUtil::setVar('Profile', 'onlinemembersitemsperpage', 20);
-        ModUtil::setVar('Profile', 'recentmembersitemsperpage', 10);
-        ModUtil::setVar('Profile', 'filterunverified', 1);
+        $this->setVar('memberslistitemsperpage', 20);
+        $this->setVar('onlinemembersitemsperpage', 20);
+        $this->setVar('recentmembersitemsperpage', 10);
+        $this->setVar('filterunverified', 1);
 
-        ModUtil::setVar('Profile', 'dudtextdisplaytags', 0);
+        $this->setVar('dudtextdisplaytags', 0);
 
         // create the default data for the module
         $this->defaultdata();
@@ -65,10 +65,10 @@ class Profile_Installer extends Zikula_Installer
                 DBUtil::executeSQL("UPDATE {$table} SET pn_prop_dtype = '1' WHERE pn_prop_dtype = '0'");
 
             case '1.1':
-                ModUtil::setVar('Profile', 'memberslistitemsperpage',   ModUtil::getVar('Members_List', 'memberslistitemsperpage', 20));
-                ModUtil::setVar('Profile', 'onlinemembersitemsperpage', ModUtil::getVar('Members_List', 'onlinemembersitemsperpage', 20));
-                ModUtil::setVar('Profile', 'recentmembersitemsperpage', ModUtil::getVar('Members_List', 'recentmembersitemsperpage', 10));
-                ModUtil::setVar('Profile', 'filterunverified',          ModUtil::getVar('Members_List', 'filterunverified', 1));
+                $this->setVar('memberslistitemsperpage',   ModUtil::getVar('Members_List', 'memberslistitemsperpage', 20));
+                $this->setVar('onlinemembersitemsperpage', ModUtil::getVar('Members_List', 'onlinemembersitemsperpage', 20));
+                $this->setVar('recentmembersitemsperpage', ModUtil::getVar('Members_List', 'recentmembersitemsperpage', 10));
+                $this->setVar('filterunverified',          ModUtil::getVar('Members_List', 'filterunverified', 1));
                 ModUtil::delVar('Members_List');
 
                 // upgrade blocks table to migrate Members_List blocks to Profile
@@ -86,7 +86,7 @@ class Profile_Installer extends Zikula_Installer
                 }
 
             case '1.3':
-                ModUtil::setVar('Profile', 'dudtextdisplaytags', 0);
+                $this->setVar('dudtextdisplaytags', 0);
 
             case '1.4':
             // remove definitely the user_data table
@@ -152,14 +152,14 @@ class Profile_Installer extends Zikula_Installer
                 DBUtil::updateObjectArray($newprops, 'user_property', 'prop_id');
 
                 // clean some modvars
-                ModUtil::delVar('Profile', 'itemsperpage');
-                ModUtil::delVar('Profile', 'itemsperrow');
-                ModUtil::delVar('Profile', 'displaygraphics');
+                $this->delVar('itemsperpage');
+                $this->delVar('itemsperrow');
+                $this->delVar('displaygraphics');
 
                 // set the active fields to display in the registration form
                 ModUtil::loadApi('Profile', 'user', true);
                 $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
-                ModUtil::setVar('Profile', 'dudregshow', array_keys($items));
+                $this->setVar('dudregshow', array_keys($items));
                 unset($items);
 
                 // update the users' data to ids
@@ -236,7 +236,7 @@ class Profile_Installer extends Zikula_Installer
         }
 
         // Delete any module variables
-        ModUtil::delVar('Profile');
+        $this->delVar();
 
         // Deletion successful
         return true;
@@ -399,6 +399,6 @@ class Profile_Installer extends Zikula_Installer
 
         // set realname, homepage, timezone offset, location and ocupation
         // to be shown in the registration form by default
-        ModUtil::setVar('Profile', 'dudregshow', array(1, 3, 4, 10, 11));
+        $this->setVar('dudregshow', array(1, 3, 4, 10, 11));
     }
 }

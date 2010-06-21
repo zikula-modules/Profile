@@ -72,8 +72,6 @@ class Profile_Ajax extends Zikula_Controller
      */
     public function changeprofilestatus()
     {
-
-
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
         }
@@ -114,8 +112,6 @@ class Profile_Ajax extends Zikula_Controller
      */
     public function profilesection()
     {
-
-
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
             AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
         }
@@ -139,19 +135,19 @@ class Profile_Ajax extends Zikula_Controller
         }
 
         // build the output
-        $render = & pnRender::getInstance('Profile', false, null, true);
+        $this->renderer->setCaching(false)->add_core_data();
 
         // check the tmeplate existance
         $template = "sections/profile_section_{$name}.htm";
 
-        if (!$render->template_exists($template)) {
+        if (!$this->renderer->template_exists($template)) {
             return array('result' => false);
         }
 
         // assign and render the output
-        $render->assign('section', $section);
+        $this->renderer->assign('section', $section);
 
-        return array('result' => $render->fetch($template, $uid),
+        return array('result' => $this->renderer->fetch($template, $uid),
                 'name'   => $name,
                 'uid'    => $uid);
     }
