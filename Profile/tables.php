@@ -17,7 +17,7 @@
  * @author Mark West
  * @return array table definition array
  */
-function Profile_tables()()
+function Profile_tables()
 {
     // Initialise table array
     $dbtable = array();
