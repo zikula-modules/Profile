@@ -142,8 +142,8 @@ class Profile_Api_Admin extends Zikula_Api
                 $result  = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
                 $result['prop_weight'] = $item['prop_weight'];
 
-                $pntable = System::dbGetTables();
-                $column  = $pntable['user_property_column'];
+                $dbtable = DBUtil::getTables();
+                $column  = $dbtable['user_property_column'];
                 $where   = "$column[prop_weight] =  '$args[prop_weight]'
                         AND $column[prop_id] <> '$args[dudid]'";
 
@@ -238,8 +238,8 @@ class Profile_Api_Admin extends Zikula_Api
         }
 
         // delete the property data aka attributes
-        $pntables       = System::dbGetTables();
-        $objattr_column = $pntables['objectdata_attributes_column'];
+        $dbtables       = DBUtil::getTables();
+        $objattr_column = $dbtables['objectdata_attributes_column'];
 
         $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
                    AND $objattr_column[object_type] = 'users'";
@@ -334,10 +334,10 @@ class Profile_Api_Admin extends Zikula_Api
         }
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
-        $propertytable  = $pntable['user_property'];
-        $propertycolumn = $pntable['user_property_column'];
+        $propertytable  = $dbtable['user_property'];
+        $propertycolumn = $dbtable['user_property_column'];
 
         // Update the other items
         $sql = "UPDATE $propertytable

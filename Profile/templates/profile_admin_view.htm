@@ -28,7 +28,7 @@
                     <span class="z-itemcell z-w15">{$duditem.dtype|varprephtmldisplay}</span>
                     <span class="z-itemcell z-w15">
                         {if $duditem.status.url ne ''}
-                        <a href="{$duditem.status.url|varprepfordisplay}" id="profilestatus_{$duditem.prop_id}" class="profilestatus_{$duditem.statusval}">
+                        <a href="{$duditem.status.url|safetext}" id="profilestatus_{$duditem.prop_id}" class="profilestatus_{$duditem.statusval}">
                             {img modname='core' set='icons/extrasmall' src=$duditem.status.image alt=$duditem.status.title title=$duditem.status.title}
                             <strong>{$duditem.status.title}</strong>
                         </a>
@@ -39,7 +39,7 @@
                     <span class="z-itemcell z-w10">
                         {assign var='options' value=$duditem.options}
                         {section name='options' loop=$options}
-                        <a href="{$options[options].url|varprepfordisplay}"{if $options[options].class} class="{$options[options].class|varprepfordisplay}"{/if}>{img modname='core' set='icons/extrasmall' src=$options[options].image alt=$options[options].title title=$options[options].title}</a>
+                        <a href="{$options[options].url|safetext}"{if $options[options].class} class="{$options[options].class|safetext}"{/if}>{img modname='core' set='icons/extrasmall' src=$options[options].image alt=$options[options].title title=$options[options].title}</a>
                         {/section}
                     </span>
                 </li>

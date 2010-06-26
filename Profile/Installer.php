@@ -79,7 +79,7 @@ class Profile_Installer extends Zikula_Installer
 
             case '1.2':
             // dependencies do not work during upgrade yet so we check it manually
-                $usersmod = ModUtil::getInfo(ModUtil::getIdFromName('Users'));
+                $usersmod = ModUtil::getInfoFromName('Users');
                 if (version_compare($usersmod['version'], '1.9', '<=')) {
                     LogUtil::registerError($this->__("Error! The 'Users' module must be upgraded to version 1.10 before you can upgrade the 'Profile' module."));
                     return '1.2';
@@ -206,7 +206,7 @@ class Profile_Installer extends Zikula_Installer
 
             case '1.4.1':
             // checkpoint to deprecate the extdate field (6)
-                $tables = System::dbGetTables();
+                $tables = DBUtil::getTables();
                 $sql    = "UPDATE $tables[user_property] SET pn_prop_validation = REPLACE(pn_prop_validation, '\"displaytype\";s:1:\"6\"', '\"displaytype\";s:1:\"5\"') WHERE pn_prop_validation LIKE '%s:11:\"displaytype\";s:1:\"6\"%'";
                 if (!DBUtil::executeSQL($sql)) {
                     LogUtil::registerError($this->__('Error! Could not update table.'));
@@ -236,7 +236,7 @@ class Profile_Installer extends Zikula_Installer
         }
 
         // Delete any module variables
-        $this->delVar();
+        $this->delVars();
 
         // Deletion successful
         return true;

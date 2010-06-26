@@ -105,7 +105,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // build the output
     $output = '';
-    $render = & pnRender::getInstance('Profile', false, null, true);
+    $render = & Renderer::getInstance('Profile', false, null, true);
     $render->assign('item',      $item);
     $render->assign('userinfo',  $userinfo);
     $render->assign('uservalue', $uservalue);

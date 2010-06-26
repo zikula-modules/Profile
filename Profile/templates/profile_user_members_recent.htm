@@ -45,7 +45,7 @@
                 {if $user.__ATTRIBUTES__.url eq ''}
                 &nbsp;
                 {else}
-                <a href="{$user.__ATTRIBUTES__.url|varprepfordisplay}">{img modname=core set=icons/extrasmall src="agt_internet.gif" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
+                <a href="{$user.__ATTRIBUTES__.url|safetext}">{img modname=core set=icons/extrasmall src="agt_internet.gif" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
                 {/if}
             </td>
             {/if}

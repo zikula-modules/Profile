@@ -137,8 +137,8 @@ class Profile_Api_Dud extends Zikula_Api
         }
 
         // delete the property data aka attributes
-        $pntables       = System::dbGetTables();
-        $objattr_column = $pntables['objectdata_attributes_column'];
+        $dbtables       = DBUtil::getTables();
+        $objattr_column = $dbtables['objectdata_attributes_column'];
 
         $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
                    AND $objattr_column[object_type] = 'users'";

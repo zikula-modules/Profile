@@ -324,7 +324,7 @@ class Profile_Admin extends Zikula_Controller
         $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
 
         // Create output object
-        $render = & pnRender::getInstance('Profile', false);
+        $render = & Renderer::getInstance('Profile', false);
 
         // Add a hidden variable for the item id.
         $this->renderer->assign('dudid', $dudid);

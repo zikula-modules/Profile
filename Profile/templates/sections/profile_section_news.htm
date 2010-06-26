@@ -4,7 +4,7 @@
 <ul>
     {foreach from=$section item='item'}
     <li>
-        <a href="{modurl modname='News' func='display' title=$item.urltitle sid=$item.sid}">{$item.title|varprepfordisplay}</a><br />
+        <a href="{modurl modname='News' func='display' title=$item.urltitle sid=$item.sid}">{$item.title|safetext}</a><br />
         <span class="z-sub">{gt text='On %s' tag1=$item.time|date_format:'datelong'}</span>
     </li>
     {/foreach}

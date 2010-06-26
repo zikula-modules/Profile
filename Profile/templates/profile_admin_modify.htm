@@ -17,10 +17,10 @@
                 <div class="z-formnote z-warningmsg">{gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."}</div>
                 <div class="z-formrow">
                     <label for="profile_label">{gt text='Label'}</label>
-                    <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|varprepfordisplay}" />
+                    <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|safetext}" />
 
                     {modurl modname='Profile' type='admin' func='help' fqurl=true assign='helpurl'}
-                    <div class="z-formnote z-informationmsg">{gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|varprepfordisplay}</div>
+                    <div class="z-formnote z-informationmsg">{gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|safetext}</div>
                 </div>
                 <div class="z-formrow">
                     <label for="profile_attributename">{gt text='Attribute name'}</label>
@@ -38,7 +38,7 @@
                         {html_options options=$viewbyoptions selected=$item.prop_viewby}
                     </select>
                 </div>
-                <input type="hidden" name="dtype" value="{$item.prop_dtype|varprepfordisplay}" />
+                <input type="hidden" name="dtype" value="{$item.prop_dtype|safetext}" />
                 <div class="z-formrow">
                     <label for="profile_displaytype">{gt text='Type of control to display'}</label>
                     <select id="profile_displaytype" name="displaytype">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="z-formrow" id="profile_content_wrapper">
                     <label for="profile_listoptions">{gt text='Content'}</label>
-                    <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|varprepfordisplay}</textarea>
+                    <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|safetext}</textarea>
 
                     <p class="z-formnote z-informationmsg" id="profile_help_type2">{gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. The order is important. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'. All the values are translatable."}</p>
                     <p class="z-formnote z-informationmsg" id="profile_help_type3">{gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3'. The options are translatable."}</p>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="z-formrow">
                     <label for="profile_note">{gt text='Notice to display with personal info item'}</label>
-                    <textarea id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|varprepfordisplay}</textarea>
+                    <textarea id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|safetext}</textarea>
                 </div>
             </fieldset>
 

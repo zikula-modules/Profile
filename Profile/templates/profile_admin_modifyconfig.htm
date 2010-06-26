@@ -20,15 +20,15 @@
                 </div>
                 <div class="z-formrow">
                     <label for="profile_memberslistitemsperpage">{gt text="Users per page in 'Registered users list'"}</label>
-                    <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="{$pncore.Profile.memberslistitemsperpage|varprepfordisplay}" />
+                    <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="{$pncore.Profile.memberslistitemsperpage|safetext}" />
                 </div>
                 <div class="z-formrow">
                     <label for="profile_onlinemembersitemsperpage">{gt text="Users per page in 'Users currently on-line' page"}</label>
-                    <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="{$pncore.Profile.onlinemembersitemsperpage|varprepfordisplay}" />
+                    <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="{$pncore.Profile.onlinemembersitemsperpage|safetext}" />
                 </div>
                 <div class="z-formrow">
                     <label for="profile_recentmembersitemsperpage">{gt text="Users per page in 'Recent registrations' page"}</label>
-                    <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="{$pncore.Profile.recentmembersitemsperpage|varprepfordisplay}" />
+                    <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="{$pncore.Profile.recentmembersitemsperpage|safetext}" />
                 </div>
                 <div class="z-formrow">
                     <label for="profile_filterunverified">{gt text="Filter unverified users from 'Registered users list'"}</label>
@@ -67,11 +67,11 @@
                         {foreach from=$dudfields key='dudid' item='dudlabel'}
                         <div class="z-formlist">
                             {if in_array($dudid, $pncore.Profile.dudregshow)}
-                            <input id="profile_dudregshow_{$dudid|varprepfordisplay}" type="checkbox" name="dudregshow[]" value="{$dudid|varprepfordisplay}" checked="checked" />
+                            <input id="profile_dudregshow_{$dudid|safetext}" type="checkbox" name="dudregshow[]" value="{$dudid|safetext}" checked="checked" />
                             {else}
-                            <input id="profile_dudregshow_{$dudid|varprepfordisplay}" type="checkbox" name="dudregshow[]" value="{$dudid|varprepfordisplay}" />
+                            <input id="profile_dudregshow_{$dudid|safetext}" type="checkbox" name="dudregshow[]" value="{$dudid|safetext}" />
                             {/if}
-                            <label for="profile_dudregshow_{$dudid|varprepfordisplay}">{gt text=$dudlabel}</label>
+                            <label for="profile_dudregshow_{$dudid|safetext}">{gt text=$dudlabel}</label>
                         </div>
                         {/foreach}
                     </div>

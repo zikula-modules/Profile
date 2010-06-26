@@ -4,7 +4,7 @@
 <ul>
 {foreach from=$section item='item'}
     <li>
-        <a href="{$item.url|varprepfordisplay}">{if $item.subject}{$item.subject|varprepfordisplay}{else}{$item.comment|varprepfordisplay|truncate:50}{/if}</a><br />
+        <a href="{$item.url|safetext}">{if $item.subject}{$item.subject|safetext}{else}{$item.comment|safetext|truncate:50}{/if}</a><br />
         <span class="z-sub">{gt text='On %s' tag1=$item.date|date_format:'datelong'}</span>
     </li>
 {/foreach}

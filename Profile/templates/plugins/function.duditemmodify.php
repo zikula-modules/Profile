@@ -100,7 +100,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
     }
 
-    $render = & pnRender::getInstance('Profile', false, null, true);
+    $render = & Renderer::getInstance('Profile', false, null, true);
 
     // assign the default values for the control
     $render->assign('class',         $class);

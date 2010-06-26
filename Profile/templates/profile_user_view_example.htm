@@ -1,6 +1,6 @@
 {array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
 {if !$name}{assign var='name' value=$uname}{/if}
-{gt text="Latest submissions of %s" tag1=$name|@ucwords|varprepfordisplay assign='templatetitle'}
+{gt text="Latest submissions of %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
 
 {include file='profile_user_menu.htm'}
 
@@ -10,7 +10,7 @@
     {img modname='core' src='personal.gif' set='icons/large' class='profileavatar'}
     {else}
     {modgetvar module='Users' name='avatarpath' assign='avatarpath'}
-    <img src="{$avatarpath}/{$dudarray.avatar|varprepfordisplay}" alt="" class="profileavatar" />
+    <img src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" class="profileavatar" />
     {/if}
     {/if}
 

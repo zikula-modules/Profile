@@ -69,7 +69,7 @@
             </td>
             <td><strong>{$user.uname|userprofilelink}</strong></td>
             { if isset($dudarray.realname) }
-            <td>{$user.__ATTRIBUTES__.realname|varprepfordisplay|default:"&nbsp;"}</td>
+            <td>{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}</td>
             {/if}
             {if $msgmodule}
             <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.gif" __alt='Send private message'}</a></td>
@@ -79,7 +79,7 @@
                 {if $user.__ATTRIBUTES__.url eq ''}
                 &nbsp;
                 {else}
-                <a href="{$user.__ATTRIBUTES__.url|varprepfordisplay}" rel="nofollow">{img modname=core set=icons/extrasmall src="agt_internet.gif" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
+                <a href="{$user.__ATTRIBUTES__.url|safetext}" rel="nofollow">{img modname=core set=icons/extrasmall src="agt_internet.gif" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
                 {/if}
             </td>
             {/if}
@@ -102,7 +102,7 @@
 
 <h3>{gt text='Membership statistics'}</h3>
 <ul id="profile_status">
-    <li><strong>{gt text='Registered:'} </strong>{$memberslistreg|varprepfordisplay}</li>
+    <li><strong>{gt text='Registered:'} </strong>{$memberslistreg|safetext}</li>
     <li><strong>{gt text='On-line:'} </strong><a href="{modurl modname='Profile' type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
     <li><strong>{gt text='Newest user:'} </strong><a href="{modurl modname='Profile' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
 </ul>

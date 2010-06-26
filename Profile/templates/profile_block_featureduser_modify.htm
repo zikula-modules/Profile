@@ -8,8 +8,8 @@
     <div id="profile_block_fields">
         {foreach from=$dudarray key='dud_label' item='dud_display'}
         <div class="z-formlist">
-            <input id="featured_field_{$dud_label|varprepfordisplay}" type="checkbox" name="fieldstoshow[]" value="{$dud_label|varprepfordisplay}"{if isset($fieldstoshow.$dud_label)} checked="checked"{/if} />
-            <label for="featured_field_{$dud_label|varprepfordisplay}">{$dud_display|varprepfordisplay}</label>
+            <input id="featured_field_{$dud_label|safetext}" type="checkbox" name="fieldstoshow[]" value="{$dud_label|safetext}"{if isset($fieldstoshow.$dud_label)} checked="checked"{/if} />
+            <label for="featured_field_{$dud_label|safetext}">{$dud_display|safetext}</label>
         </div>
         {/foreach}
     </div>

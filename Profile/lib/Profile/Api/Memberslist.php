@@ -72,20 +72,20 @@ class Profile_Api_Memberslist extends Zikula_Api
         ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // It's good practice to name column definitions you are getting
         // $column don't cut it in more complex modules
-        $userscolumn = $pntable['users_column'];
-        $datacolumn  = $pntable['objectdata_attributes_column'];
-        $propcolumn  = $pntable['user_property_column'];
+        $userscolumn = $dbtable['users_column'];
+        $datacolumn  = $dbtable['objectdata_attributes_column'];
+        $propcolumn  = $dbtable['user_property_column'];
 
         // Builds the sql query
         $sql  = "SELECT     $userscolumn[uid] as uid
-             FROM       $pntable[users] as tbl ";
-        $join = "LEFT JOIN  $pntable[objectdata_attributes] as a
+             FROM       $dbtable[users] as tbl ";
+        $join = "LEFT JOIN  $dbtable[objectdata_attributes] as a
              ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A'
-             LEFT JOIN $pntable[user_property] as b
+             LEFT JOIN $dbtable[user_property] as b
              ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
 
         // treat a single character as from the alpha filter and everything else as from the search input
@@ -262,20 +262,20 @@ class Profile_Api_Memberslist extends Zikula_Api
         ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // It's good practice to name column definitions you are getting
         // $column don't cut it in more complex modules
-        $userscolumn = $pntable['users_column'];
-        $datacolumn  = $pntable['objectdata_attributes_column'];
-        $propcolumn  = $pntable['user_property_column'];
+        $userscolumn = $dbtable['users_column'];
+        $datacolumn  = $dbtable['objectdata_attributes_column'];
+        $propcolumn  = $dbtable['user_property_column'];
 
         // Builds the sql query
         $sql   = "SELECT     COUNT(DISTINCT tbl.$userscolumn[uname])
-              FROM       $pntable[users] as tbl ";
-        $join  = "LEFT JOIN  $pntable[objectdata_attributes] as a
+              FROM       $dbtable[users] as tbl ";
+        $join  = "LEFT JOIN  $dbtable[objectdata_attributes] as a
               ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A'
-              LEFT JOIN $pntable[user_property] as b
+              LEFT JOIN $dbtable[user_property] as b
               ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
 
         // treat a single character as from the alpha filter and everything else as from the search input
@@ -403,12 +403,12 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $sessioninfocolumn = $pntable['session_info_column'];
-        $sessioninfotable  = $pntable['session_info'];
+        $sessioninfocolumn = $dbtable['session_info_column'];
+        $sessioninfotable  = $dbtable['session_info'];
 
         $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
 
@@ -450,11 +450,11 @@ class Profile_Api_Memberslist extends Zikula_Api
         ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $userscolumn = $pntable['users_column'];
+        $userscolumn = $dbtable['users_column'];
 
         // filter out unverified users
         $where = '';
@@ -464,7 +464,7 @@ class Profile_Api_Memberslist extends Zikula_Api
 
         // Get items
         $sql = "SELECT $userscolumn[uid]
-            FROM $pntable[users]
+            FROM $dbtable[users]
             WHERE $userscolumn[uname] NOT LIKE 'Anonymous' $where
             ORDER BY $userscolumn[uid] DESC";
 
@@ -503,15 +503,15 @@ class Profile_Api_Memberslist extends Zikula_Api
         }
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // get active time based on security settings
         $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $sessioninfocolumn = $pntable['session_info_column'];
-        $sessioninfotable  = $pntable['session_info'];
+        $sessioninfocolumn = $dbtable['session_info_column'];
+        $sessioninfotable  = $dbtable['session_info'];
 
         // Get items
         $sql = "SELECT DISTINCT $sessioninfocolumn[uid]
@@ -552,14 +552,14 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // define the array to hold the resultant items
         $items = array();
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $sessioninfocolumn = $pntable['session_info_column'];
-        $sessioninfotable  = $pntable['session_info'];
+        $sessioninfocolumn = $dbtable['session_info_column'];
+        $sessioninfotable  = $dbtable['session_info'];
 
         // get active time based on security settings
         $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
@@ -607,15 +607,15 @@ class Profile_Api_Memberslist extends Zikula_Api
 
 
         // Get database setup
-        $pntable = System::dbGetTables();
+        $dbtable = DBUtil::getTables();
 
         // define the array to hold the resultant items
         $items = array();
 
-        $sessioninfotable  = $pntable['session_info'];
-        $sessioninfocolumn = &$pntable['session_info_column'];
-        $usertbl           = $pntable['users'];
-        $usercol           = &$pntable['users_column'];
+        $sessioninfotable  = $dbtable['session_info'];
+        $sessioninfocolumn = &$dbtable['session_info_column'];
+        $usertbl           = $dbtable['users'];
+        $usercol           = &$dbtable['users_column'];
 
         // get active time based on security
 

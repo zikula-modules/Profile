@@ -157,8 +157,8 @@ class Profile_Api_User extends Zikula_Api
 
         if (!isset($items)) {
             // Get datbase setup
-            $pntable = System::dbGetTables();
-            $column  = $pntable['user_property_column'];
+            $dbtable = DBUtil::getTables();
+            $column  = $dbtable['user_property_column'];
             $where   = "WHERE $column[prop_weight] > '0'
                     AND   $column[prop_dtype] >= '0'";
             $orderBy = $column['prop_weight'];
@@ -266,8 +266,8 @@ class Profile_Api_User extends Zikula_Api
     public function getweightlimits()
     {
         // Get datbase setup
-        $pntable = System::dbGetTables();
-        $column  = $pntable['user_property_column'];
+        $dbtable = DBUtil::getTables();
+        $column  = $dbtable['user_property_column'];
 
         $where = "WHERE $column[prop_weight] <> 0";
         $max   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MAX', $where);

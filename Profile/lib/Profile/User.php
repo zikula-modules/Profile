@@ -242,7 +242,7 @@ class Profile_User extends Zikula_Controller
 
         // Create output object
         $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
-        $render  = & pnRender::getInstance('Profile', true, $cacheid);
+        $render  = & Renderer::getInstance('Profile', true, $cacheid);
         $this->renderer->setCaching(true)->setCache_Id($cacheid);
         /*
     // check out if the contents are cached.
@@ -338,7 +338,7 @@ class Profile_User extends Zikula_Controller
             return $this->renderer->fetch('profile_user_members_recent.htm');
         }
 
-        $modvars = $this->getVar();
+        $modvars = $this->getVars();
 
         // get last x user id's
         $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall',
