@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Ajax extends Zikula_Controller
+class Profile_Controller_Ajax extends Zikula_Controller
 {
     /**
      * change the weight of a profile item
@@ -135,19 +135,19 @@ class Profile_Ajax extends Zikula_Controller
         }
 
         // build the output
-        $this->renderer->setCaching(false)->add_core_data();
+        $this->view->setCaching(false)->add_core_data();
 
         // check the tmeplate existance
         $template = "sections/profile_section_{$name}.htm";
 
-        if (!$this->renderer->template_exists($template)) {
+        if (!$this->view->template_exists($template)) {
             return array('result' => false);
         }
 
         // assign and render the output
-        $this->renderer->assign('section', $section);
+        $this->view->assign('section', $section);
 
-        return array('result' => $this->renderer->fetch($template, $uid),
+        return array('result' => $this->view->fetch($template, $uid),
                 'name'   => $name,
                 'uid'    => $uid);
     }

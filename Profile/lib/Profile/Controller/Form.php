@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Form extends Zikula_Controller
+class Profile_Controller_Form extends Zikula_Controller
 {
     /**
      * display the dynadata section of the register form
@@ -48,15 +48,15 @@ class Profile_Form extends Zikula_Controller
         }
 
         // Create output object
-        $this->renderer->setCaching(false)->add_core_data();
+        $this->view->setCaching(false)->add_core_data();
 
         // Assign the items to the template
-        $this->renderer->assign('duditems', $items);
+        $this->view->assign('duditems', $items);
 
-        $this->renderer->assign('userid', $userid);
+        $this->view->assign('userid', $userid);
 
         // Return the dynamic data section
-        return $this->renderer->fetch('profile_form_edit.htm');
+        return $this->view->fetch('profile_form_edit.htm');
     }
 
     /**
@@ -94,12 +94,12 @@ class Profile_Form extends Zikula_Controller
         }
 
         // Create output object
-        $this->renderer->setCaching(false)
+        $this->view->setCaching(false)
                 ->assign('duditems', $items)
                 ->assign('userid', 1);
 
         // Return the dynamic data section
-        return $this->renderer->fetch('profile_form_edit.htm');
+        return $this->view->fetch('profile_form_edit.htm');
     }
 
     /**
@@ -126,11 +126,11 @@ class Profile_Form extends Zikula_Controller
         $userinfo = isset($args['userinfo']) ? $args['userinfo'] : array();
 
         // Create output object
-        $this->renderer->setCaching(false)
+        $this->view->setCaching(false)
                 ->assign('duditems', $items)
                 ->assign('userinfo', $userinfo);
 
         // Return the dynamic data rows
-        return $this->renderer->fetch('profile_form_display.htm');
+        return $this->view->fetch('profile_form_display.htm');
     }
 }
