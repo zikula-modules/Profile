@@ -334,8 +334,6 @@ class Profile_Api_User extends Zikula_Api
             $args['dynadata'] = FormUtil::getPassedValue('dynadata');
         }
 
-
-
         // The API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
 
@@ -355,13 +353,13 @@ class Profile_Api_User extends Zikula_Api
                 } elseif (is_array($args['dynadata'][$item['prop_attribute_name']])) {
                     while (list(,$value) = each($args['dynadata'][$item['prop_attribute_name']]))
                     {
-                        if (_ProfileIsEmptyValue($value)) {
+                        if ($this->_profileIsEmptyValue($value)) {
                             $error['result'] = true;
                             $error['fields'][] = $item['prop_attribute_name'];
                             $error['translatedFields'][] = $this->__($item['prop_label']);
                         }
                     }
-                } elseif (_ProfileIsEmptyValue($args['dynadata'][$item['prop_attribute_name']])) {
+                } elseif ($this->_profileIsEmptyValue($args['dynadata'][$item['prop_attribute_name']])) {
                     $error['result'] = true;
                     $error['fields'][] = $item['prop_attribute_name'];
                     $error['translatedFields'][] = $this->__($item['prop_label']);
@@ -380,7 +378,7 @@ class Profile_Api_User extends Zikula_Api
     /**
      * Checks if a value is empty
      */
-    function _ProfileIsEmptyValue($value)
+    function _profileIsEmptyValue($value)
     {
         $empty = false;
 
