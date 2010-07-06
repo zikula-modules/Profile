@@ -100,7 +100,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
     }
 
-    $render = & Renderer::getInstance('Profile', false, null, true);
+    $render = & Zikula_View::getInstance('Profile', false, null, true);
 
     // assign the default values for the control
     $render->assign('class',         $class);

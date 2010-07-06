@@ -23,9 +23,9 @@
                 </li>
                 {foreach from=$duditems item='duditem'}
                 <li id="profile_{$duditem.prop_id}" class="{cycle values='z-odd,z-even'} z-itemsort z-sortable z-clearfix">
-                    <span class="z-itemcell z-w25" id="profiledrag_{$duditem.prop_id}">{$duditem.prop_label|varprephtmldisplay} ({gt text=$duditem.prop_label})</span>
+                    <span class="z-itemcell z-w25" id="profiledrag_{$duditem.prop_id}">{$duditem.prop_label|safehtml} ({gt text=$duditem.prop_label})</span>
                     <span class="z-itemcell z-w25">{$duditem.prop_attribute_name}</span>
-                    <span class="z-itemcell z-w15">{$duditem.dtype|varprephtmldisplay}</span>
+                    <span class="z-itemcell z-w15">{$duditem.dtype|safehtml}</span>
                     <span class="z-itemcell z-w15">
                         {if $duditem.status.url ne ''}
                         <a href="{$duditem.status.url|safetext}" id="profilestatus_{$duditem.prop_id}" class="profilestatus_{$duditem.statusval}">

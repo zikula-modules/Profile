@@ -27,7 +27,7 @@
         {if $pncore.Profile.viewregdate|default:1 and $userinfo.user_regdate neq '1970-01-01 00:00:00'}
         <div class="z-formrow">
             <strong class="z-label">{gt text='Registration date:'}</strong>
-            <span>{$userinfo.user_regdate|date_format:'datebrief'}</span>
+            <span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
         </div>
         {/if}
     </div>

@@ -11,9 +11,9 @@
         {/if}
     </p>
     {foreach from=$dudarray key='dudlabel' item='dudvalue'}
-        <p><strong>{gt text=$dudlabel}</strong><br />{$dudvalue|varprephtmldisplay}</p>
+        <p><strong>{gt text=$dudlabel}</strong><br />{$dudvalue|safehtml}</p>
     {/foreach}
     {if $showregdate}
-        <span>{gt text='Registered on %s' tag1=$userinfo.user_regdate|date_format:'datebrief'}</span>
+        <span>{gt text='Registered on %s' tag1=$userinfo.user_regdate|dateformat:'datebrief'}</span>
     {/if}
 </div>

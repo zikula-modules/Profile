@@ -105,7 +105,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // build the output
     $output = '';
-    $render = & Renderer::getInstance('Profile', false, null, true);
+    $render = & Zikula_View::getInstance('Profile', false, null, true);
     $render->assign('item',      $item);
     $render->assign('userinfo',  $userinfo);
     $render->assign('uservalue', $uservalue);

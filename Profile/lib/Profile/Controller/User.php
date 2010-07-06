@@ -242,7 +242,7 @@ class Profile_Controller_User extends Zikula_Controller
 
         // Create output object
         $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
-        $render  = & Renderer::getInstance('Profile', true, $cacheid);
+        $render  = & Zikula_View::getInstance('Profile', true, $cacheid);
         $this->view->setCaching(true)->setCache_Id($cacheid);
         /*
     // check out if the contents are cached.

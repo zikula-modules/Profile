@@ -33,7 +33,7 @@
                 {/if}
             </td>
             <td><strong>{$user.uname|userprofilelink}</strong></td>
-            <td>{$user.pn_user_regdate|date_format|default:"&nbsp;"}</td>
+            <td>{$user.pn_user_regdate|dateformat|default:"&nbsp;"}</td>
             { if @isset($dudarray.realname) }
             <td>{$user.__ATTRIBUTES__.realname|default:"&nbsp;"}</td>
             {/if}
