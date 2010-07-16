@@ -20,7 +20,6 @@ class Profile_Version extends Zikula_Version
         $meta['url']            = $this->__('profile');
         $meta['version']        = '1.5.3';
         $meta['capabilities']   = array('profile' => array('version' => '1.0'));
-        $meta['contact']        = 'http://zikula.org/';
 
         $meta['securityschema'] = array('Profile::' => '::',
                 'Profile::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
