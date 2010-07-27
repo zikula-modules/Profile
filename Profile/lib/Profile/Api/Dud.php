@@ -48,13 +48,13 @@ class Profile_Api_Dud extends Zikula_Api
 
 
         if (!ModUtil::getIdFromName($args['modname'])) {
-            return LogUtil::registerError($this->$this->$this->$this->$this->$this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
+            return LogUtil::registerError($this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
         }
 
         // parses the DUD type
         $dtypes = array(-1 => 'noneditable', 0 => 'mandatory', 2 => 'normal');
         if (!in_array($args['dtype'], $dtypes)) {
-            return LogUtil::registerError($this->$this->$this->$this->$this->$this->__f("Error! Invalid '%s' passed.", 'dtype'));
+            return LogUtil::registerError($this->__f("Error! Invalid '%s' passed.", 'dtype'));
         }
 
         // Clean the label
