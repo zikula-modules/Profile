@@ -182,8 +182,8 @@ class Profile_Api_User extends Zikula_Api
             // Get datbase setup
             $dbtable = DBUtil::getTables();
             $column  = $dbtable['user_property_column'];
-            $where   = "WHERE $column[prop_weight] > '0'
-                    AND   $column[prop_dtype] >= '0'";
+            $where   = "WHERE {$column['prop_weight']} > '0'
+                    AND   {$column['prop_dtype']} >= '0'";
             $orderBy = $column['prop_weight'];
 
             $permFilter = array();
