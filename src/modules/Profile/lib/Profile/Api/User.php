@@ -1,25 +1,34 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Zikula Application Framework
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnuserapi.php 118 2010-03-12 10:40:23Z yokav $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
- * @license http://www.gnu.org/copyleft/gpl.html
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Profile
+ * @subpackage Api
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * Operations accessible by non-administrative users.
+ */
 class Profile_Api_User extends Zikula_Api
 {
     /**
-     * Get all Dynamic user data fields
-     * @author Mateo Tibaquira
-     * @author Mark West
-     * @param int args['startnum'] starting record number for request
-     * @param int args['numitems'] number of records to retrieve
-     * @return mixed array of items, or false on failure
+     * Get all Dynamic user data fields.
+     *
+     * @param array $args All parameters passed to this function.
+     *                      int    $args['startnum'] Starting record number for request; optional; default is to return items beginning with
+     *                                                  the first.
+     *                      int    $args['numitems'] Number of records to retrieve; optional; default is to return all items.
+     *                      string $args['index']    The field to use as the array index for the returned items; one of 'prop_id',
+     *                                                  'prop_label', or 'prop_attribute_name'; optional; default = 'prop_label'.
+     *
+     * @return array|boolean Array of items, or false on failure.
      */
     public function getall($args)
     {
@@ -59,8 +68,7 @@ class Profile_Api_User extends Zikula_Api
         $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum']-1, $args['numitems'], $args['index'], $permFilter);
 
         // Put items into result array.
-        foreach (array_keys($items) as $k)
-        {
+        foreach (array_keys($items) as $k) {
             $validationinfo = @unserialize($items[$k]['prop_validation']);
             unset($items[$k]['prop_validation']);
 
@@ -75,11 +83,16 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Get a specific Dynamic user data item
-     * @author Mateo Tibaquira
-     * @author Mark West
-     * @param $args['propid'] id of property to get
-     * @return mixed item array, or false on failure
+     * Get a specific Dynamic user data item.
+     *
+     * @param array $args All parameters passed to this function.
+     *                      integer $args['propid']    Id of the property to get; optional if proplabel or propattribute provided.
+     *                      string  $args['proplabel'] Label of the property to get; optional if propid or propattribute provided; ignored
+     *                                                  if propid provided.
+     *                      string  $args['proplabel'] Attribute name of the property to get; optional if propid or proplabel provided;
+     *                                                  ignored if propid or proplabel provided.
+     *
+     * @return array|boolean Item array, or false on failure.
      */
     public function get($args)
     {
@@ -121,12 +134,22 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Get all active Dynamic user data fields
-     * @author Mateo Tibaquira
-     * @author Mark West
-     * @param int args['startnum'] starting record number for request
-     * @param int args['numitems'] number of records to retrieve
-     * @return mixed array of items, or false on failure
+     * Get all active Dynamic user data fields.
+     *
+     * @param array $args All parameters passed to this function.
+     *                      integer $args['startnum'] Starting record number for request; optional; default is to start with the first
+     *                                                  record.
+     *                      integer $args['numitems'] Number of records to retrieve; optional; default is to return all records.
+     *                      string  $args['index']    The field to use as the array index for the returned items; one of 'prop_id',
+     *                                                  'prop_label', or 'prop_attribute_name'; optional; default = 'prop_attribute_name'.
+     *                      string  $args['get']      Which subset of fields to return; one of 'all', 'editable', 'viewable'; optional;
+     *                                                  default = 'all'.
+     *                      integer $args['uid']      The user id of the user for which data fields are being retrieved, in order to
+     *                                                  filter the result based on ownership of the data; optional; defaults to -1, which
+     *                                                  will not match any user id (i.e., all owner-only fields are not returned unless
+     *                                                  the current user has ADMIN access).
+     *
+     * @return array|boolean Array of items, or false on failure.
      */
     public function getallactive($args)
     {
@@ -174,8 +197,7 @@ class Profile_Api_User extends Zikula_Api
 
             $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, -1, -1, 'prop_id', $permFilter);
 
-            foreach (array_keys($items) as $k)
-            {
+            foreach (array_keys($items) as $k) {
                 // Extract the validation info array
                 $validationinfo = @unserialize($items[$k]['prop_validation']);
                 unset($items[$k]['prop_validation']);
@@ -200,12 +222,10 @@ class Profile_Api_User extends Zikula_Api
         $isadmin     = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
 
         $result  = array();
-        foreach ($items as $item)
-        {
-            switch ($args['get'])
-            {
+        foreach ($items as $item) {
+            switch ($args['get']) {
                 case 'editable':
-                // check the display type
+                    // check the display type
                     if ($item['prop_dtype'] < 0) {
                         break;
                     }
@@ -248,9 +268,9 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Utility function to count the number of items held by this module
-     * @author Mark West
-     * @return int number of items held by this module
+     * Utility function to count the number of items held by this module.
+     *
+     * @return integer Number of items held by this module.
      */
     public function countitems()
     {
@@ -259,9 +279,9 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Utility function to get the weight limits
-     * @author Mark West
-     * @return mixed array of items, or false on failure
+     * Utility function to get the weight limits.
+     *
+     * @return array|boolean Array of weight limits (min and max), or false on failure.
      */
     public function getweightlimits()
     {
@@ -269,10 +289,10 @@ class Profile_Api_User extends Zikula_Api
         $dbtable = DBUtil::getTables();
         $column  = $dbtable['user_property_column'];
 
-        $where = "WHERE $column[prop_weight] <> 0";
+        $where = "WHERE {$column['prop_weight']} != 0";
         $max   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MAX', $where);
 
-        $where = "WHERE $column[prop_weight] <> 0";
+        $where = "WHERE {$column['prop_weight']} != 0";
         $min   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MIN', $where);
 
         // Return the number of items
@@ -280,9 +300,13 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Utility function to save the data of the user
-     * @author FC
-     * @return true - success; false - failure
+     * Utility function to save the data of the user.
+     *
+     * @param array $args All parameters passed to this function.
+     *                      integer $args['uid']      The user id of the user for which the data should be saved; required.
+     *                      array   $args['dynadata'] The data for the user to be saved, indexed by prop_attribute_name; required.
+     *
+     * @return boolean True on success; otherwise false.
      */
     public function savedata($args)
     {
@@ -295,8 +319,7 @@ class Profile_Api_User extends Zikula_Api
 
         $duds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
 
-        foreach ($duds as $attrname => $dud)
-        {
+        foreach ($duds as $attrname => $dud) {
             // exclude avatar update when Avatar module is present
             if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
@@ -323,9 +346,14 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Profile_Manager function to check the required missing
-     * @author FC
-     * @return false - success (no errors), otherwise array('result' => true, 'fields' => array of field names)
+     * Profile_Manager function to check the required missing.
+     *
+     * @param array $args All parameters passed to this function.
+     *                      array $args['dynadata'] The array of user data, index by prop_attribute_name, to check; required, but may be
+     *                                                  passed in a GET, POST, REQUEST, or SESSION variable.
+     *
+     * @return array|boolean False on success (no errors); otherwise an array in the form
+     *                          array('result' => true, 'fields' => array of field names).
      */
     public function checkrequired($args)
     {
@@ -340,8 +368,7 @@ class Profile_Api_User extends Zikula_Api
         // Initializing Error check
         $error = false;
 
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             if ($item['prop_required'] == 1) {
                 // exclude the checkboxes from required check
                 if (in_array($item['prop_displaytype'], array(2, 7))) {
@@ -351,8 +378,7 @@ class Profile_Api_User extends Zikula_Api
                     $error['fields'][] = $item['prop_attribute_name'];
                     $error['translatedFields'][] = $this->__($item['prop_label']);
                 } elseif (is_array($args['dynadata'][$item['prop_attribute_name']])) {
-                    while (list(,$value) = each($args['dynadata'][$item['prop_attribute_name']]))
-                    {
+                    while (list(,$value) = each($args['dynadata'][$item['prop_attribute_name']])) {
                         if ($this->_profileIsEmptyValue($value)) {
                             $error['result'] = true;
                             $error['fields'][] = $item['prop_attribute_name'];
@@ -376,9 +402,13 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Checks if a value is empty
+     * Checks if a value is empty, however if the $value is 0, it is not considered empty.
+     *
+     * @param mixed $value The value to check for empty.
+     *
+     * @return boolean True if the value is empty (according to the PHP function) and is not 0; otherwise false.
      */
-    function _profileIsEmptyValue($value)
+    protected function _profileIsEmptyValue($value)
     {
         $empty = false;
 
@@ -398,9 +428,16 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Profile_Manager function to retrieve the dynamic data to the user object
-     * @author Mateo Tibaquira
-     * @return array of data to attach to the users object or false
+     * Profile_Manager function to retrieve the dynamic data to the user object.
+     *
+     * @param array $args All parameters passed to this function.
+     *                      integer $args['uid']      The user id of the user for which the data is to be inserted.
+     *                      array   $args['dynadata'] The user data to insert, indexed by prop_attribute_name; required, however can be
+     *                                                  passed by a GET, POST, REQUEST, COOKIE, or SESSION variable.
+     *
+     * @return array The dynadata array as an array element in the '__ATTRIBUTES__' index of a new array, merged with existing user
+     *                  attributes if the uid is supplied and is a valid user, unchanged (not merged) if the uid is not supplied or does
+     *                  not refer to an existing user, or an empty array if the dynadata is not supplied or is empty.
      */
     public function insertdyndata($args)
     {
@@ -429,10 +466,14 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * Search the input values through the dynadata
+     * Search the input values through the dynadata.
      *
-     * @author Mateo Tibaquira
-     * @return array of matching UIDs
+     * @param array $args All parameters passed to this function.
+     *                      array $args['dynadata'] An array of data on which to search; required, but may be passed as a GET, POST,
+     *                                                  REQUEST, COOKIE, or SESSION variable.
+     *
+     * @return array An array of uids for users who have matching attributes as specified by the dynadata array; an empty array if there
+     *                  are no matching users.
      */
     public function searchdynadata($args)
     {
@@ -468,9 +509,11 @@ class Profile_Api_User extends Zikula_Api
 
 
     /**
-     * decode the custom url string
+     * Decode the custom url string.
      *
-     * @author Mark West
+     * @param array $args All parameters passed to this function.
+     *                      array $args['vars'] The array of URL variables to decode; required.
+     *
      * @return bool true if successful, false otherwise
      */
     public function decodeurl($args)
@@ -503,10 +546,16 @@ class Profile_Api_User extends Zikula_Api
     }
 
     /**
-     * form custom url string
+     * Create custom url string.
      *
-     * @author Mark West
-     * @return string custom url string
+     * @param array $args All parameters passed to this function.
+     *                      string $args['modname'] The module name for the URL; required.
+     *                      string $args['type']    The function type; optional; defaults to 'user'.
+     *                      string $args['func']    The function name for the URL; required.
+     *                      array  $args['args']    An array of arguments for the URL's query string; required; if $args['func'] is 'view'
+     *                                                  then either $args['args']['uname'] or $args['args']['uid'] is required.
+     *
+     * @return string The custom url string.
      */
     public function encodeurl($args)
     {
@@ -536,6 +585,4 @@ class Profile_Api_User extends Zikula_Api
         // construct the custom url part
         return $args['modname'] . '/' . $args['func'] . '/' . $vars;
     }
-
-
 }
