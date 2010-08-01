@@ -1,22 +1,34 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Zikula Application Framework
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnform.php 82 2010-01-09 09:23:00Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Profile
+ * @subpackage Api
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * UI operations related to the display of dynamically defined user attributes.
+ */
 class Profile_Controller_Form extends Zikula_Controller
 {
     /**
-     * display the dynadata section of the register form
+     * Display the dynadata section of a form for editing user accounts or registering for a new account.
      *
-     * @author Mateo Tibaquira
-     * @return string HTML string
+     * @param array $args All arguments passed to this function.
+     *                      integer $args['userid']   The user id of the user for which the form section is being rendered; optional;
+     *                                                  defaults to 1, which will result in the use of default values from the anonymous
+     *                                                  user.
+     *                      array   $args['dynadata'] The dynamic user data with which to populate the form section; if not specified in
+     *                                                  $args it can be retrieved from a GET, POST, REQUEST, COOKIE, or SESSION variable.
+     *
+     * @return string The rendered template output.
      */
     public function edit($args)
     {
@@ -47,25 +59,21 @@ class Profile_Controller_Form extends Zikula_Controller
             }
         }
 
-        // Create output object
-        $this->view->setCaching(false)->add_core_data();
-
-        // Assign the items to the template
-        $this->view->assign('duditems', $items);
-
-        $this->view->assign('userid', $userid);
+        $this->view->setCaching(false)
+                    ->add_core_data()
+                    ->assign('duditems', $items)
+                    ->assign('userid', $userid);
 
         // Return the dynamic data section
         return $this->view->fetch('profile_form_edit.tpl');
     }
 
     /**
-     * display the dynadata section of the search form
+     * Display the dynadata section of the search form.
      *
-     * @author Mateo Tibaquira
      * @return string HTML string
      */
-    public function search($args)
+    public function search()
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
@@ -93,20 +101,21 @@ class Profile_Controller_Form extends Zikula_Controller
             $items[$k]['prop_required'] = false;
         }
 
-        // Create output object
         $this->view->setCaching(false)
-                ->assign('duditems', $items)
-                ->assign('userid', 1);
+                    ->assign('duditems', $items)
+                    ->assign('userid', 1);
 
         // Return the dynamic data section
         return $this->view->fetch('profile_form_edit.tpl');
     }
 
     /**
-     * fills a z-datatable body with the passed dynadata
+     * Fills a z-datatable body with the passed dynadata.
      *
-     * @author Mateo Tibaquira
-     * @return string HTML string
+     * @param array $args All parameters passed to this function.
+     *                      array $args['userinfo'] The dynadata with which to populate the data table.
+     *
+     * @return string The rendered template output.
      */
     public function display($args)
     {
