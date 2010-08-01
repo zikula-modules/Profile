@@ -2,7 +2,7 @@
 {if !$name}{assign var='name' value=$uname}{/if}
 {gt text="Personal info for %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
 
-{include file='profile_user_menu.htm'}
+{include file='profile_user_menu.tpl'}
 
 <div id="profile_wrapper">
     {if isset($dudarray.avatar)}

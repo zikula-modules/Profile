@@ -50,7 +50,7 @@ function smarty_function_profilesection($params, &$smarty)
     $render = Zikula_View::getInstance('Profile', false, null, true);
 
     // check the tmeplate existance
-    $template = "sections/profile_section_{$params['name']}.htm";
+    $template = "sections/profile_section_{$params['name']}.tpl";
 
     if (!$render->template_exists($template)) {
         return '';

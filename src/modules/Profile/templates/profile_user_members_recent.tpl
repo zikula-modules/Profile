@@ -1,6 +1,6 @@
 {gt text='Last %s registered users' tag1=$recentmembersitemsperpage assign='templatetitle'}
 
-{include file='profile_user_menu.htm'}
+{include file='profile_user_menu.tpl'}
 
 <table class="z-datatable">
     <thead>

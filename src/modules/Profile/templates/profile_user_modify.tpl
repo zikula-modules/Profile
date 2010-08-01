@@ -1,7 +1,7 @@
 {gt text='Edit personal info' assign='templatetitle'}
 {ajaxheader validation=true}
 
-{include file='profile_user_menu.htm'}
+{include file='profile_user_menu.tpl'}
 
 <form id="modifyprofileform" class="z-form" action="{modurl modname='Profile' type='user' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset>

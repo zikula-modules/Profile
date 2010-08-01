@@ -56,7 +56,7 @@ class Profile_Controller_Form extends Zikula_Controller
         $this->view->assign('userid', $userid);
 
         // Return the dynamic data section
-        return $this->view->fetch('profile_form_edit.htm');
+        return $this->view->fetch('profile_form_edit.tpl');
     }
 
     /**
@@ -99,7 +99,7 @@ class Profile_Controller_Form extends Zikula_Controller
                 ->assign('userid', 1);
 
         // Return the dynamic data section
-        return $this->view->fetch('profile_form_edit.htm');
+        return $this->view->fetch('profile_form_edit.tpl');
     }
 
     /**
@@ -131,6 +131,6 @@ class Profile_Controller_Form extends Zikula_Controller
                 ->assign('userinfo', $userinfo);
 
         // Return the dynamic data rows
-        return $this->view->fetch('profile_form_display.htm');
+        return $this->view->fetch('profile_form_display.tpl');
     }
 }

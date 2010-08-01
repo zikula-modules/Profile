@@ -1,5 +1,5 @@
 {gt text='Users currently on-line' assign='templatetitle'}
-{include file='profile_user_menu.htm'}
+{include file='profile_user_menu.tpl'}
 
 <table class="z-datatable">
     <thead>

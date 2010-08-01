@@ -138,7 +138,7 @@ class Profile_Controller_Ajax extends Zikula_Controller
         $this->view->setCaching(false)->add_core_data();
 
         // check the tmeplate existance
-        $template = "sections/profile_section_{$name}.htm";
+        $template = "sections/profile_section_{$name}.tpl";
 
         if (!$this->view->template_exists($template)) {
             return array('result' => false);

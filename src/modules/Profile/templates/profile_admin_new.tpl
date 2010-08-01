@@ -1,7 +1,7 @@
 {ajaxheader modname='Profile' filename='profile_edit_property.js' nobehaviour=true noscriptaculous=true}
 {gt text='Create new personal info item' assign='templatetitle'}
 
-{include file='profile_admin_menu.htm'}
+{include file='profile_admin_menu.tpl'}
 
 <div class="z-admincontainer">
     <div class="z-adminpageicon">{img modname='core' src='filenew.gif' set='icons/large' alt=$templatetitle}</div>

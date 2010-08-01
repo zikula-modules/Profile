@@ -122,7 +122,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         $render->assign('selectmultiple', '');
         $render->assign('listoptions',    array_keys($tzinfo));
         $render->assign('listoutput',     array_values($tzinfo));
-        return $render->fetch('profile_dudedit_select.htm');
+        return $render->fetch('profile_dudedit_select.tpl');
     }
 
     if ($item['prop_attribute_name'] == 'avatar') {
@@ -140,10 +140,10 @@ function smarty_function_duditemmodify($params, &$smarty)
             }
             $render->assign('linktext', __('Go to the Avatar manager', $dom));
             $render->assign('linkurl', ModUtil::url('Avatar'));
-            $output = $render->fetch('profile_dudedit_link.htm');
+            $output = $render->fetch('profile_dudedit_link.tpl');
             // add a hidden input if this is required
             if ($item['prop_required']) {
-                $output .= $render->fetch('profile_dudedit_hidden.htm');
+                $output .= $render->fetch('profile_dudedit_hidden.tpl');
             }
             return $output;
         }
@@ -172,7 +172,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         $render->assign('selectmultiple', '');
         $render->assign('listoptions',    $listoptions);
         $render->assign('listoutput',     $listoutput);
-        return $render->fetch('profile_dudedit_select.htm');
+        return $render->fetch('profile_dudedit_select.tpl');
     }
 
     switch ($item['prop_displaytype'])
@@ -297,5 +297,5 @@ function smarty_function_duditemmodify($params, &$smarty)
             break;
     }
 
-    return $render->fetch('profile_dudedit_'.$type.'.htm');
+    return $render->fetch('profile_dudedit_'.$type.'.tpl');
 }

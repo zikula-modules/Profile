@@ -111,9 +111,9 @@ function smarty_function_duditemdisplay($params, &$smarty)
     $render->assign('uservalue', $uservalue);
 
     // detects the template to use
-    $template = $tplset.'_'.$item['prop_id'].'.htm';
+    $template = $tplset.'_'.$item['prop_id'].'.tpl';
     if (!$render->template_exists($template)) {
-        $template = $tplset.'_generic.htm';
+        $template = $tplset.'_generic.tpl';
     }
 
     $output = '';
