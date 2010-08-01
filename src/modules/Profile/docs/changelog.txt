@@ -1,7 +1,10 @@
+CHANGELOG
+---------
 
-  CHANGELOG
+1.X.X (probably 1.6.0)
+    - Templates renamed to use the new standard .tpl suffix.
 
-  1.5
+1.5
     'Mandatory' and 'Core' field types are now deprecated
     New field types list:
       2  - Third party (normal) editable and deactivable
