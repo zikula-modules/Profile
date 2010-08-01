@@ -229,12 +229,11 @@ class Profile_Api_User extends Zikula_Api
                     if ($item['prop_dtype'] < 0) {
                         break;
                     }
-                case 'editable':
+                    // Fall through to next case on purpose, handle editable and viewable the same at this point.
                 case 'viewable':
                     $isallowed = true;
                     // check the item visibility
-                    switch ($item['prop_viewby'])
-                    {
+                    switch ($item['prop_viewby']) {
                         // everyone, do nothing
                         case '0':
                             break;
@@ -251,11 +250,10 @@ class Profile_Api_User extends Zikula_Api
                             $isallowed = $isadmin;
                             break;
                     }
-                    // break if it's not viewable
-                    if (!$isallowed) {
-                        break;
+                    // Only add if is viewable.
+                    if ($isallowed) {
+                        $result[$item[$args['index']]] = $item;
                     }
-                    $result[$item[$args['index']]] = $item;
                     break;
                 case 'all':
                     $result[$item[$args['index']]] = $item;
