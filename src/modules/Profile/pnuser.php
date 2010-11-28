@@ -119,24 +119,17 @@ function Profile_user_modify($args)
 
     $dom = ZLanguage::getModuleDomain('Profile');
 
-    // check if we get called form the update function in case of an error
-    $uname    = FormUtil::getPassedValue('uname',    (isset($args['uname']) ? $args['uname'] : null),    'GET');
-    $dynadata = FormUtil::getPassedValue('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()), 'GET');
-
-    // Getting uid by uname
-    if (!empty($uname)) {
-        $uid = pnUserGetIDFromName($uname);
-    } elseif (empty($uid)) {
-        $uid = pnUserGetVar('uid');
-    }
-
     // The API function is called.
-    $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $uid));
+    $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('uid' => pnUserGetVar('uid'), 'get' => 'editable'));
 
     // The return value of the function is checked here
     if ($items === false) {
         return LogUtil::registerError(__('Error! Could not load personal info items.', $dom));
     }
+
+    // check if we get called form the update function in case of an error
+    $uname    = FormUtil::getPassedValue('uname',    (isset($args['uname']) ? $args['uname'] : null),    'GET');
+    $dynadata = FormUtil::getPassedValue('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()), 'GET');
 
     // merge this temporary dynadata and the errors into the items array
     foreach ($dynadata as $propattr => $propdata) {

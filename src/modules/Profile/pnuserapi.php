@@ -143,7 +143,7 @@ function Profile_userapi_getallactive($args)
         $args['get'] = 'all';
     }
     if (!isset($args['uid']) || !is_numeric($args['uid'])) {
-        $args['uid'] = -1;
+        $args['uid'] = 0;
     }
 
     // Security check
@@ -207,7 +207,6 @@ function Profile_userapi_getallactive($args)
                 if ($item['prop_dtype'] < 0) {
                     break;
                 }
-            case 'editable':
             case 'viewable':
                 $isallowed = true;
                 // check the item visibility
@@ -218,7 +217,7 @@ function Profile_userapi_getallactive($args)
                         break;
                     // members only or higher
                     case '1':
-                        $isallowed = $ismember;
+                        $isallowed = ($isowner || $ismember);
                         break;
                     // account owner or admin
                     case '2':
@@ -233,12 +232,9 @@ function Profile_userapi_getallactive($args)
                 if (!$isallowed) {
                     break;
                 }
-                $result[$item[$args['index']]] = $item;
-                break;
             case 'all':
                 $result[$item[$args['index']]] = $item;
         }
-        
     }
 
     // Return the items
@@ -349,7 +345,7 @@ function Profile_userapi_checkrequired($args)
     $dom = ZLanguage::getModuleDomain('Profile');
 
     // The API function is called.
-    $items = pnModAPIFunc('Profile', 'user', 'getallactive');
+    $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
     // Initializing Error check
     $error = false;
