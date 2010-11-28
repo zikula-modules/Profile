@@ -304,7 +304,7 @@ function Profile_userapi_savedata($args)
         if (isset($fields[$attrname])) {
             // Process the Date DUD separately
             if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
-                $fieldvalue = DateUtil::parseUIDate($fields[$attrname]);
+                $fieldvalue = Profile_userapi_parseDate($fields[$attrname]);
                 $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
             } elseif (is_array($fields[$attrname])) {
                 $fieldvalue = serialize(array_values($fields[$attrname]));
@@ -318,6 +318,20 @@ function Profile_userapi_savedata($args)
     // Return the result (true = success, false = failure
     // At this point, the result is true.
     return true;
+}
+
+function Profile_userapi_parseDate(&$datestring) {
+    // same in ObjectUtil.class.php
+    $dateformats = array(null,"%d.%m.%Y", "%Y-%m-%d", "%e.%n.%Y", "%e.%n.%y", "%Y/%m/%d", "%y/%m/%d");
+    $result = null;
+    foreach ($dateformats as $format) {
+        $result = DateUtil::parseUIDate($datestring, $format);
+        if ($result != null) {
+            $datestring = DateUtil::formatDatetime($result, "%d.%m.%Y", false);
+            break;
+        }
+    }
+    return $result;
 }
 
 /**
@@ -363,7 +377,7 @@ function Profile_userapi_checkrequired($args)
                 $error['result'] = true;
                 $error['fields'][] = $item['prop_attribute_name'];
                 $error['translatedFields'][] = __($item['prop_label'], $dom);
-            } elseif ($item['prop_displaytype'] == 5 && DateUtil::parseUIDate($args['dynadata'][$item['prop_attribute_name']]) == null) { // not empty, check if date is correct
+            } elseif ($item['prop_displaytype'] == 5 && Profile_userapi_parseDate($args['dynadata'][$item['prop_attribute_name']]) == null) { // not empty, check if date is correct
                 $error['result'] = true;
                 $error['fields'][] = $item['prop_attribute_name'];
                 $error['translatedFields'][] = __($item['prop_label'], $dom);
