@@ -363,6 +363,10 @@ function Profile_userapi_checkrequired($args)
                 $error['result'] = true;
                 $error['fields'][] = $item['prop_attribute_name'];
                 $error['translatedFields'][] = __($item['prop_label'], $dom);
+            } elseif ($item['prop_displaytype'] == 5 && DateUtil::parseUIDate($args['dynadata'][$item['prop_attribute_name']]) == null) { // not empty, check if date is correct
+                $error['result'] = true;
+                $error['fields'][] = $item['prop_attribute_name'];
+                $error['translatedFields'][] = __($item['prop_label'], $dom);
             }
         }
     }
