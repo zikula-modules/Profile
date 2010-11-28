@@ -30,6 +30,7 @@ $modversion['author']         = 'Mateo Tibaquirá, Mark West, Franky Chestnut';
 $modversion['contact']        = 'http://nestormateo.com/, http://www.markwest.me.uk/, http://dev.pnconcept.com/';
 
 $modversion['securityschema'] = array('Profile::' => '::',
+                                      'Profile:view:' => '::',
                                       'Profile::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
                                       'Profile:Members:' => '::',
                                       'Profile:Members:recent' => '::',
