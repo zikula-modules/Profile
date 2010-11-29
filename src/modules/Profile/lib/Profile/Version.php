@@ -22,6 +22,7 @@ class Profile_Version extends Zikula_Version
         $meta['capabilities']   = array('profile' => array('version' => '1.0'));
 
         $meta['securityschema'] = array('Profile::' => '::',
+                'Profile:view:' => '::',
                 'Profile::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
                 'Profile:Members:' => '::',
                 'Profile:Members:recent' => '::',

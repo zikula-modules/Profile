@@ -33,7 +33,7 @@ class Profile_Controller_User extends Zikula_Controller
     public function view($args)
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ) || !SecurityUtil::checkPermission('Profile:view:', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
 
@@ -115,24 +115,17 @@ class Profile_Controller_User extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
 
-        // check if we get called form the update function in case of an error
-        $uname    = FormUtil::getPassedValue('uname',    (isset($args['uname']) ? $args['uname'] : null),    'GET');
-        $dynadata = FormUtil::getPassedValue('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()), 'GET');
-
-        // Getting uid by uname
-        if (!empty($uname)) {
-            $uid = UserUtil::getIdFromName($uname);
-        } elseif (empty($uid)) {
-            $uid = UserUtil::getVar('uid');
-        }
-
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $uid));
+        $items = pnModAPIFunc('Profile', 'user', 'getallactive', array('uid' => pnUserGetVar('uid'), 'get' => 'editable'));
 
         // The return value of the function is checked here
         if ($items === false) {
             return LogUtil::registerError($this->__('Error! Could not load personal info items.'));
         }
+
+        // check if we get called form the update function in case of an error
+        $uname    = FormUtil::getPassedValue('uname',    (isset($args['uname']) ? $args['uname'] : null),    'GET');
+        $dynadata = FormUtil::getPassedValue('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()), 'GET');
 
         // merge this temporary dynadata and the errors into the items array
         foreach ($dynadata as $propattr => $propdata) {

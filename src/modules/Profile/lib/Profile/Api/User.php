@@ -168,7 +168,7 @@ class Profile_Api_User extends Zikula_Api
             $args['get'] = 'all';
         }
         if (!isset($args['uid']) || !is_numeric($args['uid'])) {
-            $args['uid'] = -1;
+            $args['uid'] = 0;
         }
 
         // Security check
@@ -239,7 +239,7 @@ class Profile_Api_User extends Zikula_Api
                             break;
                         // members only or higher
                         case '1':
-                            $isallowed = $ismember;
+                            $isallowed = ($isowner || $ismember);
                             break;
                         // account owner or admin
                         case '2':
@@ -250,15 +250,13 @@ class Profile_Api_User extends Zikula_Api
                             $isallowed = $isadmin;
                             break;
                     }
-                    // Only add if is viewable.
-                    if ($isallowed) {
-                        $result[$item[$args['index']]] = $item;
+                    // break if it's not viewable
+                    if (!$isallowed) {
+                        break;
                     }
-                    break;
                 case 'all':
                     $result[$item[$args['index']]] = $item;
             }
-
         }
 
         // Return the items
@@ -327,7 +325,7 @@ class Profile_Api_User extends Zikula_Api
             if (isset($fields[$attrname])) {
                 // Process the Date DUD separately
                 if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
-                    $fieldvalue = DateUtil::parseUIDate($fields[$attrname]);
+                    $fieldvalue = $this->parseDate($fields[$attrname]);
                     $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
                 } elseif (is_array($fields[$attrname])) {
                     $fieldvalue = serialize(array_values($fields[$attrname]));
@@ -341,6 +339,20 @@ class Profile_Api_User extends Zikula_Api
         // Return the result (true = success, false = failure
         // At this point, the result is true.
         return true;
+    }
+
+    function parseDate(&$datestring) {
+        // same in ObjectUtil.class.php
+        $dateformats = array(null,"%d.%m.%Y", "%Y-%m-%d", "%e.%n.%Y", "%e.%n.%y", "%Y/%m/%d", "%y/%m/%d");
+        $result = null;
+        foreach ($dateformats as $format) {
+            $result = DateUtil::parseUIDate($datestring, $format);
+            if ($result != null) {
+                $datestring = DateUtil::formatDatetime($result, "%d.%m.%Y", false);
+                break;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -361,7 +373,7 @@ class Profile_Api_User extends Zikula_Api
         }
 
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
 
         // Initializing Error check
         $error = false;
@@ -383,6 +395,10 @@ class Profile_Api_User extends Zikula_Api
                             $error['translatedFields'][] = $this->__($item['prop_label']);
                         }
                     }
+                } elseif ($item['prop_displaytype'] == 5 && this->parseDate($args['dynadata'][$item['prop_attribute_name']]) == null) { // not empty, check if date is correct
+                    $error['result'] = true;
+                    $error['fields'][] = $item['prop_attribute_name'];
+                    $error['translatedFields'][] = $this->__($item['prop_label']);
                 } elseif ($this->_profileIsEmptyValue($args['dynadata'][$item['prop_attribute_name']])) {
                     $error['result'] = true;
                     $error['fields'][] = $item['prop_attribute_name'];
