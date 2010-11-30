@@ -215,7 +215,6 @@ class Profile_Controller_Admin extends Zikula_Controller
     /**
      * Function that executes the creation
      *
-     * @author Mark West
      * @see Profile_admin_new()
      * @param string 'label' the name of the item to be created
      * @param string 'dtype' the data type of the item to be created
@@ -292,7 +291,6 @@ class Profile_Controller_Admin extends Zikula_Controller
      * Modify a dynamic user data item
      * This is a standard function that is called whenever an administrator
      * wishes to modify a current module item
-     * @author Mark West
      * @param int 'dudid' the id of the item to be modified
      * @param int 'objectid' generic object id maps to dudid if present
      * @return string HTML string
@@ -356,7 +354,6 @@ class Profile_Controller_Admin extends Zikula_Controller
     /**
      * Function that executes the update
      *
-     * @author Mark West
      * @see ProfileModify()
      * @param int 'dudid' the id of the item to be updated
      * @param int 'objectid' generic object id maps to dudid if present
@@ -581,9 +578,6 @@ class Profile_Controller_Admin extends Zikula_Controller
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
 
-        // Let any other modules know that the modules configuration has been updated
-        $this->callHooks('module','updateconfig','Profile', array('module' => 'Profile'));
-
         // This function generated no output
         return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
@@ -664,9 +658,6 @@ class Profile_Controller_Admin extends Zikula_Controller
 
         $dudregshow = FormUtil::getPassedValue('dudregshow', array(), 'POST');
         $this->setVar('dudregshow', $dudregshow);
-
-        // Let any other modules know that the modules configuration has been updated
-        $this->callHooks('module', 'updateconfig', 'Profile', array('module' => 'Profile'));
 
         // the module configuration has been updated successfuly
         $this->registerStatus($this->__('Done! Saved your settings changes.'));

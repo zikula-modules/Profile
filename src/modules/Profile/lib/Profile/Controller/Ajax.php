@@ -21,8 +21,6 @@ class Profile_Controller_Ajax extends Zikula_Controller
      */
     public function changeprofileweight()
     {
-
-
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
         }

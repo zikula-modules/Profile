@@ -117,7 +117,7 @@ class Profile_Controller_User extends Zikula_Controller
 
         // The API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $uid));
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('uid' => UserUtil::getVar('uid');, 'get' => 'editable'));
+        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('uid' => UserUtil::getVar('uid'), 'get' => 'editable'));
 
         // The return value of the function is checked here
         if ($items === false) {
@@ -236,7 +236,6 @@ class Profile_Controller_User extends Zikula_Controller
 
         // Create output object
         $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
-        $render  = Zikula_View::getInstance('Profile', true, $cacheid);
         $this->view->setCaching(true)
                         ->setCache_Id($cacheid);
         /*
@@ -400,7 +399,7 @@ class Profile_Controller_User extends Zikula_Controller
         }
 
         // Create output object
-        $this->view->setCache_Id = ('onlinemembers' . (int)UserUtil::isLoggedIn());
+        $this->view->setCache_Id('onlinemembers' . (int)UserUtil::isLoggedIn());
 
         // check out if the contents are cached.
         if ($this->view->is_cached('profile_user_members_online.tpl')) {

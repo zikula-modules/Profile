@@ -32,6 +32,6 @@
         {/if}
     </div>
 
-    {modurl modname='Profile' func='view' uid=$userinfo.uid assign='returnurl'}
-    {modcallhooks hookobject='item' hookaction='display' hookid=$userinfo.uid module='Profile' returnurl=$returnurl owneruid=$userinfo.uid}
+    {*modurl modname='Profile' func='view' uid=$userinfo.uid assign='returnurl'*}
+    {*notifydisplayhooks eventname='profile.hook.general.ui.view' subject=$userinfo id=$userinfo.uid returnurl=$returnurl*}
 </div>
