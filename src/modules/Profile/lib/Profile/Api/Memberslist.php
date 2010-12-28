@@ -27,8 +27,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function getall($args)
     {
-
-
         // Optional arguments.
         if (!isset($args['startnum'])) {
             $args['startnum'] = 1;
@@ -239,8 +237,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function countitems($args)
     {
-
-
         // Optional arguments.
         if (!isset($args['searchby']) || empty($args['searchby'])) {
             $args['searchby'] = 'uname';
@@ -400,8 +396,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function getregisteredonline($args)
     {
-
-
         // Get database setup
         $dbtable = DBUtil::getTables();
 
@@ -409,8 +403,8 @@ class Profile_Api_Memberslist extends Zikula_Api
         // getting - $table and $column don't cut it in more complex modules
         $sessioninfocolumn = $dbtable['session_info_column'];
         $sessioninfotable  = $dbtable['session_info'];
-
-        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
+        
+        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         // Get items
         $sql = "SELECT DISTINCT $sessioninfocolumn[uid] FROM $sessioninfotable
@@ -444,8 +438,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function getlatestuser($args)
     {
-
-
         // load the database information for the users module
         ModUtil::dbInfoLoad('Users');
 
@@ -495,8 +487,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function isonline($args)
     {
-
-
         // check arguments
         if (!isset($args['userid']) || empty($args['userid']) || !is_numeric($args['userid'])) {
             return false;
@@ -506,7 +496,7 @@ class Profile_Api_Memberslist extends Zikula_Api
         $dbtable = DBUtil::getTables();
 
         // get active time based on security settings
-        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
+        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
@@ -549,8 +539,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function whosonline($args)
     {
-
-
         // Get database setup
         $dbtable = DBUtil::getTables();
 
@@ -562,7 +550,7 @@ class Profile_Api_Memberslist extends Zikula_Api
         $sessioninfotable  = $dbtable['session_info'];
 
         // get active time based on security settings
-        $activetime = adodb_strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
+        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         // Get items
         $sql = "SELECT DISTINCT $sessioninfocolumn[uid]
@@ -604,8 +592,6 @@ class Profile_Api_Memberslist extends Zikula_Api
      */
     public function getallonline($args)
     {
-
-
         // Get database setup
         $dbtable = DBUtil::getTables();
 
@@ -618,9 +604,7 @@ class Profile_Api_Memberslist extends Zikula_Api
         $usercol           = &$dbtable['users_column'];
 
         // get active time based on security
-
-        // TODO: this adodb_ function is deprecated -refactored ro strftime but might need review.
-        $activetime = strftime('%Y-%m-%d %H:%M:%S', time() - (System::getVar('secinactivemins') * 60));
+		$activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         // Check if anonymous session are on
         if (System::getVar('anonymoussessions')) {
