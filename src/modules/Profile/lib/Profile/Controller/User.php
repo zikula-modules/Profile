@@ -116,7 +116,6 @@ class Profile_Controller_User extends Zikula_Controller
         }
 
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $uid));
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('uid' => UserUtil::getVar('uid'), 'get' => 'editable'));
 
         // The return value of the function is checked here
