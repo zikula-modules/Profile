@@ -395,7 +395,7 @@ class Profile_Api_User extends Zikula_Api
                             $error['translatedFields'][] = $this->__($item['prop_label']);
                         }
                     }
-                } elseif ($item['prop_displaytype'] == 5 && this->parseDate($args['dynadata'][$item['prop_attribute_name']]) == null) { // not empty, check if date is correct
+                } elseif ($item['prop_displaytype'] == 5 && $this->parseDate($args['dynadata'][$item['prop_attribute_name']]) == null) { // not empty, check if date is correct
                     $error['result'] = true;
                     $error['fields'][] = $item['prop_attribute_name'];
                     $error['translatedFields'][] = $this->__($item['prop_label']);
