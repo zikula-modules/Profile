@@ -406,26 +406,16 @@ class Profile_Api_Memberslist extends Zikula_Api
         
         $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
-        // Get items
-        $sql = "SELECT DISTINCT $sessioninfocolumn[uid] FROM $sessioninfotable
-            WHERE $sessioninfocolumn[uid] != 0 AND $sessioninfocolumn[lastused] > '$activetime'
-            GROUP BY $sessioninfocolumn[uid]";
-
-        $result = DBUtil::executeSQL($sql);
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
+        $where = "$sessioninfocolumn[uid] <> 0 AND $sessioninfocolumn[lastused] > '$activetime'"; 
+        
+        $result = DBUtil::selectFieldArray('session_info', 'uid', $where, '', true);
+                
         if ($result === false) {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
-
-        // Obtain the number of items
-        $numusers = $result->RecordCount();
-
-        // All successful database queries produce a result set, and that result
-        // set should be closed when it has been finished with
-        $result->Close();
-
+		
+        $numusers = count($result);
+		
         // Return the number of items
         return $numusers;
     }
