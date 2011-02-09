@@ -10,8 +10,7 @@
  * @subpackage Profile
  */
 
-// Ported from : i-Block [Last x Reg Users 2.4] - Alexander Graef aka MagicX - http://www.portalzine.de
-class Profile_Block_Lastxusers extends Zikula_Block
+class Profile_Block_Lastxusers extends Zikula_Controller_Block
 {
     /**
      * initialise block

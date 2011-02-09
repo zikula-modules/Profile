@@ -10,9 +10,8 @@
  * @subpackage Profile
  */
 
-// Ported from : i-Block [Featured User 1.5] - Alexander Graef aka MagicX - http://www.portalzine.de
 
-class Profile_Block_Featureduser extends Zikula_Block
+class Profile_Block_Featureduser extends Zikula_Controller_Block
 {
 
     /**

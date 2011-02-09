@@ -10,8 +10,7 @@
  * @subpackage Profile
  */
 
-// Ported from : i-Block [Members Online 2.5] - MagicX - Portalzine.de
-class Profile_Block_Membersonline extends Zikula_Block
+class Profile_Block_Membersonline extends Zikula_Controller_Block
 {
     /**
      * initialise block
