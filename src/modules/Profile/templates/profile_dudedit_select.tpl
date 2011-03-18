@@ -1,11 +1,14 @@
 {modgetvar module='Users' name='avatarpath' assign='avatarpath'}
 
 <div class="{$class|default:'z-formrow'}">
-    <label for="prop_{$attributename}">
-        {gt text=$proplabeltext}
-        {if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}
-    </label>
-    <select id="prop_{$attributename}" name="dynadata[{$attributename}]{if $selectmultiple}[]{/if}"{$selectmultiple}{if $required} class="required"{/if}>
+    {if $required}
+    <p id="advice-required-prop_{$attributename}" class="custom-advice z-formnote" style="display:none">
+        {gt text='Sorry! A required personal info item is missing. Please correct and try again.'}
+    </p>
+    {/if}
+
+    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}</label>
+    <select id="prop_{$attributename}" name="dynadata[{$attributename}]{if $selectmultiple}[]{/if}"{$selectmultiple} class="{if $required}required{/if} {if $error}z-form-error{/if}">
         {html_options id=$attributename values=$listoptions output=$listoutput selected=$value}
     </select>
 
@@ -15,9 +18,10 @@
         <img id="youravatardisplay" src="{$avatarpath}/{$value}" alt="{$proplabeltext}" />
     </p>
     {/if}
-    {if $note neq ''}
-    <em class="z-sub z-formnote">{gt text='Notice:'} {$note}</em>
+    {if $note}
+    <em class="z-sub z-formnote">{$note}</em>
     {/if}
+    <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
 </div>
 
 {if $attributename eq 'avatar'}

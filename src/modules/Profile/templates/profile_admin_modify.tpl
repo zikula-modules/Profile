@@ -66,8 +66,6 @@
                 </div>
             </fieldset>
 
-            {modcallhooks hookobject='item' hookaction='modify' hookid=$dudid module='Profile'}
-
             <div class="z-formbuttons z-buttons">
                 {button src='button_ok.gif' set='icons/small' __alt='Save' __title='Save' __text='Save'}
                 <a href="{modurl modname='Profile' type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>

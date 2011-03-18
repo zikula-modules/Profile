@@ -1,4 +1,8 @@
-{array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
+{if isset($userinfo.__ATTRIBUTES__)}
+    {array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
+{else}
+    {assign var='name' value=''}
+{/if}
 {if !$name}{assign var='name' value=$uname}{/if}
 {gt text="Personal info for %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
 
@@ -31,7 +35,4 @@
         </div>
         {/if}
     </div>
-
-    {*modurl modname='Profile' func='view' uid=$userinfo.uid assign='returnurl'*}
-    {*notifydisplayhooks eventname='profile.hook.general.ui.view' subject=$userinfo id=$userinfo.uid returnurl=$returnurl*}
 </div>

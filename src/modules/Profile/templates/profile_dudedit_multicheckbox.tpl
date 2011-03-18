@@ -1,8 +1,5 @@
 <div class="{$class|default:'z-formrow'}">
-    <label for="prop_{$attributename}">
-        {gt text=$proplabeltext}
-        {if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}
-    </label>
+    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}</label>
     <div id="prop_{$attributename}">
         {html_checkboxes name="dynadata[$attributename]" labels=true options=$fields selected=$value assign='fields'}
         {foreach from=$fields item='field'}
@@ -11,6 +8,7 @@
     </div>
 
     {if $note neq ''}
-    <em class="z-sub z-formnote">{gt text='Notice:'} {$note}</em>
+    <em class="z-sub z-formnote">{$note}</em>
     {/if}
+    <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
 </div>

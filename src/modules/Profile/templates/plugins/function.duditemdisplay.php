@@ -33,6 +33,7 @@
  * @param        string      $proplabel         Property label to display (optional overrides the preformated dud item $item)
  * @param        string      $propattribute     Property attribute to display
  * @param        string      $default           Default content for an empty DUD
+ * @param        boolean     $showlabel         Show the label? default = true;
  * @return       string      the results of the module function
  */
 function smarty_function_duditemdisplay($params, &$smarty)
@@ -123,7 +124,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // avatar
     if ($item['prop_attribute_name'] == 'avatar') {
         $baseurl = System::getBaseUrl();
-        $avatarpath = ModUtil::getVar('Users', 'avatarpath', 'images/avatar');
+        $avatarpath = ModUtil::getVar(Users::MODNAME, Users::MODVAR_AVATAR_IMAGE_PATH, Users::DEFAULT_AVATAR_IMAGE_PATH);
         if (empty($uservalue)) {
             $uservalue = 'blank.gif';
         }
@@ -233,7 +234,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
         return '';
     }
 
-    $render->assign('output', is_array($output) ? $output : array($output));
-
-    return $render->fetch($template);
+    return $render->assign('output', is_array($output) ? $output : array($output))
+        ->fetch($template);
 }

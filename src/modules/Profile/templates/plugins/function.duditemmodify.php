@@ -35,6 +35,7 @@
  * @param        string      $class             CSS class to assign to the table row/form row div (optional)
  * @param        string      $proplabel         Property label to display (optional overrides the preformated dud item $item)
  * @param        string      $propattribute     Property attribute to display
+ * @param        string      error              Property error message
  * @return       string      the results of the module function
  */
 function smarty_function_duditemmodify($params, &$smarty)
@@ -86,7 +87,16 @@ function smarty_function_duditemmodify($params, &$smarty)
     if (isset($item['temp_propdata'])) {
         $uservalue = $item['temp_propdata'];
     } elseif ($uid >= 0) {
-        $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid); // ($alias, $uid);
+        // TODO - This is a bit of a hack for admin editing. Need to know if it is a reg.
+        $user = UserUtil::getVars($uid);
+        $isRegistrationRecord = false;
+        if (!$user) {
+            $user = UserUtil::getVars($uid, false, 'uid', true);
+            if ($user) {
+                $isRegistrationRecord = true;
+            }
+        }
+        $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid, false, $isRegistrationRecord); // ($alias, $uid);
     }
 
     // try to get the DUD output if it's Third Party
@@ -109,6 +119,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     $render->assign('proplabeltext', $item['prop_label']);
     $render->assign('note',          $item['prop_note']);
     $render->assign('required',      (bool)$item['prop_required']);
+    $render->assign('error',         isset($error) ? $error : '');
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {

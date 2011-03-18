@@ -92,9 +92,6 @@ class Profile_Api_Dud extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! Could not create the new personal info item.'));
         }
 
-        // Let any hooks know that we have created a new item.
-        ModUtil::callHooks('item', 'create', $obj['prop_id'], array('module' => 'Profile'));
-
         // Return the id of the newly created item to the calling process
         return $obj['prop_id'];
     }
@@ -153,9 +150,6 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         if (!$res) {
             return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
         }
-
-        // Let any hooks know that we have deleted an item.
-        ModUtil::callHooks('item', 'delete', $item['prop_id'], array('module' => 'Profile'));
 
         // Let the calling process know that we have finished successfully
         return true;

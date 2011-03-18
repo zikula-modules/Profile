@@ -5,13 +5,10 @@
     </p>
     {/if}
 
-    <label for="prop_{$attributename}">
-        {gt text=$proplabeltext}
-        {if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}
-    </label>
-    <input id="prop_{$attributename}" type="text" name="dynadata[{$attributename}]" value="{$value}" size="30"{if $required} class="required"{/if} />
-
-    {if $note neq ''}
-    <em class="z-sub z-formnote">{gt text='Notice:'}: {$note}</em>
+    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}</label>
+    <input id="prop_{$attributename}" type="text" name="dynadata[{$attributename}]" value="{$value}" size="30" class="{if $required}required{/if} {if $error}z-form-error{/if}" />
+    {if $note}
+    <em class="z-sub z-formnote">{$note}</em>
     {/if}
+    <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
 </div>

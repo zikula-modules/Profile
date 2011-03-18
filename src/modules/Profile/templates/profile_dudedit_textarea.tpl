@@ -5,16 +5,14 @@
     </p>
     {/if}
 
-    <label for="prop_{$attributename}">
-        {gt text=$proplabeltext}
-        {if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}
-    </label>
-    <textarea id="prop_{$attributename}" cols="40" rows="5" name="dynadata[{$attributename}]"{if $required} class="required"{/if}>{$value}</textarea><br />
+    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}</label>
+    <textarea id="prop_{$attributename}" cols="40" rows="5" name="dynadata[{$attributename}]" class="{if $required}required{/if} {if $error}z-form-error{/if}">{$value}</textarea><br />
 
-    {if $note neq ''}
-    <em class="z-sub z-formnote">{gt text='Notice:'}: {$note}</em>
+    {if $note}
+    <em class="z-sub z-formnote">{$note}</em>
     {/if}
     {if $pncore.Profile.dudtextdisplaytags|default:0 eq 1}
     <p class="z-formnote">{gt text="Permitted HTML tags:"} {allowedhtml}</p>
     {/if}
+    <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
 </div>

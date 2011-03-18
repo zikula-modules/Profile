@@ -83,9 +83,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! Could not create new attribute.' ));
         }
 
-        // Let any hooks know that we have created a new item.
-        ModUtil::callHooks('item', 'create', $obj['prop_id'], array('module' => 'Profile'));
-
         // Return the id of the newly created item to the calling process
         return $obj['prop_id'];
     }
@@ -116,7 +113,9 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         // Clean the label
         $permsep = System::getVar('shorturlsseparator');
-        $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
+        // TODO - Original line: $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
+        // The above was converting the label to lower case, preventing update
+        $args['label'] = str_replace($permsep, '', $args['label']);
 
         // Security check
         if (!SecurityUtil::checkPermission('Profile::Item', "$item[prop_label]::$args[dudid]", ACCESS_EDIT)) {
@@ -195,9 +194,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! Could not save your changes.' ));
         }
 
-        // New hook functions
-        ModUtil::callHooks('item', 'update', $args['dudid'], array('module' => 'Profile'));
-
         // Let the calling process know that we have finished successfully
         return true;
     }
@@ -254,9 +250,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if (!$res) {
             return LogUtil::registerError($this->__('Error! Could not delete the personal info item.' ));
         }
-
-        // Let any hooks know that we have deleted an item.
-        ModUtil::callHooks('item', 'delete', $dudid, array('module' => 'Profile'));
 
         // Let the calling process know that we have finished successfully
         return true;

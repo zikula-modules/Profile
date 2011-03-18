@@ -15,6 +15,7 @@
     {/foreach}
 
     {if $note neq ''}
-    <em class="z-sub z-formnote">{gt text='Notice:'} {$note}</em>
+    <em class="z-sub z-formnote">{$note}</em>
     {/if}
+    <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
 </div>
