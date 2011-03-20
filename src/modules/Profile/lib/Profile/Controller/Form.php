@@ -16,7 +16,7 @@
 /**
  * UI operations related to the display of dynamically defined user attributes.
  */
-class Profile_Controller_Form extends Zikula_Controller
+class Profile_Controller_Form extends Zikula_AbstractController
 {
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.

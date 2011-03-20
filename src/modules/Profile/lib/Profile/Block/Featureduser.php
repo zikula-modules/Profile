@@ -11,7 +11,7 @@
  */
 
 
-class Profile_Block_Featureduser extends Zikula_Controller_Block
+class Profile_Block_Featureduser extends Zikula_Controller_AbstractBlock
 {
 
     /**

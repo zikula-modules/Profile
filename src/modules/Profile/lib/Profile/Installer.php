@@ -10,7 +10,7 @@
  * @author Mark West
  */
 
-class Profile_Installer extends Zikula_Installer
+class Profile_Installer extends Zikula_AbstractInstaller
 {
     /**
      * Initialise the dynamic user data  module

@@ -11,7 +11,7 @@
  * @author Mark West
  */
 
-class Profile_Controller_Admin extends Zikula_Controller
+class Profile_Controller_Admin extends Zikula_AbstractController
 {
     /**
      * The main administration function

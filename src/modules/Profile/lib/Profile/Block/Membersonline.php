@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Block_Membersonline extends Zikula_Controller_Block
+class Profile_Block_Membersonline extends Zikula_Controller_AbstractBlock
 {
     /**
      * initialise block

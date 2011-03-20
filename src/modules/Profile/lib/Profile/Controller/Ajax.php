@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Controller_Ajax extends Zikula_Controller
+class Profile_Controller_Ajax extends Zikula_AbstractController
 {
     /**
      * change the weight of a profile item

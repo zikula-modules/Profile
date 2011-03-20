@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Controller_User extends Zikula_Controller
+class Profile_Controller_User extends Zikula_AbstractController
 {
     /**
      * the main user function

@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Api_Dud extends Zikula_Api
+class Profile_Api_Dud extends Zikula_AbstractApi
 {
     /**
      * Register a dynamic user data field

@@ -11,7 +11,7 @@
  * @author Mark West
  */
 
-class Profile_Api_Account extends Zikula_Api
+class Profile_Api_Account extends Zikula_AbstractApi
 {
 
     /**

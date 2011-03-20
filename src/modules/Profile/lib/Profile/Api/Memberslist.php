@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Api_Memberslist extends Zikula_Api
+class Profile_Api_Memberslist extends Zikula_AbstractApi
 {
     /**
      * Get all users
@@ -403,19 +403,19 @@ class Profile_Api_Memberslist extends Zikula_Api
         // getting - $table and $column don't cut it in more complex modules
         $sessioninfocolumn = $dbtable['session_info_column'];
         $sessioninfotable  = $dbtable['session_info'];
-        
+
         $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
-        $where = "$sessioninfocolumn[uid] <> 0 AND $sessioninfocolumn[lastused] > '$activetime'"; 
-        
+        $where = "$sessioninfocolumn[uid] <> 0 AND $sessioninfocolumn[lastused] > '$activetime'";
+
         $result = DBUtil::selectFieldArray('session_info', 'uid', $where, '', true);
-                
+
         if ($result === false) {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
-		
+
         $numusers = count($result);
-		
+
         // Return the number of items
         return $numusers;
     }
@@ -594,7 +594,7 @@ class Profile_Api_Memberslist extends Zikula_Api
         $usercol           = &$dbtable['users_column'];
 
         // get active time based on security
-		$activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
+        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         // Check if anonymous session are on
         if (System::getVar('anonymoussessions')) {

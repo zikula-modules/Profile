@@ -10,7 +10,7 @@
  * @subpackage Profile
  */
 
-class Profile_Block_Lastxusers extends Zikula_Controller_Block
+class Profile_Block_Lastxusers extends Zikula_Controller_AbstractBlock
 {
     /**
      * initialise block

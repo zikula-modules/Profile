@@ -11,7 +11,7 @@
  * @author Mark West
  */
 
-class Profile_Api_Admin extends Zikula_Api
+class Profile_Api_Admin extends Zikula_AbstractApi
 {
     /**
      * create a new dynamic user data item

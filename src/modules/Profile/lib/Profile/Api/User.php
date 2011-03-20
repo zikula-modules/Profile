@@ -16,7 +16,7 @@
 /**
  * Operations accessible by non-administrative users.
  */
-class Profile_Api_User extends Zikula_Api
+class Profile_Api_User extends Zikula_AbstractApi
 {
     /**
      * Get all Dynamic user data fields.

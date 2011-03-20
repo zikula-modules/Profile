@@ -9,7 +9,7 @@
  * @subpackage Profile
  */
 
-class Profile_Version extends Zikula_Version
+class Profile_Version extends Zikula_AbstractVersion
 {
     public function getMetaData()
     {
