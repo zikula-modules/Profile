@@ -1,4 +1,4 @@
-{modgetvar module='Users' name='avatarpath' assign='avatarpath'}
+{modgetvar module='Users::MODNAME'|constant name='Users::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
 
 <div class="{$class|default:'z-formrow'}">
     {if $required}

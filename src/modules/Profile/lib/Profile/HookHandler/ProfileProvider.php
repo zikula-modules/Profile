@@ -82,7 +82,11 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
         if ($items) {
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user
-            $userid   = $event->hasArg('id') ? $event->getArg('id') : 1;
+            $userid   = $event->hasArg('id') ? $event->getArg('id') : null;
+            
+            if (!isset($userid)) {
+                $userid = 1;
+            }
 
             // Get the dynamic data that might have been posted
             if ($this->request->isPost() && $this->request->getPost()->has('dynadata')) {

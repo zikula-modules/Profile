@@ -9,7 +9,7 @@
     {if $dudarray.avatar eq '' or $dudarray.avatar eq 'blank.gif'}
     {img modname='core' src='personal.gif' set='icons/large' class='profileavatar'}
     {else}
-    {modgetvar module='Users' name='avatarpath' assign='avatarpath'}
+    {modgetvar module='Users::MODNAME'|constant name='Users::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
     <img src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" class="profileavatar" />
     {/if}
     {/if}

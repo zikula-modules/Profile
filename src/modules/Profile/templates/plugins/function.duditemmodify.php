@@ -89,14 +89,8 @@ function smarty_function_duditemmodify($params, &$smarty)
     } elseif ($uid >= 0) {
         // TODO - This is a bit of a hack for admin editing. Need to know if it is a reg.
         $user = UserUtil::getVars($uid);
-        $isRegistrationRecord = false;
-        if (!$user) {
-            $user = UserUtil::getVars($uid, false, 'uid', true);
-            if ($user) {
-                $isRegistrationRecord = true;
-            }
-        }
-        $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid, false, $isRegistrationRecord); // ($alias, $uid);
+        $isRegistration = UserUtil::isRegistration($uid);
+        $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid, false, $isRegistration); // ($alias, $uid);
     }
 
     // try to get the DUD output if it's Third Party
@@ -165,7 +159,8 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
         $render->assign('value', DataUtil::formatForDisplay($uservalue));
 
-        $filelist = FileUtil::getFiles(ModUtil::getVar('Users', 'avatarpath', 'images/avatar'), false, true, array('gif', 'jpg', 'png'), 'f');
+        $avatarPath = ModUtil::getVar(Users::MODNAME, Users::MODVAR_AVATAR_IMAGE_PATH, Users::DEFAULT_AVATAR_IMAGE_PATH);
+        $filelist = FileUtil::getFiles($avatarPath, false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
 
         $listoutput = $listoptions = $filelist;
