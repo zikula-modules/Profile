@@ -159,7 +159,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
         $render->assign('value', DataUtil::formatForDisplay($uservalue));
 
-        $avatarPath = ModUtil::getVar(Users_Constant::MODNAME, Users_Constant::MODVAR_AVATAR_IMAGE_PATH, Users_UserInterface::DEFAULT_AVATAR_IMAGE_PATH);
+        $avatarPath = ModUtil::getVar(Users_Constant::MODNAME, Users_Constant::MODVAR_AVATAR_IMAGE_PATH, Users_Constant::DEFAULT_AVATAR_IMAGE_PATH);
         $filelist = FileUtil::getFiles($avatarPath, false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
 
