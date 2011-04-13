@@ -62,7 +62,7 @@
         <tr class="{cycle values='z-odd,z-even'}">
             <td>
                 {if $user.onlinestatus eq 1}
-                <a href="{modurl modname='Profile' type='user' func='onlinemembers'}">{img modname='core' src='greenled.png.png' set='icons/extrasmall' __title='On-line' __alt='On-line'}</a>
+                <a href="{modurl modname='Profile' type='user' func='onlinemembers'}">{img modname='core' src='greenled.png' set='icons/extrasmall' __title='On-line' __alt='On-line'}</a>
                 {else}
                 {img modname='core' src='redled.png' set='icons/extrasmall' __title='Off-line' __alt='Off-line'}
                 {/if}
