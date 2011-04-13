@@ -18,11 +18,11 @@
             <td><strong>{$user.uname|userprofilelink}</strong></td>
             <td>{$user.__ATTRIBUTES__.realname|default:'&nbsp;'}</td>
             {if $msgmodule}
-            <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src='mail_new.gif' __alt='Send private message'}</a></td>
+            <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src='mail_new.png' __alt='Send private message'}</a></td>
             {/if}
             <td>
                 {if @isset($user.__ATTRIBUTES__.url) and $user.__ATTRIBUTES__.url neq '' and $user.__ATTRIBUTES__.url neq 'http://'}
-                <a href="{$user.__ATTRIBUTES__.url|safetext}">{img modname='core' set='icons/extrasmall' src='agt_internet.gif' title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
+                <a href="{$user.__ATTRIBUTES__.url|safetext}">{img modname='core' set='icons/extrasmall' src='agt_internet.png' title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
                 {else}
                 &nbsp;
                 {/if}

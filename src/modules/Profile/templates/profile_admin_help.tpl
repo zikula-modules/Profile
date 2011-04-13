@@ -3,7 +3,7 @@
 {include file='profile_admin_menu.tpl'}
 
 <div class="z-admincontainer">
-    <div class="z-adminpageicon">{img modname='core' src='info.gif' set='icons/large' alt=''}</div>
+    <div class="z-adminpageicon">{img modname='core' src='info.png' set='icons/large' alt=''}</div>
 
     <h2>{$templatetitle}</h2>
     <p>

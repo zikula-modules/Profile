@@ -1,6 +1,6 @@
 {include file='profile_admin_menu.tpl'}
 <div class="z-admincontainer">
-    <div class="z-adminpageicon">{img modname='core' src='configure.gif' set='icons/large' __alt='User account panel settings'}</div>
+    <div class="z-adminpageicon">{img modname='core' src='configure.png' set='icons/large' __alt='User account panel settings'}</div>
 
     <h2>{gt text="User account panel settings"}</h2>
 
@@ -79,8 +79,8 @@
             </fieldset>
 
             <div class="z-formbuttons z-buttons">
-                {button src='button_ok.gif' set='icons/small' __alt='Save' __title='Save' __text='Save'}
-                <a href="{modurl modname='Profile' type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
+                {button src='button_ok.png' set='icons/small' __alt='Save' __title='Save' __text='Save'}
+                <a href="{modurl modname='Profile' type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
             </div>
         </div>
     </form>

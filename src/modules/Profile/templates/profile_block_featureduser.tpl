@@ -3,10 +3,10 @@
 <div class="profile-block-featureduser">
     <h5>{$userinfo.uname|userprofilelink}</h5>
     <p>
-        {if @isset($userinfo.__ATTRIBUTES__.avatar) and $userinfo.__ATTRIBUTES__.avatar neq '' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.gif'}
+        {if @isset($userinfo.__ATTRIBUTES__.avatar) and $userinfo.__ATTRIBUTES__.avatar neq '' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.gif' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.png'}
         {$userinfo.uname|userprofilelink:'':"`$avatarpath`/`$userinfo.__ATTRIBUTES__.avatar`"}
         {else}
-        {img modname='core' src='personal.gif' set='icons/large' assign='profileicon'}
+        {img modname='core' src='personal.png' set='icons/large' assign='profileicon'}
         {$userinfo.uname|userprofilelink:'profileicon':$profileicon}
         {/if}
     </p>

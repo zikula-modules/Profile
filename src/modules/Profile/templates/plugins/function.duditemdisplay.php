@@ -126,7 +126,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $baseurl = System::getBaseUrl();
         $avatarpath = ModUtil::getVar(Users_Constant::MODNAME, Users_Constant::MODVAR_AVATAR_IMAGE_PATH, Users_Constant::DEFAULT_AVATAR_IMAGE_PATH);
         if (empty($uservalue)) {
-            $uservalue = 'blank.gif';
+            $uservalue = 'blank.png';
         }
 
         $output = "<img alt=\"\" src=\"{$baseurl}{$avatarpath}/{$uservalue}\" />";

@@ -10,8 +10,8 @@
 
 <div id="profile_wrapper">
     {if isset($dudarray.avatar)}
-    {if $dudarray.avatar eq '' or $dudarray.avatar eq 'blank.gif'}
-    {img modname='core' src='personal.gif' set='icons/large' class='profileavatar'}
+    {if $dudarray.avatar eq '' or $dudarray.avatar eq 'blank.gif' or $dudarray.avatar eq 'blank.png'}
+    {img modname='core' src='personal.png' set='icons/large' class='profileavatar'}
     {else}
     {modgetvar module='Users_Constant::MODNAME'|constant name='Users_Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
     <img src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" class="profileavatar" />

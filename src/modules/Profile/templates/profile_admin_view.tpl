@@ -4,7 +4,7 @@
 {include file='profile_admin_menu.tpl'}
 
 <div class="z-admincontainer">
-    <div class="z-adminpageicon">{img modname='core' src='windowlist.gif' set='icons/large' alt=$templatetitle}</div>
+    <div class="z-adminpageicon">{img modname='core' src='windowlist.png' set='icons/large' alt=$templatetitle}</div>
 
     <h2>{$templatetitle}</h2>
 

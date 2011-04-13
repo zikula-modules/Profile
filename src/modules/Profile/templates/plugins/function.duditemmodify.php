@@ -155,7 +155,7 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         // display the avatar selector
         if (empty($uservalue)) {
-            $uservalue = 'blank.gif';
+            $uservalue = 'blank.png';
         }
         $render->assign('value', DataUtil::formatForDisplay($uservalue));
 

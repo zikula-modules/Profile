@@ -13,8 +13,8 @@
         {/foreach}
     </fieldset>
     <div class="z-formbuttons z-buttons">
-        {button src='button_ok.gif' set='icons/small' __alt='Save' __title='Save' __text='Save'}
-        <a href="{modurl modname='Profile' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.gif' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
+        {button src='button_ok.png' set='icons/small' __alt='Save' __title='Save' __text='Save'}
+        <a href="{modurl modname='Profile' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
     </div>
 </form>
 

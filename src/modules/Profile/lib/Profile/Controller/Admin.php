@@ -80,7 +80,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                 case ($item['prop_dtype'] <= 0):
                     $statusval = 1;
                     $status = array('url' => '',
-                            'image' => 'greenled.gif',  'title' => $this->__('Required'));
+                            'image' => 'greenled.png',  'title' => $this->__('Required'));
                     break;
 
                 case ($item['prop_weight'] <> 0):
@@ -89,7 +89,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                             array('dudid'    => $item['prop_id'],
                             'weight'   => $item['prop_weight'],
                             'authid'   => $authid)),
-                            'image' => 'greenled.gif',
+                            'image' => 'greenled.png',
                             'title' => $this->__('Deactivate'));
                     break;
 
@@ -98,7 +98,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                     $status = array('url'   => ModUtil::url('Profile', 'admin', 'activate',
                             array('dudid'    => $item['prop_id'],
                             'authid'   => $authid)),
-                            'image' => 'redled.gif',
+                            'image' => 'redled.png',
                             'title' => $this->__('Activate'));
             }
 
@@ -132,27 +132,27 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT))
             {
                 $options[] = array('url' => ModUtil::url('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])),
-                        'image' => 'xedit.gif',
+                        'image' => 'xedit.png',
                         'class' => '',
                         'title' => $this->__('Edit'));
 
                 if ($item['prop_weight'] > 1) {
                     $options[] = array('url' => ModUtil::url('Profile', 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])),
-                            'image' => '2uparrow.gif',
+                            'image' => '2uparrow.png',
                             'class' => 'profile_up',
                             'title' => $this->__('Up'));
                 }
 
                 if ($x < $count) {
                     $options[] = array('url' => ModUtil::url('Profile', 'admin', 'increase_weight', array('dudid' => $item['prop_id'])),
-                            'image' => '2downarrow.gif',
+                            'image' => '2downarrow.png',
                             'class' => 'profile_down',
                             'title' => $this->__('Down'));
                 }
 
                 if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
                     $options[] = array('url' => ModUtil::url('Profile', 'admin', 'delete', array('dudid' => $item['prop_id'])),
-                            'image' => '14_layer_deletelayer.gif',
+                            'image' => '14_layer_deletelayer.png',
                             'class' => '',
                             'title' => $this->__('Delete'));
                 }
