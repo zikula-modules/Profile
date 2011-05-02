@@ -82,7 +82,7 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
         if ($items) {
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user
-            $userid   = $event->hasArg('id') ? $event->getArg('id') : null;
+            $userid   = $event->hasArg('id') ? $event->getArgument('id') : null;
             
             if (!isset($userid)) {
                 $userid = 1;
