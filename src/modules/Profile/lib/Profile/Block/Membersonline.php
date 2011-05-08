@@ -79,7 +79,7 @@ class Profile_Block_Membersonline extends Zikula_Controller_AbstractBlock
         }
 
         $this->view->setCaching(false)
-                       ->setCache_Id($uid);
+                       ->setCacheId($uid);
 
         // check which messaging module is available and add the necessary info
         $msgmodule = ModUtil::apiFunc('Profile', 'memberslist', 'getmessagingmodule');

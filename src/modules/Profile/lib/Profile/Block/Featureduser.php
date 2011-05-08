@@ -123,7 +123,7 @@ class Profile_Block_Featureduser extends Zikula_Controller_AbstractBlock
         unset($activeduds);
 
         // build the output
-        $this->view->setCache_Id('featured'.$vars['username']);
+        $this->view->setCacheId('featured'.$vars['username']);
 
         $this->view->assign('userinfo',    $userinfo);
         $this->view->assign('showregdate', $vars['showregdate']);

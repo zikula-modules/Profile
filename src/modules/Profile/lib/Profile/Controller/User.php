@@ -236,7 +236,7 @@ class Profile_Controller_User extends Zikula_AbstractController
         // Create output object
         $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
         $this->view->setCaching(true)
-                        ->setCache_Id($cacheid);
+                        ->setCacheId($cacheid);
         /*
     // check out if the contents are cached.
     if ($this->view->is_cached('profile_user_members_view.tpl')) {
@@ -324,7 +324,7 @@ class Profile_Controller_User extends Zikula_AbstractController
         }
 
         // set the cache id
-        $this->view->setCache_Id('recent' . (int)UserUtil::isLoggedIn());
+        $this->view->setCacheId('recent' . (int)UserUtil::isLoggedIn());
 
         // check out if the contents are cached.
         if ($this->view->is_cached('profile_user_members_recent.tpl')) {
@@ -398,7 +398,7 @@ class Profile_Controller_User extends Zikula_AbstractController
         }
 
         // Create output object
-        $this->view->setCache_Id('onlinemembers' . (int)UserUtil::isLoggedIn());
+        $this->view->setCacheId('onlinemembers' . (int)UserUtil::isLoggedIn());
 
         // check out if the contents are cached.
         if ($this->view->is_cached('profile_user_members_online.tpl')) {
