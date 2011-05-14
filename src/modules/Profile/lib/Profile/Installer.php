@@ -23,7 +23,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
             'dudtextdisplaytags'        => 0,
         );
     }
-    
+
     /**
      * Initialise the dynamic user data  module
      *
@@ -40,7 +40,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
 
         // create the default data for the module
         $this->defaultdata();
-        
+
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
         // Initialisation successful
@@ -63,26 +63,23 @@ class Profile_Installer extends Zikula_AbstractInstaller
             case '1.6.0':
                 // future upgrade routines
         }
-        
+
         $modVars = $this->getVars();
         $defaultModVars = $this->getDefaultModVars();
-        
+
         // Remove modvars no longer in the default set.
         foreach ($modVars as $modVar => $value) {
             if (!array_key_exists($modVar, $defaultModVars)) {
                 $this->delVar($modVar);
             }
         }
-        
+
         // Add vars defined in the default set, but missing from the current set.
         foreach ($defaultModVars as $modVar => $value) {
             if (!array_key_exists($modVar, $modVars)) {
                 $this->setVar($modVar, $value);
             }
         }
-        
-        // Upgrade the hook bundles.
-        HookUtil::upgradeHookProviderBundles($this->version);
 
         // Update successful
         return true;
