@@ -41,7 +41,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // create the default data for the module
         $this->defaultdata();
 
-        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
+        //HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
         // Initialisation successful
         return true;

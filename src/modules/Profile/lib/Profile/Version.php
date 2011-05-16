@@ -45,11 +45,11 @@ class Profile_Version extends Zikula_AbstractVersion
 
     protected function setupHookBundles()
     {
-        $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'modulehook_area.profile.profile', 'ui', $this->__('Profile (dynamic user data) providers'));
-        $bundle->addHook('hookhandler.profile.ui.view', 'ui.view', 'Profile_HookHandler_ProfileProvider', 'uiView', 'profile.service');
-        $bundle->addHook('hookhandler.profile.ui.edit', 'ui.edit', 'Profile_HookHandler_ProfileProvider', 'uiEdit', 'profile.service');
-        $bundle->addHook('hookhandler.profile.validate.edit', 'validate.edit', 'Profile_HookHandler_ProfileProvider', 'validateEdit', 'profile.service');
-        $bundle->addHook('hookhandler.profile.process.edit', 'process.edit', 'Profile_HookHandler_ProfileProvider', 'processEdit', 'profile.service');
-        $this->registerHookProviderBundle($bundle);
+//        $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.profile.ui_hooks.profile', 'ui_hooks', $this->__('Profile (dynamic user data) providers'));
+//        $bundle->addServiceHandler('ui.view', 'Profile_HookHandler_ProfileProvider', 'uiView', 'profile.service');
+//        $bundle->addServiceHandler('ui.edit', 'Profile_HookHandler_ProfileProvider', 'uiEdit', 'profile.service');
+//        $bundle->addServiceHandler('validate.edit', 'Profile_HookHandler_ProfileProvider', 'validateEdit', 'profile.service');
+//        $bundle->addServiceHandler('process.edit', 'Profile_HookHandler_ProfileProvider', 'processEdit', 'profile.service');
+//        $this->registerHookProviderBundle($bundle);
     }
 }
