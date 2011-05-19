@@ -1,5 +1,5 @@
 {if isset($userinfo.__ATTRIBUTES__)}
-    {array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
+    {array_field array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
 {else}
     {assign var='name' value=''}
 {/if}

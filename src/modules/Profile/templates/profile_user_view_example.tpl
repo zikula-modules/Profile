@@ -1,4 +1,4 @@
-{array_field_isset array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
+{array_field array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
 {if !$name}{assign var='name' value=$uname}{/if}
 {gt text="Latest submissions of %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
 
