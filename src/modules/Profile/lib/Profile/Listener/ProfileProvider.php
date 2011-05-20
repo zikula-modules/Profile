@@ -16,46 +16,55 @@
 /**
  * Hook handlers for basic profile data.
  */
-class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
+class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
 {
     /**
      * The area name that this handler processes.
      */
-    const AREA = 'modulehook_area.profile.profile';
-    
+    const AREA = 'provider.profile.profile';
+
     /**
      * The common module name.
      *
      * @var string
      */
     protected $name = Profile::MODNAME;
-    
+
     /**
      * Access to a Zikula_View instance for the Profile module.
      *
      * @var Zikula_View
      */
     protected $view;
-    
+
     /**
      * Access to the request information.
      *
      * @var Zikula_Request_Http
      */
     protected $request;
-    
+
     /**
      * Builds an instance of this class.
-     * 
+     *
      * Cannot have parameters.
      */
-    public function __construct()
+    public function __construct(Zikula_EventManager $eventManager)
     {
-        $this->serviceManager = ServiceUtil::getManager();
+        parent::__construct($eventManager);
+        $this->serviceManager = $eventManager->getServiceManager();
         $this->view = Zikula_View::getInstance($this->name);
         $this->request = $this->serviceManager->getService('request');
     }
-    
+
+    public function setupHandlerDefinitions()
+    {
+//        $this->addHandlerDefinition('', 'uiView');
+//        $this->addHandlerDefinition('', 'uiEdit');
+//        $this->addHandlerDefinition('', 'validateEdit');
+//        $this->addHandlerDefinition('', 'processEdit');
+    }
+
     public function uiView(Zikula_Event $event)
     {
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
@@ -73,7 +82,7 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
             $event->data[self::AREA] = new Zikula_Response_DisplayHook(self::AREA, $this->view, 'profile_profile_ui_view.tpl');
         }
     }
-    
+
     public function uiEdit(Zikula_Event $event)
     {
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
@@ -83,7 +92,7 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user
             $userid   = $event->hasArg('id') ? $event->getArgument('id') : null;
-            
+
             if (!isset($userid)) {
                 $userid = 1;
             }
@@ -103,7 +112,7 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
                     }
                 }
             }
-            
+
             if ($this->validation) {
                 $errorFields = $this->validation->getErrors();
             } else {
@@ -118,12 +127,12 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
             $event->data[self::AREA] = new Zikula_Response_DisplayHook(self::AREA, $this->view, 'profile_profile_ui_edit.tpl');
         }
     }
-    
+
     public function validateEdit(Zikula_Event $event)
     {
         if ($this->request->isPost()) {
             $dynadata = $this->request->getPost()->has('dynadata') ? $this->request->getPost()->get('dynadata') : array();
-            
+
             $this->validation = new Zikula_Provider_HookValidation('dynadata', $dynadata);
             $requiredFailures = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
 
@@ -134,15 +143,15 @@ class Profile_HookHandler_ProfileProvider extends Zikula_HookHandler
                     $errorCount++;
                 }
             }
-            
+
             if ($errorCount > 0) {
                 LogUtil::registerError($this->_fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount)));
             }
-            
+
             $event->data->set(self::AREA, $this->validation);
         }
     }
-    
+
     public function processEdit(Zikula_Event $event)
     {
         if ($this->request->isPost()) {

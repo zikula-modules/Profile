@@ -40,6 +40,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
 
         // create the default data for the module
         $this->defaultdata();
+        EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_ProfileProvider');
 
         //HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
@@ -61,6 +62,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
             case '1.5.2':
                 // 1.5.2 -> 1.6.0
             case '1.6.0':
+                EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_ProfileProvider');
                 // future upgrade routines
         }
 
