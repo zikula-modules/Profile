@@ -26,9 +26,9 @@ class Profile_Version extends Zikula_AbstractVersion
                 'profile'                   => array(
                     'version'       => '1.0'
                 ),
-                HookUtil::PROVIDER_CAPABLE  => array(
-                    'enabled'       => true
-                ),
+//                HookUtil::PROVIDER_CAPABLE  => array(
+//                    'enabled'       => true
+//                ),
 
             ),
 
