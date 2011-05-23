@@ -28,7 +28,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
      *
      * @var string
      */
-    protected $name = Profile::MODNAME;
+    protected $name = Profile_Constants::MODNAME;
 
     /**
      * Access to a Zikula_View instance for the Profile module.
@@ -43,6 +43,8 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
      * @var Zikula_Request_Http
      */
     protected $request;
+
+    protected $validation;
 
     /**
      * Builds an instance of this class.
@@ -59,10 +61,10 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
 
     public function setupHandlerDefinitions()
     {
-//        $this->addHandlerDefinition('', 'uiView');
-//        $this->addHandlerDefinition('', 'uiEdit');
-//        $this->addHandlerDefinition('', 'validateEdit');
-//        $this->addHandlerDefinition('', 'processEdit');
+        $this->addHandlerDefinition('users.user.display_view', 'uiView');
+        $this->addHandlerDefinition('users.user.form_edit', 'uiEdit');
+        $this->addHandlerDefinition('users.user.validate_edit', 'validateEdit');
+        $this->addHandlerDefinition('users.user.process_edit', 'processEdit');
     }
 
     public function uiView(Zikula_Event $event)
@@ -91,7 +93,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
         if ($items) {
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user
-            $userid   = $event->hasArg('id') ? $event->getArgument('id') : null;
+            $userid   = $event->hasArg('id') ? $event->getArg('id') : null;
 
             if (!isset($userid)) {
                 $userid = 1;
@@ -133,19 +135,19 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
         if ($this->request->isPost()) {
             $dynadata = $this->request->getPost()->has('dynadata') ? $this->request->getPost()->get('dynadata') : array();
 
-            $this->validation = new Zikula_Provider_HookValidation('dynadata', $dynadata);
+            $this->validation = new Zikula_Hook_ValidationResponse('dynadata', $dynadata);
             $requiredFailures = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
 
             $errorCount = 0;
             if ($requiredFailures && $requiredFailures['result']) {
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {
-                    $this->validation->addError($fieldName, $this->__f('The \'%1$s\' field is required.', array($requiredFailures['translatedFields'][$key])));
+                    $this->validation->addError($fieldName, __f('The \'%1$s\' field is required.', array($requiredFailures['translatedFields'][$key]), $this->domain));
                     $errorCount++;
                 }
             }
 
             if ($errorCount > 0) {
-                LogUtil::registerError($this->_fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount)));
+                LogUtil::registerError(_fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount), $this->domain));
             }
 
             $event->data->set(self::AREA, $this->validation);

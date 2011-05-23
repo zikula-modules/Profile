@@ -15,7 +15,7 @@
 /**
  * Profile module constants.
  */
-interface Profile
+interface Profile_Constants
 {
     /**
      * The common module name.
