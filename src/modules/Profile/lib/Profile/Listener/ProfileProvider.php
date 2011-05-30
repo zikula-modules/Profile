@@ -28,7 +28,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
      *
      * @var string
      */
-    protected $name = Profile_Constants::MODNAME;
+    protected $name = Profile_Constant::MODNAME;
 
     /**
      * Access to a Zikula_View instance for the Profile module.
