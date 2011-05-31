@@ -7,14 +7,14 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Profile
- * @subpackage HookHandler
+ * @subpackage Events
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
 
 /**
- * Hook handlers for basic profile data.
+ * Hook-like event handlers for basic profile data.
  */
 class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
 {
@@ -81,7 +81,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
                     ->assign('userinfo', $user);
 
             // Return the dynamic data rows
-            $event->data[self::EVENT_KEY] = new Zikula_Response_DisplayHook(self::EVENT_KEY, $this->view, 'profile_profile_ui_view.tpl');
+            $event->data[self::EVENT_KEY] = $this->view->fetch('profile_profile_ui_view.tpl');
         }
     }
 
@@ -126,7 +126,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
                     ->assign('duditems', $items)
                     ->assign('userid', $userid);
 
-            $event->data[self::EVENT_KEY] = new Zikula_Response_DisplayHook(self::EVENT_KEY, $this->view, 'profile_profile_ui_edit.tpl');
+            $event->data[self::EVENT_KEY] = $this->view->fetch('profile_profile_ui_edit.tpl');
         }
     }
 
