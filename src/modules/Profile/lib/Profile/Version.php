@@ -26,10 +26,6 @@ class Profile_Version extends Zikula_AbstractVersion
                 'profile'                   => array(
                     'version'       => '1.0'
                 ),
-//                HookUtil::PROVIDER_CAPABLE  => array(
-//                    'enabled'       => true
-//                ),
-
             ),
 
             'securityschema'=> array(
@@ -41,15 +37,5 @@ class Profile_Version extends Zikula_AbstractVersion
                 'Profile:Members:online'    => '::'
             ),
         );
-    }
-
-    protected function setupHookBundles()
-    {
-//        $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.profile.ui_hooks.profile', 'ui_hooks', $this->__('Profile (dynamic user data) providers'));
-//        $bundle->addServiceHandler('ui.view', 'Profile_HookHandler_ProfileProvider', 'uiView', 'profile.service');
-//        $bundle->addServiceHandler('ui.edit', 'Profile_HookHandler_ProfileProvider', 'uiEdit', 'profile.service');
-//        $bundle->addServiceHandler('validate.edit', 'Profile_HookHandler_ProfileProvider', 'validateEdit', 'profile.service');
-//        $bundle->addServiceHandler('process.edit', 'Profile_HookHandler_ProfileProvider', 'processEdit', 'profile.service');
-//        $this->registerHookProviderBundle($bundle);
     }
 }
