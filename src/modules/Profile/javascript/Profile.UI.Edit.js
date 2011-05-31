@@ -4,7 +4,7 @@ Zikula.define('Profile.UI');
 
 Zikula.Profile.UI.Edit = {
     init: function() {
-        Zikula.Users.NewUser.addValidatorHandler('modulehook_area.profile.profile', Zikula.Profile.UI.Edit.getRegistrationErrorsResponse)
+        Zikula.Users.NewUser.addValidatorHandler('profile.users.ui.profile', Zikula.Profile.UI.Edit.getRegistrationErrorsResponse)
     },
     
     /**

@@ -21,7 +21,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
     /**
      * The area name that this handler processes.
      */
-    const AREA = 'provider.profile.profile';
+    const EVENT_KEY = 'profile.users.ui.profile';
 
     /**
      * The common module name.
@@ -81,7 +81,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
                     ->assign('userinfo', $user);
 
             // Return the dynamic data rows
-            $event->data[self::AREA] = new Zikula_Response_DisplayHook(self::AREA, $this->view, 'profile_profile_ui_view.tpl');
+            $event->data[self::EVENT_KEY] = new Zikula_Response_DisplayHook(self::EVENT_KEY, $this->view, 'profile_profile_ui_view.tpl');
         }
     }
 
@@ -126,7 +126,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
                     ->assign('duditems', $items)
                     ->assign('userid', $userid);
 
-            $event->data[self::AREA] = new Zikula_Response_DisplayHook(self::AREA, $this->view, 'profile_profile_ui_edit.tpl');
+            $event->data[self::EVENT_KEY] = new Zikula_Response_DisplayHook(self::EVENT_KEY, $this->view, 'profile_profile_ui_edit.tpl');
         }
     }
 
@@ -150,7 +150,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
                 LogUtil::registerError(_fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount), $this->domain));
             }
 
-            $event->data->set(self::AREA, $this->validation);
+            $event->data->set(self::EVENT_KEY, $this->validation);
         }
     }
 
