@@ -16,12 +16,12 @@
 /**
  * Hook-like event handlers for basic profile data.
  */
-class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
+class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler
 {
     /**
      * The area name that this handler processes.
      */
-    const EVENT_KEY = 'profile.users.ui.profile';
+    const EVENT_KEY = 'module.profile.users_ui_handler';
 
     /**
      * The common module name.
