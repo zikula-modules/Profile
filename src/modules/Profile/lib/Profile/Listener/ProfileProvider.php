@@ -62,15 +62,21 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
     public function setupHandlerDefinitions()
     {
         $this->addHandlerDefinition('module.users.ui.display_view', 'uiView');
+        
         $this->addHandlerDefinition('module.users.ui.form_edit.new_user', 'uiEdit');
         $this->addHandlerDefinition('module.users.ui.form_edit.modify_user', 'uiEdit');
         $this->addHandlerDefinition('module.users.ui.form_edit.new_registration', 'uiEdit');
         $this->addHandlerDefinition('module.users.ui.form_edit.modify_registration', 'uiEdit');
+        
         $this->addHandlerDefinition('module.users.ui.validate_edit.new_user', 'validateEdit');
         $this->addHandlerDefinition('module.users.ui.validate_edit.modify_user', 'validateEdit');
         $this->addHandlerDefinition('module.users.ui.validate_edit.new_registration', 'validateEdit');
         $this->addHandlerDefinition('module.users.ui.validate_edit.modify_registration', 'validateEdit');
-        $this->addHandlerDefinition('users.user.process_edit', 'processEdit');
+        
+        $this->addHandlerDefinition('module.users.ui.process_edit.new_user', 'processEdit');
+        $this->addHandlerDefinition('module.users.ui.process_edit.modify_user', 'processEdit');
+        $this->addHandlerDefinition('module.users.ui.process_edit.new_registration', 'processEdit');
+        $this->addHandlerDefinition('module.users.ui.process_edit.modify_registration', 'processEdit');
     }
 
     public function uiView(Zikula_Event $event)
