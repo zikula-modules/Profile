@@ -19,8 +19,6 @@ class Profile_Installer extends Zikula_AbstractInstaller
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
             'filterunverified'          => 1,
-
-            'dudtextdisplaytags'        => 0,
         );
     }
 

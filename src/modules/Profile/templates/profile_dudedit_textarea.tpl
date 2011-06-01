@@ -11,8 +11,5 @@
     {if $note}
     <em class="z-sub z-formnote">{$note}</em>
     {/if}
-    {if $pncore.Profile.dudtextdisplaytags|default:0 eq 1}
-    <p class="z-formnote">{gt text="Permitted HTML tags:"} {allowedhtml}</p>
-    {/if}
     <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
 </div>

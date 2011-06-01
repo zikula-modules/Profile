@@ -48,17 +48,6 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend>{gt text='Personal info item settings'}</legend>
-                <div class="z-formrow">
-                    <label for="profile_dudtextdisplaytags">{gt text="Display 'Allowed HTML tags' notice with each personal info item that is a 'textarea'"}</label>
-                    {if $pncore.Profile.dudtextdisplaytags|default:0 eq 1}
-                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" checked="checked" />
-                    {else}
-                    <input id="profile_dudtextdisplaytags" name="dudtextdisplaytags" type="checkbox" value="1" />
-                    {/if}
-                </div>
-            </fieldset>
-            <fieldset>
                 <legend>{gt text='User registration form settings'}</legend>
                 <p class="z-informationmsg">{gt text="The personal info items that you activate below will be displayed in the user registration form if the 'Users' module is configured to display personal info items during user registration, and if the 'Profile' module is specified in the 'General settings manager' as the module to provide the site's user profile management functionality. Personal info items that are configured as 'Required' will always be displayed in the user registration form. The list below only includes properties that are not 'Required' items."}</p>
                 <div class="z-formrow">

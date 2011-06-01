@@ -651,11 +651,6 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         $filterunverified = (bool)FormUtil::getPassedValue('filterunverified', false, 'POST');
         $this->setVar('filterunverified', $filterunverified);
 
-
-        $dudtextdisplaytags = (bool)FormUtil::getPassedValue('dudtextdisplaytags', 0, 'POST');
-        $this->setVar('dudtextdisplaytags', $dudtextdisplaytags);
-
-
         $dudregshow = FormUtil::getPassedValue('dudregshow', array(), 'POST');
         $this->setVar('dudregshow', $dudregshow);
 
