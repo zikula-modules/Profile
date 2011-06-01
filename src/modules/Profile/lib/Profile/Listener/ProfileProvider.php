@@ -61,7 +61,7 @@ class Profile_Listener_ProfileProvider extends Zikula_AbstractEventHandler
 
     public function setupHandlerDefinitions()
     {
-        $this->addHandlerDefinition('users.user.display_view', 'uiView');
+        $this->addHandlerDefinition('module.users.ui.display_view', 'uiView');
         $this->addHandlerDefinition('users.user.form_edit', 'uiEdit');
         $this->addHandlerDefinition('users.user.validate_edit', 'validateEdit');
         $this->addHandlerDefinition('users.user.process_edit', 'processEdit');
