@@ -16,7 +16,7 @@
 /**
  * Hook-like event handlers for basic profile data.
  */
-class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler
+class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implements Zikula_TranslatableInterface
 {
     /**
      * The area name that this handler processes.
@@ -29,6 +29,13 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler
      * @var string
      */
     protected $name = Profile_Constant::MODNAME;
+    
+    /**
+     * The language domain for ZLanguage i18n
+     *
+     * @var string|null
+     */
+    protected $domain = null;
 
     /**
      * Access to a Zikula_View instance for the Profile module.
@@ -54,6 +61,9 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler
     public function __construct(Zikula_EventManager $eventManager)
     {
         parent::__construct($eventManager);
+        
+        $this->domain = ZLanguage::getModuleDomain($this->name);
+        
         $this->serviceManager = $eventManager->getServiceManager();
         $this->view = Zikula_View::getInstance($this->name);
         $this->request = $this->serviceManager->getService('request');
@@ -153,7 +163,7 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler
             $errorCount = 0;
             if ($requiredFailures && $requiredFailures['result']) {
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {
-                    $this->validation->addError($fieldName, __f('The \'%1$s\' field is required.', array($requiredFailures['translatedFields'][$key]), $this->domain));
+                    $this->validation->addError($fieldName, $this->__f('The \'%1$s\' field is required.', array($requiredFailures['translatedFields'][$key])));
                     $errorCount++;
                 }
             }
@@ -178,5 +188,59 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler
                 }
             }
         }
+    }
+    
+    /**
+     * Translate.
+     *
+     * @param string $msgid String to be translated.
+     *
+     * @return string
+     */
+    public function __($msgid)
+    {
+        return __($msgid, $this->domain);
+    }
+
+    /**
+     * Translate with sprintf().
+     *
+     * @param string       $msgid  String to be translated.
+     * @param string|array $params Args for sprintf().
+     *
+     * @return string
+     */
+    public function __f($msgid, $params)
+    {
+        return __f($msgid, $params, $this->domain);
+    }
+
+    /**
+     * Translate plural string.
+     *
+     * @param string $singular Singular instance.
+     * @param string $plural   Plural instance.
+     * @param string $count    Object count.
+     *
+     * @return string Translated string.
+     */
+    public function _n($singular, $plural, $count)
+    {
+        return _n($singular, $plural, $count, $this->domain);
+    }
+
+    /**
+     * Translate plural string with sprintf().
+     *
+     * @param string       $sin    Singular instance.
+     * @param string       $plu    Plural instance.
+     * @param string       $n      Object count.
+     * @param string|array $params Sprintf() arguments.
+     *
+     * @return string
+     */
+    public function _fn($sin, $plu, $n, $params)
+    {
+        return _fn($sin, $plu, $n, $params, $this->domain);
     }
 }
