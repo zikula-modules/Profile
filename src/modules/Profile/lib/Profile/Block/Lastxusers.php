@@ -1,52 +1,57 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: lastxusers.php 90 2010-01-25 08:31:41Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * "Last X Registered Users" block.
+ */
 class Profile_Block_Lastxusers extends Zikula_Controller_AbstractBlock
 {
     /**
-     * initialise block
+     * Initialise block.
      *
-     * @author       The Zikula Development Team
+     * @return void
      */
     public function init()
     {
-        // Security
         SecurityUtil::registerPermissionSchema('Profile:LastXUsersblock:', 'Block title::');
     }
 
     /**
-     * get information on block
+     * Get information on the block.
      *
-     * @author       The Zikula Development Team
-     * @return       array       The block information
+     * @return array The block information.
      */
     public function info()
     {
-        return array('module'          => 'Profile',
-                'text_type'       => $this->__('Last X registered users'),
-                'text_type_long'  => $this->__('Show last X registered users'),
-                'allow_multiple'  => true,
-                'form_content'    => false,
-                'form_refresh'    => false,
-                'show_preview'    => true,
-                'admin_tableless' => true);
+        return array(
+            'module'          => 'Profile',
+            'text_type'       => $this->__('Last X registered users'),
+            'text_type_long'  => $this->__('Show last X registered users'),
+            'allow_multiple'  => true,
+            'form_content'    => false,
+            'form_refresh'    => false,
+            'show_preview'    => true,
+            'admin_tableless' => true,
+        );
     }
 
     /**
-     * display block
+     * Display the block.
      *
-     * @author       The Zikula Development Team
-     * @param        array       $blockinfo     a blockinfo structure
-     * @return       output      the rendered bock
+     * @param array $blockinfo A blockinfo structure.
+     * 
+     * @return string The rendered block.
      */
     public function display($blockinfo)
     {
@@ -78,11 +83,11 @@ class Profile_Block_Lastxusers extends Zikula_Controller_AbstractBlock
     }
 
     /**
-     * modify block settings
+     * Modify block settings.
      *
-     * @author       The Zikula Development Team
-     * @param        array       $blockinfo     a blockinfo structure
-     * @return       output      the bock form
+     * @param array $blockinfo A blockinfo structure.
+     * 
+     * @return string The rendered block form.
      */
     public function modify($blockinfo)
     {
@@ -106,11 +111,11 @@ class Profile_Block_Lastxusers extends Zikula_Controller_AbstractBlock
     }
 
     /**
-     * update block settings
+     * Update block settings.
      *
-     * @author       The Zikula Development Team
-     * @param        array       $blockinfo     a blockinfo structure
-     * @return       $blockinfo  the modified blockinfo structure
+     * @param array $blockinfo A blockinfo structure.
+     * 
+     * @return array The modified blockinfo structure.
      */
     public function update($blockinfo)
     {
