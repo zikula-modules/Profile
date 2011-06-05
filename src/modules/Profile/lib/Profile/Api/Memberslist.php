@@ -71,160 +71,104 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
 
         // Get database setup
         $dbtable = DBUtil::getTables();
-
-        // It's good practice to name column definitions you are getting
-        // $column don't cut it in more complex modules
+        
         $userscolumn = $dbtable['users_column'];
         $datacolumn  = $dbtable['objectdata_attributes_column'];
         $propcolumn  = $dbtable['user_property_column'];
-
-        // Builds the sql query
-        $sql  = "SELECT     $userscolumn[uid] as uid
-             FROM       $dbtable[users] as tbl ";
-        $join = "LEFT JOIN  $dbtable[objectdata_attributes] as a
-             ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A'
-             LEFT JOIN $dbtable[user_property] as b
-             ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
-
-        // treat a single character as from the alpha filter and everything else as from the search input
-        if (strlen($args['letter']) > 1) {
-            $args['letter'] = "%{$args['letter']}";
+        
+        $joinInfo = array();
+        if ($args['searchby'] != 'uname') {
+            $joinInfo[] = array(
+                'join_table'            => 'objectdata_attributes',
+                'join_field'            => array(),
+                'object_field_name'     => array(),
+                'compare_field_table'   => 'uid',
+                'compare_field_join'    => 'object_id',
+            );
+            $joinInfo[] = array(
+                'join_table'            => 'user_property',
+                'join_field'            => array(),
+                'object_field_name'     => array(),
+                'compare_field_table'   => "a.{$datacolumn['attribute_name']}",
+                'compare_field_join'    => 'prop_attribute_name',
+            );
         }
-
-        $where = '';
+        
+        $where = "WHERE tbl.{$userscolumn['uid']} != 1 ";
         if ($args['searchby'] == 'uname') {
             $join  = '';
             if (!empty($args['letter']) && preg_match('/[a-z]/i', $args['letter'])) {
                 // are we listing all or "other" ?
-                $where = "WHERE UPPER(tbl.$userscolumn[uname]) LIKE '".strtoupper($args['letter'])."%' AND tbl.$userscolumn[uid] != '1' ";
+                $where .= "AND LOWER(tbl.{$userscolumn['uname']}) LIKE '".mb_strtolower($args['letter'])."%' ";
                 // I guess we are not..
             } else if (!empty($args['letter'])) {
                 // But other are numbers ?
-                $where = "WHERE (tbl.$userscolumn[uname] LIKE '0%'
-                          OR tbl.$userscolumn[uname] LIKE '1%'
-                          OR tbl.$userscolumn[uname] LIKE '2%'
-                          OR tbl.$userscolumn[uname] LIKE '3%'
-                          OR tbl.$userscolumn[uname] LIKE '4%'
-                          OR tbl.$userscolumn[uname] LIKE '5%'
-                          OR tbl.$userscolumn[uname] LIKE '6%'
-                          OR tbl.$userscolumn[uname] LIKE '7%'
-                          OR tbl.$userscolumn[uname] LIKE '8%'
-                          OR tbl.$userscolumn[uname] LIKE '9%'
-                          OR tbl.$userscolumn[uname] LIKE '-%'
-                          OR tbl.$userscolumn[uname] LIKE '.%'
-                          OR tbl.$userscolumn[uname] LIKE '@%'
-                          OR tbl.$userscolumn[uname] LIKE '$%') ";
+                static $otherWhere;
+                if (!isset($otherWhere)) {
+                    $otherList = array ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
+                    $otherWhere = array();
+                    foreach ($otherList as $other) {
+                        $otherWhere[] = "tbl.{$userscolumn['uname']} LIKE '{$other}%'";
+                    }
+                    $otherWhere = 'AND (' . implode(' OR ', $otherWhere) . ') ';
+                }
+                
+                $where .= $otherWhere;
 
                 // fifers: while this is not the most eloquent solution, it is
                 // cross database compatible.  We could do an if dbtype is mysql
                 // then do the regexp.  consider for performance enhancement.
                 //
-                // "WHERE $column[uname] REGEXP \"^\[1-9]\" "
-                // REGEX :D, although i think its MySQL only
-                // Will have to change this later.
                 // if you know a better way to match only the first char
-                // to be a number in uname, please change it and email
-                // sweede@gallatinriver.net the correction
-                // or go to post-nuke project page and post
-                // your correction there. Thanks, Bjorn.
-            } else {
-                // or we are unknown or all..
-                $where = "WHERE tbl.$userscolumn[uid] != '1' ";
-                // this is to get rid of the annonymous registry
+                // to be a number in uname, open a ticket with the Profile project.
             }
 
         } else if (is_array($args['searchby'])) {
             if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
                 // args.searchby is all => search_value to loop all the user attributes
-                /*
-            $dudfields = ModUtil::apiFunc('Profile', 'user', 'getallactive');
-            if (empty($dudfields)) {
-                return $items;
-            }
-            $attrids = array();
-            foreach ($dudfields as $dud) {
-                $attrids[] = "'$dud[attribute_name]'";
-            }
-            $attrids = implode(', ', $attrids);
-            // active duds can be retrieved better with weight > 0 AND dtype >= 0
-                */
 
                 $value = DataUtil::formatForStore($args['searchby']['all']);
-                //$where = "WHERE a.$datacolumn[attribute_name] IN ($attrids) AND a.$datacolumn[value] LIKE '%$value%' ";
-                $where = "WHERE b.$propcolumn[prop_weight] > '0' AND $propcolumn[prop_dtype] >= '0' AND a.$datacolumn[value] LIKE '%$value%' ";
+                $where .= "AND a.{$datacolumn['object_type']} = 'users' AND a.{$datacolumn['obj_status']} = 'A' ";
+                $where .= "AND b.{$propcolumn['prop_weight']} > 0 AND b.{$propcolumn['prop_dtype']} >= 0 AND a.{$datacolumn['value']} LIKE '%{$value}%' ";
 
             } else {
                 // args.searchby is an array of the form prop_id => value
-                $where = array();
+                $whereList = array();
                 foreach ($args['searchby'] as $prop_id => $value) {
                     $prop_id = DataUtil::formatForStore($prop_id);
                     $value   = DataUtil::formatForStore($value);
-                    $where[] = "(b.$propcolumn[prop_id] = '$prop_id' AND a.$datacolumn[value] LIKE '%$value%')";
+                    $whereList[] = "(b.{$propcolumn['prop_id']} = '{$prop_id}' AND a.{$datacolumn['value']} LIKE '%{$value}%')";
                 }
                 // check if there where contitionals
-                if (!empty($where)) {
-                    $where = 'WHERE '.implode(' AND ', $where).' ';
-                } else {
-                    $where = '';
+                if (!empty($whereList)) {
+                    $where .= 'AND ' . implode(' AND ', $whereList) . ' ';
                 }
             }
 
         } else if (is_numeric($args['searchby'])) {
-            $where = "WHERE b.$propcolumn[prop_id] = '$args[searchby]' AND a.$datacolumn[value] LIKE '$args[letter]%' ";
+            $where .= "AND b.{$propcolumn['prop_id']} = '{$args['searchby']}' AND a.{$datacolumn['value']} LIKE '{$args['letter']}%' ";
 
         } elseif (isset($propcolumn[$args['searchby']])) {
-            $where = "WHERE b.".$propcolumn[$args['searchby']]." LIKE '$args[letter]%' ";
+            $where .= 'AND b.' . $propcolumn[$args['searchby']] . " LIKE '{$args['letter']}%' ";
         }
 
         if (!$args['sorting'] && ModUtil::getVar('Profile', 'filterunverified')) {
-            $where .= " AND tbl.$userscolumn[activated] != '0'";
+            $where .= "AND tbl.{$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
         }
-
-        $groupby = " GROUP BY tbl.$userscolumn[uname] ";
-
-        // sort by
+        
         if (array_key_exists($args['sortby'], $userscolumn)) {
-            $sort = 'ORDER BY tbl.'.$userscolumn[$args['sortby']] .' '. $args['sortorder'];
+            $orderBy = 'tbl.'.$userscolumn[$args['sortby']] .' '. $args['sortorder'];
         } else {
-            $sort = 'ORDER BY '.DataUtil::formatForStore($args['sortby']) .' '. $args['sortorder'];
+            $orderBy = DataUtil::formatForStore($args['sortby']) .' '. $args['sortorder'];
         }
-        if ($sort && $args['sortby'] != 'uname') {
-            $sort .= ", $userscolumn[uname] ASC ";
+        if ($orderBy && $args['sortby'] != 'uname') {
+            $orderBy .= ", {$userscolumn['uname']} ASC ";
         }
-
-        $sql .= $join . $where . $groupby . $sort;
-
-        $result = DBUtil::executeSQL($sql, $args['startnum']-1, $args['numitems']);
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
-        if ($result === false) {
-            LogUtil::registerError($this->__('Error! Could not load data.'));
-
-            if (is_object($result)) {
-                $result->Close();
-            }
-            return $items;
-        }
-
-        // Put items into result array
-        for (; !$result->EOF; $result->MoveNext()) {
-            list($uid) = $result->fields;
-            if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
-                if (!$args['returnUids']) {
-                    $items[$uid] = UserUtil::getVars($uid);
-                } else {
-                    $items[] = $uid;
-                }
-            }
-        }
-
-        // All successful database queries produce a result set, and that result
-        // set should be closed when it has been finished with
-        $result->Close();
+        
+        $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true);
 
         // Return the items
-        return $items;
+        return $result;
     }
 
     /**
