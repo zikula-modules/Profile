@@ -18,9 +18,9 @@
 class Profile_Controller_Admin extends Zikula_AbstractController
 {
     /**
-     * The main administration function
+     * The default entrypoint.
      *
-     * @return string HTML string
+     * @return void
      */
     public function main()
     {
@@ -28,29 +28,26 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * The Profile help page
+     * The Profile help page.
      *
-     * @return string HTML string
+     * @return string The rendered template output.
      */
     public function help()
     {
-        // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
 
-        // Return the output
         return $this->view->fetch('profile_admin_help.tpl');;
     }
 
     /**
-     * View all items held by this module
-     * @author Mark West
-     * @return string HTML string
+     * View all items managed by this module.
+     * 
+     * @return string The rendered template output.
      */
     public function view()
     {
-        // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
@@ -59,7 +56,6 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         $startnum = (int)FormUtil::getPassedValue('startnum', null, 'GET');
         $numitems = 20;
 
-        // The user API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getall',
                 array('startnum' => $startnum,
                 'numitems' => $numitems));
@@ -69,11 +65,9 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
         $x = 1;
         $duditems = array();
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             // display the proper icom and link to enable or disable the field
-            switch (true)
-            {
+            switch (true) {
                 // 0 <= DUD types can't be disabled
                 case ($item['prop_dtype'] <= 0):
                     $statusval = 1;
@@ -101,8 +95,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             }
 
             // analizes the DUD type
-            switch ($item['prop_dtype'])
-            {
+            switch ($item['prop_dtype']) {
                 case '-2': // non-editable field
                     $data_type_text = $this->__('Not editable field');
                     break;
@@ -127,8 +120,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
             // Options for the item.
             $options = array();
-            if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT))
-            {
+            if (SecurityUtil::checkPermission('Profile::item', "$item[prop_label]::$item[prop_id]", ACCESS_EDIT)) {
                 $options[] = array('url' => ModUtil::url('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])),
                         'image' => 'xedit.png',
                         'class' => '',
@@ -178,10 +170,9 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * Add new dynamic user data item
+     * Add new dynamic user data item.
      *
-     * @author Mark West
-     * @return string HTML string
+     * @return string The rendered template output.
      */
     public function newdud()
     {
@@ -190,33 +181,50 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $this->view->assign('displaytypes',     array(0 => DataUtil::formatForDisplay($this->__('Text box')),
-                1 => DataUtil::formatForDisplay($this->__('Text area')),
-                2 => DataUtil::formatForDisplay($this->__('Checkbox')),
-                3 => DataUtil::formatForDisplay($this->__('Radio button')),
-                4 => DataUtil::formatForDisplay($this->__('Dropdown list')),
-                5 => DataUtil::formatForDisplay($this->__('Date')),
-                7 => DataUtil::formatForDisplay($this->__('Multiple checkbox set'))));
+        $this->view->assign('displaytypes', array(
+            0 => DataUtil::formatForDisplay($this->__('Text box')),
+            1 => DataUtil::formatForDisplay($this->__('Text area')),
+            2 => DataUtil::formatForDisplay($this->__('Checkbox')),
+            3 => DataUtil::formatForDisplay($this->__('Radio button')),
+            4 => DataUtil::formatForDisplay($this->__('Dropdown list')),
+            5 => DataUtil::formatForDisplay($this->__('Date')),
+            7 => DataUtil::formatForDisplay($this->__('Multiple checkbox set')),
+        ));
 
-        $this->view->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay($this->__('No')),
-                1 => DataUtil::formatForDisplay($this->__('Yes'))));
+        $this->view->assign('requiredoptions', array(
+            0 => DataUtil::formatForDisplay($this->__('No')),
+            1 => DataUtil::formatForDisplay($this->__('Yes')),
+        ));
 
-        $this->view->assign('viewbyoptions',    array(0 => DataUtil::formatForDisplay($this->__('Everyone')),
-                1 => DataUtil::formatForDisplay($this->__('Registered users only')),
-                2 => DataUtil::formatForDisplay($this->__('Admins and account owner only')),
-                3 => DataUtil::formatForDisplay($this->__('Admins only'))));
+        $this->view->assign('viewbyoptions', array(
+            0 => DataUtil::formatForDisplay($this->__('Everyone')),
+            1 => DataUtil::formatForDisplay($this->__('Registered users only')),
+            2 => DataUtil::formatForDisplay($this->__('Admins and account owner only')),
+            3 => DataUtil::formatForDisplay($this->__('Admins only')),
+        ));
 
         // Return the output that has been generated by this function
         return $this->view->fetch('profile_admin_new.tpl');
     }
 
     /**
-     * Function that executes the creation
+     * Create the dud.
+     * 
+     * Parameters passed via the $args array or via a POST:
+     * ----------------------------------------------------
+     * string  label         The name of the item to be created.
+     * string  attributename The attribute name of the item to be created.
+     * numeric required      0 if not required, 1 if required.
+     * numeric viewby        Viewable-by option; 0 thru 3, everyone, registered users, admins and account owners, admin only.
+     * numeric displaytype   Display type; 0 thru 7.
+     * array   listoptions   If the display type is a list, then the options to display in the list.
+     * string  note          Note for the item.
      *
-     * @see Profile_admin_new()
-     * @param string 'label' the name of the item to be created
-     * @param string 'dtype' the data type of the item to be created
-     * @return bool true if item created, false otherwise
+     * @param array $args All parameters passed to this function via an internal call.
+     * 
+     * @return bool True if item created, false otherwise.
+     *
+     * @see    Profile_admin_new()
      */
     public function create($args)
     {
@@ -265,15 +273,16 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // The API function is called.
-        $dudid = ModUtil::apiFunc('Profile', 'admin', 'create',
-                array('label'          => $filteredlabel,
-                'attribute_name' => $attrname,
-                'required'       => $required,
-                'viewby'         => $viewby,
-                'dtype'          => 1,
-                'displaytype'    => $displaytype,
-                'listoptions'    => $listoptions,
-                'note'           => $note));
+        $dudid = ModUtil::apiFunc('Profile', 'admin', 'create', array(
+            'label'          => $filteredlabel,
+            'attribute_name' => $attrname,
+            'required'       => $required,
+            'viewby'         => $viewby,
+            'dtype'          => 1,
+            'displaytype'    => $displaytype,
+            'listoptions'    => $listoptions,
+            'note'           => $note,
+        ));
 
         // The return value of the function is checked here
         if ($dudid != false) {
@@ -286,12 +295,18 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * Modify a dynamic user data item
-     * This is a standard function that is called whenever an administrator
-     * wishes to modify a current module item
-     * @param int 'dudid' the id of the item to be modified
-     * @param int 'objectid' generic object id maps to dudid if present
-     * @return string HTML string
+     * Modify a dynamic user data item.
+     * 
+     * This is a standard function that is called whenever an administrator wishes to modify a current module item.
+     * 
+     * Parameters passed via the $args array or via GET:
+     * -------------------------------------------------
+     * int dudid    The id of the item to be modified.
+     * int objectid Generic object id maps to dudid if present.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return string The rendered template.
      */
     public function modify($args)
     {
@@ -325,40 +340,51 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         // Add a hidden variable for the item id.
         $this->view->assign('dudid', $dudid);
 
-        $this->view->assign('displaytypes',     array(0 => DataUtil::formatForDisplay($this->__('Text box')),
-                1 => DataUtil::formatForDisplay($this->__('Text area')),
-                2 => DataUtil::formatForDisplay($this->__('Checkbox')),
-                3 => DataUtil::formatForDisplay($this->__('Radio button')),
-                4 => DataUtil::formatForDisplay($this->__('Dropdown list')),
-                5 => DataUtil::formatForDisplay($this->__('Date')),
-                7 => DataUtil::formatForDisplay($this->__('Multiple checkbox set'))));
+        $this->view->assign('displaytypes', array(
+            0 => DataUtil::formatForDisplay($this->__('Text box')),
+            1 => DataUtil::formatForDisplay($this->__('Text area')),
+            2 => DataUtil::formatForDisplay($this->__('Checkbox')),
+            3 => DataUtil::formatForDisplay($this->__('Radio button')),
+            4 => DataUtil::formatForDisplay($this->__('Dropdown list')),
+            5 => DataUtil::formatForDisplay($this->__('Date')),
+            7 => DataUtil::formatForDisplay($this->__('Multiple checkbox set')),
+        ));
 
-        $this->view->assign('requiredoptions',  array(0 => DataUtil::formatForDisplay($this->__('No')),
-                1 => DataUtil::formatForDisplay($this->__('Yes'))));
+        $this->view->assign('requiredoptions', array(
+            0 => DataUtil::formatForDisplay($this->__('No')),
+            1 => DataUtil::formatForDisplay($this->__('Yes')),
+        ));
 
-        $this->view->assign('viewbyoptions',    array(0 => DataUtil::formatForDisplay($this->__('Everyone')),
-                1 => DataUtil::formatForDisplay($this->__('Registered users only')),
-                2 => DataUtil::formatForDisplay($this->__('Admins and account owner only')),
-                3 => DataUtil::formatForDisplay($this->__('Admins only'))));
+        $this->view->assign('viewbyoptions', array(
+            0 => DataUtil::formatForDisplay($this->__('Everyone')),
+            1 => DataUtil::formatForDisplay($this->__('Registered users only')),
+            2 => DataUtil::formatForDisplay($this->__('Admins and account owner only')),
+            3 => DataUtil::formatForDisplay($this->__('Admins only')),
+        ));
 
         $item['prop_listoptions'] = str_replace("\n", '', $item['prop_listoptions']);
 
         $this->view->assign('item', $item);
 
-        // Return the output that has been generated by this function
         return $this->view->fetch('profile_admin_modify.tpl');
     }
 
     /**
-     * Function that executes the update
+     * Update the dynamic user data definition.
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * int    dudid    The id of the item to be updated.
+     * int    objectid Generic object id maps to dudid if present.
+     * string label    The name of the item to be updated.
+     * string dtype    The data type of the item.
+     * int    length   The lenght of item if dtype is string.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
+     * 
+     * @return bool True if update successful, false otherwise.
      *
-     * @see ProfileModify()
-     * @param int 'dudid' the id of the item to be updated
-     * @param int 'objectid' generic object id maps to dudid if present
-     * @param string 'label' the name of the item to be updated
-     * @param string 'dtype' the data type of the item
-     * @param int 'length' the lenght of item if dtype is string
-     * @return bool true if update successful, false otherwise
+     * @see    ProfileModify()
      */
     public function update($args)
     {
@@ -384,15 +410,16 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // The return value of the function is checked here
-        if (ModUtil::apiFunc('Profile', 'admin', 'update',
-        array('dudid'       => $dudid,
-        'required'    => $required,
-        'viewby'      => $viewby,
-        'label'       => $label,
-        'displaytype' => $displaytype,
-        'listoptions' => str_replace("\n", "", $listoptions),
-        'note'        => $note))) {
-            // Success
+        $parameters = array(
+            'dudid'       => $dudid,
+            'required'    => $required,
+            'viewby'      => $viewby,
+            'label'       => $label,
+            'displaytype' => $displaytype,
+            'listoptions' => str_replace("\n", "", $listoptions),
+            'note'        => $note,
+        );
+        if (ModUtil::apiFunc('Profile', 'admin', 'update', $parameters)) {
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
 
@@ -401,13 +428,17 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * delete item
+     * Delete a dud item.
      *
-     * @author Mark West
-     * @param int 'dudid' the id of the item to be deleted
-     * @param int 'objectid' generic object id maps to dudid if present
-     * @param bool 'confirmation' confirmation that this item can be deleted
-     * @return mixed HTML string if no confirmation, true if delete successful, false otherwise
+     * Parameters passed via the $args array, or via GET, or via POST:
+     * ---------------------------------------------------------------
+     * int  dudid        The id of the item to be deleted.
+     * int  objectid     Generic object id maps to dudid if present.
+     * bool confirmation Confirmation that this item can be deleted.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
+     * 
+     * @return boolean|string If no confirmation then the rendered output of a template to get confirmation; otherwise true if delete successful, false otherwise.
      */
     public function delete($args)
     {
@@ -463,13 +494,15 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * Increase weight
+     * Increase weight of a dud item in the sorted list.
      *
-     * @author Mark West
-     * @param  int 'dudid' the id of the item to be updated
-     * @return bool true if update successful, false otherwise
+     * Parameters passed in via GET:
+     * -----------------------------
+     * int dudid The id of the item to be updated.
+     * 
+     * @return boolean True if update successful, false otherwise.
      */
-    public function increase_weight($args)
+    public function increase_weight()
     {
         $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -495,13 +528,15 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * Decrease weight
+     * Decrease weight of a dud item on the sorted list.
      *
-     * @author Mark West
-     * @param  int 'dudid' the id of the item to be updated
-     * @return bool true if update successful, false otherwise
+     * Parameters passed via GET:
+     * --------------------------
+     * int dudid The id of the item to be updated.
+     * 
+     * @return boolean True if update successful, false otherwise.
      */
-    public function decrease_weight($var)
+    public function decrease_weight()
     {
         $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -532,10 +567,14 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
     /**
      * Process item activation request
-     * @author Mark West
-     * @param int 'dudid' id of item activate
-     * @return bool true if activation successful, false otherwise
-     * @todo remove passing of weight parameter; can be got from API
+     *
+     * Parameters passed in the $args array, or via GET:
+     * -------------------------------------------------
+     * int dudid Id of item activate.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
+     * 
+     * @return boolean True if activation successful, false otherwise.
      */
     public function activate($args)
     {
@@ -554,11 +593,14 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
     /**
      * Process item deactivation request
-     * @author Mark West
-     * @param int 'dudid' id of item deactivate
-     * @param int 'weight' current weight of item
-     * @return bool true if deactivation successful, false otherwise
-     * @todo remove passing of weight parameter; can be got from API
+     *
+     * Parameters passed in the $args array, or via GET:
+     * -------------------------------------------------
+     * int dudid Id of item deactivate
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
+     * 
+     * @return boolean True if deactivation successful, false otherwise.
      */
     public function deactivate($args)
     {
@@ -581,10 +623,9 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * This is a standard function to modify the configuration parameters of the
-     * module
-     * @author Mark West
-     * @return string HTML string
+     * This is a standard function to modify the configuration parameters of the module.
+     *
+     * @return string The rendered template output.
      */
     public function modifyconfig()
     {
@@ -605,20 +646,27 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
         // Create output object
         // Appending the module configuration to template
-        $this->view->setCaching(false)
-                        ->add_core_data()
-                        ->assign('dudfields', $items);
-
-        // Return the output that has been generated by this function
-        return $this->view->fetch('profile_admin_modifyconfig.tpl');
+        return $this->view->setCaching(false)
+                ->add_core_data()
+                ->assign('dudfields', $items)
+                ->fetch('profile_admin_modifyconfig.tpl');
     }
 
     /**
-     * Function that updates the module configuration
-     *
-     * @author Mark West
-     * @see Profile_admin_modifyconfig()
-     * @return bool true if update successful, false otherwise
+     * Function that updates the module configuration.
+     * 
+     * Parameters passed in via POST:
+     * ------------------------------
+     * boolean viewregdate               If true the user's registration date is displayed; false to supress the registration date.
+     * numeric memberslistitemsperpage   The number of members to show per page on the member list.
+     * numeric onlinemembersitemsperpage The number of members to show per page on the members online list.
+     * numeric recentmembersitemsperpage The number of members to show per page on the recent registered members list.
+     * booleam filterunverified          If true, users who have not completed the registration process are not listed; if false, they are listed.
+     * array   dudregshow                An array of dud item ids indicating which items to include in the registration form; an empty array to include none.
+     * 
+     * @return boolean True if update successful, false otherwise.
+     * 
+     * @see    Profile_admin_modifyconfig()
      */
     public function updateconfig()
     {

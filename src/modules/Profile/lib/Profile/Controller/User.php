@@ -1,34 +1,47 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Zikula Application Framework
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnuser.php 118 2010-03-12 10:40:23Z yokav $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * UI operations executable by general users.
+ */
 class Profile_Controller_User extends Zikula_AbstractController
 {
     /**
-     * the main user function
-     *
-     * @author Mark West
-     * @return string HTML string
+     * The default entry point.
+     * 
+     * This redirects back to the default entry point for the Users module.
+     * 
+     * @return void
      */
     public function main()
     {
-        // showing account links is not longer part of the Profile module, redirect to Users:
-        return System::redirect(ModUtil::url('Users', 'user', 'main'));
+        $this->redirect(ModUtil::url('Users', 'user', 'main'));
     }
 
     /**
-     * display item
+     * Display item.
+     * 
+     * Parameters passed via the $args array, or via GET:
+     * --------------------------------------------------
+     * numeric uid   The user account id (uid) of the user for whom to display profile information; optional, ignored if uname is supplied, if not provided 
+     *                  and if uname is not supplied then defaults to the current user.
+     * string  uname The user name of the user for whom to display profile information; optional, if not supplied, then uid is used to determine the user.
+     * string  page  The name of the Profile "page" (view template) to display; optional, if not provided then the standard view template is used.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
      *
-     * @author Mark West
-     * @return string HTML string
+     * @return string The rendered template output.
      */
     public function view($args)
     {
@@ -104,9 +117,16 @@ class Profile_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * modify a users profile information
+     * Modify a users profile information.
+     * 
+     * Parameters passed via the $args array, or via GET:
+     * --------------------------------------------------
+     * string   uname The user name of the account for which profile information should be modified; defaults to the uname of the current user.
+     * dynadata array The modified profile information passed into this function in case of an error in the update function.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
      *
-     * @author Franky Chestnut
+     * @return string The rendered template output.
      */
     public function modify($args)
     {
@@ -144,15 +164,22 @@ class Profile_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * update a users profile
+     * Update a users profile.
+     * 
+     * Parameters passed via POST:
+     * ---------------------------
+     * string uname    The user name of the account for which profile information should be updated.
+     * array  dynadata An array containing the updated profile information for the user account.
      *
-     * @author Franky Chestnut
+     * @return void
+     * 
+     * @throws Zikula_Exception_Forbidden Thrown if the authkey is not confirmed.
      */
     public function update()
     {
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'user', 'modify'));
+            throw new Zikula_Exception_Forbidden();
         }
 
         // Get parameters from whatever input we need.
@@ -171,7 +198,7 @@ class Profile_Controller_User extends Zikula_AbstractController
             $params = array('uname'    => $uname,
                     'dynadata' => $dynadata);
 
-            return System::redirect(ModUtil::url('Profile', 'user', 'modify', $params));
+            $this->redirect(ModUtil::url('Profile', 'user', 'modify', $params));
         }
 
         // Building the sql and saving - The API function is called.
@@ -180,21 +207,36 @@ class Profile_Controller_User extends Zikula_AbstractController
                 'dynadata' => $dynadata));
 
         if ($save != true) {
-            return System::redirect(ModUtil::url('Profile', 'user', 'view'));
+            $this->redirect(ModUtil::url('Profile', 'user', 'view'));
         }
 
         // This function generated no output, we redirect the user
         LogUtil::registerStatus($this->__('Done! Saved your changes to your personal information.'));
 
-        return System::redirect(ModUtil::url('Profile', 'user', 'view', array('uname' => UserUtil::getVar('uname'))));
+        $this->redirect(ModUtil::url('Profile', 'user', 'view', array('uname' => UserUtil::getVar('uname'))));
     }
 
     /**
-     * view members list
-     * This function provides the main members list view
+     * View members list.
+     * 
+     * This function provides the main members list view.
+     * 
+     * Parameters passed via the $args array, or via GET, or via POST:
+     * ---------------------------------------------------------------
+     * numeric startnum The ordinal number of the record at which to begin displaying records; not obtained via POST.
+     * string  sortby    A comma-separated list of fields on which the list of members should be sorted.
+     * mixed   searchby  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                      available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                      an array indexed by property id containing values for each property on which to select, or a string containing the name of
+     *                      a property on which to select.
+     * string  sortorder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
+     * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                      is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
      *
-     * @author Mark West
-     * @return string HTML string
+     * @return string The rendered template output.
      */
     public function viewmembers($args)
     {
@@ -236,13 +278,8 @@ class Profile_Controller_User extends Zikula_AbstractController
         // Create output object
         $cacheid = md5((int)$edit.(int)$delete.$startnum.$letter.$sortby);
         $this->view->setCaching(true)
-                        ->setCacheId($cacheid);
-        /*
-    // check out if the contents are cached.
-    if ($this->view->is_cached('profile_user_members_view.tpl')) {
-        return $this->view->fetch('profile_user_members_view.tpl');
-    }
-        */
+                ->setCacheId($cacheid);
+        
         // get the number of users to show per page from the module vars
         $itemsperpage = ModUtil::getVar('Profile', 'memberslistitemsperpage');
 
@@ -251,12 +288,14 @@ class Profile_Controller_User extends Zikula_AbstractController
         $this->view->assign('memberslistonline', ModUtil::apiFunc('Profile', 'memberslist', 'getregisteredonline'));
         $this->view->assign('memberslistnewest', UserUtil::getVar('uname', ModUtil::apiFunc('Profile', 'memberslist', 'getlatestuser')));
 
-        $fetchargs = array('letter'    => $letter,
-                'sortby'    => $sortby,
-                'sortorder' => $sortorder,
-                'searchby'  => $searchby,
-                'startnum'  => $startnum,
-                'numitems'  => $itemsperpage);
+        $fetchargs = array(
+            'letter'    => $letter,
+            'sortby'    => $sortby,
+            'sortorder' => $sortorder,
+            'searchby'  => $searchby,
+            'startnum'  => $startnum,
+            'numitems'  => $itemsperpage,
+        );
 
         // get full list of user id's
         $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $fetchargs);
@@ -270,8 +309,7 @@ class Profile_Controller_User extends Zikula_AbstractController
         $this->view->assign('adminedit', $edit);
         $this->view->assign('admindelete', $delete);
 
-        foreach ($users as $userid => $user)
-        {
+        foreach ($users as $userid => $user) {
             //$user = array_merge(UserUtil::getVars($userid['uid']), $userid);
             $isonline = ModUtil::apiFunc('Profile', 'memberslist', 'isonline', array('userid' => $userid));
 
@@ -309,12 +347,11 @@ class Profile_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * Displays last X registered users
-     * This function displays the last X users who registered at this site
-     * available from the module.
-     *
-     * @author Mark West
-     * @return string HTML string
+     * Displays last X registered users.
+     * 
+     * This function displays the last X users who registered at this site available from the module.
+     * 
+     * @return string The rendered template output.
      */
     public function recentmembers()
     {
@@ -359,8 +396,7 @@ class Profile_Controller_User extends Zikula_AbstractController
         $this->view->assign('adminedit', $edit);
         $this->view->assign('admindelete', $delete);
 
-        foreach (array_keys($users) as $userid)
-        {
+        foreach (array_keys($users) as $userid) {
             $isonline = ModUtil::apiFunc('Profile', 'memberslist', 'isonline', array('userid' => $userid));
 
             // display online status
@@ -384,11 +420,11 @@ class Profile_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * View users online
-     * This function displays the currently online users
-     *
-     * @author Mark West
-     * @return string HTML string
+     * View users online.
+     * 
+     * This function displays the currently online users.
+     * 
+     * @return string The rendered template output.
      */
     public function onlinemembers()
     {

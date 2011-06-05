@@ -1,23 +1,31 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c) 2001, Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnajax.php 90 2010-01-25 08:31:41Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * AJAX query and response functions.
+ */
 class Profile_Controller_Ajax extends Zikula_AbstractController
 {
     /**
-     * change the weight of a profile item
+     * Change the weight of a profile item.
+     * 
+     * Parameters passed in via FormUtil:
+     * ----------------------------------
+     * array   profilelist An array of dud item ids for which the weight should be changed.
+     * numeric startnum    The desired weight of the first item in the list minus 1 (e.g., if the weight of the first item should be 3 then startnum contains 2)
      *
-     * @author Mark West
-     * @param blockorder array of sorted properties (value = prop_id)
-     * @return mixed true or Ajax error
+     * @return mixed An AJAX result array containing a result equal to true, or an Ajax error.
      */
     public function changeprofileweight()
     {
@@ -39,8 +47,7 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         // update the items with the new weights
         $items = array();
         $weight = $startnum + 1;
-        foreach ($profilelist as $prop_id)
-        {
+        foreach ($profilelist as $prop_id) {
             if (empty($prop_id)) {
                 continue;
             }
@@ -61,23 +68,25 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
     }
 
     /**
-     * change the status of a profile item
+     * Change the status of a profile item.
      *
-     * @author Mateo Tibaquira
-     * @param  dudid id of the property to update
-     * @param  oldstatus to activate or deactivate the item
-     * @return mixed true or Ajax error
+     * Parameters passed in via FormUtil:
+     * ----------------------------------
+     * numeric dudid     Id of the property to update.
+     * boolean oldstatus True to activate or false to deactivate the item.
+     * 
+     * @return mixed An AJAX result array containing a result equal to true along with the dud id and new status, or an Ajax error.
      */
     public function changeprofilestatus()
     {
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
         }
-        /*
-    if (!SecurityUtil::confirmAuthKey()) {
-        AjaxUtil::error($this->__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."));
-    }
-        */
+        
+        //if (!SecurityUtil::confirmAuthKey()) {
+        //    AjaxUtil::error($this->__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."));
+        //}
+        
         $prop_id   = FormUtil::getPassedValue('dudid');
         $oldstatus = (bool)FormUtil::getPassedValue('oldstatus');
 
@@ -100,13 +109,15 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
     }
 
     /**
-     * get a profile section for an user
+     * Get a profile section for a user.
      *
-     * @author Mateo Tibaquira
-     * @param  uid   id of the user to query
-     * @param  name  name of the section to retrieve
-     * @param  args  [optional] arguments to the API
-     * @return array output or Ajax error
+     * Parameters passed in via FormUtil:
+     * ----------------------------------
+     * numeric uid  Id of the user to query.
+     * string  name Name of the section to retrieve.
+     * array   args Optional arguments to the API.
+     * 
+     * @return mixed An AJAX result array containing a result equal to the rendered output along with the section name and uid, or an Ajax error.
      */
     public function profilesection()
     {

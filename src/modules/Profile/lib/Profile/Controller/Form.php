@@ -7,7 +7,6 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Profile
- * @subpackage Api
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -20,13 +19,15 @@ class Profile_Controller_Form extends Zikula_AbstractController
 {
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.
-     *
-     * @param array $args All arguments passed to this function.
-     *                      integer $args['userid']   The user id of the user for which the form section is being rendered; optional;
-     *                                                  defaults to 1, which will result in the use of default values from the anonymous
-     *                                                  user.
-     *                      array   $args['dynadata'] The dynamic user data with which to populate the form section; if not specified in
-     *                                                  $args it can be retrieved from a GET, POST, REQUEST, COOKIE, or SESSION variable.
+     * 
+     * Parameters passed via the $args array, or via FormUtil:
+     * -------------------------------------------------------
+     * integer userid   The user id of the user for which the form section is being rendered; optional; defaults to 1, which will result in the use of 
+     *                      default values from the anonymous user.
+     * array   dynadata The dynamic user data with which to populate the form section; if not specified in $args it can be retrieved from a GET, POST, 
+     *                      REQUEST, COOKIE, or SESSION variable.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
      *
      * @return string The rendered template output.
      */
@@ -71,7 +72,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
     /**
      * Display the dynadata section of the search form.
      *
-     * @return string HTML string
+     * @return string The rendered template output.
      */
     public function search()
     {
@@ -111,9 +112,12 @@ class Profile_Controller_Form extends Zikula_AbstractController
 
     /**
      * Fills a z-datatable body with the passed dynadata.
-     *
-     * @param array $args All parameters passed to this function.
-     *                      array $args['userinfo'] The dynadata with which to populate the data table.
+     * 
+     * Parameters passed via the $args array, or via FormUtil:
+     * -------------------------------------------------------
+     * array userinfo The dynadata with which to populate the data table.
+     * 
+     * @param array $args All parameters passed to this function via an internal call.
      *
      * @return string The rendered template output.
      */
