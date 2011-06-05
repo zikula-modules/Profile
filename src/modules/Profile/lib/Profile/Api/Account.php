@@ -42,7 +42,7 @@ class Profile_Api_Account extends Zikula_AbstractApi
                     'module'  => 'Profile',
                     //! account panel link
                     'title'   => $this->__('Personal info'),
-                    'icon'    => 'admin.gif');
+                    'icon'    => 'admin.png');
 
             if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
                 $items['1'] = array('url'     => ModUtil::url('Profile', 'user', 'viewmembers'),
