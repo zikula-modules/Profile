@@ -1,16 +1,20 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnadmin.php 108 2010-02-08 06:39:56Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
- * @author Mark West
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * Administrative UI-oriented operations.
+ */
 class Profile_Controller_Admin extends Zikula_AbstractController
 {
     /**
@@ -20,13 +24,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function main()
     {
-        // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
-        }
-
-        // Return the output
-        return $this->view->fetch('profile_admin_main.tpl');;
+        $this->redirect(ModUtil::url($this->name, 'admin', 'view'), 301);
     }
 
     /**
