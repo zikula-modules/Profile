@@ -48,7 +48,7 @@ class Profile_Api_Account extends Zikula_AbstractApi
                 $items['1'] = array('url'     => ModUtil::url('Profile', 'user', 'viewmembers'),
                         'module'  => 'Profile',
                         'title'   => $this->__('Registered users list'),
-                        'icon'    => 'members.gif');
+                        'icon'    => 'members.png');
             }
         }
 
