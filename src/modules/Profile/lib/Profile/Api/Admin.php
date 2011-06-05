@@ -1,25 +1,34 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnadminapi.php 90 2010-01-25 08:31:41Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
- * @author Mark West
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * Administrative API functions for the Profile module.
+ */
 class Profile_Api_Admin extends Zikula_AbstractApi
 {
     /**
-     * create a new dynamic user data item
-     * @author Mark West
-     * @param string $args['label'] the name of the item to be created
-     * @param string $args['attribute_name'] the attribute name of the item to be created
-     * @param string $args['dtype'] the DUD type of the item to be created
-     * @return mixed dud item ID on success, false on failure
+     * Create a new dynamic user data item.
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * string label          The name of the item to be created.
+     * string attribute_name The attribute name of the item to be created.
+     * string dtype          The DUD type of the item to be created.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return boolean|integer dud item ID on success, false on failure
      */
     public function create($args)
     {
@@ -88,11 +97,16 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     }
 
     /**
-     * Update a dynamic user data item
-     * @author Mark West
-     * @param int $args['dudid'] the id of the item to be updated
-     * @param string $args['label'] the name of the item to be updated
-     * @return bool true on success, false on failure
+     * Update a dynamic user data item.
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * int    dudid The id of the item to be updated.
+     * string label The name of the item to be updated.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return bool True on success, false on failure.
      */
     public function update($args)
     {
@@ -101,8 +115,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
                 !isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-
-
 
         // The user API function is called.
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
@@ -199,9 +211,14 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     }
 
     /**
-     * Delete a dynamic user data item
-     * @author Mark West
-     * @param int $args['dudid'] ID of the item
+     * Delete a dynamic user data item.
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * int dudid ID of the item to delete.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
      * @return bool true on success, false on failure
      */
     public function delete($args)
@@ -213,8 +230,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         $dudid = $args['dudid'];
         unset($args);
-
-
 
         // The user API function is called.
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -256,10 +271,16 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     }
 
     /**
-     * Activate a dynamic user data item
-     * @author Mark West
-     * @param int $args['dudid'] the id of the item to be updated
+     * Activate a dynamic user data item.
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * int dudid The id of the item to be activated.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
      * @return bool true on success, false on failure
+     * 
      * @todo remove weight; can be got from get API
      */
     public function activate($args)
@@ -268,8 +289,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-
-
 
         // The API function is called.
         $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
@@ -289,11 +308,17 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     }
 
     /**
-     * Deactivate a dynamic user data item
-     * @author Mark West
-     * @param int $args['dudid'] the id of the item to be updated
-     * @return bool true on success, false on failure
-     * @todo remove weight; can be got from get API
+     * Deactivate a dynamic user data item.
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * int dudid The id of the item to be deactivated.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return bool true on success, false on failure.
+     * 
+     * @todo remove weight; can be got from get API.
      */
     public function deactivate($args)
     {
@@ -301,8 +326,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-
-
 
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
@@ -348,15 +371,12 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     }
 
     /**
-     * get available admin panel links
-     *
-     * @author Mark West
-     * @return array array of admin links
+     * Get available admin panel links.
+     * 
+     * @return array An array of admin links.
      */
     public function getlinks()
     {
-
-
         $links = array();
 
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {

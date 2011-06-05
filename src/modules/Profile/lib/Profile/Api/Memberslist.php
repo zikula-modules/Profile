@@ -1,29 +1,38 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnmemberslistapi.php 92 2010-01-25 10:44:29Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * API functions related to member list management.
+ */
 class Profile_Api_Memberslist extends Zikula_AbstractApi
 {
     /**
-     * Get all users
-     * This API function returns all users ids. This function allows for
-     * filtering and for paged selection
+     * Get all users.
+     * 
+     * This API function returns all users ids. This function allows for filtering and for paged selection.
      *
-     * @author Mark West
-     * @param 'startnum' start number for recordset
-     * @param 'numitems' number of items to return
-     * @param 'letter' letter to filter by
-     * @param 'sortby' attribute to sort by
-     * @param 'sortorder' sort order ascending/descending
-     * @return array matching user ids
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * numeric startnum  Start number for recordset.
+     * numeric numitems  Number of items to return.
+     * string  letter    Letter to filter by.
+     * string  sortby    Attribute to sort by.
+     * string  sortorder Sort order ascending/descending.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return array Matching user ids.
      */
     public function getall($args)
     {
@@ -172,12 +181,17 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function to count the number of users
-     * This function allows for filtering by letter
+     * Counts the number of users.
+     * 
+     * This function allows for filtering by letter.
      *
-     * @author Mark West
-     * @param 'letter' letter to filter by
-     * @return integer count of matching users
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * string letter Letter to filter by.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return integer Count of matching users.
      */
     public function countitems($args)
     {
@@ -268,21 +282,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         } else if (is_array($args['searchby'])) {
             if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
                 // args.searchby is all => search_value to loop all the user attributes
-                /*
-            $dudfields = ModUtil::apiFunc('Profile', 'user', 'getallactive');
-            if (empty($dudfields)) {
-                return $items;
-            }
-            $attrids = array();
-            foreach ($dudfields as $dud) {
-                $attrids[] = "'$dud[attribute_name]'";
-            }
-            $attrids = implode(', ', $attrids);
-            // active duds can be retrieved better with weight > 0 AND dtype >= 0
-                */
-
                 $value = DataUtil::formatForStore($args['searchby']['all']);
-                //$where = "WHERE a.$datacolumn[attribute_name] IN ($attrids) AND a.$datacolumn[value] LIKE '%$value%' ";
                 $where = "WHERE b.$propcolumn[prop_weight] > '0' AND $propcolumn[prop_dtype] >= '0' AND a.$datacolumn[value] LIKE '%$value%' ";
 
             } else {
@@ -333,12 +333,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function to count the number of users online
+     * Counts the number of users online.
      *
-     * @author Mark West
-     * @return integer count of registered users online
+     * @return integer Count of registered users online.
      */
-    public function getregisteredonline($args)
+    public function getregisteredonline()
     {
         // Get database setup
         $dbtable = DBUtil::getTables();
@@ -365,12 +364,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function get the latest registered user
+     * Get the latest registered user.
      *
-     * @author Mark West
      * @return integer latest registered user id
      */
-    public function getlatestuser($args)
+    public function getlatestuser()
     {
         // load the database information for the users module
         ModUtil::dbInfoLoad('Users');
@@ -414,10 +412,15 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function to decide if a user is online
+     * Determine if a user is online.
      *
-     * @author Mark West
-     * @return bool true if online, false otherwise
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * numeric userid The uid of the user for whom a determination should be made; required.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return bool True if the specified user is online; false otherwise.
      */
     public function isonline($args)
     {
@@ -466,12 +469,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function return registered users online
+     * Return registered users online.
      *
-     * @author Mark West
-     * @return array registered users
+     * @return array Registered users who are online.
      */
-    public function whosonline($args)
+    public function whosonline()
     {
         // Get database setup
         $dbtable = DBUtil::getTables();
@@ -519,12 +521,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function returns all users online
+     * Returns all users online.
      *
-     * @author Frank Chestnut
-     * @return array All online visitors (including anonymous)
+     * @return array All online visitors (including anonymous).
      */
-    public function getallonline($args)
+    public function getallonline()
     {
         // Get database setup
         $dbtable = DBUtil::getTables();
@@ -593,9 +594,9 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     }
 
     /**
-     * Utility function to find out which messages module is installed
-     * @author Frank Schmmertz
-     * @return string name of the messaging module found, empty if none
+     * Find out which messages module is installed.
+     *
+     * @return string Name of the messaging module found, empty if none.
      */
     public function getmessagingmodule()
     {

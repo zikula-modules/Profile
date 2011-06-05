@@ -1,21 +1,31 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pnaccountapi.php 91 2010-01-25 09:05:01Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
- * @author Mark West
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * The Account API provides links for modules on the "user account page"; this class provides them for the Profile module.
+ */
 class Profile_Api_Account extends Zikula_AbstractApi
 {
 
     /**
-     * Return an array of items to show in the your account panel
+     * Return an array of items to show in the "user account page".
+     * 
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * string uname The user name of the user for whom links should be returned; optional, defaults to the current user.
+     * 
+     * @param array $args All parameters passed to this function.
      *
      * @return   array   array of items, or false on failure
      */

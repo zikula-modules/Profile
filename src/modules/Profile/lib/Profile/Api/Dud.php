@@ -1,33 +1,42 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: pndudapi.php 90 2010-01-25 08:31:41Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * API functions related to dynamic user data field management.
+ */
 class Profile_Api_Dud extends Zikula_AbstractApi
 {
     /**
-     * Register a dynamic user data field
+     * Register a dynamic user data field.
      *
-     * @author Mateo Tibaquira
-     * @param  string  $args['modname']         responsible module of the new field
-     * @param  string  $args['label']           label for the new account property
-     * @param  string  $args['attribute_name']  name of the attribute to use inside the user's data
-     * @param  string  $args['dtype']           dud type to create {normal, mandatory, noneditable}
-     * @param  array   $args['validationinfo']  validation info for the new field with the following fields:
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * string  modname        Responsible module of the new field.
+     * string  label          Label for the new account property.
+     * string  attribute_name Name of the attribute to use inside the user's data.
+     * string  dtype          Dud type to create {normal, mandatory, noneditable}.
+     * array   validationinfo Validation info for the new field with the following fields:
      *                   'required'    => {0: no, 1: mandatory}
      *                   'viewby'      => viewable by {0: Everyone, 1: Registered users only, 2: Admins only}
      *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 7: multi checkbox}
      *                   'listoptions' => options for the new field
      *                   'note'        => note to show in edit mode
-     *                   and any other required data
-     * @return true on success or false on failure
+     *                   and any other required data.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return boolean True on success or false on failure.
      */
     public function register($args)
     {
@@ -44,8 +53,6 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         if (!SecurityUtil::checkPermission('Profile::item', "$args[label]::", ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
-
-
 
         if (!ModUtil::getIdFromName($args['modname'])) {
             return LogUtil::registerError($this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
@@ -97,13 +104,17 @@ class Profile_Api_Dud extends Zikula_AbstractApi
     }
 
     /**
-     * Unregister a specific Dynamic user data item
+     * Unregister a specific dynamic user data item.
      *
-     * @author Mateo Tibaquira
-     * @param  integer  $args['propid']         id of property to unregister
-     * @param  string   $args['proplabel']      label of property to unregister
-     * @param  string   $args['propattribute']   of property to unregister
-     * @return true on success or false on failure
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * integer  propid        Id of property to unregister; required if proplabel and propattribute are not specified, must not be present if either is specified.
+     * string   proplabel     Label of property to unregister; required if propid and propattribute are not specified, ignored if propid specified, must not be present if propattribute specified.
+     * string   propattribute Attribute name(?) of property to unregister; required if propid and proplabel are not specified, ignored if propid or proplable specified.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return boolean True on success or false on failure.
      */
     public function unregister($args)
     {
@@ -111,8 +122,6 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
             return LogUtil::registerArgsError();
         }
-
-
 
         // Get item with where clause
         if (isset($args['propid'])) {
@@ -158,13 +167,17 @@ class Profile_Api_Dud extends Zikula_AbstractApi
     /**
      * Update users data
      *
-     * @author Mateo Tibaquira
-     * @param  string   $args['field']      serialized 'prop_validation' field of the DUD
-     * @param  array    $args['item']       array with the DUD information
-     * @param  string   $args['newfield']   serialized new 'prop_validation' field of the DUD
-     * @param  array    $args['newitem']    array with the new DUD information
-     * @param  string   $args['uservalue']  current user value
-     * @return string   updated user value if there were id changes in the listoptions
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * string   field     Serialized 'prop_validation' field of the DUD.
+     * array    item      Array with the DUD information.
+     * string   newfield  Serialized new 'prop_validation' field of the DUD.
+     * array    newitem   Array with the new DUD information.
+     * string   uservalue Current user value.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return string Updated user value if there were id changes in the listoptions.
      */
     public function updatedata($args)
     {
@@ -233,12 +246,16 @@ class Profile_Api_Dud extends Zikula_AbstractApi
     }
 
     /**
-     * Get the options of a DUD field
+     * Get the options of a DUD field.
      *
-     * @author Mateo Tibaquira
-     * @param  string   $args['field']      serialized 'prop_validation' field of the DUD
-     * @param  array    $args['item']       array with the DUD information
-     * @return array    indexed id => label for the DUD field
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * string field Serialized 'prop_validation' field of the DUD.
+     * array  item  Array with the DUD information.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return array Indexed id => label for the DUD field.
      */
     public function getoptions($args)
     {
@@ -258,13 +275,12 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         $item = $args['item'];
         unset($args);
 
-
-
         $options = array();
         switch ($item['prop_displaytype'])
         {
-            case 3: // RADIO
-            // extract the options
+            case 3:
+                // RADIO
+                // extract the options
                 $list = array_splice(explode('@@', $item['prop_listoptions']), 1);
 
                 // translate them if needed
@@ -275,7 +291,8 @@ class Profile_Api_Dud extends Zikula_AbstractApi
                 }
                 break;
 
-            case 4: // SELECT
+            case 4:
+                // SELECT
                 $list = explode('@@', $item['prop_listoptions']);
                 $list = array_splice($list, 1);
 
@@ -287,8 +304,11 @@ class Profile_Api_Dud extends Zikula_AbstractApi
                 }
                 break;
 
-            case 5: // DATE
-            case 6: // EXTDATE (deprecated)
+            case 5:
+                // DATE
+                // Falls through to case 6 on purpose.
+            case 6:
+                // EXTDATE (deprecated)
                 $options = $item['prop_listoptions'];
 
                 // validate the option against core and %strftime options
@@ -304,7 +324,8 @@ class Profile_Api_Dud extends Zikula_AbstractApi
                 }
                 break;
 
-            case 7: // MULTICHECKBOX
+            case 7:
+                // MULTICHECKBOX
                 $combos = explode(';', $item['prop_listoptions']);
                 $combos = array_filter($combos);
 
