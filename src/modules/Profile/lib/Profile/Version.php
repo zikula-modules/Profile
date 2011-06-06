@@ -1,16 +1,27 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * Profile module version information and other metadata.
+ */
 class Profile_Version extends Zikula_AbstractVersion
 {
+    /**
+     * Provides an array of standard Zikula Extension metadata.
+     * 
+     * @return array Zikula Extension metadata.
+     */
     public function getMetaData()
     {
         return array(

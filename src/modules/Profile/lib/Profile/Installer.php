@@ -1,17 +1,27 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
- * @author Mark West
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
+/**
+ * Profile module installer.
+ */
 class Profile_Installer extends Zikula_AbstractInstaller
 {
+    /**
+     * Provides an array containing default values for module variables (settings).
+     *
+     * @return array An array indexed by variable name containing the default values for those variables.
+     */
     protected function getDefaultModVars()
     {
         return array(
@@ -23,10 +33,9 @@ class Profile_Installer extends Zikula_AbstractInstaller
     }
 
     /**
-     * Initialise the dynamic user data  module
+     * Initialise the dynamic user data  module.
      *
-     * @author Mark West
-     * @return bool true on success or false on failure
+     * @return boolean True on success or false on failure.
      */
     public function install()
     {
@@ -45,11 +54,12 @@ class Profile_Installer extends Zikula_AbstractInstaller
     }
 
     /**
-     * Upgrade the dynamic user data module from an old version
-     * This function can be called multiple times
-     * @author Mark West
-     * @param int $oldversion version to upgrade from
-     * @return bool true on success or false on failure
+     * Upgrade the dynamic user data module from an old version.
+     * 
+     * @param string $oldversion The version from which the upgrade is beginning (the currently installed version); this should be compatible 
+     *                              with {@link version_compare()}.
+     * 
+     * @return boolean True on success or false on failure.
      */
     public function upgrade($oldversion)
     {
@@ -60,7 +70,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
                 EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_UsersUiHandler');
                 
             case '1.6.0':
-                // future upgrade routines
+                // 1.6.0 -> X.X.X when appropriate.
         }
 
         $modVars = $this->getVars();
@@ -85,10 +95,9 @@ class Profile_Installer extends Zikula_AbstractInstaller
     }
 
     /**
-     * Delete the dynamic user data module
+     * Delete the dynamic user data module.
      *
-     * @author Mark West
-     * @return bool true on success or false on failure
+     * @return boolean True on success or false on failure.
      */
     public function uninstall()
     {
@@ -104,11 +113,9 @@ class Profile_Installer extends Zikula_AbstractInstaller
     }
 
     /**
-     * create the default data for the users module
+     * Create the default data for the users module.
      *
-     * This function is only ever called once during the lifetime of a particular
-     * module instance
-     *
+     * @return void
      */
     protected function defaultdata()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Zikula Foundation 2011 - Zikula Application Framework
+ * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
  * Contributor Agreements and licensed to You under the following license:
@@ -15,7 +15,7 @@
 /**
  * Profile module constants.
  */
-interface Profile_Constant
+class Profile_Constant
 {
     /**
      * The common module name.
