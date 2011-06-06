@@ -33,7 +33,7 @@
                 {/if}
             </td>
             <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
-            <td>{$user.pn_user_regdate|dateformat|default:"&nbsp;"}</td>
+            <td>{$user.user_regdate|dateformat|default:"&nbsp;"}</td>
             { if @isset($dudarray.realname) }
             <td>{$user.__ATTRIBUTES__.realname|default:"&nbsp;"}</td>
             {/if}
@@ -51,7 +51,7 @@
             {/if}
             {if $adminedit}
             <td>
-                <a href="{modurl modname='Users' type='admin' func='modify' userid=$user.pn_uid}">{img modname='core' set='icons/extrasmall' src='xedit.png' __alt='Edit'}</a>
+                <a href="{modurl modname='Users' type='admin' func='modify' userid=$user.uid}">{img modname='core' set='icons/extrasmall' src='xedit.png' __alt='Edit'}</a>
                 {if $admindelete}
                 <a href="{modurl modname='Users' type='admin' func='deleteusers' userid=$user.uid}">{img modname='core' set='icons/extrasmall' src='14_layer_deletelayer.png' __alt='Delete'}</a>
                 {/if}
