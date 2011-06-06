@@ -18,48 +18,47 @@
 class Profile_Api_Memberslist extends Zikula_AbstractApi
 {
     /**
-     * Get all users.
+     * Get or count users that match the given criteria.
      * 
-     * This API function returns all users ids. This function allows for filtering and for paged selection.
-     *
-     * Parameters passed in the $args array:
-     * -------------------------------------
-     * numeric startnum  Start number for recordset.
-     * numeric numitems  Number of items to return.
-     * string  letter    Letter to filter by.
-     * string  sortby    Attribute to sort by.
-     * string  sortorder Sort order ascending/descending.
+     * @param boolean $countOnly True to only return a count, if false the matching uids are returned in an array.
+     * @param mixed   $searchBy  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
+     *                              a property on which to select.
+     * @param string  $letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     * @param string  $letter     Letter to filter by.
+     * @param string  $sortBy     A comma-separated list of fields on which the list of members should be sorted.
+     * @param string  $sortOrder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
+     * @param numeric $startNum   Start number for recordset; ignored if $countOnly is true.
+     * @param numeric $numItems   Number of items to return; ignored if $countOnly is true.
      * 
-     * @param array $args All parameters passed to this function.
-     * 
-     * @return array Matching user ids.
+     * @return array|integer Matching user ids or a count of the matching integers.
      */
-    public function getall($args)
+    protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1)
     {
-        // Optional arguments.
-        if (!isset($args['startnum'])) {
-            $args['startnum'] = 1;
+        if (!isset($startNum) || !is_numeric($startNum) || ($startNum != (string)((int)$startNum)) || ($startNum < -1)) {
+            throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
+        } elseif ($startNum <= 0) {
+            $startNum = -1;
         }
-        if (!isset($args['numitems'])) {
-            $args['numitems'] = -1;
+        
+        if (!isset($numItems) || !is_numeric($numItems) || ($numItems != (string)((int)$numItems)) || (($numItems != -1) && ($numItems < 1))) {
+            throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
         }
-        if (!isset($args['sortby']) || empty($args['sortby'])) {
-            $args['sortby'] = 'uname';
+        
+        if (!isset($sortBy) || empty($sortBy)) {
+            $sortBy = 'uname';
         }
-        if (!isset($args['sortorder']) || empty($args['sortorder'])) {
-            $args['sortorder'] = 'ASC';
+        if (!isset($sortOrder) || empty($sortOrder)) {
+            $sortOrder = 'ASC';
         }
-        if (!isset($args['sorting']) || empty($args['sorting'])) {
-            $args['sorting'] = 0;
+        if (!isset($searchBy) || empty($searchBy)) {
+            $searchBy = 'uname';
         }
-        if (!isset($args['searchby']) || empty($args['searchby'])) {
-            $args['searchby'] = 'uname';
-        }
-        if (!isset($args['letter'])) {
-            $args['letter'] = null;
-        }
-        if (!isset($args['returnUids'])) {
-            $args['returnUids'] = false;
+        if (!isset($letter)) {
+            $letter = null;
         }
 
         // define the array to hold the result items
@@ -71,8 +70,8 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         }
 
         // Sanitize the args used in queries
-        $args['letter']   = DataUtil::formatForStore($args['letter']);
-        $args['searchby'] = DataUtil::formatForStore($args['searchby']);
+        $letter   = DataUtil::formatForStore($letter);
+        $searchBy = DataUtil::formatForStore($searchBy);
 
         // load the database information for the users module
         ModUtil::dbInfoLoad('ObjectData');
@@ -86,7 +85,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $propcolumn  = $dbtable['user_property_column'];
         
         $joinInfo = array();
-        if ($args['searchby'] != 'uname') {
+        if ($searchBy != 'uname') {
             $joinInfo[] = array(
                 'join_table'            => 'objectdata_attributes',
                 'join_field'            => array(),
@@ -104,13 +103,13 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         }
         
         $where = "WHERE tbl.{$userscolumn['uid']} != 1 ";
-        if ($args['searchby'] == 'uname') {
+        if ($searchBy == 'uname') {
             $join  = '';
-            if (!empty($args['letter']) && preg_match('/[a-z]/i', $args['letter'])) {
+            if (!empty($letter) && preg_match('/[a-z]/i', $letter)) {
                 // are we listing all or "other" ?
-                $where .= "AND LOWER(tbl.{$userscolumn['uname']}) LIKE '".mb_strtolower($args['letter'])."%' ";
+                $where .= "AND LOWER(tbl.{$userscolumn['uname']}) LIKE '".mb_strtolower($letter)."%' ";
                 // I guess we are not..
-            } else if (!empty($args['letter'])) {
+            } else if (!empty($letter)) {
                 // But other are numbers ?
                 static $otherWhere;
                 if (!isset($otherWhere)) {
@@ -132,18 +131,18 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
                 // to be a number in uname, open a ticket with the Profile project.
             }
 
-        } else if (is_array($args['searchby'])) {
-            if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
+        } else if (is_array($searchBy)) {
+            if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
                 // args.searchby is all => search_value to loop all the user attributes
 
-                $value = DataUtil::formatForStore($args['searchby']['all']);
+                $value = DataUtil::formatForStore($searchBy['all']);
                 $where .= "AND a.{$datacolumn['object_type']} = 'users' AND a.{$datacolumn['obj_status']} = 'A' ";
                 $where .= "AND b.{$propcolumn['prop_weight']} > 0 AND b.{$propcolumn['prop_dtype']} >= 0 AND a.{$datacolumn['value']} LIKE '%{$value}%' ";
 
             } else {
                 // args.searchby is an array of the form prop_id => value
                 $whereList = array();
-                foreach ($args['searchby'] as $prop_id => $value) {
+                foreach ($searchBy as $prop_id => $value) {
                     $prop_id = DataUtil::formatForStore($prop_id);
                     $value   = DataUtil::formatForStore($value);
                     $whereList[] = "(b.{$propcolumn['prop_id']} = '{$prop_id}' AND a.{$datacolumn['value']} LIKE '%{$value}%')";
@@ -154,182 +153,116 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
                 }
             }
 
-        } else if (is_numeric($args['searchby'])) {
-            $where .= "AND b.{$propcolumn['prop_id']} = '{$args['searchby']}' AND a.{$datacolumn['value']} LIKE '{$args['letter']}%' ";
+        } else if (is_numeric($searchBy)) {
+            $where .= "AND b.{$propcolumn['prop_id']} = '{$searchBy}' AND a.{$datacolumn['value']} LIKE '{$letter}%' ";
 
-        } elseif (isset($propcolumn[$args['searchby']])) {
-            $where .= 'AND b.' . $propcolumn[$args['searchby']] . " LIKE '{$args['letter']}%' ";
+        } elseif (isset($propcolumn[$searchBy])) {
+            $where .= 'AND b.' . $propcolumn[$searchBy] . " LIKE '{$letter}%' ";
         }
 
-        if (!$args['sorting'] && ModUtil::getVar('Profile', 'filterunverified')) {
+        if (ModUtil::getVar('Profile', 'filterunverified')) {
             $where .= "AND tbl.{$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
         }
         
-        if (array_key_exists($args['sortby'], $userscolumn)) {
-            $orderBy = 'tbl.'.$userscolumn[$args['sortby']] .' '. $args['sortorder'];
+        if (array_key_exists($sortBy, $userscolumn)) {
+            $orderBy = 'tbl.'.$userscolumn[$sortBy] .' '. $sortOrder;
         } else {
-            $orderBy = DataUtil::formatForStore($args['sortby']) .' '. $args['sortorder'];
+            $orderBy = DataUtil::formatForStore($sortBy) .' '. $sortOrder;
         }
-        if ($orderBy && $args['sortby'] != 'uname') {
+        if ($orderBy && $sortBy != 'uname') {
             $orderBy .= ", {$userscolumn['uname']} ASC ";
         }
         
-        $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true);
+        if ($countOnly) {
+            $result = DBUtil::selectExpandedObjectCount('users', $joinInfo, $where, true);
+        } else {
+            $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true, '', null, $startNum, $numItems);
+        }
 
         // Return the items
         return $result;
     }
 
     /**
-     * Counts the number of users.
+     * Get users that match the given criteria.
      * 
-     * This function allows for filtering by letter.
+     * This API function returns all users ids. This function allows for filtering and for paged selection.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
-     * string letter Letter to filter by.
+     * mixed   searchby  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
+     *                              a property on which to select.
+     * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     * string  sortby    A comma-separated list of fields on which the list of members should be sorted.
+     * string  sortorder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
+     * numeric startnum  Start number for recordset.
+     * numeric numitems  Number of items to return.
      * 
      * @param array $args All parameters passed to this function.
      * 
-     * @return integer Count of matching users.
+     * @return array Matching user ids.
      */
-    public function countitems($args)
+    public function getall($args)
     {
         // Optional arguments.
+        if (!isset($args['startnum'])) {
+            $args['startnum'] = -1;
+        }
+        if (!isset($args['numitems'])) {
+            $args['numitems'] = -1;
+        }
+        if (!isset($args['sortby']) || empty($args['sortby'])) {
+            $args['sortby'] = 'uname';
+        }
+        if (!isset($args['sortorder']) || empty($args['sortorder'])) {
+            $args['sortorder'] = 'ASC';
+        }
         if (!isset($args['searchby']) || empty($args['searchby'])) {
             $args['searchby'] = 'uname';
         }
         if (!isset($args['letter'])) {
             $args['letter'] = null;
         }
+        
+        return $this->getOrCountAll(false, $args['searchby'], $args['letter'], $args['sortby'], $args['sortorder'], $args['startnum'], $args['numitems']);
+    }
 
-        // Security check
-        if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
-            return 0;
+    /**
+     * Count users that match the given criteria.
+     * 
+     * This API function returns all users ids. This function allows for filtering and for paged selection.
+     *
+     * Parameters passed in the $args array:
+     * -------------------------------------
+     * mixed   searchby  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
+     *                              a property on which to select.
+     * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     * 
+     * @param array $args All parameters passed to this function.
+     * 
+     * @return array Count of matching users.
+     */
+    public function countitems($args)
+    {
+        if (!isset($args['searchby']) || empty($args['searchby'])) {
+            $args['searchby'] = 'uname';
         }
-
-        // Sanitize the args used in queries
-        $args['letter']   = DataUtil::formatForStore($args['letter']);
-        $args['searchby'] = DataUtil::formatForStore($args['searchby']);
-
-        // load the database information for the users module
-        ModUtil::dbInfoLoad('Users');
-
-        // Get database setup
-        $dbtable = DBUtil::getTables();
-
-        // It's good practice to name column definitions you are getting
-        // $column don't cut it in more complex modules
-        $userscolumn = $dbtable['users_column'];
-        $datacolumn  = $dbtable['objectdata_attributes_column'];
-        $propcolumn  = $dbtable['user_property_column'];
-
-        // Builds the sql query
-        $sql   = "SELECT     COUNT(DISTINCT tbl.$userscolumn[uname])
-              FROM       $dbtable[users] as tbl ";
-        $join  = "LEFT JOIN  $dbtable[objectdata_attributes] as a
-              ON         a.$datacolumn[object_id] = tbl.$userscolumn[uid] AND a.$datacolumn[object_type] = 'users' AND a.$datacolumn[obj_status] = 'A'
-              LEFT JOIN $dbtable[user_property] as b
-              ON         b.$propcolumn[prop_attribute_name] = a.$datacolumn[attribute_name] ";
-
-        // treat a single character as from the alpha filter and everything else as from the search input
-        if (strlen($args['letter']) > 1) {
-            $args['letter'] = "%{$args['letter']}";
+        if (!isset($args['letter'])) {
+            $args['letter'] = null;
         }
+        
+        $sortBy = 'uname';
+        $sortOrder = 'ASC';
 
-        $where = '';
-        if ($args['searchby'] == 'uname') {
-            $join = '';
-            if (!empty($args['letter']) && preg_match('/[a-z]/i', $args['letter'])) {
-                // are we listing all or "other" ?
-                $where = "WHERE UPPER(tbl.$userscolumn[uname]) LIKE '".strtoupper($args['letter'])."%' AND tbl.$userscolumn[uid] != '1' ";
-                // I guess we are not..
-            } else if (!empty($args['letter'])) {
-                // But other are numbers ?
-                $where = "WHERE (tbl.$userscolumn[uname] LIKE '0%'
-                          OR tbl.$userscolumn[uname] LIKE '1%'
-                          OR tbl.$userscolumn[uname] LIKE '2%'
-                          OR tbl.$userscolumn[uname] LIKE '3%'
-                          OR tbl.$userscolumn[uname] LIKE '4%'
-                          OR tbl.$userscolumn[uname] LIKE '5%'
-                          OR tbl.$userscolumn[uname] LIKE '6%'
-                          OR tbl.$userscolumn[uname] LIKE '7%'
-                          OR tbl.$userscolumn[uname] LIKE '8%'
-                          OR tbl.$userscolumn[uname] LIKE '9%'
-                          OR tbl.$userscolumn[uname] LIKE '-%'
-                          OR tbl.$userscolumn[uname] LIKE '.%'
-                          OR tbl.$userscolumn[uname] LIKE '@%'
-                          OR tbl.$userscolumn[uname] LIKE '$%') ";
-
-                // fifers: while this is not the most eloquent solution, it is
-                // cross database compatible.  We could do an if dbtype is mysql
-                // then do the regexp.  consider for performance enhancement.
-                //
-                // "WHERE $column[uname] REGEXP \"^\[1-9]\" "
-                // REGEX :D, although i think its MySQL only
-                // Will have to change this later.
-                // if you know a better way to match only the first char
-                // to be a number in uname, please change it and email
-                // sweede@gallatinriver.net the correction
-                // or go to post-nuke project page and post
-                // your correction there. Thanks, Bjorn.
-            } else {
-                // or we are unknown or all..
-                $where = "WHERE tbl.$userscolumn[uid] != '1' ";
-                // this is to get rid of the annonymous registry
-            }
-
-        } else if (is_array($args['searchby'])) {
-            if (count($args['searchby']) == 1 && in_array('all', array_keys($args['searchby']))) {
-                // args.searchby is all => search_value to loop all the user attributes
-                $value = DataUtil::formatForStore($args['searchby']['all']);
-                $where = "WHERE b.$propcolumn[prop_weight] > '0' AND $propcolumn[prop_dtype] >= '0' AND a.$datacolumn[value] LIKE '%$value%' ";
-
-            } else {
-                // args.searchby is an array of the form prop_id => value
-                $where = array();
-                foreach ($args['searchby'] as $prop_id => $value) {
-                    $prop_id = DataUtil::formatForStore($prop_id);
-                    $value   = DataUtil::formatForStore($value);
-                    $where[] = "(b.$propcolumn[prop_id] = '$prop_id' AND a.$datacolumn[value] LIKE '%$value%')";
-                }
-                // check if there where contitionals
-                if (!empty($where)) {
-                    $where = 'WHERE '.implode(' AND ', $where).' ';
-                } else {
-                    $where = '';
-                }
-            }
-
-        } else if (is_numeric($args['searchby'])) {
-            $where = "WHERE b.$propcolumn[prop_id] = '$args[searchby]' AND a.$datacolumn[value] LIKE '$args[letter]%' ";
-
-        } elseif (isset($propcolumn[$args['searchby']])) {
-            $where = "WHERE b.".$propcolumn[$args['searchby']]." LIKE '$args[letter]%' ";
-        }
-
-        if (!$args['sorting'] && ModUtil::getVar('Profile', 'filterunverified')) {
-            $where .= " AND tbl.$userscolumn[activated] != '0'";
-        }
-
-        $sql   .= $join . $where;
-
-        $result = DBUtil::executeSQL($sql);
-
-        // Check for an error with the database code
-        if ($result === false) {
-            return LogUtil::registerError($this->__('Error! Could not load data.'));
-        }
-
-        // Obtain the number of items
-        list($numitems) = $result->fields;
-
-        // All successful database queries produce a result set, and that result
-        // set should be closed when it has been finished with
-        $result->Close();
-
-        // Return the number of items
-        return $numitems;
+        return $this->getOrCountAll(true, $args['searchby'], $args['letter'], $sortBy, $sortOrder);
     }
 
     /**
