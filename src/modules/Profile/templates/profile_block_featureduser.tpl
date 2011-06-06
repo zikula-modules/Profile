@@ -1,13 +1,13 @@
 {modgetvar module='Users_Constant::MODNAME'|constant name='Users_Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
 
 <div class="profile-block-featureduser">
-    <h5>{$userinfo.uname|userprofilelink}</h5>
+    <h5>{$userinfo.uname|profilelinkbyuname}</h5>
     <p>
         {if @isset($userinfo.__ATTRIBUTES__.avatar) and $userinfo.__ATTRIBUTES__.avatar neq '' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.gif' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.png'}
-        {$userinfo.uname|userprofilelink:'':"`$avatarpath`/`$userinfo.__ATTRIBUTES__.avatar`"}
+        {$userinfo.uname|profilelinkbyuname:'':"`$avatarpath`/`$userinfo.__ATTRIBUTES__.avatar`"}
         {else}
         {img modname='core' src='personal.png' set='icons/large' assign='profileicon'}
-        {$userinfo.uname|userprofilelink:'profileicon':$profileicon}
+        {$userinfo.uname|profilelinkbyuname:'profileicon':$profileicon}
         {/if}
     </p>
     {foreach from=$dudarray key='dudlabel' item='dudvalue'}

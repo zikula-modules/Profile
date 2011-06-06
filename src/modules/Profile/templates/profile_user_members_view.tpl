@@ -68,7 +68,7 @@
                 {img modname='core' src='redled.png' set='icons/extrasmall' __title='Off-line' __alt='Off-line'}
                 {/if}
             </td>
-            <td><strong>{$user.uname|userprofilelink}</strong></td>
+            <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
             {if isset($dudarray.realname) }
             <td>{if isset($user.__ATTRIBUTES__)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
             {/if}

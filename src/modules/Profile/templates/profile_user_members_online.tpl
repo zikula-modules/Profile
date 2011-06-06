@@ -15,7 +15,7 @@
     <tbody>
         {foreach from=$users item='user'}
         <tr class="{cycle values='z-odd,z-even'}">
-            <td><strong>{$user.uname|userprofilelink}</strong></td>
+            <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
             <td>{$user.__ATTRIBUTES__.realname|default:'&nbsp;'}</td>
             {if $msgmodule}
             <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src='mail_new.png' __alt='Send private message'}</a></td>

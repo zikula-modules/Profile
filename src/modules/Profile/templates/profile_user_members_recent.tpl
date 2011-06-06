@@ -32,7 +32,7 @@
                 {img modname='core' src='redled.png' set='icons/extrasmall' __title='Off-line' __alt='Off-line' }
                 {/if}
             </td>
-            <td><strong>{$user.uname|userprofilelink}</strong></td>
+            <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
             <td>{$user.pn_user_regdate|dateformat|default:"&nbsp;"}</td>
             { if @isset($dudarray.realname) }
             <td>{$user.__ATTRIBUTES__.realname|default:"&nbsp;"}</td>

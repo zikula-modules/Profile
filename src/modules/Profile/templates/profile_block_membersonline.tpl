@@ -2,7 +2,7 @@
 <ul>
     {foreach item='user' from=$usersonline}
     <li>
-        {$user.uname|userprofilelink:'':'':$maxLength}
+        {$user.uname|profilelinkbyuname:'':'':$maxLength}
         {modurl modname=$msgmodule func='inbox' assign="messageslink"}
         {if $msgmodule AND $user.uid eq $uid}
         (<a href="{$messageslink|safehtml}" title="{gt text='unread'}">{$messages.unread}</a> | <a href="{$messageslink|safehtml}" title="{gt text='total'}">{$messages.totalin}</a>)
