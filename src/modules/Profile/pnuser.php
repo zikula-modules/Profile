@@ -31,7 +31,7 @@ function Profile_user_main()
 function Profile_user_view($args)
 {
     // Security check
-    if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ) || !SecurityUtil::checkPermission('Profile:view:', '::', ACCESS_READ)) {
+    if (!SecurityUtil::checkPermission('Profile::view', '::', ACCESS_READ)) {
         return LogUtil::registerPermissionError();
     }
 
