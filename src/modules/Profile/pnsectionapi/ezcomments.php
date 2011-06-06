@@ -1,21 +1,28 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id$
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
-*/
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
+ */
 
 /**
- * Section to show the latest comments of an user
+ * Section to show the latest comments of a user.
  *
- * @author Mateo Tibaquira
- * @param  integer   numitems   number of comments to show
- * @return array of comments
+ * Parameters passed in the $args array:
+ * -------------------------------------
+ * numeric uid      The user account id of the user for whom to return comments.
+ * numeric numitems Number of comments to show.
+ * 
+ * @param array $args All parameters passed to this function.
+ * 
+ * @return array An array of comments.
  */
 function Profile_sectionapi_ezcomments($args)
 {
