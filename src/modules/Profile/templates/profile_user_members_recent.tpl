@@ -38,7 +38,7 @@
             <td>{$user.__ATTRIBUTES__.realname|default:"&nbsp;"}</td>
             {/if}
             {if $msgmodule}
-            <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message' }</a></td>
+            <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message' }</a></td>
             {/if}
             { if @isset($dudarray.url) }
             <td>

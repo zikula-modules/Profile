@@ -73,7 +73,7 @@
             <td>{if isset($user.__ATTRIBUTES__)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
             {/if}
             {if $msgmodule}
-            <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message'}</a></td>
+            <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message'}</a></td>
             {/if}
             { if isset($dudarray.url) }
             <td>
@@ -105,5 +105,5 @@
 <ul id="profile_status">
     <li><strong>{gt text='Registered:'} </strong>{$memberslistreg|safetext}</li>
     <li><strong>{gt text='On-line:'} </strong><a href="{modurl modname='Profile' type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
-    <li><strong>{gt text='Newest user:'} </strong><a href="{modurl modname='Profile' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
+    <li><strong>{gt text='Newest user:'} </strong><a href="{modurl modname='Profile' type='user' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
 </ul>

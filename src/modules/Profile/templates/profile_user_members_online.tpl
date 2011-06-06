@@ -18,7 +18,7 @@
             <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
             <td>{$user.__ATTRIBUTES__.realname|default:'&nbsp;'}</td>
             {if $msgmodule}
-            <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src='mail_new.png' __alt='Send private message'}</a></td>
+            <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src='mail_new.png' __alt='Send private message'}</a></td>
             {/if}
             <td>
                 {if @isset($user.__ATTRIBUTES__.url) and $user.__ATTRIBUTES__.url neq '' and $user.__ATTRIBUTES__.url neq 'http://'}
