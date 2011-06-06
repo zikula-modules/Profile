@@ -397,36 +397,20 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         // get active time based on security settings
         $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
-        // Get items
-        $sql = "SELECT DISTINCT $sessioninfocolumn[uid]
-            FROM $sessioninfotable
-            WHERE $sessioninfocolumn[uid] != 0
-            AND $sessioninfocolumn[lastused] > '$activetime'
-            GROUP BY $sessioninfocolumn[uid]";
+        $where = "WHERE {$sessioninfocolumn['uid']} != 1 AND {$sessioninfocolumn['lastused']} > '{$activetime}' ";
+        
+        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
 
-        $result = DBUtil::executeSQL($sql);
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
         if ($result === false) {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
 
-        // Obtain the number of items
-        list($numitems) = $result->fields;
-
-        // Put items into result array.
-        for (; !$result->EOF; $result->MoveNext()) {
-            list($uid) = $result->fields;
-            $items[$uid] = UserUtil::getVars($uid);
+        foreach ($result as $key => $user) {
+            $result[$key] = UserUtil::getVars($user['uid']);
         }
 
-        // All successful database queries produce a result set, and that result
-        // set should be closed when it has been finished with
-        $result->Close();
-
         // Return the items
-        return $items;
+        return $result;
     }
 
     /**
@@ -450,55 +434,42 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         // get active time based on security
         $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
+        
+        $where = "WHERE {$sessioninfocolumn['lastused']} > '{$activetime}' ";
         // Check if anonymous session are on
         if (System::getVar('anonymoussessions')) {
-            $anonwhere = "AND $sessioninfotable.$sessioninfocolumn[uid] >= '0' ";
+            $where .= "AND {$sessioninfocolumn['uid']} >= 1 ";
         } else {
-            $anonwhere = "AND $sessioninfotable.$sessioninfocolumn[uid] > '0'";
+            $where .= "AND {$sessioninfocolumn['uid']} > 1 ";
         }
+        
+        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), false);
 
-        // Get items
-        $sql = "SELECT   $sessioninfotable.$sessioninfocolumn[uid],
-                $usertbl.$usercol[uname]
-            FROM     $sessioninfotable, $usertbl
-            WHERE    $sessioninfocolumn[lastused] > '$activetime'
-                $anonwhere
-            AND      IF($sessioninfotable.$sessioninfocolumn[uid]='0','1',
-                $sessioninfotable.$sessioninfocolumn[uid]) = $usertbl.$usercol[uid]
-            GROUP BY $sessioninfocolumn[ipaddr], $sessioninfotable.$sessioninfocolumn[uid]
-            ORDER BY $usercol[uname]";
-
-        $result = DBUtil::executeSQL($sql);
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
         if ($result === false) {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
 
-        $numusers  = 0;
         $numguests = 0;
         $unames = array();
-        for (; !$result->EOF; $result->MoveNext()) {
-            list($uid, $uname) = $result->fields;
-
-            if ($uid != 0) {
-                $unames[] = array('uid'   => $uid,
-                        'uname' => $uname);
-                $numusers++;
+        foreach ($result as $key => $user) {
+            if ($user['uid'] != 1) {
+                $user['uname'] = UserUtil::getVar('uname', $user['uid']);
+                $unames[$user['uname']] = $user;
             } else {
                 $numguests++;
             }
         }
+        ksort($unames);
+        $unames = array_values($unames);
+        $numusers = count($unames);
 
-        $items = array('unames'    => $unames,
-                'numusers'  => $numusers,
-                'numguests' => $numguests,
-                'total'     => $numguests + $numusers);
+        $items = array(
+            'unames'    => $unames,
+            'numusers'  => $numusers,
+            'numguests' => $numguests,
+            'total'     => $numguests + $numusers,
+        );
 
-        $result->Close();
-
-        // Return the items
         return $items;
     }
 
