@@ -57,6 +57,7 @@
             {/if}
         </tr>
     </thead>
+
     <tbody>
         {foreach from=$users item='user'}
         <tr class="{cycle values='z-odd,z-even'}">
@@ -68,15 +69,15 @@
                 {/if}
             </td>
             <td><strong>{$user.uname|userprofilelink}</strong></td>
-            { if isset($dudarray.realname) }
-            <td>{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}</td>
+            {if isset($dudarray.realname) }
+            <td>{if isset($user.__ATTRIBUTES__)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
             {/if}
             {if $msgmodule}
             <td><a href="{modurl modname=$msgmodule func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message'}</a></td>
             {/if}
             { if isset($dudarray.url) }
             <td>
-                {if $user.__ATTRIBUTES__.url eq ''}
+                {if !isset($user.__ATTRIBUTES__) || ($user.__ATTRIBUTES__.url == '')}
                 &nbsp;
                 {else}
                 <a href="{$user.__ATTRIBUTES__.url|safetext}" rel="nofollow">{img modname=core set=icons/extrasmall src="agt_internet.png" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
@@ -85,7 +86,7 @@
             {/if}
             {if $adminedit}
             <td>
-                <a href="{modurl modname=Users type=admin func=modify userid=$user.pn_uid}">{img modname='core' set='icons/extrasmall' src="xedit.png" __alt='Edit'}</a>
+                <a href="{modurl modname=Users type=admin func=modify userid=$user.uid}">{img modname='core' set='icons/extrasmall' src="xedit.png" __alt='Edit'}</a>
                 {if $admindelete}
                 <a href="{modurl modname=Users type=admin func=deleteusers userid=$user.uid}">{img modname='core' set='icons/extrasmall' src="14_layer_deletelayer.png" __alt='Delete'}</a>
                 {/if}
