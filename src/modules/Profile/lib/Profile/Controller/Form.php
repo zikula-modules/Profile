@@ -35,7 +35,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
+            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile', 'user', 'viewmembers'));
         }
 
         // The API function is called.
@@ -78,7 +78,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
+            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile', 'user', 'viewmembers'));
         }
 
         // The API function is called.
@@ -125,7 +125,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile'));
+            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile', 'user', 'viewmembers'));
         }
 
         // The API function is called.

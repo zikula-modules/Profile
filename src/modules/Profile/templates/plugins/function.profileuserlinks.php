@@ -72,7 +72,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
         $userlinks .= "<span class=\"$params[class]\">$params[start] ";
 
         if ($currentuser >= 2) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users')) . '">' . __('User account panel', $dom) . '</a>';
+            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users', 'user', 'main')) . '">' . __('User account panel', $dom) . '</a>';
         }
         if ($currentfunc != 'viewmembers') {
             $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Profile', 'user', 'viewmembers')) . '">' . __('Registered users list', $dom) . '</a>';
@@ -109,7 +109,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
 
     // process the common functions
     if ($smarty->_tpl_vars['ismember'] && $smarty->_tpl_vars['sameuser']) {
-        $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users')) . '">' . __('User account panel', $dom) . '</a>';
+        $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users', 'user', 'main')) . '">' . __('User account panel', $dom) . '</a>';
     }
 
     if ($smarty->_tpl_vars['sameuser'] && $currentfunc != 'modify') {
@@ -144,7 +144,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
         $linksarray = array(); 
 
         if (empty($userlinks)) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users')) . '">' . __('User account panel', $dom) . '</a>';
+            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users', 'user', 'main')) . '">' . __('User account panel', $dom) . '</a>';
         }
         $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('ContactList', 'user', 'display', array('uid' => $smarty->_tpl_vars['uid']))) . '">' . __f('Show %s\'s contacts', $smarty->_tpl_vars['uname'], $dom) . '</a>';
         if ($buddystatus) {

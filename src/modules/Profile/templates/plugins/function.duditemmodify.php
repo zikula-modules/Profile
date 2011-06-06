@@ -147,7 +147,7 @@ function smarty_function_duditemmodify($params, &$smarty)
                 return '';
             }
             $render->assign('linktext', __('Go to the Avatar manager', $dom));
-            $render->assign('linkurl', ModUtil::url('Avatar'));
+            $render->assign('linkurl', ModUtil::url('Avatar', 'user', 'main'));
             $output = $render->fetch('profile_dudedit_link.tpl');
             // add a hidden input if this is required
             if ($item['prop_required']) {
