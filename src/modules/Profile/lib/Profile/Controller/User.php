@@ -378,6 +378,10 @@ class Profile_Controller_User extends Zikula_AbstractController
                 array('sortby'    => 'user_regdate',
                 'numitems'  => $modvars['recentmembersitemsperpage'],
                 'sortorder' => 'DESC'));
+        
+        foreach ($users as $key => $uid) {
+            $users[$key] = UserUtil::getVars($uid);
+        }
 
         // Is current user online
         $this->view->assign('loggedin', UserUtil::isLoggedIn());
