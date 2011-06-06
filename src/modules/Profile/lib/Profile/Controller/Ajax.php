@@ -20,8 +20,8 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
     /**
      * Change the weight of a profile item.
      * 
-     * Parameters passed in via FormUtil:
-     * ----------------------------------
+     * Parameters passed in via POST, or via GET:
+     * ------------------------------------------
      * array   profilelist An array of dud item ids for which the weight should be changed.
      * numeric startnum    The desired weight of the first item in the list minus 1 (e.g., if the weight of the first item should be 3 then startnum contains 2)
      *
@@ -37,8 +37,8 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
             AjaxUtil::error($this->__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."));
         }
 
-        $profilelist = FormUtil::getPassedValue('profilelist');
-        $startnum    = FormUtil::getPassedValue('startnum');
+        $profilelist = $this->request->getPost()->get('profilelist', $this->request->getGet()->get('profilelist', null));
+        $startnum    = $this->request->getPost()->get('startnum', $this->request->getGet()->get('startnum', null));
 
         if ($startnum < 0) {
             AjaxUtil::error($this->__f("Error! Invalid '%s' passed.", 'startnum'));
@@ -70,8 +70,8 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
     /**
      * Change the status of a profile item.
      *
-     * Parameters passed in via FormUtil:
-     * ----------------------------------
+     * Parameters passed in via POST, or via GET:
+     * ------------------------------------------
      * numeric dudid     Id of the property to update.
      * boolean oldstatus True to activate or false to deactivate the item.
      * 
@@ -87,8 +87,8 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         //    AjaxUtil::error($this->__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."));
         //}
         
-        $prop_id   = FormUtil::getPassedValue('dudid');
-        $oldstatus = (bool)FormUtil::getPassedValue('oldstatus');
+        $prop_id   = $this->request->getPost()->get('dudid', $this->request->getGet()->get('dudid', null));
+        $oldstatus = (bool)$this->request->getPost()->get('oldstatus', $this->request->getGet()->get('oldstatus', null));
 
         if (!$prop_id) {
             return array('result' => false);
@@ -111,8 +111,8 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
     /**
      * Get a profile section for a user.
      *
-     * Parameters passed in via FormUtil:
-     * ----------------------------------
+     * Parameters passed in via POST, or via GET:
+     * ------------------------------------------
      * numeric uid  Id of the user to query.
      * string  name Name of the section to retrieve.
      * array   args Optional arguments to the API.
@@ -125,9 +125,9 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
             AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
         }
 
-        $uid  = FormUtil::getPassedValue('uid');
-        $name = FormUtil::getPassedValue('name');
-        $args = FormUtil::getPassedValue('args');
+        $uid  = $this->request->getPost()->get('uid', $this->request->getGet()->get('uid', null));
+        $name = $this->request->getPost()->get('name', $this->request->getGet()->get('name', null));
+        $args = $this->request->getPost()->get('args', $this->request->getGet()->get('args', null));
 
         if (empty($uid) || !is_numeric($uid) || empty($name)) {
             return array('result' => false);

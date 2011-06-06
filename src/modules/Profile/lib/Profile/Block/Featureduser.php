@@ -185,6 +185,12 @@ class Profile_Block_Featureduser extends Zikula_Controller_AbstractBlock
 
     /**
      * Update block settings.
+     * 
+     * Parameters passed in via POST:
+     * ------------------------------
+     * string  username     The user name of the featured user.
+     * array   fieldstoshow An array of dud item labels corresponding to the information to display in the block.
+     * boolean showregdate  True to show the featured user's registration date, false to supress it.
      *
      * @param array $blockinfo A blockinfo structure.
      * 
@@ -196,9 +202,9 @@ class Profile_Block_Featureduser extends Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // alter the corresponding variables
-        $vars['username']     = FormUtil::getPassedValue('username', null, 'POST');
-        $vars['fieldstoshow'] = FormUtil::getPassedValue('fieldstoshow', null, 'POST');
-        $vars['showregdate']  = (bool)FormUtil::getPassedValue('showregdate', null, 'POST');
+        $vars['username']     = $this->request->getPost()->get('username', null);
+        $vars['fieldstoshow'] = $this->request->getPost()->get('fieldstoshow', null);
+        $vars['showregdate']  = (bool)$this->request->getPost()->get('showregdate', null);
 
         if (!isset($vars['fieldstoshow']) || !is_array($vars['fieldstoshow']) || empty($vars['fieldstoshow'])) {
             $vars['fieldstoshow'] = array();

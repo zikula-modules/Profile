@@ -62,8 +62,11 @@ function smarty_function_duditemmodify($params, &$smarty)
 
     // detect if we are in the registration form
     $onregistrationform = false;
-    $func = FormUtil::getPassedValue('func', 'main');
-    if (ModUtil::getName() == 'Users' && $func == 'register') {
+    
+    // TODO - will these globals always be available? Is there a utility method out there somewhere to get these?
+    global $module, $func;
+    
+    if (strtolower($module) == 'users' && strtolower($func) == 'register') {
         $onregistrationform = true;
     }
 

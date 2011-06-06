@@ -53,7 +53,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $startnum = (int)FormUtil::getPassedValue('startnum', null, 'GET');
+        $startnum = (int)$this->request->getGet()->get('startnum', null);
         $numitems = 20;
 
         $items = ModUtil::apiFunc('Profile', 'user', 'getall',
@@ -239,13 +239,13 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $label       = isset($args['label'])         ? $args['label']         : FormUtil::getPassedValue('label', null, 'POST');
-        $attrname    = isset($args['attributename']) ? $args['attributename'] : FormUtil::getPassedValue('attributename', null, 'POST');
-        $required    = isset($args['required'])      ? $args['required']      : FormUtil::getPassedValue('required', null, 'POST');
-        $viewby      = isset($args['viewby'])        ? $args['viewby']        : FormUtil::getPassedValue('viewby', null, 'POST');
-        $displaytype = isset($args['displaytype'])   ? $args['displaytype']   : FormUtil::getPassedValue('displaytype', null, 'POST');
-        $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : FormUtil::getPassedValue('listoptions', null, 'POST');
-        $note        = isset($args['note'])          ? $args['note']          : FormUtil::getPassedValue('note', null, 'POST');
+        $label       = isset($args['label'])         ? $args['label']         : $this->request->getPost()->get('label', null);
+        $attrname    = isset($args['attributename']) ? $args['attributename'] : $this->request->getPost()->get('attributename', null);
+        $required    = isset($args['required'])      ? $args['required']      : $this->request->getPost()->get('required', null);
+        $viewby      = isset($args['viewby'])        ? $args['viewby']        : $this->request->getPost()->get('viewby', null);
+        $displaytype = isset($args['displaytype'])   ? $args['displaytype']   : $this->request->getPost()->get('displaytype', null);
+        $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : $this->request->getPost()->get('listoptions', null);
+        $note        = isset($args['note'])          ? $args['note']          : $this->request->getPost()->get('note', null);
 
         $returnurl = ModUtil::url('Profile', 'admin', 'view');
 
@@ -311,8 +311,8 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     public function modify($args)
     {
         // Get parameters from whatever input we need.
-        $dudid    = isset($args['dudid'])    ? (int)$args['dudid']    : (int)FormUtil::getPassedValue('dudid',    null, 'GET');
-        $objectid = isset($args['objectid']) ? (int)$args['objectid'] : (int)FormUtil::getPassedValue('objectid', null, 'GET');
+        $dudid    = isset($args['dudid'])    ? (int)$args['dudid']    : (int)$this->request->getGet()->get('dudid', null);
+        $objectid = isset($args['objectid']) ? (int)$args['objectid'] : (int)$this->request->getGet()->get('objectid', null);
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -394,15 +394,14 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $dudid       = (int)FormUtil::getPassedValue('dudid',    (isset($args['dudid']) ? $args['dudid'] : null), 'POST');
-        $objectid    = (int)FormUtil::getPassedValue('objectid', (isset($args['objectid']) ? $args['objectid'] : null), 'POST');
-        $label       = FormUtil::getPassedValue('label',         (isset($args['label']) ? $args['label'] : null), 'POST');
-        $required    = FormUtil::getPassedValue('required',      (isset($args['required']) ? $args['required'] : null), 'POST');
-        $viewby      = FormUtil::getPassedValue('viewby',        (isset($args['viewby']) ? $args['viewby'] : null), 'POST');
-        //$dtype       = FormUtil::getPassedValue('dtype',         (isset($args['dtype']) ? $args['dtype'] : null), 'POST');
-        $displaytype = FormUtil::getPassedValue('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null), 'POST');
-        $listoptions = FormUtil::getPassedValue('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null), 'POST');
-        $note        = FormUtil::getPassedValue('note',          (isset($args['note']) ? $args['note'] : null), 'POST');
+        $dudid       = (int)$this->request->getPost()->get('dudid',    (isset($args['dudid']) ? $args['dudid'] : null));
+        $objectid    = (int)$this->request->getPost()->get('objectid', (isset($args['objectid']) ? $args['objectid'] : null));
+        $label       = $this->request->getPost()->get('label',         (isset($args['label']) ? $args['label'] : null));
+        $required    = $this->request->getPost()->get('required',      (isset($args['required']) ? $args['required'] : null));
+        $viewby      = $this->request->getPost()->get('viewby',        (isset($args['viewby']) ? $args['viewby'] : null));
+        $displaytype = $this->request->getPost()->get('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null));
+        $listoptions = $this->request->getPost()->get('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null));
+        $note        = $this->request->getPost()->get('note',          (isset($args['note']) ? $args['note'] : null));
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -443,9 +442,9 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     public function delete($args)
     {
         // Get parameters from whatever input we need.
-        $dudid        =  (int)FormUtil::getPassedValue('dudid',        (isset($args['dudid']) ? $args['dudid'] : null), 'GETPOST');
-        $objectid     =  (int)FormUtil::getPassedValue('objectid',     (isset($args['objectid']) ? $args['objectid'] : null), 'GETPOST');
-        $confirmation = (bool)FormUtil::getPassedValue('confirmation', (isset($args['confirmation']) ? $args['confirmation'] : null), 'GETPOST');
+        $dudid        =  (int)$this->request->getGet()->get('dudid',        $this->request->getPost()->get('dudid',        (isset($args['dudid']) ? $args['dudid'] : null)));
+        $objectid     =  (int)$this->request->getGet()->get('objectid',     $this->request->getPost()->get('objectid',     (isset($args['objectid']) ? $args['objectid'] : null)));
+        $confirmation = (bool)$this->request->getGet()->get('confirmation', $this->request->getPost()->get('confirmation', (isset($args['confirmation']) ? $args['confirmation'] : null)));
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -504,7 +503,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function increase_weight()
     {
-        $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
+        $dudid = (int)$this->request->getGet()->get('dudid', null);
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
@@ -538,7 +537,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function decrease_weight()
     {
-        $dudid = (int)FormUtil::getPassedValue('dudid', null, 'GET');
+        $dudid = (int)$this->request->getGet()->get('dudid', null);
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
@@ -579,7 +578,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     public function activate($args)
     {
         // Get parameters from whatever input we need.
-        $dudid  = (int)FormUtil::getPassedValue('dudid', (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
+        $dudid  = (int)$this->request->getGet()->get('dudid', (isset($args['dudid']) ? $args['dudid'] : null));
 
         // The API function is called.
         if (ModUtil::apiFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
@@ -605,7 +604,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     public function deactivate($args)
     {
         // Get parameters from whatever input we need.
-        $dudid  = (int)FormUtil::getPassedValue('dudid',  (isset($args['dudid']) ? $args['dudid'] : null), 'GET');
+        $dudid  = (int)$this->request->getGet()->get('dudid',  (isset($args['dudid']) ? $args['dudid'] : null));
 
         // Confirm authorisation code.
         if (!SecurityUtil::confirmAuthKey()) {
@@ -681,23 +680,23 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Update module variables.
-        $viewregdate = (bool)FormUtil::getPassedValue('viewregdate', 0, 'POST');
+        $viewregdate = (bool)$this->request->getPost()->get('viewregdate', 0);
         $this->setVar('viewregdate', $viewregdate);
 
 
-        $memberslistitemsperpage = (int)FormUtil::getPassedValue('memberslistitemsperpage', 20, 'POST');
+        $memberslistitemsperpage = (int)$this->request->getPost()->get('memberslistitemsperpage', 20);
         $this->setVar('memberslistitemsperpage', $memberslistitemsperpage);
 
-        $onlinemembersitemsperpage = (int)FormUtil::getPassedValue('onlinemembersitemsperpage', 20, 'POST');
+        $onlinemembersitemsperpage = (int)$this->request->getPost()->get('onlinemembersitemsperpage', 20);
         $this->setVar('onlinemembersitemsperpage', $onlinemembersitemsperpage);
 
-        $recentmembersitemsperpage = (int)FormUtil::getPassedValue('recentmembersitemsperpage', 10, 'POST');
+        $recentmembersitemsperpage = (int)$this->request->getPost()->get('recentmembersitemsperpage', 10);
         $this->setVar('recentmembersitemsperpage', $recentmembersitemsperpage);
 
-        $filterunverified = (bool)FormUtil::getPassedValue('filterunverified', false, 'POST');
+        $filterunverified = (bool)$this->request->getPost()->get('filterunverified', false);
         $this->setVar('filterunverified', $filterunverified);
 
-        $dudregshow = FormUtil::getPassedValue('dudregshow', array(), 'POST');
+        $dudregshow = $this->request->getPost()->get('dudregshow', array());
         $this->setVar('dudregshow', $dudregshow);
 
         // the module configuration has been updated successfuly

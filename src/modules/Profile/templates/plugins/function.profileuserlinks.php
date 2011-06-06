@@ -56,7 +56,9 @@ function smarty_function_profileuserlinks($params, &$smarty)
 
     $dom = ZLanguage::getModuleDomain('Profile');
 
-    $currentfunc = FormUtil::getPassedValue('func', 'main');
+    global $func;
+    
+    $currentfunc = (isset($func) && !empty($func)) ? $func : 'main';
 
     $currentuser  = UserUtil::getVar('uid');
     $currentuname = UserUtil::getVar('uname');

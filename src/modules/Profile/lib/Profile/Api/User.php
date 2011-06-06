@@ -383,7 +383,7 @@ class Profile_Api_User extends Zikula_AbstractApi
     {
         // Argument check
         if (!isset($args['dynadata'])) {
-            $args['dynadata'] = FormUtil::getPassedValue('dynadata');
+            throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
 
         // The API function is called.
@@ -472,7 +472,11 @@ class Profile_Api_User extends Zikula_AbstractApi
      */
     public function insertdyndata($args)
     {
-        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : FormUtil::getPassedValue('dynadata');
+        if (!isset($args['dynadata'])) {
+            throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+        }
+        
+        $dynadata = $args['dynadata'];
 
         // Validate if there's no dynadata
         // do not touch the __ATTRIBUTES__ field
@@ -511,7 +515,11 @@ class Profile_Api_User extends Zikula_AbstractApi
     {
         $uids = array();
 
-        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : FormUtil::getPassedValue('dynadata');
+        if (!isset($args['dynadata'])) {
+            throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+        }
+        
+        $dynadata = $args['dynadata'];
 
         // Validate if there's any dynamic data
         if (empty($dynadata) || !is_array($dynadata)) {

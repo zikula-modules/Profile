@@ -144,7 +144,7 @@ class Profile_Block_Membersonline extends Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // alter the corresponding variable
-        $vars['lengthmax'] = (int)FormUtil::getPassedValue('lengthmax', null, 'REQUEST');
+        $vars['lengthmax'] = (int)$this->request->getPost()->get('lengthmax', null);
 
         // write back the new contents
         $blockinfo['content'] = BlockUtil::varsToContent($vars);

@@ -124,7 +124,7 @@ class Profile_Block_Lastseen extends Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
         // alter the corresponding variable
-        $vars['amount'] = (int)FormUtil::getPassedValue('amount', null, 'REQUEST');
+        $vars['amount'] = (int)$this->request->getPost()->get('amount', null);
 
         // write back the new contents
         $blockinfo['content'] = BlockUtil::varsToContent($vars);

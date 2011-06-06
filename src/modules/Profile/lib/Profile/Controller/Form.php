@@ -20,8 +20,8 @@ class Profile_Controller_Form extends Zikula_AbstractController
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.
      * 
-     * Parameters passed via the $args array, or via FormUtil:
-     * -------------------------------------------------------
+     * Parameters passed via the $args array, or via POST:
+     * ---------------------------------------------------
      * integer userid   The user id of the user for which the form section is being rendered; optional; defaults to 1, which will result in the use of 
      *                      default values from the anonymous user.
      * array   dynadata The dynamic user data with which to populate the form section; if not specified in $args it can be retrieved from a GET, POST, 
@@ -49,7 +49,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
         // check if there's a user to edit
         // or uses uid=1 to pull the default values from the annonymous user
         $userid   = isset($args['userid']) ? $args['userid'] : 1;
-        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : FormUtil::getPassedValue('dynadata', array());
+        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : $this->request->getPost()->get('dynadata', array());
 
         // merge this temporary dynadata and the errors into the items array
         foreach ($items as $prop_label => $item) {
@@ -113,8 +113,8 @@ class Profile_Controller_Form extends Zikula_AbstractController
     /**
      * Fills a z-datatable body with the passed dynadata.
      * 
-     * Parameters passed via the $args array, or via FormUtil:
-     * -------------------------------------------------------
+     * Parameters passed via the $args array:
+     * --------------------------------------
      * array userinfo The dynadata with which to populate the data table.
      * 
      * @param array $args All parameters passed to this function via an internal call.
