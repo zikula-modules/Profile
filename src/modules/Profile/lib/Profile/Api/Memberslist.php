@@ -299,7 +299,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     /**
      * Get the latest registered user.
      *
-     * @return integer latest registered user id
+     * @return integer Latest registered user id.
      */
     public function getlatestuser()
     {
@@ -314,34 +314,22 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $userscolumn = $dbtable['users_column'];
 
         // filter out unverified users
-        $where = '';
+        $where = "{$userscolumn['uid']} != 1 ";
         if (ModUtil::getVar('Profile', 'filterunverified')) {
-            $where = " AND $userscolumn[activated] = '1'";
+            $where .= " AND {$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
         }
-
-        // Get items
-        $sql = "SELECT $userscolumn[uid]
-            FROM $dbtable[users]
-            WHERE $userscolumn[uname] NOT LIKE 'Anonymous' $where
-            ORDER BY $userscolumn[uid] DESC";
-
-        $result = DBUtil::executeSQL($sql);
+        
+        $orderby = "uid DESC ";
+        
+        $result = DBUtil::selectObjectArray('users', $where, $orderby, -1, 1, '', null, null, array('uid'));
 
         // Check for an error with the database code, and if so set an appropriate
         // error message and return
-        if ($result === false) {
+        if (($result === false) || empty($result) || !isset($result[0]) || empty($result[0]) || !isset($result[0]['uid']) || empty($result[0]['uid'])) {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
 
-        // Obtain the number of items
-        list($lastuser) = $result->fields;
-
-        // All successful database queries produce a result set, and that result
-        // set should be closed when it has been finished with
-        $result->Close();
-
-        // Return the number of items
-        return $lastuser;
+        return $result[0]['uid'];
     }
 
     /**
@@ -372,29 +360,17 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         // getting - $table and $column don't cut it in more complex modules
         $sessioninfocolumn = $dbtable['session_info_column'];
         $sessioninfotable  = $dbtable['session_info'];
+        
+        $where = "WHERE {$sessioninfocolumn['uid']} = " . DataUtil::formatForStore($args['userid']) . " AND {$sessioninfocolumn['lastused']} > '{$activetime}'";
+        
+        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
 
-        // Get items
-        $sql = "SELECT DISTINCT $sessioninfocolumn[uid]
-            FROM $sessioninfotable
-            WHERE $sessioninfocolumn[uid] = $args[userid] and $sessioninfocolumn[lastused] > '$activetime'";
-
-        $result = DBUtil::executeSQL($sql);
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
         if ($result === false) {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
 
-        // Obtain the item
-        list($online) = $result->fields;
-
-        // All successful database queries produce a result set, and that result
-        // set should be closed when it has been finished with
-        $result->Close();
-
         // Return if the user is online
-        if ($online > 0) {
+        if (count($result) > 0) {
             return true;
         } else {
             return false;
