@@ -1,26 +1,32 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: function.profilesection.php 121 2010-06-03 05:02:54Z drak $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_Value_Addons
- * @subpackage Profile
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
 /**
- * Smarty function to display a section of the user profile
+ * Smarty function to display a section of the user profile.
  *
  * Example
- * <!--[profilesection name='ezcomments']-->
+ * {profilesection name='ezcomments'}
  *
- * @author       Mateo Tibaquira
- * @param        array       $params      All parameters passed to this section from the template
- * @param        object      &$smarty     Reference to the Smarty object
- * @param        string      $name        Section name to render
- * @return       string      the user section
+ * Parameters passed in via the $params array:
+ * -------------------------------------------
+ * numeric uid  The user account id of the user for which this profile section should be displayed.
+ * string  name Section name to render.
+ * 
+ * @param array  $params  All parameters passed to this section from the template.
+ * @param object &$smarty Reference to the Smarty object.
+ * 
+ * @return string|boolean The rendered section; empty string if the section is not defined; false if error.
  */
 function smarty_function_profilesection($params, &$smarty)
 {

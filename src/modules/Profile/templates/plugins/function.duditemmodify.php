@@ -1,42 +1,42 @@
 <?php
 /**
- * Zikula Application Framework
+ * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: function.duditemmodify.php 121 2010-06-03 05:02:54Z drak $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
  *
- * Dynamic User data Module
+ * @license GNU/GPLv3 (or at your option, any later version).
+ * @package Profile
  *
- * @package      Zikula_System_Modules
- * @subpackage   Profile
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
 
 /**
- * Smarty function to display an editable dynamic user data field
+ * Smarty function to display an editable dynamic user data field.
  *
  * Example
- * <!--[duditemmodify propattribute='avatar']-->
+ * {duditemmodify propattribute='avatar'}
  *
  * Example
- * <!--[duditemmodify propattribute='realname' uid=$uid]-->
+ * {duditemmodify propattribute='realname' uid=$uid}
  *
  * Example
- * <!--[duditemmodify item=$item]-->
+ * {duditemmodify item=$item}
  *
- * @author       Mark West
- * @since        21/01/04
- * @see          function.exampleadminlinks.php::smarty_function_exampleadminlinks()
- * @param        array       $params            All attributes passed to this function from the template
- * @param        object     &$smarty            Reference to the Smarty object
- * @param        string      $item              The Profile DUD item
- * @param        string      $uid               User ID to display the field value for (-1 = do not load)
- * @param        string      $class             CSS class to assign to the table row/form row div (optional)
- * @param        string      $proplabel         Property label to display (optional overrides the preformated dud item $item)
- * @param        string      $propattribute     Property attribute to display
- * @param        string      error              Property error message
- * @return       string      the results of the module function
+ * Parameters passed in via the $params array:
+ * -------------------------------------------
+ * string item          The Profile DUD item.
+ * string uid           User ID to display the field value for (-1 = do not load).
+ * string class         CSS class to assign to the table row/form row div (optional).
+ * string proplabel     Property label to display (optional overrides the preformated dud item $item).
+ * string propattribute Property attribute to display.
+ * string error         Property error message.
+ * 
+ * @param array  $params  All attributes passed to this function from the template.
+ * @param object &$smarty Reference to the Zikula_View/Smarty object.
+ * 
+ * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
 function smarty_function_duditemmodify($params, &$smarty)
 {
@@ -44,7 +44,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     unset($params);
 
     if (!ModUtil::available('Profile')) {
-        return;
+        return '';
     }
 
     if (!isset($item)) {
@@ -53,11 +53,11 @@ function smarty_function_duditemmodify($params, &$smarty)
         } else if (isset($propattribute)) {
             $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
         } else {
-            return;
+            return false;
         }
     }
     if (!isset($item) || empty ($item)) {
-        return;
+        return false;
     }
 
     // detect if we are in the registration form
