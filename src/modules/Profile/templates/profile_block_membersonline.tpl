@@ -3,11 +3,12 @@
     {foreach item='user' from=$usersonline}
     <li>
         {$user.uname|profilelinkbyuname:'':'':$maxLength}
-        {modurl modname=$msgmodule type='user' func='inbox' assign="messageslink"}
-        {if $msgmodule AND $user.uid eq $uid}
+        {if $msgmodule}{modurl modname=$msgmodule type='user' func='inbox' assign="messageslink"}
+        {if $user.uid eq $uid}
         (<a href="{$messageslink|safehtml}" title="{gt text='unread'}">{$messages.unread}</a> | <a href="{$messageslink|safehtml}" title="{gt text='total'}">{$messages.totalin}</a>)
-        {elseif $msgmodule}
+        {else}
         <a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}" title="{gt text='Send private message'}&nbsp;{$user.uname|safehtml}">{img modname='core' set='icons/extrasmall' src='mail_new.png' __alt='Send private message' style='vertical-align:middle; margin-left:2px;'}</a>
+        {/if}
         {/if}
     </li>
     {/foreach}
