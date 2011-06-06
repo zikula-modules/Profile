@@ -167,7 +167,7 @@ class Profile_Block_Featureduser extends Zikula_Controller_AbstractBlock
         $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
 
         foreach ($activeduds as $attr => $activedud) {
-            $dudarray[$attr] = $this->__($activedud['prop_label'], $dom);
+            $dudarray[$attr] = $this->__($activedud['prop_label']);
         }
 
         // Create output object
