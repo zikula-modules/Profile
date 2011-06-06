@@ -1,13 +1,4 @@
-/**
- * Zikula Application Framework
- *
- * @copyright (c), Zikula Development Team
- * @link http://www.zikula.com
- * @version $Id: profile_edit_property.js 85 2010-01-22 06:19:04Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Zikula_System_Modules
- * @subpackage Profile
- */
+// Copyright 2011 Zikula Foundation.
 
 Event.observe(window, 'load', profile_modifyconfig_init, false);
 
