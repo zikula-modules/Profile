@@ -1,9 +1,7 @@
 {if $users}
 <ul>
     {foreach from=$users item='user'}
-    {usergetvar name='uname' uid=$user.uid assign='uname'}
-    {usergetvar name='user_regdate' uid=$user.uid assign='regdate'}
-    <li>{$uname|profilelinkbyuname} ({$regdate|dateformat})</li>
+        <li>{$user.uname|profilelinkbyuname} ({$user.user_regdate|dateformat})</li>
     {/foreach}
 </ul>
 {/if}

@@ -71,10 +71,11 @@ class Profile_Block_Lastseen extends Zikula_Controller_AbstractBlock
         $this->view->setCaching(false);
 
         // get last x logged in user id's
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall',
-                array('sortby'    => 'lastlogin',
-                'numitems'  => $vars['amount'],
-                'sortorder' => 'DESC'));
+        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', array(
+            'sortby'    => 'lastlogin',
+            'numitems'  => $vars['amount'],
+            'sortorder' => 'DESC',
+        ));
 
         $this->view->assign('users', $users);
 

@@ -526,13 +526,14 @@ class Profile_Api_User extends Zikula_AbstractApi
             return $uids;
         }
 
+        $params = array('returnUids' => true);
         if (count($dynadata) == 1 && in_array('all', array_keys($dynadata))) {
-            $params = array('searchby' => $dynadata, 'returnUids' => true);
+            $params['searchby'] = $dynadata;
 
         } else {
             $duditems = ModUtil::apiFunc('Profile', 'user', 'getall');
 
-            $params = array('searchby' => array(), 'returnUids' => true);
+            $params['searchby'] = array();
             foreach ($duditems as $item) {
                 if (isset($dynadata[$item['prop_attribute_name']]) && !empty($dynadata[$item['prop_attribute_name']])) {
                     $params['searchby'][$item['prop_id']] = $dynadata[$item['prop_attribute_name']];

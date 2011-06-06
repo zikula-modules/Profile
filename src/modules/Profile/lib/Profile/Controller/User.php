@@ -289,19 +289,17 @@ class Profile_Controller_User extends Zikula_AbstractController
         $this->view->assign('memberslistnewest', UserUtil::getVar('uname', ModUtil::apiFunc('Profile', 'memberslist', 'getlatestuser')));
 
         $fetchargs = array(
-            'letter'    => $letter,
-            'sortby'    => $sortby,
-            'sortorder' => $sortorder,
-            'searchby'  => $searchby,
-            'startnum'  => $startnum,
-            'numitems'  => $itemsperpage,
+            'letter'     => $letter,
+            'sortby'     => $sortby,
+            'sortorder'  => $sortorder,
+            'searchby'   => $searchby,
+            'startnum'   => $startnum,
+            'numitems'   => $itemsperpage,
+            'returnUids' => false,
         );
 
         // get full list of user id's
         $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $fetchargs);
-        foreach ($users as $key => $uid) {
-            $users[$key] = UserUtil::getVars($uid);
-        }
 
         $userscount = ModUtil::apiFunc('Profile', 'memberslist', 'countitems', $fetchargs);
 
@@ -374,15 +372,13 @@ class Profile_Controller_User extends Zikula_AbstractController
         $modvars = $this->getVars();
 
         // get last x user id's
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall',
-                array('sortby'    => 'user_regdate',
-                'numitems'  => $modvars['recentmembersitemsperpage'],
-                'sortorder' => 'DESC'));
+        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', array(
+            'sortby'     => 'user_regdate',
+            'numitems'   => $modvars['recentmembersitemsperpage'],
+            'sortorder'  => 'DESC',
+            'returnUids' => false,
+        ));
         
-        foreach ($users as $key => $uid) {
-            $users[$key] = UserUtil::getVars($uid);
-        }
-
         // Is current user online
         $this->view->assign('loggedin', UserUtil::isLoggedIn());
 

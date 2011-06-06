@@ -33,10 +33,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      * @param string  $sortOrder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
      * @param numeric $startNum   Start number for recordset; ignored if $countOnly is true.
      * @param numeric $numItems   Number of items to return; ignored if $countOnly is true.
+     * @param boolean $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true.
      * 
      * @return array|integer Matching user ids or a count of the matching integers.
      */
-    protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1)
+    protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
         if (!isset($startNum) || !is_numeric($startNum) || ($startNum != (string)((int)$startNum)) || ($startNum < -1)) {
             throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
@@ -177,6 +178,12 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             $result = DBUtil::selectExpandedObjectCount('users', $joinInfo, $where, true);
         } else {
             $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true, '', null, $startNum, $numItems);
+            
+            if (!$returnUids) {
+                foreach ($result as $key => $uid) {
+                    $result[$key] = UserUtil::getVars($uid);
+                }
+            }
         }
 
         // Return the items
@@ -190,17 +197,18 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      *
      * Parameters passed in the $args array:
      * -------------------------------------
-     * mixed   searchby  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
-     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
-     *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
-     *                              a property on which to select.
-     * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
-     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
-     *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
-     * string  sortby    A comma-separated list of fields on which the list of members should be sorted.
-     * string  sortorder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
-     * numeric startnum  Start number for recordset.
-     * numeric numitems  Number of items to return.
+     * mixed   searchby   Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                      available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                      an array indexed by property id containing values for each property on which to select, or a string containing the name of
+     *                      a property on which to select.
+     * string  letter     If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                      is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     * string  sortby     A comma-separated list of fields on which the list of members should be sorted.
+     * string  sortorder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
+     * numeric startnum   Start number for recordset.
+     * numeric numitems   Number of items to return.
+     * boolean returnUids If true then a simple array containing only uids is returned, if false then an array containing full user records is returned.
      * 
      * @param array $args All parameters passed to this function.
      * 
@@ -227,8 +235,13 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         if (!isset($args['letter'])) {
             $args['letter'] = null;
         }
+        if (!isset($args['returnUids'])) {
+            $args['returnUids'] = false;
+        } else {
+            $args['returnUids'] = (bool)$args['returnUids'];
+        }
         
-        return $this->getOrCountAll(false, $args['searchby'], $args['letter'], $args['sortby'], $args['sortorder'], $args['startnum'], $args['numitems']);
+        return $this->getOrCountAll(false, $args['searchby'], $args['letter'], $args['sortby'], $args['sortorder'], $args['startnum'], $args['numitems'], $args['returnUids']);
     }
 
     /**
