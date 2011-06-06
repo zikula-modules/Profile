@@ -299,6 +299,9 @@ class Profile_Controller_User extends Zikula_AbstractController
 
         // get full list of user id's
         $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $fetchargs);
+        foreach ($users as $key => $uid) {
+            $users[$key] = UserUtil::getVars($uid);
+        }
 
         $userscount = ModUtil::apiFunc('Profile', 'memberslist', 'countitems', $fetchargs);
 
