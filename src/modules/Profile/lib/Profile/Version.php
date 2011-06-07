@@ -41,7 +41,7 @@ class Profile_Version extends Zikula_AbstractVersion
 
             'securityschema'=> array(
                 'Profile::'                 => '::',
-                'Profile:view:'             => '::',
+                'Profile::view'             => '::',
                 'Profile::item'             => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
                 'Profile:Members:'          => '::',
                 'Profile:Members:recent'    => '::',

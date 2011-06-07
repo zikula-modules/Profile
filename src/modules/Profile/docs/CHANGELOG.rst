@@ -18,6 +18,23 @@ CHANGELOG
         + etc.
     - Various bug fixes, including issues #60, #61, #66.
 
+1.5.3
+=====
+    - Changed the permission for the view function.
+        Changed from 'Profile:view:' to the more standard 'Profile::view', and 
+        also removed the double permission requirement for the view function 
+        (Read access needed only for 'Profile::view' not for  both that 
+        AND 'Profile::'). (issue #55)
+
+        *** NOTE: If your current permission set includes 'Profile:view:', then
+            it must be changed to 'Profile::view'.
+
+1.5.2
+=====
+
+1.5.1
+=====
+
 1.5
 ===
     - 'Mandatory' and 'Core' field types are now deprecated

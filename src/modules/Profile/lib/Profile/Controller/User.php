@@ -46,7 +46,7 @@ class Profile_Controller_User extends Zikula_AbstractController
     public function view($args)
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ) || !SecurityUtil::checkPermission('Profile:view:', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('Profile::view', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
 
