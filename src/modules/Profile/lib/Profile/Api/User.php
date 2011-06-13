@@ -571,6 +571,8 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['vars'][2]) || empty($args['vars'][2]) || $args['vars'][2] != 'view') {
             return false;
         }
+        
+        System::queryStringSetVar('type', 'user');
         System::queryStringSetVar('func', 'view');
 
         // identify the correct parameter to identify the user
@@ -613,6 +615,12 @@ class Profile_Api_User extends Zikula_AbstractApi
 
         if (!isset($args['type'])) {
             $args['type'] = 'user';
+        } elseif (!is_string($args['type']) || ($args['type'] != 'user')) {
+            return LogUtil::registerArgsError();
+        }
+        
+        if (empty($args['func'])) {
+            $args['func'] = 'main';
         }
 
         // create an empty string ready for population
