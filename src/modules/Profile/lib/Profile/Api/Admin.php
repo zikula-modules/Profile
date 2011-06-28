@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
@@ -17,6 +18,7 @@
  */
 class Profile_Api_Admin extends Zikula_AbstractApi
 {
+
     /**
      * Create a new dynamic user data item.
      * 
@@ -54,11 +56,11 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         // Check if the label or attribute name already exists
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
         if ($item) {
-            return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']) ));
+            return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
         }
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
-            return LogUtil::registerError($this->__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name']) ));
+            return LogUtil::registerError($this->__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
         }
 
         // Determine the new weight
@@ -72,24 +74,24 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         // produce the validation array
         $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
-        $validationinfo = array('required'    => $args['required'],
-                'viewby'      => $args['viewby'],
-                'displaytype' => $args['displaytype'],
-                'listoptions' => $args['listoptions'],
-                'note'        => $args['note']);
+        $validationinfo = array('required' => $args['required'],
+            'viewby' => $args['viewby'],
+            'displaytype' => $args['displaytype'],
+            'listoptions' => $args['listoptions'],
+            'note' => $args['note']);
 
         $obj = array();
-        $obj['prop_label']          = $args['label'];
+        $obj['prop_label'] = $args['label'];
         $obj['prop_attribute_name'] = $args['attribute_name'];
-        $obj['prop_dtype']          = $args['dtype'];
-        $obj['prop_weight']         = $weight;
-        $obj['prop_validation']     = serialize($validationinfo);
+        $obj['prop_dtype'] = $args['dtype'];
+        $obj['prop_weight'] = $weight;
+        $obj['prop_validation'] = serialize($validationinfo);
 
         $res = DBUtil::insertObject($obj, 'user_property', 'prop_id');
 
         // Check for an error with the database
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not create new attribute.' ));
+            return LogUtil::registerError($this->__('Error! Could not create new attribute.'));
         }
 
         // Return the id of the newly created item to the calling process
@@ -120,7 +122,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
         if ($item == false) {
-            return LogUtil::registerError($this->__('Error! No such personal info item found.' ));
+            return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
 
         // Clean the label
@@ -142,7 +144,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if ($args['label'] <> $item['prop_label']) {
             $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
             if ($vitem) {
-                return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label']) ));
+                return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
             }
         }
 
@@ -150,12 +152,12 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             if ($args['prop_weight'] == 0) {
                 unset($args['prop_weight']);
             } elseif ($args['prop_weight'] <> $item['prop_weight']) {
-                $result  = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
+                $result = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
                 $result['prop_weight'] = $item['prop_weight'];
 
                 $dbtable = DBUtil::getTables();
-                $column  = $dbtable['user_property_column'];
-                $where   = "$column[prop_weight] =  '$args[prop_weight]'
+                $column = $dbtable['user_property_column'];
+                $where = "$column[prop_weight] =  '$args[prop_weight]'
                         AND $column[prop_id] <> '$args[dudid]'";
 
                 DBUtil::updateObject($result, 'user_property', $where, 'prop_id');
@@ -164,8 +166,8 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         // create the object to update
         $obj = array();
-        $obj['prop_id']     = $args['dudid'];
-        $obj['prop_dtype']  = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
+        $obj['prop_id'] = $args['dudid'];
+        $obj['prop_dtype'] = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
         $obj['prop_weight'] = (isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight']);
 
         // assumes if displaytype is set, all the validation info is
@@ -177,11 +179,11 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
             // Produce the validation array
             $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
-            $validationinfo = array('required'    => $args['required'],
-                    'viewby'      => $args['viewby'],
-                    'displaytype' => $args['displaytype'],
-                    'listoptions' => $args['listoptions'],
-                    'note'        => $args['note']);
+            $validationinfo = array('required' => $args['required'],
+                'viewby' => $args['viewby'],
+                'displaytype' => $args['displaytype'],
+                'listoptions' => $args['listoptions'],
+                'note' => $args['note']);
 
             $obj['prop_validation'] = serialize($validationinfo);
         }
@@ -194,16 +196,15 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         // before update it search for option ID change
         // to update the respective user's data
         if ($obj['prop_validation'] != $item['prop_validation']) {
-            ModUtil::apiFunc('Profile', 'dud', 'updatedata',
-                    array('item'    => $item['prop_validation'],
-                    'newitem' => $obj['prop_validation']));
+            ModUtil::apiFunc('Profile', 'dud', 'updatedata', array('item' => $item['prop_validation'],
+                'newitem' => $obj['prop_validation']));
         }
 
         $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
 
         // Check for an error with the database code
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not save your changes.' ));
+            return LogUtil::registerError($this->__('Error! Could not save your changes.'));
         }
 
         // Let the calling process know that we have finished successfully
@@ -235,12 +236,12 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
-            return LogUtil::registerError($this->__('Error! No such personal info item found.' ));
+            return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
 
         // normal type validation
         if ((int)$item['prop_dtype'] != 1) {
-            return LogUtil::registerError($this->__('Error! You cannot delete this personal info item.' ), 404);
+            return LogUtil::registerError($this->__('Error! You cannot delete this personal info item.'), 404);
         }
 
         // Security check
@@ -249,7 +250,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         }
 
         // delete the property data aka attributes
-        $dbtables       = DBUtil::getTables();
+        $dbtables = DBUtil::getTables();
         $objattr_column = $dbtables['objectdata_attributes_column'];
 
         $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
@@ -257,13 +258,13 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.' ));
+            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
         }
 
         // delete the property
         $res = DBUtil::deleteObjectByID('user_property', $dudid, 'prop_id');
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.' ));
+            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
         }
 
         // Let the calling process know that we have finished successfully
@@ -295,13 +296,13 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         // Update the item
         $obj = array('prop_id' => (int)$args['dudid'],
-                'prop_weight' => $weightlimits['max'] + 1);
+            'prop_weight' => $weightlimits['max'] + 1);
 
         $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
 
         // Check for an error with the database code
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Activation failed.' ));
+            return LogUtil::registerError($this->__('Error! Activation failed.'));
         }
 
         return true;
@@ -330,29 +331,29 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
 
         if ($item == false) {
-            return LogUtil::registerError($this->__('Error! No such personal info item found.' ), 404);
+            return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
 
         // type validation
         if ($item['prop_dtype'] < 1) {
-            return LogUtil::registerError($this->__('Error! You cannot deactivate this personal info item.' ), 404);
+            return LogUtil::registerError($this->__('Error! You cannot deactivate this personal info item.'), 404);
         }
 
         // Update the item
         $obj = array('prop_id' => (int)$args['dudid'],
-                'prop_weight' => 0);
+            'prop_weight' => 0);
 
         $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
 
         // Check for an error with the database code
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.' ));
+            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
         }
 
         // Get database setup
         $dbtable = DBUtil::getTables();
 
-        $propertytable  = $dbtable['user_property'];
+        $propertytable = $dbtable['user_property'];
         $propertycolumn = $dbtable['user_property_column'];
 
         // Update the other items
@@ -364,7 +365,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         // Check for an error with the database code
         if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.' ));
+            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
         }
 
         return true;
@@ -379,23 +380,34 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     {
         $links = array();
 
+        // Add User module links
+        $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'),
+            'text' => $this->__('Users Module'),
+            'class' => 'z-icon-es-user',
+            'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
+
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'view'),
-                    'text' => $this->__('Personal info items list'), 'class' => 'z-icon-es-list');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'),
+                'text' => $this->__('Personal info items list'),
+                'class' => 'z-icon-es-view');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
-            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'newdud'),
-                    'text' => $this->__('Create new personal info item'), 'class' => 'z-icon-es-new');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'newdud'),
+                'text' => $this->__('Create new personal info item'),
+                'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'modifyconfig'),
-                    'text' => $this->__('User account panel settings'), 'class' => 'z-icon-es-config');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'modifyconfig'),
+                'text' => $this->__('User account panel settings'),
+                'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url'  => ModUtil::url('Profile', 'admin', 'help'),
-                    'text' => $this->__('Help'), 'class' => 'z-icon-es-help');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'help'),
+                'text' => $this->__('Help'),
+                'class' => 'z-icon-es-help');
         }
 
         return $links;
     }
+
 }
