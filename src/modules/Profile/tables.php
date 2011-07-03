@@ -23,15 +23,15 @@ function Profile_tables()
     $dbtable = array();
 
     // Set the table name
-    $dbtable['user_property'] = DBUtil::getLimitedTablename('user_property');
+    $dbtable['user_property'] = 'user_property';
 
-    $dbtable['user_property_column'] = array('prop_id'             => 'pn_prop_id',
-                                             'prop_label'          => 'pn_prop_label',
-                                             'prop_dtype'          => 'pn_prop_dtype',
-                                             'prop_modname'        => 'pn_prop_modname',
-                                             'prop_weight'         => 'pn_prop_weight',
-                                             'prop_validation'     => 'pn_prop_validation',
-                                             'prop_attribute_name' => 'pn_prop_attribute_name');
+    $dbtable['user_property_column'] = array('prop_id'             => 'id',
+                                             'prop_label'          => 'label',
+                                             'prop_dtype'          => 'dtype',
+                                             'prop_modname'        => 'modname',
+                                             'prop_weight'         => 'weight',
+                                             'prop_validation'     => 'validation',
+                                             'prop_attribute_name' => 'attributename');
 
     $dbtable['user_property_column_def'] = array('prop_id'             => 'I4 NOTNULL AUTO PRIMARY',
                                                  'prop_label'          => "C(255) NOTNULL DEFAULT ''",
