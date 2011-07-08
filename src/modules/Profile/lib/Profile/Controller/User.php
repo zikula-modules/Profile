@@ -26,7 +26,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      */
     public function main()
     {
-        $this->redirect(ModUtil::url('Users', 'user', 'viewmembers'));
+        $this->redirect(ModUtil::url('Profile', 'user', 'viewmembers'));
     }
 
     /**
