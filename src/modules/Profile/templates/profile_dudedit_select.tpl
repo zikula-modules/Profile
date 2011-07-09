@@ -14,8 +14,8 @@
 
     {if $attributename eq 'avatar'}
     <p id="youravatarcontainer" class="z-formnote">
-        <span id="youravatarpath" style="display:none">{$avatarpath}</span>
-        <img id="youravatardisplay" src="{$avatarpath}/{$value}" alt="{$proplabeltext}" />
+        <span id="youravatarpath" style="display:none">{$avatarpath}</span>{gt text=$proplabeltext assign='avatarlabeltext'}
+        <img id="youravatardisplay" src="{$avatarpath}/{$value}" alt="{$avatarlabeltext}" />
     </p>
     {/if}
     {if $note}
