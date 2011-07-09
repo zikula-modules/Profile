@@ -107,11 +107,12 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
     }
 
-    $render = Zikula_View::getInstance('Profile', false, null, true);
+    $render = $smarty;//Zikula_View::getInstance('Profile', false, null, true);
 
     // assign the default values for the control
     $render->assign('class',         $class);
     $render->assign('value',         DataUtil::formatForDisplay($uservalue));
+    
     $render->assign('attributename', $item['prop_attribute_name']);
     $render->assign('proplabeltext', $item['prop_label']);
     $render->assign('note',          $item['prop_note']);
@@ -153,29 +154,30 @@ function smarty_function_duditemmodify($params, &$smarty)
             if ($item['prop_required']) {
                 $output .= $render->fetch('profile_dudedit_hidden.tpl');
             }
+           
             return $output;
         }
 
         // display the avatar selector
         if (empty($uservalue)) {
-            $uservalue = 'blank.png';
+            $uservalue = 'gravatar.gif';
         }
         $render->assign('value', DataUtil::formatForDisplay($uservalue));
-
         $avatarPath = ModUtil::getVar(Users_Constant::MODNAME, Users_Constant::MODVAR_AVATAR_IMAGE_PATH, Users_Constant::DEFAULT_AVATAR_IMAGE_PATH);
         $filelist = FileUtil::getFiles($avatarPath, false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
 
         $listoutput = $listoptions = $filelist;
+
         // strip the extension of the output list
         foreach ($listoutput as $k => $output) {
-            $listoutput[$k] = substr($output, 0, strrpos($output, '.'));
+            $listoutput[$k] = $output;//substr($output, 0, strrpos($output, '.'));
         }
 
-        $selectedvalue = null;
-        if (in_array($uservalue, $filelist)) {
-            $selectedvalue = $uservalue;
-        }
+        $selectedvalue = $uservalue;
+//        if (in_array($uservalue, $filelist)) {
+//            $selectedvalue = $uservalue;
+//        }
 
         $render->assign('value',          $selectedvalue);
         $render->assign('selectmultiple', '');
