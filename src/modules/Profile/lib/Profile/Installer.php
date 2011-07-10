@@ -55,10 +55,10 @@ class Profile_Installer extends Zikula_AbstractInstaller
 
     /**
      * Upgrade the dynamic user data module from an old version.
-     * 
-     * @param string $oldversion The version from which the upgrade is beginning (the currently installed version); this should be compatible 
+     *
+     * @param string $oldversion The version from which the upgrade is beginning (the currently installed version); this should be compatible
      *                              with {@link version_compare()}.
-     * 
+     *
      * @return boolean True on success or false on failure.
      */
     public function upgrade($oldversion)
@@ -68,7 +68,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
             case '1.5.2':
                 // 1.5.2 -> 1.6.0
                 EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_UsersUiHandler');
-                $connection = DBConnectionStack::getConnection();
+                $connection = Doctrine_Manager::getCurrentConnection();
                 $sqlStatements = array();
                 // N.B. statements generated with PHPMyAdmin
                 $sqlStatements[] = 'RENAME TABLE ' . DBUtil::getLimitedTablename('user_property') . " TO user_property";
@@ -84,9 +84,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
                     try {
                         $stmt->execute();
                     } catch (Exception $e) {
-                    }   
+                    }
                 }
-                
+
             case '1.6.0':
                 // 1.6.0 -> X.X.X when appropriate.
         }
