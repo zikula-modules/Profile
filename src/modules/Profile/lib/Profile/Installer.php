@@ -68,7 +68,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
             case '1.5.2':
                 // 1.5.2 -> 1.6.0
                 EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_UsersUiHandler');
-                $connection = DBConnectionStack::getConnection();
+                $connection = Doctrine_Manager::getInstance()->getConnection('default');
                 $sqlStatements = array();
                 // N.B. statements generated with PHPMyAdmin
                 $sqlStatements[] = 'RENAME TABLE ' . DBUtil::getLimitedTablename('user_property') . " TO user_property";
