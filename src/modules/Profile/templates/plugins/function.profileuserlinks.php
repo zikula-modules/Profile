@@ -56,7 +56,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
 
     $dom = ZLanguage::getModuleDomain('Profile');
 
-    global $func;
+    $func = FormUtil::getPassedValue('func', 'main', 'GET');
     
     $currentfunc = (isset($func) && !empty($func)) ? $func : 'main';
 
@@ -72,16 +72,16 @@ function smarty_function_profileuserlinks($params, &$smarty)
         $userlinks .= "<span class=\"$params[class]\">$params[start] ";
 
         if ($currentuser >= 2) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users', 'user', 'main')) . '">' . __('User account panel', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('Users', 'user', 'main') . '">' . __('User account panel', $dom) . '</a>';
         }
         if ($currentfunc != 'viewmembers') {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Profile', 'user', 'viewmembers')) . '">' . __('Registered users list', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'viewmembers') . '">' . __('Registered users list', $dom) . '</a>';
         }
         if ($currentfunc != 'recentmembers') {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Profile', 'user', 'recentmembers')) . '">' . __f('Last %s registered users', ModUtil::getVar('Profile', 'recentmembersitemsperpage'), $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'recentmembers') . '">' . __f('Last %s registered users', ModUtil::getVar('Profile', 'recentmembersitemsperpage'), $dom) . '</a>';
         }
         if ($currentfunc != 'onlinemembers') {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Profile', 'user', 'onlinemembers')) . '">' . __('Users currently on-line', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'onlinemembers') . '">' . __('Users currently on-line', $dom) . '</a>';
         }
 
         $userlinks .= implode(" $params[seperator] ", $linksarray);
@@ -109,22 +109,22 @@ function smarty_function_profileuserlinks($params, &$smarty)
 
     // process the common functions
     if ($smarty->_tpl_vars['ismember'] && $smarty->_tpl_vars['sameuser']) {
-        $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users', 'user', 'main')) . '">' . __('User account panel', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url('Users', 'user', 'main') . '">' . __('User account panel', $dom) . '</a>';
     }
 
     if ($smarty->_tpl_vars['sameuser'] && $currentfunc != 'modify') {
-        $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Profile', 'user', 'modify')) . '">' . __('Edit personal info', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'modify') . '">' . __('Edit personal info', $dom) . '</a>';
     }
 
     if ($smarty->_tpl_vars['ismember'] && $currentfunc != 'view') {
-        $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Profile', 'user', 'view', array('uid' => $currentuser))) . '">' . __('View personal info', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'view', array('uid' => $currentuser)) . '">' . __('View personal info', $dom) . '</a>';
     }
 
     if (!$smarty->_tpl_vars['sameuser']) {
         // check for the messaging module
         $msgmodule = System::getVar('messagemodule');
         if (isset($smarty->_tpl_vars['uid']) && ModUtil::available($msgmodule)) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url($msgmodule, 'user', 'newpm', array('uid' => $smarty->_tpl_vars['uid']))) . '">' . __('Send private message', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url($msgmodule, 'user', 'newpm', array('uid' => $smarty->_tpl_vars['uid'])) . '">' . __('Send private message', $dom) . '</a>';
         }
     }
         
@@ -144,13 +144,13 @@ function smarty_function_profileuserlinks($params, &$smarty)
         $linksarray = array(); 
 
         if (empty($userlinks)) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Users', 'user', 'main')) . '">' . __('User account panel', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('Users', 'user', 'main') . '">' . __('User account panel', $dom) . '</a>';
         }
-        $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('ContactList', 'user', 'display', array('uid' => $smarty->_tpl_vars['uid']))) . '">' . __f('Show %s\'s contacts', $smarty->_tpl_vars['uname'], $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url('ContactList', 'user', 'display', array('uid' => $smarty->_tpl_vars['uid'])) . '">' . __f('Show %s\'s contacts', $smarty->_tpl_vars['uname'], $dom) . '</a>';
         if ($buddystatus) {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('ContactList', 'user', 'edit', array('id' => $buddystatus))) . '">' . __('Edit contact', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('ContactList', 'user', 'edit', array('id' => $buddystatus)) . '">' . __('Edit contact', $dom) . '</a>';
         } else {
-            $linksarray[] = '<a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('ContactList', 'user', 'create', array('uid' => $smarty->_tpl_vars['uid']))) . '">' . __('Add as contact', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('ContactList', 'user', 'create', array('uid' => $smarty->_tpl_vars['uid'])) . '">' . __('Add as contact', $dom) . '</a>';
         }
 
         $userlinks .= "<div class=\"z-menu\">\n";
