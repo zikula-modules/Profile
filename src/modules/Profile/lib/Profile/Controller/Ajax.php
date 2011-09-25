@@ -15,7 +15,7 @@
 /**
  * AJAX query and response functions.
  */
-class Profile_Controller_Ajax extends Zikula_AbstractController
+class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
 {
     /**
      * Change the weight of a profile item.
@@ -29,12 +29,10 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
      */
     public function changeprofileweight()
     {
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
-        }
+        $this->checkAjaxToken();
 
-        if (!SecurityUtil::confirmAuthKey()) {
-            AjaxUtil::error($this->__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."));
+        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+            throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
 
         $profilelist = $this->request->getPost()->get('profilelist', $this->request->getGet()->get('profilelist', null));
@@ -47,6 +45,7 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         // update the items with the new weights
         $items = array();
         $weight = $startnum + 1;
+        parse_str($profilelist);
         foreach ($profilelist as $prop_id) {
             if (empty($prop_id)) {
                 continue;
@@ -61,10 +60,10 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         $res = DBUtil::updateObjectArray($items, 'user_property', 'prop_id');
 
         if (!$res) {
-            AjaxUtil::error($this->__('Error! Could not save your changes.'));
+            throw new Zikula_Exception_Fatal($this->__('Error! Could not save your changes.'));
         }
 
-        return array('result' => true);
+        return new Zikula_Response_Ajax(array('result' => true));
     }
 
     /**
@@ -79,14 +78,12 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
      */
     public function changeprofilestatus()
     {
+        $this->checkAjaxToken();
+
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
+            throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
-        
-        //if (!SecurityUtil::confirmAuthKey()) {
-        //    AjaxUtil::error($this->__("Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."));
-        //}
-        
+
         $prop_id   = $this->request->getPost()->get('dudid', $this->request->getGet()->get('dudid', null));
         $oldstatus = (bool)$this->request->getPost()->get('oldstatus', $this->request->getGet()->get('oldstatus', null));
 
@@ -100,12 +97,13 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         $res = ModUtil::apiFunc('Profile', 'admin', $func, array('dudid' => $prop_id));
 
         if (!$res) {
-            AjaxUtil::error($this->__('Error! Could not save your changes.'));
+            throw new Zikula_Exception_Fatal($this->__('Error! Could not save your changes.'));
         }
 
-        return array('result' => true,
-                'dudid' => $prop_id,
-                'newstatus' => !$oldstatus);
+        return new Zikula_Response_Ajax(array('result' => true,
+                                              'dudid' => $prop_id,
+                                              'newstatus' => !$oldstatus));
+
     }
 
     /**
@@ -121,8 +119,10 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
      */
     public function profilesection()
     {
+        $this->checkAjaxToken();
+
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
-            AjaxUtil::error($this->__('Sorry! You do not have authorisation for this module.'));
+            throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
 
         $uid  = $this->request->getPost()->get('uid', $this->request->getGet()->get('uid', null));
@@ -140,7 +140,7 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         $section = ModUtil::apiFunc('Profile', 'section', $name, array_merge($args, array('uid' => $uid)));
 
         if (!$section) {
-            AjaxUtil::error($this->__('Error! Could not load the section.'));
+            throw new Zikula_Exception_Fatal($this->__('Error! Could not load the section.'));
         }
 
         // build the output
@@ -156,8 +156,8 @@ class Profile_Controller_Ajax extends Zikula_AbstractController
         // assign and render the output
         $this->view->assign('section', $section);
 
-        return array('result' => $this->view->fetch($template, $uid),
-                'name'   => $name,
-                'uid'    => $uid);
+        return new Zikula_Response_Ajax(array('result' => $this->view->fetch($template, $uid),
+                                              'name'   => $name,
+                                              'uid'    => $uid));
     }
 }

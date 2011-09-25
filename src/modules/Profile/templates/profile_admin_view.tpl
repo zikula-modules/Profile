@@ -7,7 +7,7 @@
 
 <form class="z-adminform" action="" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-        <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Profile'}" />
+        <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" id="startnum" name="startnum" value="{$startnum}" />
         <div id="profilehint" class="z-informationmsg" style="display:none">{gt text="Notice: Use drag and drop to arrange the arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place."}</div>
         <ol id="profilelist" class="z-itemlist">

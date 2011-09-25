@@ -4,7 +4,7 @@
 
 <form id="profile-search" class="z-form" action="{modurl modname='Profile' type='user' func='viewmembers'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-        <input type="hidden" name="authid" id="authid" value="{insert name='generateauthkey' module='Profile'}" />
+        <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <fieldset>
             <div class="z-formrow">
                 <label for="profile_letter" class="profile_letter">{gt text='Search'}</label>

@@ -173,14 +173,11 @@ class Profile_Controller_User extends Zikula_AbstractController
      *
      * @return void
      * 
-     * @throws Zikula_Exception_Forbidden Thrown if the authkey is not confirmed.
+     * @throws Zikula_Exception_Forbidden Thrown if the csrftoken is not confirmed.
      */
     public function update()
     {
-        // Confirm authorisation code.
-        if (!SecurityUtil::confirmAuthKey()) {
-            throw new Zikula_Exception_Forbidden();
-        }
+		$this->checkCsrfToken();
 
         // Get parameters from whatever input we need.
         $uname    = $this->request->getPost()->get('uname',    null);

@@ -7,7 +7,7 @@
     <fieldset>
         <legend>{$templatetitle}</legend>
         <p>{gt text="Items marked with an asterisk ('*') are required entries."}</p>
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Profile'}" />
+        <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         {foreach from=$duditems item=item}
         {duditemmodify item=$item}
         {/foreach}
