@@ -61,7 +61,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                 'numitems' => $numitems));
 
         $count  = ModUtil::apiFunc('Profile', 'user', 'countitems');
-        $authid = SecurityUtil::generateAuthKey();
+        $csrftoken = SecurityUtil::generateCsrfToken();
 
         $x = 1;
         $duditems = array();
@@ -80,7 +80,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                     $status = array('url'   => ModUtil::url('Profile', 'admin', 'deactivate',
                             array('dudid'    => $item['prop_id'],
                             'weight'   => $item['prop_weight'],
-                            'authid'   => $authid)),
+                            'csrftoken'   => $csrftoken)),
                             'image' => 'greenled.png',
                             'title' => $this->__('Deactivate'));
                     break;
@@ -89,7 +89,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                     $statusval = 0;
                     $status = array('url'   => ModUtil::url('Profile', 'admin', 'activate',
                             array('dudid'    => $item['prop_id'],
-                            'authid'   => $authid)),
+                            'csrftoken'   => $csrftoken)),
                             'image' => 'redled.png',
                             'title' => $this->__('Activate'));
             }
@@ -228,10 +228,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function create($args)
     {
-        // Confirm authorisation code.
-        if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
-        }
+		$this->checkCsrfToken();
 
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
@@ -388,10 +385,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function update($args)
     {
-        // Confirm authorisation code.
-        if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
-        }
+		$this->checkCsrfToken();
 
         // Get parameters from whatever input we need.
         $dudid       = (int)$this->request->getPost()->get('dudid',    (isset($args['dudid']) ? $args['dudid'] : null));
@@ -477,10 +471,8 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
         // If we get here it means that the user has confirmed the action
 
-        // Confirm authorisation code.
-        if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
-        }
+        // Check CsrfToken
+		$this->checkCsrfToken();
 
         // The API function is called.
         if (ModUtil::apiFunc('Profile', 'admin', 'delete', array('dudid' => $dudid))) {
@@ -577,6 +569,8 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function activate($args)
     {
+        $this->checkCsrfToken($this->request->getGet()->get('csrftoken'));
+
         // Get parameters from whatever input we need.
         $dudid  = (int)$this->request->getGet()->get('dudid', (isset($args['dudid']) ? $args['dudid'] : null));
 
@@ -603,13 +597,10 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function deactivate($args)
     {
+        $this->checkCsrfToken($this->request->getGet()->get('csrftoken'));
+
         // Get parameters from whatever input we need.
         $dudid  = (int)$this->request->getGet()->get('dudid',  (isset($args['dudid']) ? $args['dudid'] : null));
-
-        // Confirm authorisation code.
-        if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
-        }
 
         // The API function is called.
         if (ModUtil::apiFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
@@ -669,14 +660,11 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function updateconfig()
     {
+		$this->checkCsrfToken();
+
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
-        }
-
-        // Confirm authorisation code.
-        if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(ModUtil::url('Profile', 'admin', 'view'));
         }
 
         // Update module variables.

@@ -52,13 +52,14 @@ function profileinit()
  */
 function profileweightchanged()
 {
-    var pars = "module=Profile&func=changeprofileweight&authid=" + $F('authid') + "&startnum=" + $F('startnum')
-               + "&" + Sortable.serialize('profilelist', { 'name': 'profilelist' });
+    var pars = {
+        startnum: $F('startnum'),
+        profilelist: Sortable.serialize('profilelist', { 'name': 'profilelist' })
+    };
 
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php', 
+    var myAjax = new Zikula.Ajax.Request(
+        Zikula.Config.baseURL + 'ajax.php?module=Profile&func=changeprofileweight', 
         {
-            method: 'get', 
             parameters: pars, 
             onComplete: profileweightchanged_response
         });
@@ -73,15 +74,12 @@ function profileweightchanged()
  */
 function profileweightchanged_response(req)
 {
-    if (req.status != 200 ) { 
-        pnshowajaxerror(req.responseText);
+    if (!req.isSuccess()) {
+        Zikula.showajaxerror(req.getMessage());
         return;
     }
 
-    var json = pndejsonize(req.responseText);
-    pnupdateauthids(json.authid);
-
-    pnrecolor('profilelist', 'profilelistheader');
+    Zikula.recolor('profilelist', 'profilelistheader');
 }
 
 /**
@@ -94,13 +92,14 @@ function profileweightchanged_response(req)
  */
 function profilestatuschanged(prop_id, oldstatus)
 {
-    var pars = "module=Profile&func=changeprofilestatus&authid=" + $F('authid')
-               + "&oldstatus=" + oldstatus + "&dudid=" + prop_id;
+    var pars = {
+        oldstatus: oldstatus,
+        dudid: prop_id
+    };
 
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php', 
+    var myAjax = new Zikula.Ajax.Request(
+        Zikula.Config.baseURL + 'ajax.php?module=Profile&func=changeprofilestatus', 
         {
-            method: 'get', 
             parameters: pars, 
             onComplete: profilestatuschanged_response
         });
@@ -115,36 +114,31 @@ function profilestatuschanged(prop_id, oldstatus)
  */
 function profilestatuschanged_response(req)
 {
-    if (req.status != 200 ) { 
-        pnshowajaxerror(req.responseText);
+    if (!req.isSuccess()) {
+        Zikula.showajaxerror(req.getMessage());
         return;
     }
 
-    var json = pndejsonize(req.responseText);
-    pnupdateauthids(json.authid);
-
-    if (!json.result) {
-    	return;
-    }
+    var data = req.getData();
 
     // define item list and status link objects
     var li   = null;
-    var link = $('profilestatus_'+json.dudid);
+    var link = $('profilestatus_'+data.dudid);
 
     // switch the status in the classname
     var newclassname = '';
-    if (json.newstatus) {
+    if (data.newstatus) {
         // got active
         newclassname = link.getAttribute('class').replace('0', '1')
         // update the li item
-        li = $('profile'+json.dudid);
-        li.setAttribute('id', 'profile_'+json.dudid);
+        li = $('profile'+data.dudid);
+        li.setAttribute('id', 'profile_'+data.dudid);
     } else {
         // got inactive
         newclassname = link.getAttribute('class').replace('1', '0')
         // update the li item
-        li = $('profile_'+json.dudid);
-        li.setAttribute('id', 'profile'+json.dudid);
+        li = $('profile_'+data.dudid);
+        li.setAttribute('id', 'profile'+data.dudid);
     }
     link.setAttribute('class', newclassname);
 
@@ -152,7 +146,7 @@ function profilestatuschanged_response(req)
     $A(link.childElements()).each(
         function (node) {
             if (node.tagName == 'IMG') {
-                if (json.newstatus) {
+                if (data.newstatus) {
                     node.src = node.src.replace('redled', 'greenled');
                     node.title = msgProfileStatusDeactivate;
                     node.alt = msgProfileStatusDeactivate;
@@ -162,7 +156,7 @@ function profilestatuschanged_response(req)
                     node.alt = msgProfileStatusActivate;
                 };
             } else if (node.tagName == 'STRONG') {
-                if (json.newstatus) {
+                if (data.newstatus) {
                     node.innerHTML = msgProfileStatusDeactivate;
                 } else {
                     node.innerHTML = msgProfileStatusActivate;

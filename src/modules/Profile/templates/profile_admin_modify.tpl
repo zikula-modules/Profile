@@ -7,7 +7,7 @@
 
 <form class="z-form" action="{modurl modname='Profile' type='admin' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Profile'}" />
+        <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="dudid" value="{$dudid}" />
         <fieldset>
             <legend>{gt text='Personal info item'}</legend>

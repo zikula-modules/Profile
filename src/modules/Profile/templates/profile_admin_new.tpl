@@ -7,7 +7,7 @@
 
 <form class="z-form" action="{modurl modname='Profile' type='admin' func='create'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Profile'}" />
+        <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <fieldset>
             <legend>{gt text='Personal info item'}</legend>
             <div class="z-formnote z-warningmsg">{gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."}</div>
