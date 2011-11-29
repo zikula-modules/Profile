@@ -7,7 +7,7 @@
 
     <label for="prop_{$attributename}">
         {gt text=$proplabeltext}
-        {if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}
+        {if $required}<span class="z-form-mandatory-flag">{gt text='*'}</span>{/if}
     </label>
 
     <span class="z-formnote">

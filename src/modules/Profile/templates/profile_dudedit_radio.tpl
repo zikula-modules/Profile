@@ -7,7 +7,7 @@
 
     <label>
         {gt text=$proplabeltext}
-        {if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}
+        {if $required}<span class="z-form-mandatory-flag">{gt text='*'}</span>{/if}
     </label>
     {html_radios name="dynadata[$attributename]" values=$listoptions output=$listoutput checked=$value labels=false assign='listoptions'}
     {foreach from=$listoptions item='item'}

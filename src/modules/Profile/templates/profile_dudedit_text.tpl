@@ -5,7 +5,7 @@
     </p>
     {/if}
 
-    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-mandatorysym">{gt text='*'}</span>{/if}</label>
+    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-form-mandatory-flag">{gt text='*'}</span>{/if}</label>
     <input id="prop_{$attributename}" type="text" name="dynadata[{$attributename}]" value="{$value}" size="30" class="{if $required}required{/if} {if $error}z-form-error{/if}" />
     {if $note}
     <em class="z-sub z-formnote">{$note}</em>
