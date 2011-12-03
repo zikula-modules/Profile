@@ -31,7 +31,8 @@ class Profile_Version extends Zikula_AbstractVersion
             'url'           => $this->__('profile'),
 
             'version'       => '1.6.0',
-            'core_min'      => '1.3.0',
+            'core_min' => '1.3.0', // Fixed to 1.3.x range
+            'core_max' => '1.3.99', // Fixed to 1.3.x range
 
             'capabilities'  => array(
                 'profile'                   => array(
