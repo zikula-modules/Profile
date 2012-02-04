@@ -257,7 +257,7 @@ class Profile_Controller_User extends Zikula_AbstractController
             $letter = null;
         }
         if (empty($startnum)) {
-            $startnum = 1;
+            $startnum = -1;
         }
 
         // get some permissions to use in the cache id and later to filter template output
