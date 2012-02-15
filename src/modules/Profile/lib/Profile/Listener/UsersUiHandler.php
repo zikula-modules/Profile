@@ -69,8 +69,16 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
         $this->domain = ZLanguage::getModuleDomain($this->name);
         
         $this->serviceManager = $eventManager->getServiceManager();
-        $this->view = Zikula_View::getInstance($this->name);
         $this->request = $this->serviceManager->getService('request');
+    }
+    
+    public function getView()
+    {
+        if (!$this->view) {
+            $this-view = Zikula_View::getInstance($this->name);
+        }
+        
+        return $this->view;
     }
 
     /**
@@ -114,12 +122,12 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
             $user = $event->getSubject();
 
             // Create output object
-            $this->view->setCaching(false)
+            $this->getView()->setCaching(false)
                     ->assign('duditems', $items)
                     ->assign('userinfo', $user);
 
             // Return the dynamic data rows
-            $event->data[self::EVENT_KEY] = $this->view->fetch('profile_profile_ui_view.tpl');
+            $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_view.tpl');
         }
     }
 
@@ -171,12 +179,12 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
                 $errorFields = array();
             }
 
-            $this->view->setCaching(false)
+            $this->getView()->setCaching(false)
                     ->assign('duderrors', $errorFields)
                     ->assign('duditems', $items)
                     ->assign('userid', $userid);
 
-            $event->data[self::EVENT_KEY] = $this->view->fetch('profile_profile_ui_edit.tpl');
+            $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_edit.tpl');
         }
     }
 
