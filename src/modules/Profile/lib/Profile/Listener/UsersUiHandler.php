@@ -75,7 +75,7 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     public function getView()
     {
         if (!$this->view) {
-            $this-view = Zikula_View::getInstance($this->name);
+            $this->view = Zikula_View::getInstance($this->name);
         }
         
         return $this->view;
