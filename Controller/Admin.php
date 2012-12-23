@@ -22,7 +22,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      *
      * @return void
      */
-    public function main()
+    public function mainAction()
     {
         $this->redirect(ModUtil::url($this->name, 'admin', 'view'), 301);
     }
@@ -32,7 +32,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function help()
+    public function helpAction()
     {
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
@@ -46,7 +46,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return string The rendered template output.
      */
-    public function view()
+    public function viewAction()
     {
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
@@ -174,7 +174,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function newdud()
+    public function newdudAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
@@ -226,7 +226,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      *
      * @see    Profile_admin_new()
      */
-    public function create($args)
+    public function createAction($args)
     {
 		$this->checkCsrfToken();
 
@@ -305,7 +305,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return string The rendered template.
      */
-    public function modify($args)
+    public function modifyAction($args)
     {
         // Get parameters from whatever input we need.
         $dudid    = isset($args['dudid'])    ? (int)$args['dudid']    : (int)$this->request->getGet()->get('dudid', null);
@@ -383,7 +383,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      *
      * @see    ProfileModify()
      */
-    public function update($args)
+    public function updateAction($args)
     {
 		$this->checkCsrfToken();
 
@@ -433,7 +433,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return boolean|string If no confirmation then the rendered output of a template to get confirmation; otherwise true if delete successful, false otherwise.
      */
-    public function delete($args)
+    public function deleteAction($args)
     {
         // Get parameters from whatever input we need.
         $dudid        =  (int)$this->request->getGet()->get('dudid',        $this->request->getPost()->get('dudid',        (isset($args['dudid']) ? $args['dudid'] : null)));
@@ -493,7 +493,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return boolean True if update successful, false otherwise.
      */
-    public function increase_weight()
+    public function increase_weightAction()
     {
         $dudid = (int)$this->request->getGet()->get('dudid', null);
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -527,7 +527,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return boolean True if update successful, false otherwise.
      */
-    public function decrease_weight()
+    public function decrease_weightAction()
     {
         $dudid = (int)$this->request->getGet()->get('dudid', null);
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
@@ -567,7 +567,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return boolean True if activation successful, false otherwise.
      */
-    public function activate($args)
+    public function activateAction($args)
     {
         $this->checkCsrfToken($this->request->getGet()->get('csrftoken'));
 
@@ -595,7 +595,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @return boolean True if deactivation successful, false otherwise.
      */
-    public function deactivate($args)
+    public function deactivateAction($args)
     {
         $this->checkCsrfToken($this->request->getGet()->get('csrftoken'));
 
@@ -617,7 +617,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function modifyconfig()
+    public function modifyconfigAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
@@ -658,7 +658,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * 
      * @see    Profile_admin_modifyconfig()
      */
-    public function updateconfig()
+    public function updateconfigAction()
     {
 		$this->checkCsrfToken();
 

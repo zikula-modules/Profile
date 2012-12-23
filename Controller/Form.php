@@ -31,7 +31,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function edit($args)
+    public function editAction($args)
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
@@ -74,7 +74,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function search()
+    public function searchAction()
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
@@ -121,7 +121,7 @@ class Profile_Controller_Form extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function display($args)
+    public function displayAction($args)
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {

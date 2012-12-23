@@ -24,7 +24,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      * 
      * @return void
      */
-    public function main()
+    public function mainAction()
     {
         $this->redirect(ModUtil::url('Profile', 'user', 'viewmembers'));
     }
@@ -43,7 +43,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function view($args)
+    public function viewAction($args)
     {
         // Security check
         if (!SecurityUtil::checkPermission('Profile::view', '::', ACCESS_READ)) {
@@ -128,7 +128,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function modify($args)
+    public function modifyAction($args)
     {
         // Security check
         if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
@@ -175,7 +175,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      * 
      * @throws Zikula_Exception_Forbidden Thrown if the csrftoken is not confirmed.
      */
-    public function update()
+    public function updateAction()
     {
 		$this->checkCsrfToken();
 
@@ -235,7 +235,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      *
      * @return string The rendered template output.
      */
-    public function viewmembers($args)
+    public function viewmembersAction($args)
     {
         // Security check
         if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
@@ -351,7 +351,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      * 
      * @return string The rendered template output.
      */
-    public function recentmembers()
+    public function recentmembersAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission('Profile:Members:recent', '::', ACCESS_READ)) {
@@ -426,7 +426,7 @@ class Profile_Controller_User extends Zikula_AbstractController
      * 
      * @return string The rendered template output.
      */
-    public function onlinemembers()
+    public function onlinemembersAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission('Profile:Members:online', '::', ACCESS_READ)) {

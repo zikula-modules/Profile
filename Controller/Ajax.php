@@ -27,7 +27,7 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
      *
      * @return mixed An AJAX result array containing a result equal to true, or an Ajax error.
      */
-    public function changeprofileweight()
+    public function changeprofileweightAction()
     {
         $this->checkAjaxToken();
 
@@ -76,7 +76,7 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
      * 
      * @return mixed An AJAX result array containing a result equal to true along with the dud id and new status, or an Ajax error.
      */
-    public function changeprofilestatus()
+    public function changeprofilestatusAction()
     {
         $this->checkAjaxToken();
 
@@ -117,7 +117,7 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
      * 
      * @return mixed An AJAX result array containing a result equal to the rendered output along with the section name and uid, or an Ajax error.
      */
-    public function profilesection()
+    public function profilesectionAction()
     {
         $this->checkAjaxToken();
 
