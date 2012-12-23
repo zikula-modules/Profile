@@ -58,7 +58,7 @@ function profileweightchanged()
     };
 
     var myAjax = new Zikula.Ajax.Request(
-        Zikula.Config.baseURL + 'ajax.php?module=Profile&func=changeprofileweight', 
+        Zikula.Config.baseURL + 'index.php?module=Profile&type=ajax&func=changeprofileweight',
         {
             parameters: pars, 
             onComplete: profileweightchanged_response
@@ -98,7 +98,7 @@ function profilestatuschanged(prop_id, oldstatus)
     };
 
     var myAjax = new Zikula.Ajax.Request(
-        Zikula.Config.baseURL + 'ajax.php?module=Profile&func=changeprofilestatus', 
+        Zikula.Config.baseURL + 'index.php?module=Profile&type=ajax&func=changeprofilestatus',
         {
             parameters: pars, 
             onComplete: profilestatuschanged_response
