@@ -68,8 +68,8 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
         
         $this->domain = ZLanguage::getModuleDomain($this->name);
         
-        $this->serviceManager = $eventManager->getServiceManager();
-        $this->request = $this->serviceManager->getService('request');
+        $this->serviceManager = $eventManager->getContainer();
+        $this->request = $this->serviceManager->get('request');
     }
     
     public function getView()
