@@ -51,9 +51,9 @@ class Profile_Controller_User extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $uid   = (int)$this->request->getGet()->get('uid', isset($args['uid']) ? $args['uid'] : null);
-        $uname = $this->request->getGet()->get('uname', isset($args['uname']) ? $args['uname'] : null);
-        $page  = $this->request->getGet()->get('page', isset($args['page']) ? $args['page'] : null);
+        $uid   = (int)$this->request->query->get('uid', isset($args['uid']) ? $args['uid'] : null);
+        $uname = $this->request->query->get('uname', isset($args['uname']) ? $args['uname'] : null);
+        $page  = $this->request->query->get('page', isset($args['page']) ? $args['page'] : null);
 
         // Getting uid by uname
         if (!empty($uname)) {
@@ -144,8 +144,8 @@ class Profile_Controller_User extends Zikula_AbstractController
         }
 
         // check if we get called form the update function in case of an error
-        $uname    = $this->request->getGet()->get('uname',    (isset($args['uname']) ? $args['uname'] : null));
-        $dynadata = $this->request->getGet()->get('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()));
+        $uname    = $this->request->query->get('uname',    (isset($args['uname']) ? $args['uname'] : null));
+        $dynadata = $this->request->query->get('dynadata', (isset($args['dynadata']) ? $args['dynadata'] : array()));
 
         // merge this temporary dynadata and the errors into the items array
         foreach ($dynadata as $propattr => $propdata) {
@@ -180,8 +180,8 @@ class Profile_Controller_User extends Zikula_AbstractController
 		$this->checkCsrfToken();
 
         // Get parameters from whatever input we need.
-        $uname    = $this->request->getPost()->get('uname',    null);
-        $dynadata = $this->request->getPost()->get('dynadata', null);
+        $uname    = $this->request->request->get('uname',    null);
+        $dynadata = $this->request->request->get('dynadata', null);
 
         $uid = UserUtil::getVar('uid');
 
@@ -243,11 +243,11 @@ class Profile_Controller_User extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need
-        $startnum  = $this->request->getGet()->get('startnum',  isset($args['startnum']) ? $args['startnum'] : null);
-        $sortby    = $this->request->getGet()->get('sortby',    $this->request->getPost()->get('sortby',    isset($args['sortby']) ? $args['sortby'] : null));
-        $searchby  = $this->request->getGet()->get('searchby',  $this->request->getPost()->get('searchby',  isset($args['searchby']) ? $args['searchby'] : null));
-        $sortorder = $this->request->getGet()->get('sortorder', $this->request->getPost()->get('sortorder', isset($args['sortorder']) ? $args['sortorder'] : null));
-        $letter    = $this->request->getGet()->get('letter',    $this->request->getPost()->get('letter',    isset($args['letter']) ? $args['letter'] : null));
+        $startnum  = $this->request->query->get('startnum',  isset($args['startnum']) ? $args['startnum'] : null);
+        $sortby    = $this->request->query->get('sortby',    $this->request->request->get('sortby',    isset($args['sortby']) ? $args['sortby'] : null));
+        $searchby  = $this->request->query->get('searchby',  $this->request->request->get('searchby',  isset($args['searchby']) ? $args['searchby'] : null));
+        $sortorder = $this->request->query->get('sortorder', $this->request->request->get('sortorder', isset($args['sortorder']) ? $args['sortorder'] : null));
+        $letter    = $this->request->query->get('letter',    $this->request->request->get('letter',    isset($args['letter']) ? $args['letter'] : null));
 
         // Set some defaults
         if (empty($sortby)) {

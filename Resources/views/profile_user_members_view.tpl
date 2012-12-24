@@ -18,13 +18,13 @@
                     <input id="profile_nickname" type="radio" name="searchby" value="uname" checked="checked" />
                     <label for="profile_nickname">{gt text='Search in user names'}</label>
                 </div>
-                { if isset($dudarray.realname) }
+                {if isset($dudarray.realname)}
                 <div class="z-formnote">
                     <input id="profile_realname" type="radio" name="searchby" value="{$dudarray.realname}" />
                     <label for="profile_realname">{gt text='Search in real names'}</label>
                 </div>
                 {/if}
-                { if isset($dudarray.url) }
+                {if isset($dudarray.url)}
                 <div class="z-formnote">
                     <input id="profile_url" type="radio" name="searchby" value="{$dudarray.url}" />
                     <label for="profile_url">{gt text='Search in site'}</label>
@@ -43,13 +43,13 @@
         <tr>
             <th>&nbsp;</th>
             <th>{gt text='User name'}</th>
-            { if isset($dudarray.realname) }
+            {if isset($dudarray.realname)}
             <th>{gt text='Real name'}</th>
             {/if}
             {if $msgmodule}
             <th>{gt text='PM'}</th>
             {/if}
-            { if isset($dudarray.url) }
+            {if isset($dudarray.url)}
             <th>{gt text='Site'}</th>
             {/if}
             {if $adminedit}
@@ -69,15 +69,15 @@
                 {/if}
             </td>
             <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
-            {if isset($dudarray.realname) }
-            <td>{if isset($user.__ATTRIBUTES__)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
+            {if isset($dudarray.realname)}
+            <td>{if isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.realname)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
             {/if}
             {if $msgmodule}
             <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message'}</a></td>
             {/if}
-            { if isset($dudarray.url) }
+            {if isset($dudarray.url)}
             <td>
-                {if !isset($user.__ATTRIBUTES__) || ($user.__ATTRIBUTES__.url == '')}
+                {if !(isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.url)) || ($user.__ATTRIBUTES__.url == '')}
                 &nbsp;
                 {else}
                 <a href="{$user.__ATTRIBUTES__.url|safetext}" rel="nofollow">{img modname=core set=icons/extrasmall src="agt_internet.png" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>

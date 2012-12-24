@@ -35,8 +35,8 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
 
-        $profilelist = $this->request->getPost()->get('profilelist', $this->request->getGet()->get('profilelist', null));
-        $startnum    = $this->request->getPost()->get('startnum', $this->request->getGet()->get('startnum', null));
+        $profilelist = $this->request->request->get('profilelist', $this->request->query->get('profilelist', null));
+        $startnum    = $this->request->request->get('startnum', $this->request->query->get('startnum', null));
 
         if ($startnum < 0) {
             AjaxUtil::error($this->__f("Error! Invalid '%s' passed.", 'startnum'));
@@ -84,8 +84,8 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
 
-        $prop_id   = $this->request->getPost()->get('dudid', $this->request->getGet()->get('dudid', null));
-        $oldstatus = (bool)$this->request->getPost()->get('oldstatus', $this->request->getGet()->get('oldstatus', null));
+        $prop_id   = $this->request->request->get('dudid', $this->request->query->get('dudid', null));
+        $oldstatus = (bool)$this->request->request->get('oldstatus', $this->request->query->get('oldstatus', null));
 
         if (!$prop_id) {
             return array('result' => false);
@@ -125,9 +125,9 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
 
-        $uid  = $this->request->getPost()->get('uid', $this->request->getGet()->get('uid', null));
-        $name = $this->request->getPost()->get('name', $this->request->getGet()->get('name', null));
-        $args = $this->request->getPost()->get('args', $this->request->getGet()->get('args', null));
+        $uid  = $this->request->request->get('uid', $this->request->query->get('uid', null));
+        $name = $this->request->request->get('name', $this->request->query->get('name', null));
+        $args = $this->request->request->get('args', $this->request->query->get('args', null));
 
         if (empty($uid) || !is_numeric($uid) || empty($name)) {
             return array('result' => false);

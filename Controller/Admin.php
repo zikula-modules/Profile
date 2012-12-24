@@ -53,7 +53,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $startnum = (int)$this->request->getGet()->get('startnum', null);
+        $startnum = (int)$this->request->query->get('startnum', null);
         $numitems = 20;
 
         $items = ModUtil::apiFunc('Profile', 'user', 'getall',
@@ -236,13 +236,13 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $label       = isset($args['label'])         ? $args['label']         : $this->request->getPost()->get('label', null);
-        $attrname    = isset($args['attributename']) ? $args['attributename'] : $this->request->getPost()->get('attributename', null);
-        $required    = isset($args['required'])      ? $args['required']      : $this->request->getPost()->get('required', null);
-        $viewby      = isset($args['viewby'])        ? $args['viewby']        : $this->request->getPost()->get('viewby', null);
-        $displaytype = isset($args['displaytype'])   ? $args['displaytype']   : $this->request->getPost()->get('displaytype', null);
-        $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : $this->request->getPost()->get('listoptions', null);
-        $note        = isset($args['note'])          ? $args['note']          : $this->request->getPost()->get('note', null);
+        $label       = isset($args['label'])         ? $args['label']         : $this->request->request->get('label', null);
+        $attrname    = isset($args['attributename']) ? $args['attributename'] : $this->request->request->get('attributename', null);
+        $required    = isset($args['required'])      ? $args['required']      : $this->request->request->get('required', null);
+        $viewby      = isset($args['viewby'])        ? $args['viewby']        : $this->request->request->get('viewby', null);
+        $displaytype = isset($args['displaytype'])   ? $args['displaytype']   : $this->request->request->get('displaytype', null);
+        $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : $this->request->request->get('listoptions', null);
+        $note        = isset($args['note'])          ? $args['note']          : $this->request->request->get('note', null);
 
         $returnurl = ModUtil::url('Profile', 'admin', 'view');
 
@@ -308,8 +308,8 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     public function modifyAction($args)
     {
         // Get parameters from whatever input we need.
-        $dudid    = isset($args['dudid'])    ? (int)$args['dudid']    : (int)$this->request->getGet()->get('dudid', null);
-        $objectid = isset($args['objectid']) ? (int)$args['objectid'] : (int)$this->request->getGet()->get('objectid', null);
+        $dudid    = isset($args['dudid'])    ? (int)$args['dudid']    : (int)$this->request->query->get('dudid', null);
+        $objectid = isset($args['objectid']) ? (int)$args['objectid'] : (int)$this->request->query->get('objectid', null);
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -388,14 +388,14 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 		$this->checkCsrfToken();
 
         // Get parameters from whatever input we need.
-        $dudid       = (int)$this->request->getPost()->get('dudid',    (isset($args['dudid']) ? $args['dudid'] : null));
-        $objectid    = (int)$this->request->getPost()->get('objectid', (isset($args['objectid']) ? $args['objectid'] : null));
-        $label       = $this->request->getPost()->get('label',         (isset($args['label']) ? $args['label'] : null));
-        $required    = $this->request->getPost()->get('required',      (isset($args['required']) ? $args['required'] : null));
-        $viewby      = $this->request->getPost()->get('viewby',        (isset($args['viewby']) ? $args['viewby'] : null));
-        $displaytype = $this->request->getPost()->get('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null));
-        $listoptions = $this->request->getPost()->get('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null));
-        $note        = $this->request->getPost()->get('note',          (isset($args['note']) ? $args['note'] : null));
+        $dudid       = (int)$this->request->request->get('dudid',    (isset($args['dudid']) ? $args['dudid'] : null));
+        $objectid    = (int)$this->request->request->get('objectid', (isset($args['objectid']) ? $args['objectid'] : null));
+        $label       = $this->request->request->get('label',         (isset($args['label']) ? $args['label'] : null));
+        $required    = $this->request->request->get('required',      (isset($args['required']) ? $args['required'] : null));
+        $viewby      = $this->request->request->get('viewby',        (isset($args['viewby']) ? $args['viewby'] : null));
+        $displaytype = $this->request->request->get('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null));
+        $listoptions = $this->request->request->get('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null));
+        $note        = $this->request->request->get('note',          (isset($args['note']) ? $args['note'] : null));
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -436,9 +436,9 @@ class Profile_Controller_Admin extends Zikula_AbstractController
     public function deleteAction($args)
     {
         // Get parameters from whatever input we need.
-        $dudid        =  (int)$this->request->getGet()->get('dudid',        $this->request->getPost()->get('dudid',        (isset($args['dudid']) ? $args['dudid'] : null)));
-        $objectid     =  (int)$this->request->getGet()->get('objectid',     $this->request->getPost()->get('objectid',     (isset($args['objectid']) ? $args['objectid'] : null)));
-        $confirmation = (bool)$this->request->getGet()->get('confirmation', $this->request->getPost()->get('confirmation', (isset($args['confirmation']) ? $args['confirmation'] : null)));
+        $dudid        =  (int)$this->request->query->get('dudid',        $this->request->request->get('dudid',        (isset($args['dudid']) ? $args['dudid'] : null)));
+        $objectid     =  (int)$this->request->query->get('objectid',     $this->request->request->get('objectid',     (isset($args['objectid']) ? $args['objectid'] : null)));
+        $confirmation = (bool)$this->request->query->get('confirmation', $this->request->request->get('confirmation', (isset($args['confirmation']) ? $args['confirmation'] : null)));
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -495,7 +495,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function increase_weightAction()
     {
-        $dudid = (int)$this->request->getGet()->get('dudid', null);
+        $dudid = (int)$this->request->query->get('dudid', null);
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
@@ -529,7 +529,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function decrease_weightAction()
     {
-        $dudid = (int)$this->request->getGet()->get('dudid', null);
+        $dudid = (int)$this->request->query->get('dudid', null);
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
@@ -569,10 +569,10 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function activateAction($args)
     {
-        $this->checkCsrfToken($this->request->getGet()->get('csrftoken'));
+        $this->checkCsrfToken($this->request->query->get('csrftoken'));
 
         // Get parameters from whatever input we need.
-        $dudid  = (int)$this->request->getGet()->get('dudid', (isset($args['dudid']) ? $args['dudid'] : null));
+        $dudid  = (int)$this->request->query->get('dudid', (isset($args['dudid']) ? $args['dudid'] : null));
 
         // The API function is called.
         if (ModUtil::apiFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
@@ -597,10 +597,10 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      */
     public function deactivateAction($args)
     {
-        $this->checkCsrfToken($this->request->getGet()->get('csrftoken'));
+        $this->checkCsrfToken($this->request->query->get('csrftoken'));
 
         // Get parameters from whatever input we need.
-        $dudid  = (int)$this->request->getGet()->get('dudid',  (isset($args['dudid']) ? $args['dudid'] : null));
+        $dudid  = (int)$this->request->query->get('dudid',  (isset($args['dudid']) ? $args['dudid'] : null));
 
         // The API function is called.
         if (ModUtil::apiFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
@@ -668,23 +668,23 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         // Update module variables.
-        $viewregdate = (bool)$this->request->getPost()->get('viewregdate', 0);
+        $viewregdate = (bool)$this->request->request->get('viewregdate', 0);
         $this->setVar('viewregdate', $viewregdate);
 
 
-        $memberslistitemsperpage = (int)$this->request->getPost()->get('memberslistitemsperpage', 20);
+        $memberslistitemsperpage = (int)$this->request->request->get('memberslistitemsperpage', 20);
         $this->setVar('memberslistitemsperpage', $memberslistitemsperpage);
 
-        $onlinemembersitemsperpage = (int)$this->request->getPost()->get('onlinemembersitemsperpage', 20);
+        $onlinemembersitemsperpage = (int)$this->request->request->get('onlinemembersitemsperpage', 20);
         $this->setVar('onlinemembersitemsperpage', $onlinemembersitemsperpage);
 
-        $recentmembersitemsperpage = (int)$this->request->getPost()->get('recentmembersitemsperpage', 10);
+        $recentmembersitemsperpage = (int)$this->request->request->get('recentmembersitemsperpage', 10);
         $this->setVar('recentmembersitemsperpage', $recentmembersitemsperpage);
 
-        $filterunverified = (bool)$this->request->getPost()->get('filterunverified', false);
+        $filterunverified = (bool)$this->request->request->get('filterunverified', false);
         $this->setVar('filterunverified', $filterunverified);
 
-        $dudregshow = $this->request->getPost()->get('dudregshow', array());
+        $dudregshow = $this->request->request->get('dudregshow', array());
         $this->setVar('dudregshow', $dudregshow);
 
         // the module configuration has been updated successfuly
