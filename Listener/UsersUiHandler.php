@@ -158,8 +158,8 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
             }
 
             // Get the dynamic data that might have been posted
-            if ($this->request->isPost() && $this->request->getPost()->has('dynadata')) {
-                $dynadata = $this->request->getPost()->get('dynadata');
+            if ($this->request->isMethod('POST') && $this->request->request->has('dynadata')) {
+                $dynadata = $this->request->request->get('dynadata');
             } else {
                 $dynadata = array();
             }
@@ -202,8 +202,8 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
      */
     public function validateEdit(Zikula_Event $event)
     {
-        if ($this->request->isPost()) {
-            $dynadata = $this->request->getPost()->has('dynadata') ? $this->request->getPost()->get('dynadata') : array();
+        if ($this->request->isMethod('POST')) {
+            $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
 
             $this->validation = new Zikula_Hook_ValidationResponse('dynadata', $dynadata);
             $requiredFailures = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
@@ -237,10 +237,10 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
      */
     public function processEdit(Zikula_Event $event)
     {
-        if ($this->request->isPost()) {
+        if ($this->request->isMethod('POST')) {
             if ($this->validation && !$this->validation->hasErrors()) {
                 $user = $event->getSubject();
-                $dynadata = $this->request->getPost()->has('dynadata') ? $this->request->getPost()->get('dynadata') : array();
+                $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
 
                 foreach ($dynadata as $dudName => $dudItem) {
                     UserUtil::setVar($dudName, $dudItem, $user['uid']);
