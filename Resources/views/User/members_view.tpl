@@ -1,6 +1,6 @@
 {gt text='Registered users list' assign='templatetitle'}
 
-{include file='profile_user_menu.tpl'}
+{include file='User/menu.tpl'}
 
 <form id="profile-search" class="z-form" action="{modurl modname='Profile' type='user' func='viewmembers'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>

@@ -1,6 +1,6 @@
 {gt text='Account Panel' assign='templatetitle'}
 
-{include file='profile_user_menu.tpl'}
+{include file='User/menu.tpl'}
 
 {section name='accountlinks' loop=$accountlinks}
 <div class="z-profilelink" style="width:{math equation='100/x' x=$pncore.Profile.itemsperrow format='%.0d'}%;">
