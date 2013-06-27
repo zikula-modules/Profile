@@ -9,7 +9,7 @@
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" id="startnum" name="startnum" value="{$startnum}" />
-        <div id="profilehint" class="z-informationmsg" style="display:none">{gt text="Notice: Use drag and drop to arrange the arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place."}</div>
+        <div id="profilehint" class="z-informationmsg" style="display:none">{gt text="Notice: Use drag and drop to arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place."}</div>
         <ol id="profilelist" class="z-itemlist">
             <li class="z-itemheader z-itemsortheader z-clearfix">
                 <span class="z-itemcell z-w25">{gt text='Label'}</span>
