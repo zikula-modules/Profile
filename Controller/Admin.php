@@ -256,7 +256,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         }
 
         if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label))) {
-            return LogUtil::registerError($this->__('Error! There is already an personal info item label with this naming.'), null, $returnurl);
+            return LogUtil::registerError($this->__('Error! There is already a personal info item label with this naming.'), null, $returnurl);
         }
 
         if (ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
