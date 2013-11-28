@@ -56,11 +56,11 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         // Check if the label or attribute name already exists
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
         if ($item) {
-            return LogUtil::registerError($this->__("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
+            return LogUtil::registerError($this->__f("Error! There is already an personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
         }
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
-            return LogUtil::registerError($this->__("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
+            return LogUtil::registerError($this->__f("Error! There is already an personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
         }
 
         // Determine the new weight
