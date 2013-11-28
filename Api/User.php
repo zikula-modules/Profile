@@ -124,8 +124,7 @@ class Profile_Api_User extends Zikula_AbstractApi
         }
 
         // Extract the validation info array
-        $validationinfo = @unserialize($item['prop_validation']);
-        unset($item['prop_validation']);
+        $validationinfo = unserialize($item['prop_validation']);
 
         // Expand the item array
         foreach ((array)$validationinfo as $infolabel => $infofield) {
