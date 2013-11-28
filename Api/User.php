@@ -119,7 +119,7 @@ class Profile_Api_User extends Zikula_AbstractApi
         }
 
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', "$item[prop_label]::$item[prop_id]", ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('Profile::', $item['prop_label'].'::'.$item['prop_id'], ACCESS_READ)) {
             return false;
         }
 
@@ -128,7 +128,7 @@ class Profile_Api_User extends Zikula_AbstractApi
 
         // Expand the item array
         foreach ((array)$validationinfo as $infolabel => $infofield) {
-            $item["prop_$infolabel"] = $infofield;
+            $item['prop_'.$infolabel] = $infofield;
         }
 
         // Return the item array
