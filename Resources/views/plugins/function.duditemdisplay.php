@@ -168,9 +168,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
         // select
         $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
 
-        // process the user values and get the translated label
-        $uservalue = @unserialize($uservalue);
-
         $output = array();
         foreach ((array)$uservalue as $id) {
             if (isset($options[$id])) {
