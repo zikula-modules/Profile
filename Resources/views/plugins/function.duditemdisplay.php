@@ -174,8 +174,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
         // process the user value and get the translated label
         $output = isset($options[$uservalue]) ? $options[$uservalue] : $default;
-
-
     } elseif ($item['prop_displaytype'] == 4) {
         // select
         $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
