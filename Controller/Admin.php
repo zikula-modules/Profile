@@ -66,7 +66,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         $x = 1;
         $duditems = array();
         foreach ($items as $item) {
-            // display the proper icom and link to enable or disable the field
+            // display the proper icon and link to enable or disable the field
             switch (true) {
                 // 0 <= DUD types can't be disabled
                 case ($item['prop_dtype'] <= 0):
@@ -94,7 +94,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
                             'title' => $this->__('Activate'));
             }
 
-            // analizes the DUD type
+            // analyzes the DUD type
             switch ($item['prop_dtype']) {
                 case '-2': // non-editable field
                     $data_type_text = $this->__('Not editable field');
@@ -152,6 +152,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             $item['statusval'] = $statusval;
             $item['options']   = $options;
             $item['dtype']     = $data_type_text;
+            $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User information');
             $duditems[] = $item;
             $x++;
         }
@@ -219,6 +220,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
      * numeric displaytype   Display type; 0 thru 7.
      * array   listoptions   If the display type is a list, then the options to display in the list.
      * string  note          Note for the item.
+     * string fieldset The fieldset to group the item.
      *
      * @param array $args All parameters passed to this function via an internal call.
      * 
@@ -243,31 +245,28 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         $displaytype = isset($args['displaytype'])   ? $args['displaytype']   : $this->request->request->get('displaytype', null);
         $listoptions = isset($args['listoptions'])   ? $args['listoptions']   : $this->request->request->get('listoptions', null);
         $note        = isset($args['note'])          ? $args['note']          : $this->request->request->get('note', null);
+        $fieldset = isset($args['fieldset']) ? $args['fieldset'] : $this->request->request->get('fieldset', null);
 
         $returnurl = ModUtil::url('Profile', 'admin', 'view');
 
         // Validates and check if empty or already existing...
         if (empty($label)) {
-            return LogUtil::registerError($this->__("Error! The personal info item must have a label. An example of a recommended label is: '_MYDUDLABEL'."), null, $returnurl);
+            return LogUtil::registerError($this->__("Error! The item must have a label. An example of a recommended label is: '_MYDUDLABEL'."), null, $returnurl);
         }
 
         if (empty($attrname)) {
-            return LogUtil::registerError($this->__("Error! The personal info item must have an attribute name. An example of an acceptable name is: 'mydudfield'."), null, $returnurl);
+            return LogUtil::registerError($this->__("Error! The item must have an attribute name. An example of an acceptable name is: 'mydudfield'."), null, $returnurl);
         }
 
-        if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label))) {
-            return LogUtil::registerError($this->__('Error! There is already a personal info item label with this naming.'), null, $returnurl);
+        if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label, 'propfieldset' => $fieldset))) {
+            return LogUtil::registerError($this->__('Error! There is already a label with this naming.'), null, $returnurl);
         }
 
         if (ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
             return LogUtil::registerError($this->__('Error! There is already an attribute name with this naming.'), null, $returnurl);
         }
 
-        $permalinkssep = System::getVar('shorturlsseparator');
-        $filteredlabel = str_replace($permalinkssep, '', DataUtil::formatPermalink($label));
-        if ($label != $filteredlabel) {
-            LogUtil::registerStatus($this->__('Warning! The personal info item label has been accepted, but was filtered and altered to ensure it contains no special characters or spaces in its naming.'), null, $returnurl);
-        }
+		$filteredlabel = $label;
 
         // The API function is called.
         $dudid = ModUtil::apiFunc('Profile', 'admin', 'create', array(
@@ -279,6 +278,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             'displaytype'    => $displaytype,
             'listoptions'    => $listoptions,
             'note'           => $note,
+            'fieldset' => $fieldset
         ));
 
         // The return value of the function is checked here
@@ -330,6 +330,8 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
         // backward check to remove any 1.4- forbidden char in listoptions
         $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
+        
+        $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User information');
 
         // Create output object
         $render = Zikula_View::getInstance('Profile', false);
@@ -396,6 +398,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         $displaytype = $this->request->request->get('displaytype',   (isset($args['displaytype']) ? $args['displaytype'] : null));
         $listoptions = $this->request->request->get('listoptions',   (isset($args['listoptions']) ? $args['listoptions'] : null));
         $note        = $this->request->request->get('note',          (isset($args['note']) ? $args['note'] : null));
+        $fieldset = $this->request->request->get('fieldset', (isset($args['fieldset']) ? $args['fieldset'] : null));
 
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
@@ -411,6 +414,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             'displaytype' => $displaytype,
             'listoptions' => str_replace("\n", "", $listoptions),
             'note'        => $note,
+            'fieldset' => $fieldset,
         );
         if (ModUtil::apiFunc('Profile', 'admin', 'update', $parameters)) {
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));

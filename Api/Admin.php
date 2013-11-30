@@ -46,21 +46,15 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         }
 
-
-
-        // Clean the label
-        $permsep = System::getVar('shorturlsseparator', '-');
-        $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
-        $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
-
         // Check if the label or attribute name already exists
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
-        if ($item) {
-            return LogUtil::registerError($this->__f("Error! There is already a personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
-        }
+        //@todo The check needs to occur for both the label and fieldset.
+        //$item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+        //if ($item) {
+        //    return LogUtil::registerError($this->__f("Error! There is already an item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
+        //}
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
-            return LogUtil::registerError($this->__f("Error! There is already a personal info item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
+            return LogUtil::registerError($this->__f("Error! There is already an item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
         }
 
         // Determine the new weight
@@ -78,7 +72,9 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             'viewby' => $args['viewby'],
             'displaytype' => $args['displaytype'],
             'listoptions' => $args['listoptions'],
-            'note' => $args['note']);
+            'note' => $args['note'],
+            'fieldset' => ((isset($args['fieldset'])) ? $args['fieldset'] : $this->__('User information'))
+        );
 
         $obj = array();
         $obj['prop_label'] = $args['label'];
@@ -125,12 +121,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
 
-        // Clean the label
-        $permsep = System::getVar('shorturlsseparator');
-        // TODO - Original line: $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
-        // The above was converting the label to lower case, preventing update
-        $args['label'] = str_replace($permsep, '', $args['label']);
-
         // Security check
         if (!SecurityUtil::checkPermission('Profile::Item', "$item[prop_label]::$args[dudid]", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
@@ -141,12 +131,13 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         }
 
         // If there's a new label, check if it already exists
-        if ($args['label'] <> $item['prop_label']) {
-            $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
-            if ($vitem) {
-                return LogUtil::registerError($this->__("Error! There is already a personal info item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
-            }
-        }
+        //@todo The check needs to occur for both the label and fieldset.
+        //if ($args['label'] <> $item['prop_label']) {
+          //  $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+            //if ($vitem) {
+              //  return LogUtil::registerError($this->__("Error! There is already an item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
+            //}
+        //}
 
         if (isset($args['prop_weight'])) {
             if ($args['prop_weight'] == 0) {
@@ -183,7 +174,9 @@ class Profile_Api_Admin extends Zikula_AbstractApi
                 'viewby' => $args['viewby'],
                 'displaytype' => $args['displaytype'],
                 'listoptions' => $args['listoptions'],
-                'note' => $args['note']);
+                'note' => $args['note'],
+                'fieldset' => ((isset($args['fieldset'])) ? $args['fieldset'] : $this->__('User information'))
+            );
 
             $obj['prop_validation'] = serialize($validationinfo);
         }
@@ -388,12 +381,12 @@ class Profile_Api_Admin extends Zikula_AbstractApi
 
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
             $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'),
-                'text' => $this->__('Personal info items list'),
+                'text' => $this->__('Fields'),
                 'class' => 'z-icon-es-view');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
             $links[] = array('url' => ModUtil::url('Profile', 'admin', 'newdud'),
-                'text' => $this->__('Create new personal info item'),
+                'text' => $this->__('Create new field'),
                 'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {

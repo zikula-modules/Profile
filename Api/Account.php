@@ -51,13 +51,13 @@ class Profile_Api_Account extends Zikula_AbstractApi
             $items['0'] = array('url'     => ModUtil::url('Profile', 'user', 'view', array('uid' => $uid)),
                     'module'  => 'Profile',
                     //! account panel link
-                    'title'   => $this->__('Personal info'),
+                    'title'   => $this->__('Profile'),
                     'icon'    => 'admin.png');
 
             if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
                 $items['1'] = array('url'     => ModUtil::url('Profile', 'user', 'viewmembers'),
                         'module'  => 'Profile',
-                        'title'   => $this->__('Registered users list'),
+                        'title'   => $this->__('Registered users'),
                         'icon'    => 'members.png');
             }
         }

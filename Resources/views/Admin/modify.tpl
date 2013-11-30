@@ -2,7 +2,7 @@
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="edit" size="small"}
-    <h3>{gt text='Edit personal info item'}</h3>
+    <h3>{gt text='Edit field'}</h3>
 </div>
 
 <form class="z-form" action="{modurl modname='Profile' type='admin' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
@@ -10,7 +10,7 @@
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="dudid" value="{$dudid}" />
         <fieldset>
-            <legend>{gt text='Personal info item'}</legend>
+            <legend>{gt text='Item'}</legend>
             <div class="z-formnote z-warningmsg">{gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."}</div>
             <div class="z-formrow">
                 <label for="profile_label">{gt text='Label'}</label>
@@ -60,6 +60,10 @@
             <div class="z-formrow">
                 <label for="profile_note">{gt text='Notice to display with personal info item'}</label>
                 <textarea id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|safetext}</textarea>
+            </div>
+            <div class="z-formrow">
+                <label for="profile_fieldset">{gt text='Fieldset'}</label>
+                <input id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" value="{$item.prop_fieldset|safetext}" />
             </div>
         </fieldset>
 

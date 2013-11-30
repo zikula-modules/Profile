@@ -4,7 +4,7 @@
     {assign var='name' value=''}
 {/if}
 {if !$name}{assign var='name' value=$uname}{/if}
-{gt text="Personal info for %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
+{gt text="Profile for %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
 
 {include file='User/menu.tpl'}
 
@@ -23,16 +23,19 @@
             <strong class="z-label">{gt text='User name:'}</strong>
             <span>{$uname|safetext}</span>
         </div>
-        {foreach from=$fields item='field'}
-        {if $field.prop_attribute_name neq 'avatar'}
-        {duditemdisplay item=$field userinfo=$userinfo}
+        {if ($pncore.Profile.viewregdate|default:1 && $userinfo.user_regdate != '1970-01-01 00:00:00')}
+        	<div class="z-formrow">
+            	<strong class="z-label">{gt text='Registration date:'}</strong>
+				<span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
+			</div>
         {/if}
-        {/foreach}
-        {if $pncore.Profile.viewregdate|default:1 and $userinfo.user_regdate neq '1970-01-01 00:00:00'}
-        <div class="z-formrow">
-            <strong class="z-label">{gt text='Registration date:'}</strong>
-            <span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
-        </div>
-        {/if}
+        {foreach from=$fieldsets item='fieldset'}
+    		<h2>{$fieldset}</h2>
+			{foreach from=$fields item='item'}
+				{if (($fieldset == $item.prop_fieldset) && ($item.prop_attribute_name != 'avatar'))}
+					{duditemdisplay item=$item userinfo=$userinfo}
+				{/if}
+			{/foreach}
+		{/foreach}
     </div>
 </div>

@@ -62,7 +62,9 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
      *
      * @param Zikula_EventManager $eventManager An instance of a Zikula event manager appropriate for this listener.
      */
-    public function __construct(Zikula_EventManager $eventManager)
+    // @todo Need to set the correct type hint.
+    public function __construct($eventManager)
+    //public function __construct(Zikula_EventManager $eventManager)
     {
         parent::__construct($eventManager);
         
@@ -149,6 +151,13 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
 
         // The return value of the function is checked here
         if ($items) {
+        	$fieldsets = array();
+		
+			foreach ($items as $propattr => $propdata) {
+        		$items[$propattr]['prop_fieldset'] = (isset($items[$propattr]['prop_fieldset'])) ? $items[$propattr]['prop_fieldset'] : $this->__('User information');
+				$fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
+			}
+        	
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user
             $userid   = $event->hasArgument('id') ? $event->getArgument('id') : null;
@@ -182,6 +191,7 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
             $this->getView()->setCaching(false)
                     ->assign('duderrors', $errorFields)
                     ->assign('duditems', $items)
+                    ->assign('fieldsets', $fieldsets)
                     ->assign('userid', $userid);
 
             $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_edit.tpl');

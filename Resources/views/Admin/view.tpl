@@ -2,7 +2,7 @@
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="view" size="small"}
-    <h3>{gt text='Personal info items list'}</h3>
+    <h3>{gt text='Fields'}</h3>
 </div>
 
 <form class="z-adminform" action="" method="post" enctype="application/x-www-form-urlencoded">
@@ -12,6 +12,7 @@
         <div id="profilehint" class="z-informationmsg" style="display:none">{gt text="Notice: Use drag and drop to arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place."}</div>
         <ol id="profilelist" class="z-itemlist">
             <li class="z-itemheader z-itemsortheader z-clearfix">
+                <span class="z-itemcell z-w25">{gt text='Fieldset'}</span>
                 <span class="z-itemcell z-w25">{gt text='Label'}</span>
                 <span class="z-itemcell z-w25">{gt text='Attribute name'}</span>
                 <span class="z-itemcell z-w15">{gt text='Type'}</span>
@@ -20,7 +21,7 @@
             </li>
             {foreach from=$duditems item='duditem'}
             <li id="profile_{$duditem.prop_id}" class="{cycle values='z-odd,z-even'} z-itemsort z-sortable z-clearfix">
-                <span class="z-itemcell z-w25" id="profiledrag_{$duditem.prop_id}">{$duditem.prop_label|safehtml} ({gt text=$duditem.prop_label})</span>
+                <span class="z-itemcell z-w25" id="profiledrag_{$duditem.prop_id}">[{$duditem.prop_fieldset|safetext}] {$duditem.prop_label|safehtml} ({gt text=$duditem.prop_label})</span>
                 <span class="z-itemcell z-w25">{$duditem.prop_attribute_name}</span>
                 <span class="z-itemcell z-w15">{$duditem.dtype|safehtml}</span>
                 <span class="z-itemcell z-w15">

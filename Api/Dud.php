@@ -32,6 +32,7 @@ class Profile_Api_Dud extends Zikula_AbstractApi
      *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 7: multi checkbox}
      *                   'listoptions' => options for the new field
      *                   'note'        => note to show in edit mode
+     *					 'fieldset' => The fieldset to group the item.
      *                   and any other required data.
      * 
      * @param array $args All parameters passed to this function.

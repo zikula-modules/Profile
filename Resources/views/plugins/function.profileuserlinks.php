@@ -75,7 +75,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
             $linksarray[] = '<a href="' . ModUtil::url('Users', 'user', 'main') . '">' . __('User account panel', $dom) . '</a>';
         }
         if ($currentfunc != 'viewmembers') {
-            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'viewmembers') . '">' . __('Registered users list', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'viewmembers') . '">' . __('Registered users', $dom) . '</a>';
         }
         if ($currentfunc != 'recentmembers') {
             $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'recentmembers') . '">' . __f('Last %s registered users', ModUtil::getVar('Profile', 'recentmembersitemsperpage'), $dom) . '</a>';
@@ -113,11 +113,11 @@ function smarty_function_profileuserlinks($params, &$smarty)
     }
 
     if ($smarty->_tpl_vars['sameuser'] && $currentfunc != 'modify') {
-        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'modify') . '">' . __('Edit personal info', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'modify') . '">' . __('Edit profile', $dom) . '</a>';
     }
 
     if ($smarty->_tpl_vars['ismember'] && $currentfunc != 'view') {
-        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'view', array('uid' => $currentuser)) . '">' . __('View personal info', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'view', array('uid' => $currentuser)) . '">' . __('View profile', $dom) . '</a>';
     }
 
     if (!$smarty->_tpl_vars['sameuser']) {

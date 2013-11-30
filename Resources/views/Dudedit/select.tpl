@@ -9,6 +9,7 @@
 
     <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-form-mandatory-flag">{gt text='*'}</span>{/if}</label>
     <select id="prop_{$attributename}" name="dynadata[{$attributename}]{if $selectmultiple}[]{/if}"{$selectmultiple} class="{if $required}required{/if} {if $error}z-form-error{/if}">
+    	<option label="{gt text='Select'}" value="">{gt text='Select'}</option>
         {html_options id=$attributename values=$listoptions output=$listoutput selected=$value}
     </select>
 
