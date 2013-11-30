@@ -110,7 +110,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // build the output
     $output = '';
     $render = Zikula_View::getInstance('Profile', false, null, true);
-    $render->assign('item',      $item);
     $render->assign('userinfo',  $userinfo);
     $render->assign('uservalue', $uservalue);
 
@@ -157,7 +156,8 @@ function smarty_function_duditemdisplay($params, &$smarty)
 		 	 * Detect if the list options include the modification of the label.
 		 	 */
 		 	if (substr($item['prop_listoptions'], 0, 2) != '@@') {
-		 		array_shift($options);
+		 		$label = array_shift($options);
+		 		$item['prop_label'] = __($label, $dom);
 		 	}
         }
         
@@ -236,7 +236,8 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $output .= __($uservalue, $dom);
     }
 
-
+    $render->assign('item', $item);
+    
     // omit this field if is empty after the process
     if (empty($output)) {
         return '';
