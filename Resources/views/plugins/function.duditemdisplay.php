@@ -148,14 +148,26 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     } elseif ($item['prop_displaytype'] == 2) {
         // checkbox
-        $default = array('No', 'Yes');
-        $output  = array_splice(explode('@@', $item['prop_listoptions']), 1);
-        if (!is_array($output) || count($output) < 2) {
-            $output = $default;
+        $options = array('No', 'Yes');
+        
+        if (!empty($item['prop_listoptions'])) {
+		 	$options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
+
+		 	/**
+		 	 * Detect if the list options include the modification of the label.
+		 	 */
+		 	if (substr($item['prop_listoptions'], 0, 2) != '@@') {
+		 		array_shift($options);
+		 	}
         }
-        $output = isset($output[(int)$uservalue]) && !empty($output[(int)$uservalue]) ? __($output[(int)$uservalue], $dom) : __($default[(int)$uservalue], $dom);
-
-
+        
+        $key = array_search($uservalue, $options);
+		
+		if ($key !== false) {
+			$output = __($options[$key], $dom);
+		} else {
+			$output = '';
+		}
     } elseif ($item['prop_displaytype'] == 3) {
         // radio
         $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
@@ -174,8 +186,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
                 $output[] = $options[$id];
             }
         }
-
-
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
         // date
         $format = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
