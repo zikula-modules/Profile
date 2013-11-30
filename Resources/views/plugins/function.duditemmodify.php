@@ -198,13 +198,22 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         case 2: // CHECKBOX
             $type = 'checkbox';
+          
+			$options = array('No', 'Yes');
+        
+			if (!empty($item['prop_listoptions'])) {
+		 		$options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
 
-            $editlabel = array_splice(explode('@@', $item['prop_listoptions']), 0, 1);
-            if (!empty($editlabel[0])) {
-                $render->assign('proplabeltext', __($editlabel[0], $dom));
-            }
+		 		/**
+			 	 * Detect if the list options include the modification of the label.
+			 	 */
+			 	if (substr($item['prop_listoptions'], 0, 2) != '@@') {
+		 			$label = array_shift($options);
+		 			$render->assign('proplabeltext', __($label, $dom));
+		 		}
+		 	}
+
             break;
-
         case 3: // RADIO
             $type = 'radio';
 
