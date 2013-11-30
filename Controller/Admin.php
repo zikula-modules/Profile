@@ -152,7 +152,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             $item['statusval'] = $statusval;
             $item['options']   = $options;
             $item['dtype']     = $data_type_text;
-            $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User information');
+            $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
             $duditems[] = $item;
             $x++;
         }
@@ -331,7 +331,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         // backward check to remove any 1.4- forbidden char in listoptions
         $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
         
-        $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User information');
+        $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
 
         // Create output object
         $render = Zikula_View::getInstance('Profile', false);

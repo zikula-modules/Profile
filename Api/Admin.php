@@ -73,7 +73,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             'displaytype' => $args['displaytype'],
             'listoptions' => $args['listoptions'],
             'note' => $args['note'],
-            'fieldset' => ((isset($args['fieldset'])) ? $args['fieldset'] : $this->__('User information'))
+            'fieldset' => ((isset($args['fieldset'])) ? $args['fieldset'] : $this->__('User Information'))
         );
 
         $obj = array();
@@ -175,7 +175,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
                 'displaytype' => $args['displaytype'],
                 'listoptions' => $args['listoptions'],
                 'note' => $args['note'],
-                'fieldset' => ((isset($args['fieldset'])) ? $args['fieldset'] : $this->__('User information'))
+                'fieldset' => ((isset($args['fieldset'])) ? $args['fieldset'] : $this->__('User Information'))
             );
 
             $obj['prop_validation'] = serialize($validationinfo);
