@@ -90,7 +90,7 @@ class Profile_Controller_User extends Zikula_AbstractController
 		$items = $activeduds;	
         
         foreach ($items as $propattr => $propdata) {
-        	$items[$propattr]['prop_fieldset'] = (isset($items[$propattr]['prop_fieldset'])) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
+        	$items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
         	$fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
         }
         
@@ -161,7 +161,7 @@ class Profile_Controller_User extends Zikula_AbstractController
 		$fieldsets = array();
 		
         foreach ($items as $propattr => $propdata) {
-        	$items[$propattr]['prop_fieldset'] = (isset($items[$propattr]['prop_fieldset'])) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
+        	$items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
         	$fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
         }
 

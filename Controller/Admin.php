@@ -152,7 +152,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             $item['statusval'] = $statusval;
             $item['options']   = $options;
             $item['dtype']     = $data_type_text;
-            $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
+            $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
             $duditems[] = $item;
             $x++;
         }
@@ -258,9 +258,10 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerError($this->__("Error! The item must have an attribute name. An example of an acceptable name is: 'mydudfield'."), null, $returnurl);
         }
 
-        if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label, 'propfieldset' => $fieldset))) {
-            return LogUtil::registerError($this->__('Error! There is already a label with this naming.'), null, $returnurl);
-        }
+        //@todo The check needs to occur for both the label and fieldset.
+        //if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label, 'propfieldset' => $fieldset))) {
+        //    return LogUtil::registerError($this->__('Error! There is already a label with this naming.'), null, $returnurl);
+        //}
 
         if (ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
             return LogUtil::registerError($this->__('Error! There is already an attribute name with this naming.'), null, $returnurl);
@@ -331,7 +332,7 @@ class Profile_Controller_Admin extends Zikula_AbstractController
         // backward check to remove any 1.4- forbidden char in listoptions
         $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
         
-        $item['prop_fieldset'] = (isset($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
+        $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
 
         // Create output object
         $render = Zikula_View::getInstance('Profile', false);
