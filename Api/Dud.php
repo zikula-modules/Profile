@@ -282,7 +282,8 @@ class Profile_Api_Dud extends Zikula_AbstractApi
             case 3:
                 // RADIO
                 // extract the options
-                $list = array_splice(explode('@@', $item['prop_listoptions']), 1);
+                $prop_listoptions = explode('@@', $item['prop_listoptions']);
+                $list = array_splice($prop_listoptions, 1);
 
                 // translate them if needed
                 foreach ($list as $id => $value) {
