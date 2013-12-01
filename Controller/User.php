@@ -12,6 +12,8 @@
  * information regarding copyright and licensing.
  */
 
+use Zikula\Core\Event\GenericEvent;
+
 /**
  * UI operations executable by general users.
  */
@@ -198,11 +200,25 @@ class Profile_Controller_User extends Zikula_AbstractController
     {
 		$this->checkCsrfToken();
 
+        $uid = UserUtil::getVar('uid');
+        $user = UserUtil::getVars($uid);
+        $dynadata = $this->request->request->get('dynadata', null);
+        $event_args = array(
+            'uid' => $uid,
+            'dynadata' => $dynadata
+        );
+
+        $event = new GenericEvent($user, $event_args);
+        $event = $this->getDispatcher()->dispatch('module.profile.update', $event);
+        
         // Get parameters from whatever input we need.
         $uname    = $this->request->request->get('uname',    null);
+        
+        /**
+         * Set $dynadata again, in case it has been modified by
+         * a persistent module handler.
+         */
         $dynadata = $this->request->request->get('dynadata', null);
-
-        $uid = UserUtil::getVar('uid');
 
         // Check for required fields - The API function is called.
         $checkrequired = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
