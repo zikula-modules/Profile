@@ -12,6 +12,8 @@
  * information regarding copyright and licensing.
  */
 
+use Profile_Entity_Property as PropertyEntity;
+
 /**
  * Profile module installer.
  */
@@ -39,8 +41,10 @@ class Profile_Installer extends Zikula_AbstractInstaller
      */
     public function install()
     {
-        if (!DBUtil::createTable('user_property')) {
-            return false;
+        try {
+            DoctrineHelper::createSchema($this->entityManager, 'Profile_Entity_Property');
+        } catch (\Exception $e) {
+            return LogUtil::registerError($e->getMessage());
         }
 
         $this->setVars($this->getDefaultModVars());
@@ -63,33 +67,17 @@ class Profile_Installer extends Zikula_AbstractInstaller
      */
     public function upgrade($oldversion)
     {
+        // Only support upgrade from version 1.6 and up. Notify users if they have a version below that one.
+        if (version_compare($oldversion, '1.6', '<')) {
+            // Inform user about error, and how he can upgrade to $modversion
+            $upgradeToVersion = $this->version->getVersion();
+
+            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to version %s.', $upgradeToVersion));
+        }
         switch ($oldversion)
         {
-            case '1.5.2':
-                // 1.5.2 -> 1.6.0
-                EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_UsersUiHandler');
-                $connection = Doctrine_Manager::getInstance()->getConnection('default');
-                $sqlStatements = array();
-                // N.B. statements generated with PHPMyAdmin
-                $sqlStatements[] = 'RENAME TABLE ' . DBUtil::getLimitedTablename('user_property') . " TO user_property";
-                $sqlStatements[] = "ALTER TABLE `user_property` CHANGE  `pn_prop_id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
-CHANGE  `pn_prop_label`  `label` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE  `pn_prop_dtype`  `dtype` INT( 11 ) NOT NULL DEFAULT  '0',
-CHANGE  `pn_prop_modname`  `modname` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE  `pn_prop_weight`  `weight` INT( 11 ) NOT NULL DEFAULT  '0',
-CHANGE  `pn_prop_validation`  `validation` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL";
-                foreach ($sqlStatements as $sql) {
-                    $stmt = $connection->prepare($sql);
-                    try {
-                        $stmt->execute();
-                    } catch (Exception $e) {
-                    }   
-                }
-                
             case '1.6.0':
-            case '1.6.1':
-                // 1.6.0 -> X.X.X when appropriate.
+            case '1.6.1': // released with Core 1.3.6
         }
 
         $modVars = $this->getVars();
@@ -120,8 +108,10 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
      */
     public function uninstall()
     {
-        if (!DBUtil::dropTable('user_property')) {
-            return false;
+        try {
+            DoctrineHelper::dropSchema($this->entityManager, 'Profile_Entity_Property');
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage());
         }
 
         // Delete any module variables
@@ -146,143 +136,174 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
 
         // _UREALNAME
         $record = array();
-        $record['prop_label']          = no__('_UREALNAME');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '1';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'realname';
+        $record['label']          = no__('_UREALNAME');
+        $record['dtype']          = '1';
+        $record['weight']         = '1';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'realname';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _UFAKEMAIL
         $record = array();
-        $record['prop_label']          = no__('_UFAKEMAIL');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '2';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'publicemail';
+        $record['label']          = no__('_UFAKEMAIL');
+        $record['dtype']          = '1';
+        $record['weight']         = '2';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'publicemail';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YOURHOMEPAGE
         $record = array();
-        $record['prop_label']          = no__('_YOURHOMEPAGE');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '3';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'url';
+        $record['label']          = no__('_YOURHOMEPAGE');
+        $record['dtype']          = '1';
+        $record['weight']         = '3';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'url';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _TIMEZONEOFFSET
         $record = array();
-        $record['prop_label']          = no__('_TIMEZONEOFFSET');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '4';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'tzoffset';
+        $record['label']          = no__('_TIMEZONEOFFSET');
+        $record['dtype']          = '1';
+        $record['weight']         = '4';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'tzoffset';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YOURAVATAR
         $record = array();
-        $record['prop_label']          = no__('_YOURAVATAR');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '5';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'avatar';
+        $record['label']          = no__('_YOURAVATAR');
+        $record['dtype']          = '1';
+        $record['weight']         = '5';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'avatar';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YICQ
         $record = array();
-        $record['prop_label']          = no__('_YICQ');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '6';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'icq';
+        $record['label']          = no__('_YICQ');
+        $record['dtype']          = '1';
+        $record['weight']         = '6';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'icq';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YAIM
         $record = array();
-        $record['prop_label']          = no__('_YAIM');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '7';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'aim';
+        $record['label']          = no__('_YAIM');
+        $record['dtype']          = '1';
+        $record['weight']         = '7';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'aim';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YYIM
         $record = array();
-        $record['prop_label']          = no__('_YYIM');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '8';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'yim';
+        $record['label']          = no__('_YYIM');
+        $record['dtype']          = '1';
+        $record['weight']         = '8';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'yim';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YMSNM
         $record = array();
-        $record['prop_label']          = no__('_YMSNM');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '9';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'msnm';
+        $record['label']          = no__('_YMSNM');
+        $record['dtype']          = '1';
+        $record['weight']         = '9';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'msnm';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YLOCATION
         $record = array();
-        $record['prop_label']          = no__('_YLOCATION');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '10';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'city';
+        $record['label']          = no__('_YLOCATION');
+        $record['dtype']          = '1';
+        $record['weight']         = '10';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'city';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YOCCUPATION
         $record = array();
-        $record['prop_label']          = no__('_YOCCUPATION');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '11';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'occupation';
+        $record['label']          = no__('_YOCCUPATION');
+        $record['dtype']          = '1';
+        $record['weight']         = '11';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'occupation';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _SIGNATURE
         $record = array();
-        $record['prop_label']          = no__('_SIGNATURE');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '12';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'signature';
+        $record['label']          = no__('_SIGNATURE');
+        $record['dtype']          = '1';
+        $record['weight']         = '12';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'signature';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _EXTRAINFO
         $record = array();
-        $record['prop_label']          = no__('_EXTRAINFO');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '13';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'extrainfo';
+        $record['label']          = no__('_EXTRAINFO');
+        $record['dtype']          = '1';
+        $record['weight']         = '13';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
+        $record['attributename'] = 'extrainfo';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YINTERESTS
         $record = array();
-        $record['prop_label']          = no__('_YINTERESTS');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '14';
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
-        $record['prop_attribute_name'] = 'interests';
+        $record['label']          = no__('_YINTERESTS');
+        $record['dtype']          = '1';
+        $record['weight']         = '14';
+        $record['validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
+        $record['attribute_name'] = 'interests';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
+
+        // flush all persisted entities
+        $this->entityManager->flush();
 
         // set realname, homepage, timezone offset, location and ocupation
         // to be shown in the registration form by default
