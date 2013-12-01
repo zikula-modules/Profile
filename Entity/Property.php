@@ -29,149 +29,149 @@ class Profile_Entity_Property extends EntityAccess
      * id
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",name="id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private $prop_id;
 
     /**
      * Label
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",name="label")
      */
-    private $label;
+    private $prop_label;
 
     /**
      * Dtype
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",name="dtype")
      */
-    private $dtype = 0;
+    private $prop_dtype = 0;
 
     /**
      * Modname
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string",length=64,name="modname")
      */
-    private $modname;
+    private $prop_modname;
 
     /**
      * Weight
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",name="weight")
      */
-    private $weight = 0;
+    private $prop_weight = 0;
 
     /**
      * Validation
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text",nullable=true,name="validation")
      */
-    private $validation = null;
+    private $prop_validation = null;
 
     /**
      * Attribute name
-     * @ORM\Column(type="string", length=80)
+     * @ORM\Column(type="string",length=80,name="attributename")
      */
-    private $attributename;
+    private $prop_attribute_name;
 
     /**
      * @param string $attributename
      */
-    public function setAttributename($attributename)
+    public function setProp_attribute_name($attributename)
     {
-        $this->attributename = $attributename;
+        $this->prop_attribute_name = $attributename;
     }
 
     /**
      * @return string
      */
-    public function getAttributename()
+    public function getProp_attribute_name()
     {
-        return $this->attributename;
+        return $this->prop_attribute_name;
     }
 
     /**
      * @param integer $dtype
      */
-    public function setDtype($dtype = 0)
+    public function setProp_dtype($dtype = 0)
     {
-        $this->dtype = $dtype;
+        $this->prop_dtype = $dtype;
     }
 
     /**
      * @return integer
      */
-    public function getDtype()
+    public function getProp_dtype()
     {
-        return $this->dtype;
+        return $this->prop_dtype;
     }
 
     /**
      * @return integer
      */
-    public function getId()
+    public function getProp_id()
     {
-        return $this->id;
+        return $this->prop_id;
     }
 
     /**
      * @param string $label
      */
-    public function setLabel($label)
+    public function setProp_label($label)
     {
-        $this->label = $label;
+        $this->prop_label = $label;
     }
 
     /**
      * @return string
      */
-    public function getLabel()
+    public function getProp_label()
     {
-        return $this->label;
+        return $this->prop_label;
     }
 
     /**
      * @param string $modname
      */
-    public function setModname($modname)
+    public function setProp_modname($modname)
     {
-        $this->modname = $modname;
+        $this->prop_modname = $modname;
     }
 
     /**
      * @return string
      */
-    public function getModname()
+    public function getProp_modname()
     {
-        return $this->modname;
+        return $this->prop_modname;
     }
 
     /**
      * @param string|null $validation
      */
-    public function setValidation($validation = null)
+    public function setProp_validation($validation = null)
     {
-        $this->validation = $validation;
+        $this->prop_validation = $validation;
     }
 
     /**
      * @return string
      */
-    public function getValidation()
+    public function getProp_validation()
     {
-        return $this->validation;
+        return $this->prop_validation;
     }
 
     /**
      * @param integer $weight
      */
-    public function setWeight($weight = 0)
+    public function setProp_weight($weight = 0)
     {
-        $this->weight = $weight;
+        $this->prop_weight = $weight;
     }
 
     /**
      * @return integer
      */
-    public function getWeight()
+    public function getProp_weight()
     {
-        return $this->weight;
+        return $this->prop_weight;
     }
 
 }
