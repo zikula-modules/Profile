@@ -105,12 +105,16 @@ class Profile_Api_User extends Zikula_AbstractApi
         }
 
         // Get item with where clause
+        /** @var $item Profile_Entity_Property */
         if (isset($args['propid'])) {
-            $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int)$args['propid']);
+//            $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
         } elseif (isset($args['proplabel'])) {
-            $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_label' => $args['proplabel']));
+//            $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
         } else {
-            $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
+//            $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
         }
 
         // Check for no rows found, and if so return
@@ -119,12 +123,13 @@ class Profile_Api_User extends Zikula_AbstractApi
         }
 
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', $item['prop_label'].'::'.$item['prop_id'], ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('Profile::', $item->getProp_label().'::'.$item->getProp_id(), ACCESS_READ)) {
             return false;
         }
 
         // Extract the validation info array
-        $validationinfo = unserialize($item['prop_validation']);
+        $validationinfo = unserialize($item->getProp_validation());
+        $item = $item->toArray();
 
         // Expand the item array
         foreach ((array)$validationinfo as $infolabel => $infofield) {
@@ -182,30 +187,41 @@ class Profile_Api_User extends Zikula_AbstractApi
 
         if (!isset($items)) {
             // Get datbase setup
-            $dbtable = DBUtil::getTables();
-            $column  = $dbtable['user_property_column'];
-            $where   = "WHERE {$column['prop_weight']} > '0'
-                    AND   {$column['prop_dtype']} >= '0'";
-            $orderBy = $column['prop_weight'];
-
-            $permFilter = array();
-            $permFilter[] = array('component_left'   =>  'Profile',
-                    'component_middle' =>  '',
-                    'component_right'  =>  '',
-                    'instance_left'    =>  'prop_label',
-                    'instance_middle'  =>  '',
-                    'instance_right'   =>  'prop_id',
-                    'level'            =>  ACCESS_READ);
-
-            $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, -1, -1, 'prop_id', $permFilter);
+//            $dbtable = DBUtil::getTables();
+//            $column  = $dbtable['user_property_column'];
+//            $where   = "WHERE {$column['prop_weight']} > '0'
+//                    AND   {$column['prop_dtype']} >= '0'";
+//            $orderBy = $column['prop_weight'];
+//
+//            $permFilter = array();
+//            $permFilter[] = array('component_left'   =>  'Profile',
+//                    'component_middle' =>  '',
+//                    'component_right'  =>  '',
+//                    'instance_left'    =>  'prop_label',
+//                    'instance_middle'  =>  '',
+//                    'instance_right'   =>  'prop_id',
+//                    'level'            =>  ACCESS_READ);
+//
+//            $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, -1, -1, 'prop_id', $permFilter);
+            $qb = $this->entityManager->createQueryBuilder();
+            $qb->select('p')->from('Profile_Entity_Property', 'p')
+                ->where('p.prop_weight > 0')
+                ->andWhere('p.prop_dtype >= 0')
+                ->orderBy('p.prop_weight');
+            $items = $qb->getQuery()->getArrayResult();
 
             foreach (array_keys($items) as $k) {
-                // Extract the validation info array
-                $validationinfo = @unserialize($items[$k]['prop_validation']);
-                unset($items[$k]['prop_validation']);
+                // check permissions
+                if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'].'::'.$items[$k]['prop_id'], ACCESS_READ)) {
+                    // Extract the validation info array
+                    $validationinfo = @unserialize($items[$k]['prop_validation']);
+                    unset($items[$k]['prop_validation']);
 
-                foreach ((array)$validationinfo as $infolabel => $infofield) {
-                    $items[$k]["prop_$infolabel"] = $infofield;
+                    foreach ((array)$validationinfo as $infolabel => $infofield) {
+                        $items[$k]["prop_$infolabel"] = $infofield;
+                    }
+                } else {
+                    unset($items[$k]);
                 }
             }
         }
@@ -273,7 +289,9 @@ class Profile_Api_User extends Zikula_AbstractApi
     public function countitems()
     {
         // Return the number of items
-        return DBUtil::selectObjectCount('user_property');
+//        return DBUtil::selectObjectCount('user_property');
+        $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Profile_Entity_Property p');
+        return $query->getSingleScalarResult();
     }
 
     /**
@@ -284,14 +302,18 @@ class Profile_Api_User extends Zikula_AbstractApi
     public function getweightlimits()
     {
         // Get datbase setup
-        $dbtable = DBUtil::getTables();
-        $column  = $dbtable['user_property_column'];
+//        $dbtable = DBUtil::getTables();
+//        $column  = $dbtable['user_property_column'];
 
-        $where = "WHERE {$column['prop_weight']} != 0";
-        $max   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MAX', $where);
+//        $where = "WHERE {$column['prop_weight']} != 0";
+//        $max   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MAX', $where);
+        $query = $this->entityManager->createQuery('SELECT MAX(p.prop_weight) FROM Profile_Entity_Property p');
+        $max = $query->getSingleScalarResult();
 
-        $where = "WHERE {$column['prop_weight']} != 0";
-        $min   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MIN', $where);
+//        $where = "WHERE {$column['prop_weight']} != 0";
+//        $min   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MIN', $where);
+        $query = $this->entityManager->createQuery('SELECT MIN(p.prop_weight) FROM Profile_Entity_Property p');
+        $min = $query->getSingleScalarResult();
 
         // Return the number of items
         return array('min' => $min, 'max' => $max);
@@ -489,7 +511,8 @@ class Profile_Api_User extends Zikula_AbstractApi
         }
 
         // Needs to merge the existing attributes to not delete any of them
-        $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
+//        $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
+        $user = UserUtil::getVars($args['uid']); // use 'api' instead?
 
         if ($user === false || !isset($user['__ATTRIBUTES__'])) {
             return array('__ATTRIBUTES__' => $dynadata);

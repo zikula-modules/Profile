@@ -13,6 +13,7 @@
  * information regarding copyright and licensing.
  */
 
+use Profile_Entity_Property as PropertyEntity;
 /**
  * Administrative API functions for the Profile module.
  */
@@ -82,16 +83,21 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $obj['prop_dtype'] = $args['dtype'];
         $obj['prop_weight'] = $weight;
         $obj['prop_validation'] = serialize($validationinfo);
+        $prop = new PropertyEntity();
+        $prop->merge($obj);
+        $this->entityManager->persist($prop);
+        $this->entityManager->flush();
 
-        $res = DBUtil::insertObject($obj, 'user_property', 'prop_id');
+//        $res = DBUtil::insertObject($obj, 'user_property', 'prop_id');
 
         // Check for an error with the database
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not create new attribute.'));
-        }
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not create new attribute.'));
+//        }
 
         // Return the id of the newly created item to the calling process
-        return $obj['prop_id'];
+//        return $obj['prop_id'];
+        return $prop->getProp_id();
     }
 
     /**
@@ -143,21 +149,25 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             if ($args['prop_weight'] == 0) {
                 unset($args['prop_weight']);
             } elseif ($args['prop_weight'] <> $item['prop_weight']) {
-                $result = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
-                $result['prop_weight'] = $item['prop_weight'];
+                /** @var $property Profile_Entity_Property */
+                $property = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_weight' => $args['prop_weight']));
+//                $result = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
+                $property->setProp_weight($item['prop_weight']);
+//                $result['prop_weight'] = $item['prop_weight'];
 
-                $dbtable = DBUtil::getTables();
-                $column = $dbtable['user_property_column'];
-                $where = "$column[prop_weight] =  '$args[prop_weight]'
-                        AND $column[prop_id] <> '$args[dudid]'";
-
-                DBUtil::updateObject($result, 'user_property', $where, 'prop_id');
+//                $dbtable = DBUtil::getTables();
+//                $column = $dbtable['user_property_column'];
+//                $where = "$column[prop_weight] =  '$args[prop_weight]'
+//                        AND $column[prop_id] <> '$args[dudid]'";
+//
+//                DBUtil::updateObject($result, 'user_property', $where, 'prop_id');
+                $this->entityManager->flush($property);
             }
         }
 
         // create the object to update
         $obj = array();
-        $obj['prop_id'] = $args['dudid'];
+//        $obj['prop_id'] = $args['dudid'];
         $obj['prop_dtype'] = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
         $obj['prop_weight'] = (isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight']);
 
@@ -193,12 +203,15 @@ class Profile_Api_Admin extends Zikula_AbstractApi
                 'newitem' => $obj['prop_validation']));
         }
 
-        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
+//        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
+        $property = $this->entityManager->getRepository('Profile_Entity_Property')->find($args['dudid']);
+        $property->merge($obj);
+        $this->entityManager->flush();
 
         // Check for an error with the database code
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not save your changes.'));
-        }
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not save your changes.'));
+//        }
 
         // Let the calling process know that we have finished successfully
         return true;
@@ -243,22 +256,31 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         }
 
         // delete the property data aka attributes
-        $dbtables = DBUtil::getTables();
-        $objattr_column = $dbtables['objectdata_attributes_column'];
-
-        $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
-                   AND $objattr_column[object_type] = 'users'";
-
-        $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-        }
+//        $dbtables = DBUtil::getTables();
+//        $objattr_column = $dbtables['objectdata_attributes_column'];
+//
+//        $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
+//                   AND $objattr_column[object_type] = 'users'";
+//
+//        $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
+//        }
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->delete('Zikula\Module\UsersModule\Entity\UserAttributeEntity', 'a')
+            ->where('a.name = :name')
+            ->setParameter('name', $item['prop_attribute_name']);
+        $qb->getQuery()->execute();
 
         // delete the property
-        $res = DBUtil::deleteObjectByID('user_property', $dudid, 'prop_id');
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-        }
+//        $res = DBUtil::deleteObjectByID('user_property', $dudid, 'prop_id');
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
+//        }
+        $qb->delete('Profile_Entity_Property', 'p')
+            ->where('p.prop_id = :id')
+            ->setParameter('id', $dudid);
+        $qb->getQuery()->execute();
 
         // Let the calling process know that we have finished successfully
         return true;
@@ -287,16 +309,21 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         // The API function is called.
         $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
 
-        // Update the item
-        $obj = array('prop_id' => (int)$args['dudid'],
-            'prop_weight' => $weightlimits['max'] + 1);
+        /** @var $prop Profile_Entity_Property */
+        $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
+        $prop->setProp_weight($weightlimits['max'] + 1);
+        $this->entityManager->flush();
 
-        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
+        // Update the item
+//        $obj = array('prop_id' => (int)$args['dudid'],
+//            'prop_weight' => $weightlimits['max'] + 1);
+//
+//        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
 
         // Check for an error with the database code
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Activation failed.'));
-        }
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Activation failed.'));
+//        }
 
         return true;
     }
@@ -333,33 +360,43 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         }
 
         // Update the item
-        $obj = array('prop_id' => (int)$args['dudid'],
-            'prop_weight' => 0);
-
-        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
+        /** @var $prop Profile_Entity_Property */
+        $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
+        $prop->setProp_weight(0);
+        $this->entityManager->flush();
+//        $obj = array('prop_id' => (int)$args['dudid'],
+//            'prop_weight' => 0);
+//
+//        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
 
         // Check for an error with the database code
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
-        }
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
+//        }
 
         // Get database setup
-        $dbtable = DBUtil::getTables();
-
-        $propertytable = $dbtable['user_property'];
-        $propertycolumn = $dbtable['user_property_column'];
+//        $dbtable = DBUtil::getTables();
+//
+//        $propertytable = $dbtable['user_property'];
+//        $propertycolumn = $dbtable['user_property_column'];
 
         // Update the other items
-        $sql = "UPDATE $propertytable
-            SET    $propertycolumn[prop_weight] = $propertycolumn[prop_weight] - 1
-            WHERE  $propertycolumn[prop_weight] > '" . (int)DataUtil::formatForStore($item['weight']) . "'";
-
-        $res = DBUtil::executeSQL($sql);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->update('Profile_Entity_Property', 'p')
+            ->set('p.prop_weight', 'p.prop_weight - 1')
+            ->where('p.prop_weight > :weight')
+            ->setParameter('weight', $item['weight']);
+        $qb->getQuery()->execute();
+//        $sql = "UPDATE $propertytable
+//            SET    $propertycolumn[prop_weight] = $propertycolumn[prop_weight] - 1
+//            WHERE  $propertycolumn[prop_weight] > '" . (int)DataUtil::formatForStore($item['weight']) . "'";
+//
+//        $res = DBUtil::executeSQL($sql);
 
         // Check for an error with the database code
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
-        }
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
+//        }
 
         return true;
     }

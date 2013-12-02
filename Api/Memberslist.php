@@ -285,25 +285,35 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function getregisteredonline()
     {
+        $dql = "SELECT COUNT(s.uid)
+            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s
+            WHERE s.lastused > :activetime
+            AND s.uid >= 2";
+        $query = $this->entityManager->createQuery($dql);
+        $activetime = new DateTime(); // @todo maybe need to check TZ here
+        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $query->setParameter('activetime', $activetime);
+        $numusers = $query->getSingleScalarResult();
+
         // Get database setup
-        $dbtable = DBUtil::getTables();
+//        $dbtable = DBUtil::getTables();
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $sessioninfocolumn = $dbtable['session_info_column'];
-        $sessioninfotable  = $dbtable['session_info'];
+//        $sessioninfocolumn = $dbtable['session_info_column'];
+//        $sessioninfotable  = $dbtable['session_info'];
 
-        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
+//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
-        $where = "$sessioninfocolumn[uid] <> 0 AND $sessioninfocolumn[lastused] > '$activetime'";
+//        $where = "$sessioninfocolumn[uid] <> 0 AND $sessioninfocolumn[lastused] > '$activetime'";
 
-        $result = DBUtil::selectFieldArray('session_info', 'uid', $where, '', true);
+//        $result = DBUtil::selectFieldArray('session_info', 'uid', $where, '', true);
 
-        if ($result === false) {
-            return LogUtil::registerError($this->__('Error! Could not load data.'));
-        }
+//        if ($result === false) {
+//            return LogUtil::registerError($this->__('Error! Could not load data.'));
+//        }
 
-        $numusers = count($result);
+//        $numusers = count($result);
 
         // Return the number of items
         return $numusers;
@@ -316,33 +326,49 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function getlatestuser()
     {
-        // load the database information for the users module
-        ModUtil::dbInfoLoad('Users');
-
-        // Get database setup
-        $dbtable = DBUtil::getTables();
-
-        // It's good practice to name the table and column definitions you are
-        // getting - $table and $column don't cut it in more complex modules
-        $userscolumn = $dbtable['users_column'];
-
-        // filter out unverified users
-        $where = "{$userscolumn['uid']} != 1 ";
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
+            ->where('u.uid' <> 1);
         if (ModUtil::getVar('Profile', 'filterunverified')) {
-            $where .= " AND {$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
+            $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
         }
-        
-        $orderby = "uid DESC ";
-        
-        $result = DBUtil::selectObjectArray('users', $where, $orderby, -1, 1, '', null, null, array('uid'));
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
-        if (($result === false) || empty($result) || !isset($result[0]) || empty($result[0]) || !isset($result[0]['uid']) || empty($result[0]['uid'])) {
+        $qb->orderBy('u.uid', 'DESC')
+            ->setMaxResults(1);
+        $user = $qb->getQuery()->getResult();
+        if ($user) {
+            return $user->getUid();
+        } else {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
 
-        return $result[0]['uid'];
+
+        // load the database information for the users module
+//        ModUtil::dbInfoLoad('Users');
+
+        // Get database setup
+//        $dbtable = DBUtil::getTables();
+
+        // It's good practice to name the table and column definitions you are
+        // getting - $table and $column don't cut it in more complex modules
+//        $userscolumn = $dbtable['users_column'];
+
+        // filter out unverified users
+//        $where = "{$userscolumn['uid']} != 1 ";
+//        if (ModUtil::getVar('Profile', 'filterunverified')) {
+//            $where .= " AND {$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
+//        }
+//
+//        $orderby = "uid DESC ";
+//
+//        $result = DBUtil::selectObjectArray('users', $where, $orderby, -1, 1, '', null, null, array('uid'));
+
+        // Check for an error with the database code, and if so set an appropriate
+        // error message and return
+//        if (($result === false) || empty($result) || !isset($result[0]) || empty($result[0]) || !isset($result[0]['uid']) || empty($result[0]['uid'])) {
+//            return LogUtil::registerError($this->__('Error! Could not load data.'));
+//        }
+//
+//        return $result[0]['uid'];
     }
 
     /**
@@ -363,31 +389,46 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             return false;
         }
 
+        $dql = 'SELECT s.uid
+                FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s
+                WHERE s.lastused > :activetime
+                AND s.uid = :uid';
+        $query = $this->entityManager->createQuery($dql);
+        $activetime = new DateTime();
+        // @todo maybe need to check TZ here
+        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
+        $query->setParameter('activetime', $activetime);
+        $query->setParameter('uid', $args['userid']);
+        $uid = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR);
+        $isOnline = !empty($uid) ? true : false;
+
+        return $isOnline;
+
         // Get database setup
-        $dbtable = DBUtil::getTables();
+//        $dbtable = DBUtil::getTables();
 
         // get active time based on security settings
-        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
+//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $sessioninfocolumn = $dbtable['session_info_column'];
-        $sessioninfotable  = $dbtable['session_info'];
-        
-        $where = "WHERE {$sessioninfocolumn['uid']} = " . DataUtil::formatForStore($args['userid']) . " AND {$sessioninfocolumn['lastused']} > '{$activetime}'";
-        
-        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
-
-        if ($result === false) {
-            return LogUtil::registerError($this->__('Error! Could not load data.'));
-        }
+//        $sessioninfocolumn = $dbtable['session_info_column'];
+//        $sessioninfotable  = $dbtable['session_info'];
+//
+//        $where = "WHERE {$sessioninfocolumn['uid']} = " . DataUtil::formatForStore($args['userid']) . " AND {$sessioninfocolumn['lastused']} > '{$activetime}'";
+//
+//        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
+//
+//        if ($result === false) {
+//            return LogUtil::registerError($this->__('Error! Could not load data.'));
+//        }
 
         // Return if the user is online
-        if (count($result) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+//        if (count($result) > 0) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
     /**
@@ -397,33 +438,47 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function whosonline()
     {
+        $dql = "SELECT s.uid, u.uname
+            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s, Zikula\Module\UsersModule\Entity\UserEntity u
+            WHERE s.lastused > :activetime
+            AND (s.uid >= 2
+            AND s.uid = u.uid)";
+        $query = $this->entityManager->createQuery($dql);
+        $activetime = new DateTime(); // @todo maybe need to check TZ here
+        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $query->setParameter('activetime', $activetime);
+
+        $onlineusers = $query->getArrayResult();
+
+        return $onlineusers;
+
         // Get database setup
-        $dbtable = DBUtil::getTables();
+//        $dbtable = DBUtil::getTables();
 
         // define the array to hold the resultant items
-        $items = array();
+//        $items = array();
         // It's good practice to name the table and column definitions you are
         // getting - $table and $column don't cut it in more complex modules
-        $sessioninfocolumn = $dbtable['session_info_column'];
-        $sessioninfotable  = $dbtable['session_info'];
+//        $sessioninfocolumn = $dbtable['session_info_column'];
+//        $sessioninfotable  = $dbtable['session_info'];
 
         // get active time based on security settings
-        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
+//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
-        $where = "WHERE {$sessioninfocolumn['uid']} != 1 AND {$sessioninfocolumn['lastused']} > '{$activetime}' ";
-        
-        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
-
-        if ($result === false) {
-            return LogUtil::registerError($this->__('Error! Could not load data.'));
-        }
-
-        foreach ($result as $key => $user) {
-            $result[$key] = UserUtil::getVars($user['uid']);
-        }
+//        $where = "WHERE {$sessioninfocolumn['uid']} != 1 AND {$sessioninfocolumn['lastused']} > '{$activetime}' ";
+//
+//        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
+//
+//        if ($result === false) {
+//            return LogUtil::registerError($this->__('Error! Could not load data.'));
+//        }
+//
+//        foreach ($result as $key => $user) {
+//            $result[$key] = UserUtil::getVars($user['uid']);
+//        }
 
         // Return the items
-        return $result;
+//        return $result;
     }
 
     /**
@@ -433,41 +488,54 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function getallonline()
     {
+        $dql = "SELECT s.uid, u.uname
+            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s, Zikula\Module\UsersModule\Entity\UserEntity u
+            WHERE s.lastused > :activetime
+            AND (s.uid >= 2
+            AND s.uid = u.uid)
+            OR s.uid = 0
+            GROUP BY s.ipaddr, s.uid";
+        $query = $this->entityManager->createQuery($dql);
+        $activetime = new DateTime(); // @todo maybe need to check TZ here
+        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $query->setParameter('activetime', $activetime);
+
+        $onlineusers = $query->getArrayResult();
+
         // Get database setup
-        $dbtable = DBUtil::getTables();
+//        $dbtable = DBUtil::getTables();
 
         // define the array to hold the resultant items
-        $items = array();
+//        $items = array();
 
-        $sessioninfotable  = $dbtable['session_info'];
-        $sessioninfocolumn = &$dbtable['session_info_column'];
-        $usertbl           = $dbtable['users'];
-        $usercol           = &$dbtable['users_column'];
+//        $sessioninfotable  = $dbtable['session_info'];
+//        $sessioninfocolumn = &$dbtable['session_info_column'];
+//        $usertbl           = $dbtable['users'];
+//        $usercol           = &$dbtable['users_column'];
 
         // get active time based on security
-        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
+//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
 
         
-        $where = "WHERE {$sessioninfocolumn['lastused']} > '{$activetime}' ";
+//        $where = "WHERE {$sessioninfocolumn['lastused']} > '{$activetime}' ";
         // Check if anonymous session are on
-        if (System::getVar('anonymoussessions')) {
-            $where .= "AND {$sessioninfocolumn['uid']} >= 1 ";
-        } else {
-            $where .= "AND {$sessioninfocolumn['uid']} > 1 ";
-        }
-        
-        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), false);
-
-        if ($result === false) {
-            return LogUtil::registerError($this->__('Error! Could not load data.'));
-        }
+//        if (System::getVar('anonymoussessions')) {
+//            $where .= "AND {$sessioninfocolumn['uid']} >= 1 ";
+//        } else {
+//            $where .= "AND {$sessioninfocolumn['uid']} > 1 ";
+//        }
+//
+//        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), false);
+//
+//        if ($result === false) {
+//            return LogUtil::registerError($this->__('Error! Could not load data.'));
+//        }
 
         $numguests = 0;
         $unames = array();
-        foreach ($result as $key => $user) {
+        foreach ($onlineusers as $key => $user) {
             if ($user['uid'] != 1) {
-                $user['uname'] = UserUtil::getVar('uname', $user['uid']);
-                $unames[$user['uname']] = $user;
+                $unames[$user['uname']] = $user->toArray();
             } else {
                 $numguests++;
             }

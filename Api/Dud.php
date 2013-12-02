@@ -12,6 +12,7 @@
  * information regarding copyright and licensing.
  */
 
+use Profile_Entity_Property as PropertyEntity;
 /**
  * API functions related to dynamic user data field management.
  */
@@ -92,16 +93,21 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         $obj['prop_modname']        = $args['modname'];
         $obj['prop_weight']         = $weight;
         $obj['prop_validation']     = serialize($args['validationinfo']);
+        $prop = new PropertyEntity();
+        $prop->merge($obj);
+        $this->entityManager->persist($prop);
+        $this->entityManager->flush();
 
-        $obj = DBUtil::insertObject($obj, 'user_property', 'prop_id');
+//        $obj = DBUtil::insertObject($obj, 'user_property', 'prop_id');
 
         // Check for an error with the database
-        if (!$obj) {
-            return LogUtil::registerError($this->__('Error! Could not create the new personal info item.'));
-        }
+//        if (!$obj) {
+//            return LogUtil::registerError($this->__('Error! Could not create the new personal info item.'));
+//        }
 
         // Return the id of the newly created item to the calling process
-        return $obj['prop_id'];
+//        return $obj['prop_id'];
+        return $prop->getProp_id();
     }
 
     /**
@@ -125,12 +131,16 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         }
 
         // Get item with where clause
+        /** @var $item Profile_Entity_Property */
         if (isset($args['propid'])) {
-            $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int)$args['propid']);
+//            $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
         } elseif (isset($args['proplabel'])) {
-            $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_label' => $args['proplabel']));
+//            $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
         } else {
-            $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
+//            $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
         }
 
         // Check for no rows found, and if so return
@@ -139,27 +149,36 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         }
 
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', "$item[prop_label]::$item[prop_id]", ACCESS_DELETE)) {
+        if (!SecurityUtil::checkPermission('Profile::', $item->getProp_label().'::'.$item->getProp_id(), ACCESS_READ)) {
             return false;
         }
 
         // delete the property data aka attributes
-        $dbtables       = DBUtil::getTables();
-        $objattr_column = $dbtables['objectdata_attributes_column'];
-
-        $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
-                   AND $objattr_column[object_type] = 'users'";
-
-        $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-        }
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->delete('Zikula\Module\UsersModule\Entity\UserAttributeEntity', 'a')
+            ->where('a.name = :name')
+            ->setParameter('name', $item['prop_attribute_name']);
+        $qb->getQuery()->execute();
+//        $dbtables       = DBUtil::getTables();
+//        $objattr_column = $dbtables['objectdata_attributes_column'];
+//
+//        $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
+//                   AND $objattr_column[object_type] = 'users'";
+//
+//        $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
+//        }
 
         // delete the property
-        $res = DBUtil::deleteObjectByID('user_property', $item['prop_id'], 'prop_id');
-        if (!$res) {
-            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-        }
+        $qb->delete('Profile_Entity_Property', 'p')
+            ->where('p.prop_id = :id')
+            ->setParameter('id', $item['prop_id']);
+        $qb->getQuery()->execute();
+//        $res = DBUtil::deleteObjectByID('user_property', $item['prop_id'], 'prop_id');
+//        if (!$res) {
+//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
+//        }
 
         // Let the calling process know that we have finished successfully
         return true;
@@ -193,12 +212,12 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         }
 
         // get both option arrays
-        $oldoptions = Profile_dudapi_getoptions($args);
+        $oldoptions = $this->getoptions($args);
         $params = array(
                 'field' => isset($args['newfield']) ? $args['newfield'] : null,
                 'item'  => isset($args['newitem'])  ? $args['newitem']  : null
         );
-        $newoptions = Profile_dudapi_getoptions($params);
+        $newoptions = $this->getoptions($params);
         unset($params);
         unset($args);
 
