@@ -78,6 +78,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
         {
             case '1.6.0':
             case '1.6.1': // released with Core 1.3.6
+                // move data from objectdata_attributes to users_attributes
         }
 
         $modVars = $this->getVars();
