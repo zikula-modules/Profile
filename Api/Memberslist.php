@@ -110,7 +110,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
                 ->leftJoin('Profile_Entity_Property', 'p', 'WITH', 'a.name = p.prop_attribute_name'); // manual join
         } else {
             $qb->select('u')
-                ->from('Zikula\Module\UsersModule\Entity\UserEntity');
+                ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u');
         }
         
 //        $where = "WHERE tbl.{$userscolumn['uid']} != 1 ";
@@ -197,12 +197,15 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             $qb->andWhere('u.activated = '.Users_Constant::ACTIVATED_ACTIVE);
         }
         
-        if (array_key_exists($sortBy, $userscolumn)) {
+//        if (array_key_exists($sortBy, $userscolumn)) {
+        $orderBy = false;
+        if (property_exists('Zikula\Module\UsersModule\Entity\UserEntity', $sortBy)) {
 //            $orderBy = 'tbl.'.$userscolumn[$sortBy] .' '. $sortOrder;
-            $qb->orderBy('u.'.$userscolumn[$sortBy], $sortOrder);
-        } else {
+//            $qb->orderBy('u.'.$sortBy, $sortOrder);
+//        } else {
 //            $orderBy = DataUtil::formatForStore($sortBy) .' '. $sortOrder;
             $qb->orderBy('u.'.$sortBy, $sortOrder);
+            $orderBy = true;
         }
         if ($orderBy && $sortBy != 'uname') {
 //            $orderBy .= ", {$userscolumn['uname']} ASC ";
@@ -381,14 +384,15 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     public function getlatestuser()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
-            ->where('u.uid' <> 1);
+        $qb->select('u')
+            ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
+            ->where('u.uid <> 1');
         if (ModUtil::getVar('Profile', 'filterunverified')) {
             $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
         }
         $qb->orderBy('u.uid', 'DESC')
             ->setMaxResults(1);
-        $user = $qb->getQuery()->getResult();
+        $user = $qb->getQuery()->getSingleResult();
         if ($user) {
             return $user->getUid();
         } else {

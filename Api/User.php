@@ -70,9 +70,13 @@ class Profile_Api_User extends Zikula_AbstractApi
 //        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum']-1, $args['numitems'], $args['index'], $permFilter);
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')->from('Profile_Entity_Property', 'p')
-            ->orderBy('p.prop_weight')
-            ->setFirstResult($args['startnum']-1)
-            ->setMaxResults($args['numitems']); // have lost the indexby attribute
+            ->orderBy('p.prop_weight');
+        if ($args['startnum'] > 0) {
+            $qb->setFirstResult($args['startnum']-1);
+        }
+        if ($args['numitems'] > 0) {
+            $qb->setMaxResults($args['numitems']); // have lost the indexby attribute
+        }
         $items = $qb->getQuery()->getArrayResult();
 
         // Put items into result array.
