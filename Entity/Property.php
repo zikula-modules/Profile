@@ -38,7 +38,7 @@ class Profile_Entity_Property extends EntityAccess
      * Label
      * @ORM\Column(type="string",name="label")
      */
-    private $prop_label;
+    private $prop_label = '';
 
     /**
      * Dtype
@@ -50,7 +50,7 @@ class Profile_Entity_Property extends EntityAccess
      * Modname
      * @ORM\Column(type="string",length=64,name="modname")
      */
-    private $prop_modname;
+    private $prop_modname = '';
 
     /**
      * Weight
@@ -68,7 +68,7 @@ class Profile_Entity_Property extends EntityAccess
      * Attribute name
      * @ORM\Column(type="string",length=80,name="attributename")
      */
-    private $prop_attribute_name;
+    private $prop_attribute_name = '';
 
     /**
      * @param string $attributename
