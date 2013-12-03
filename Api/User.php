@@ -39,13 +39,13 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['numitems'])) {
             $args['numitems'] = -1;
         }
-        if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
-            $args['index'] = 'prop_label';
-        }
+//        if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
+//            $args['index'] = 'prop_label';
+//        }
 
-        if (!isset($args['startnum']) || !isset($args['numitems'])) {
-            return LogUtil::registerArgsError();
-        }
+//        if (!isset($args['startnum']) || !isset($args['numitems'])) {
+//            return LogUtil::registerArgsError();
+//        }
 
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
@@ -53,30 +53,40 @@ class Profile_Api_User extends Zikula_AbstractApi
         }
 
         // We now generate a where-clause
-        $where   = '';
-        $orderBy = 'prop_weight';
-
-        $permFilter = array();
-        $permFilter[] = array(
-            'component_left'   =>  'Profile',
-            'component_middle' =>  '',
-            'component_right'  =>  'item',
-            'instance_left'    =>  'prop_label',
-            'instance_middle'  =>  '',
-            'instance_right'   =>  'prop_id',
-            'level'            =>  ACCESS_READ,
-        );
-
-        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum']-1, $args['numitems'], $args['index'], $permFilter);
+//        $where   = '';
+//        $orderBy = 'prop_weight';
+//
+//        $permFilter = array();
+//        $permFilter[] = array(
+//            'component_left'   =>  'Profile',
+//            'component_middle' =>  '',
+//            'component_right'  =>  'item',
+//            'instance_left'    =>  'prop_label',
+//            'instance_middle'  =>  '',
+//            'instance_right'   =>  'prop_id',
+//            'level'            =>  ACCESS_READ,
+//        );
+//
+//        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum']-1, $args['numitems'], $args['index'], $permFilter);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('p')->from('Profile_Entity_Property', 'p')
+            ->orderBy('p.prop_weight')
+            ->setFirstResult($args['startnum']-1)
+            ->setMaxResults($args['numitems']); // have lost the indexby attribute
+        $items = $qb->getQuery()->getArrayResult();
 
         // Put items into result array.
         foreach (array_keys($items) as $k) {
-            $validationinfo = @unserialize($items[$k]['prop_validation']);
-            unset($items[$k]['prop_validation']);
+            if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'].'::'.$items[$k]['prop_id'], ACCESS_READ)) {
+                $validationinfo = @unserialize($items[$k]['prop_validation']);
+                unset($items[$k]['prop_validation']);
 
-            // Expand the item array
-            foreach ((array)$validationinfo as $infolabel => $infofield) {
-                $items[$k]["prop_$infolabel"] = $infofield;
+                // Expand the item array
+                foreach ((array)$validationinfo as $infolabel => $infofield) {
+                    $items[$k]["prop_$infolabel"] = $infofield;
+                }
+            } else {
+                unset($items[$k]);
             }
         }
 

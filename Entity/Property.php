@@ -174,4 +174,14 @@ class Profile_Entity_Property extends EntityAccess
         return $this->prop_weight;
     }
 
+    public function incrementWeight()
+    {
+        $this->prop_weight++;
+    }
+
+    public function decrementWeight()
+    {
+        $this->prop_weight--;
+    }
+
 }

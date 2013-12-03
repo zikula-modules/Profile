@@ -63,66 +63,82 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         }
 
         // define the array to hold the result items
-        $items = array();
+//        $items = array();
 
         // Security check
         if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
-            return $items;
+            return array();
         }
 
         // Sanitize the args used in queries
-        $letter   = DataUtil::formatForStore($letter);
-        $searchBy = DataUtil::formatForStore($searchBy);
+//        $letter   = DataUtil::formatForStore($letter);
+//        $searchBy = DataUtil::formatForStore($searchBy);
 
         // load the database information for the users module
-        ModUtil::dbInfoLoad('ObjectData');
-        ModUtil::dbInfoLoad('Users');
+//        ModUtil::dbInfoLoad('ObjectData');
+//        ModUtil::dbInfoLoad('Users');
 
         // Get database setup
-        $dbtable = DBUtil::getTables();
+//        $dbtable = DBUtil::getTables();
         
-        $userscolumn = $dbtable['users_column'];
-        $datacolumn  = $dbtable['objectdata_attributes_column'];
-        $propcolumn  = $dbtable['user_property_column'];
+//        $userscolumn = $dbtable['users_column'];
+//        $datacolumn  = $dbtable['objectdata_attributes_column'];
+//        $propcolumn  = $dbtable['user_property_column'];
         
-        $joinInfo = array();
+//        $joinInfo = array();
+//        if ($searchBy != 'uname') {
+//            $joinInfo[] = array(
+//                'join_table'            => 'objectdata_attributes',
+//                'join_field'            => array(),
+//                'object_field_name'     => array(),
+//                'compare_field_table'   => 'uid',
+//                'compare_field_join'    => 'object_id',
+//            );
+//            $joinInfo[] = array(
+//                'join_table'            => 'user_property',
+//                'join_field'            => array(),
+//                'object_field_name'     => array(),
+//                'compare_field_table'   => "a.{$datacolumn['attribute_name']}",
+//                'compare_field_join'    => 'prop_attribute_name',
+//            );
+//        }
+        $qb = $this->entityManager->createQueryBuilder();
         if ($searchBy != 'uname') {
-            $joinInfo[] = array(
-                'join_table'            => 'objectdata_attributes',
-                'join_field'            => array(),
-                'object_field_name'     => array(),
-                'compare_field_table'   => 'uid',
-                'compare_field_join'    => 'object_id',
-            );
-            $joinInfo[] = array(
-                'join_table'            => 'user_property',
-                'join_field'            => array(),
-                'object_field_name'     => array(),
-                'compare_field_table'   => "a.{$datacolumn['attribute_name']}",
-                'compare_field_join'    => 'prop_attribute_name',
-            );
+            $qb->select(array('u', 'a', 'p'))
+                ->from('Zikula\Module\UsersModule\Entity\UserEntity')
+                ->leftJoin('u.attributes', 'a')
+                ->leftJoin('Profile_Entity_Property', 'p', 'WITH', 'a.name = p.prop_attribute_name'); // manual join
+        } else {
+            $qb->select('u')
+                ->from('Zikula\Module\UsersModule\Entity\UserEntity');
         }
         
-        $where = "WHERE tbl.{$userscolumn['uid']} != 1 ";
+//        $where = "WHERE tbl.{$userscolumn['uid']} != 1 ";
+        $qb->andWhere('u.uid <> 1');
         if ($searchBy == 'uname') {
             $join  = '';
             if (!empty($letter) && preg_match('/[a-z]/i', $letter)) {
                 // are we listing all or "other" ?
-                $where .= "AND LOWER(tbl.{$userscolumn['uname']}) LIKE '".mb_strtolower($letter)."%' ";
+//                $where .= "AND LOWER(tbl.{$userscolumn['uname']}) LIKE '".mb_strtolower($letter)."%' ";
+                $qb->andWhere($qb->expr()->like('u.uname', ':letter'))
+                    ->setParameter('letter', $letter.'%');
                 // I guess we are not..
             } else if (!empty($letter)) {
                 // But other are numbers ?
                 static $otherWhere;
                 if (!isset($otherWhere)) {
                     $otherList = array ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
-                    $otherWhere = array();
+//                    $otherWhere = array();
+                    $or = $qb->expr()->orX();
                     foreach ($otherList as $other) {
-                        $otherWhere[] = "tbl.{$userscolumn['uname']} LIKE '{$other}%'";
+//                        $otherWhere[] = "tbl.{$userscolumn['uname']} LIKE '{$other}%'";
+                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other.'%')));
                     }
-                    $otherWhere = 'AND (' . implode(' OR ', $otherWhere) . ') ';
+//                    $otherWhere = 'AND (' . implode(' OR ', $otherWhere) . ') ';
+                    $qb->andWhere($or->getParts());
                 }
                 
-                $where .= $otherWhere;
+//                $where .= $otherWhere;
 
                 // fifers: while this is not the most eloquent solution, it is
                 // cross database compatible.  We could do an if dbtype is mysql
@@ -136,58 +152,96 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
                 // args.searchby is all => search_value to loop all the user attributes
 
-                $value = DataUtil::formatForStore($searchBy['all']);
-                $where .= "AND a.{$datacolumn['object_type']} = 'users' AND a.{$datacolumn['obj_status']} = 'A' ";
-                $where .= "AND b.{$propcolumn['prop_weight']} > 0 AND b.{$propcolumn['prop_dtype']} >= 0 AND a.{$datacolumn['value']} LIKE '%{$value}%' ";
+//                $value = DataUtil::formatForStore($searchBy['all']);
+//                $where .= "AND a.{$datacolumn['object_type']} = 'users' AND a.{$datacolumn['obj_status']} = 'A' ";
+//                $where .= "AND b.{$propcolumn['prop_weight']} > 0 AND b.{$propcolumn['prop_dtype']} >= 0 AND a.{$datacolumn['value']} LIKE '%{$value}%' ";
+                $qb->andWhere('p.prop_weight > 0')
+                    ->andWhere('p.prop_dtype >= 0')
+                    ->andWhere($qb->expr()->like('a.value', ':value'))
+                    ->setParameter('value', "%{$value}%");
 
             } else {
                 // args.searchby is an array of the form prop_id => value
-                $whereList = array();
+//                $whereList = array();
+                $and = $qb->expr()->andX();
                 foreach ($searchBy as $prop_id => $value) {
-                    $prop_id = DataUtil::formatForStore($prop_id);
-                    $value   = DataUtil::formatForStore($value);
-                    $whereList[] = "(b.{$propcolumn['prop_id']} = '{$prop_id}' AND a.{$datacolumn['value']} LIKE '%{$value}%')";
+//                    $prop_id = DataUtil::formatForStore($prop_id);
+//                    $value   = DataUtil::formatForStore($value);
+//                    $whereList[] = "(b.{$propcolumn['prop_id']} = '{$prop_id}' AND a.{$datacolumn['value']} LIKE '%{$value}%')";
+                    $and->add($qb->expr()->andX(
+                        $qb->expr()->eq('p.prop_id', $prop_id),
+                        $qb->expr()->like('a.value', $qb->expr()->literal('%'.$value.'%'))
+                    ));
                 }
                 // check if there where contitionals
-                if (!empty($whereList)) {
-                    $where .= 'AND ' . implode(' AND ', $whereList) . ' ';
+//                if (!empty($whereList)) {
+//                    $where .= 'AND ' . implode(' AND ', $whereList) . ' ';
+//                }
+                if ($and->count() > 0) {
+                    $qb->andWhere($and->getParts());
                 }
             }
 
         } else if (is_numeric($searchBy)) {
-            $where .= "AND b.{$propcolumn['prop_id']} = '{$searchBy}' AND a.{$datacolumn['value']} LIKE '{$letter}%' ";
-
+//            $where .= "AND b.{$propcolumn['prop_id']} = '{$searchBy}' AND a.{$datacolumn['value']} LIKE '{$letter}%' ";
+            $qb->andWhere('p.prop_id = :searchby')
+                ->setParameter('searchby', $searchBy)
+                ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter.'%')));
         } elseif (isset($propcolumn[$searchBy])) {
-            $where .= 'AND b.' . $propcolumn[$searchBy] . " LIKE '{$letter}%' ";
+//            $where .= 'AND b.' . $propcolumn[$searchBy] . " LIKE '{$letter}%' ";
+            $qb->andWhere($qb->expr()->like('p.'.$propcolumn[$searchBy], $qb->expr()->literal($letter.'%')));
         }
 
         if (ModUtil::getVar('Profile', 'filterunverified')) {
-            $where .= "AND tbl.{$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
+//            $where .= "AND tbl.{$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
+            $qb->andWhere('u.activated = '.Users_Constant::ACTIVATED_ACTIVE);
         }
         
         if (array_key_exists($sortBy, $userscolumn)) {
-            $orderBy = 'tbl.'.$userscolumn[$sortBy] .' '. $sortOrder;
+//            $orderBy = 'tbl.'.$userscolumn[$sortBy] .' '. $sortOrder;
+            $qb->orderBy('u.'.$userscolumn[$sortBy], $sortOrder);
         } else {
-            $orderBy = DataUtil::formatForStore($sortBy) .' '. $sortOrder;
+//            $orderBy = DataUtil::formatForStore($sortBy) .' '. $sortOrder;
+            $qb->orderBy('u.'.$sortBy, $sortOrder);
         }
         if ($orderBy && $sortBy != 'uname') {
-            $orderBy .= ", {$userscolumn['uname']} ASC ";
+//            $orderBy .= ", {$userscolumn['uname']} ASC ";
+            $qb->addOrderBy('u.uname', 'ASC');
+        }
+
+        try {
+            $users = $qb->getQuery()->getArrayResult();
+        } catch (\Exception $e) {
+            // remove when tested
+            \System::dump($e->getMessage());
+            \System::dump($qb->getQuery()->getDQL());
+            \System::dump($qb->getQuery()->getSQL());
+            \System::dump($qb->getParameters());
         }
         
         if ($countOnly) {
-            $result = DBUtil::selectExpandedObjectCount('users', $joinInfo, $where, true);
+//            $result = DBUtil::selectExpandedObjectCount('users', $joinInfo, $where, true);
+            return count($users);
         } else {
-            $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true, '', null, $startNum, $numItems);
+//            $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true, '', null, $startNum, $numItems);
             
-            if (!$returnUids) {
-                foreach ($result as $key => $uid) {
-                    $result[$key] = UserUtil::getVars($uid);
+//            if (!$returnUids) {
+//                foreach ($result as $key => $uid) {
+//                    $result[$key] = UserUtil::getVars($uid);
+//                }
+//            }
+            if ($returnUids) {
+                $uids = array();
+                foreach ($users as $k => $user) {
+                    $uids[$k] = $user->getUid();
                 }
+                return $uids;
             }
+            return $users;
         }
 
         // Return the items
-        return $result;
+//        return $result;
     }
 
     /**
