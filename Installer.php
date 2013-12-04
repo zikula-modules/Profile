@@ -74,11 +74,33 @@ class Profile_Installer extends Zikula_AbstractInstaller
 
             return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to version %s.', $upgradeToVersion));
         }
+        $connection = $this->entityManager->getConnection();
         switch ($oldversion)
         {
             case '1.6.0':
             case '1.6.1': // released with Core 1.3.6
-                // move data from objectdata_attributes to users_attributes
+                $sqls = array();
+                // copy data from objectdata_attributes to users_attributes
+                // NOTE: this routine *may* copy additional data to the user_property table that does not belong to
+                // the Profile module. It doesn't copy data from the Legal module because Legal attribute names begin
+                // with '_' (note discriminator in query). It is impossible to discern what else may be in the table
+                // that meets the discriminator criteria
+                $sqls[] = "INSERT INTO user_property
+                    (user_id, name, value)
+                    SELECT object_id, attribute_name, value
+                    FROM objectdata_attributes
+                    WHERE object_type = 'users'
+                    AND LEFT(attribute_name, 1) <> '_'
+                    ORDER BY object_id, attribute_name";
+                // remove old data
+                $sqls[] = "DELETE FROM objectdata_attributes
+                    WHERE object_type = 'users'
+                    AND LEFT(attribute_name, 1) <> '_'";
+                foreach ($sqls as $sql) {
+                    $stmt = $connection->prepare($sql);
+                    $stmt->execute();
+                }
+            case '2.0.0': // released with Core 1.3.7
         }
 
         $modVars = $this->getVars();
