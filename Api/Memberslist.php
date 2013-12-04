@@ -11,6 +11,7 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+use Doctrine\ORM\NoResultException;
 
 /**
  * API functions related to member list management.
@@ -458,10 +459,13 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
         $query->setParameter('uid', $args['userid']);
-        $uid = $query->getSingleScalarResult();
-        $isOnline = !empty($uid) ? true : false;
+        try {
+            $uid = $query->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return false;
+        }
 
-        return $isOnline;
+        return true;
 
         // Get database setup
 //        $dbtable = DBUtil::getTables();
