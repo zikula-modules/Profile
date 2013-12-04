@@ -385,7 +385,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $qb->update('Profile_Entity_Property', 'p')
             ->set('p.prop_weight', 'p.prop_weight - 1')
             ->where('p.prop_weight > :weight')
-            ->setParameter('weight', $item['weight']);
+            ->setParameter('weight', $item['prop_weight']);
         $qb->getQuery()->execute();
 //        $sql = "UPDATE $propertytable
 //            SET    $propertycolumn[prop_weight] = $propertycolumn[prop_weight] - 1
