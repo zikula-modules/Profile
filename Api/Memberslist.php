@@ -466,32 +466,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         }
 
         return true;
-
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-
-        // get active time based on security settings
-//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
-
-        // It's good practice to name the table and column definitions you are
-        // getting - $table and $column don't cut it in more complex modules
-//        $sessioninfocolumn = $dbtable['session_info_column'];
-//        $sessioninfotable  = $dbtable['session_info'];
-//
-//        $where = "WHERE {$sessioninfocolumn['uid']} = " . DataUtil::formatForStore($args['userid']) . " AND {$sessioninfocolumn['lastused']} > '{$activetime}'";
-//
-//        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
-//
-//        if ($result === false) {
-//            return LogUtil::registerError($this->__('Error! Could not load data.'));
-//        }
-
-        // Return if the user is online
-//        if (count($result) > 0) {
-//            return true;
-//        } else {
-//            return false;
-//        }
     }
 
     /**
