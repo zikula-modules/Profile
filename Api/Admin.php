@@ -88,15 +88,7 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $this->entityManager->persist($prop);
         $this->entityManager->flush();
 
-//        $res = DBUtil::insertObject($obj, 'user_property', 'prop_id');
-
-        // Check for an error with the database
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not create new attribute.'));
-//        }
-
         // Return the id of the newly created item to the calling process
-//        return $obj['prop_id'];
         return $prop->getProp_id();
     }
 
@@ -151,23 +143,13 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             } elseif ($args['prop_weight'] <> $item['prop_weight']) {
                 /** @var $property Profile_Entity_Property */
                 $property = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_weight' => $args['prop_weight']));
-//                $result = DBUtil::selectObjectByID('user_property', $args['prop_weight'], 'prop_weight');
                 $property->setProp_weight($item['prop_weight']);
-//                $result['prop_weight'] = $item['prop_weight'];
-
-//                $dbtable = DBUtil::getTables();
-//                $column = $dbtable['user_property_column'];
-//                $where = "$column[prop_weight] =  '$args[prop_weight]'
-//                        AND $column[prop_id] <> '$args[dudid]'";
-//
-//                DBUtil::updateObject($result, 'user_property', $where, 'prop_id');
                 $this->entityManager->flush($property);
             }
         }
 
         // create the object to update
         $obj = array();
-//        $obj['prop_id'] = $args['dudid'];
         $obj['prop_dtype'] = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
         $obj['prop_weight'] = (isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight']);
 
@@ -203,17 +185,10 @@ class Profile_Api_Admin extends Zikula_AbstractApi
                 'newitem' => $obj['prop_validation']));
         }
 
-//        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
         $property = $this->entityManager->getRepository('Profile_Entity_Property')->find($args['dudid']);
         $property->merge($obj);
         $this->entityManager->flush();
 
-        // Check for an error with the database code
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not save your changes.'));
-//        }
-
-        // Let the calling process know that we have finished successfully
         return true;
     }
 
@@ -238,7 +213,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $dudid = $args['dudid'];
         unset($args);
 
-        // The user API function is called.
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
 
         if ($item == false) {
@@ -256,16 +230,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         }
 
         // delete the property data aka attributes
-//        $dbtables = DBUtil::getTables();
-//        $objattr_column = $dbtables['objectdata_attributes_column'];
-//
-//        $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
-//                   AND $objattr_column[object_type] = 'users'";
-//
-//        $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-//        }
         $qb = $this->entityManager->createQueryBuilder();
         $qb->delete('Zikula\Module\UsersModule\Entity\UserAttributeEntity', 'a')
             ->where('a.name = :name')
@@ -273,16 +237,12 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $qb->getQuery()->execute();
 
         // delete the property
-//        $res = DBUtil::deleteObjectByID('user_property', $dudid, 'prop_id');
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-//        }
+        $qb = $this->entityManager->createQueryBuilder();
         $qb->delete('Profile_Entity_Property', 'p')
             ->where('p.prop_id = :id')
             ->setParameter('id', $dudid);
         $qb->getQuery()->execute();
 
-        // Let the calling process know that we have finished successfully
         return true;
     }
 
@@ -306,24 +266,12 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
 
-        // The API function is called.
         $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
 
         /** @var $prop Profile_Entity_Property */
         $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
         $prop->setProp_weight($weightlimits['max'] + 1);
         $this->entityManager->flush();
-
-        // Update the item
-//        $obj = array('prop_id' => (int)$args['dudid'],
-//            'prop_weight' => $weightlimits['max'] + 1);
-//
-//        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
-
-        // Check for an error with the database code
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Activation failed.'));
-//        }
 
         return true;
     }
@@ -364,21 +312,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
         $prop->setProp_weight(0);
         $this->entityManager->flush();
-//        $obj = array('prop_id' => (int)$args['dudid'],
-//            'prop_weight' => 0);
-//
-//        $res = DBUtil::updateObject($obj, 'user_property', '', 'prop_id');
-
-        // Check for an error with the database code
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
-//        }
-
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-//
-//        $propertytable = $dbtable['user_property'];
-//        $propertycolumn = $dbtable['user_property_column'];
 
         // Update the other items
         $qb = $this->entityManager->createQueryBuilder();
@@ -387,16 +320,6 @@ class Profile_Api_Admin extends Zikula_AbstractApi
             ->where('p.prop_weight > :weight')
             ->setParameter('weight', $item['prop_weight']);
         $qb->getQuery()->execute();
-//        $sql = "UPDATE $propertytable
-//            SET    $propertycolumn[prop_weight] = $propertycolumn[prop_weight] - 1
-//            WHERE  $propertycolumn[prop_weight] > '" . (int)DataUtil::formatForStore($item['weight']) . "'";
-//
-//        $res = DBUtil::executeSQL($sql);
-
-        // Check for an error with the database code
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not deactivate the personal info item.'));
-//        }
 
         return true;
     }
