@@ -233,14 +233,15 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
 //                    $result[$key] = UserUtil::getVars($uid);
 //                }
 //            }
-            if ($returnUids) {
-                $uids = array();
-                foreach ($users as $k => $user) {
-                    $uids[$k] = $user->getUid();
+            $usersArray = array();
+            foreach ($users as $k => $user) {
+                if ($returnUids) {
+                    $usersArray[$k] = $user['uid'];
+                } else {
+                    $usersArray[$user['uid']] = $user;
                 }
-                return $uids;
             }
-            return $users;
+            return $usersArray;
         }
 
         // Return the items
@@ -457,7 +458,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
         $query->setParameter('uid', $args['userid']);
-        $uid = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR);
+        $uid = $query->getSingleScalarResult();
         $isOnline = !empty($uid) ? true : false;
 
         return $isOnline;
