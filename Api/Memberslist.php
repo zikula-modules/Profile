@@ -63,46 +63,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             $letter = null;
         }
 
-        // define the array to hold the result items
-//        $items = array();
-
         // Security check
         if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
             return array();
         }
 
-        // Sanitize the args used in queries
-//        $letter   = DataUtil::formatForStore($letter);
-//        $searchBy = DataUtil::formatForStore($searchBy);
-
-        // load the database information for the users module
-//        ModUtil::dbInfoLoad('ObjectData');
-//        ModUtil::dbInfoLoad('Users');
-
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-        
-//        $userscolumn = $dbtable['users_column'];
-//        $datacolumn  = $dbtable['objectdata_attributes_column'];
-//        $propcolumn  = $dbtable['user_property_column'];
-        
-//        $joinInfo = array();
-//        if ($searchBy != 'uname') {
-//            $joinInfo[] = array(
-//                'join_table'            => 'objectdata_attributes',
-//                'join_field'            => array(),
-//                'object_field_name'     => array(),
-//                'compare_field_table'   => 'uid',
-//                'compare_field_join'    => 'object_id',
-//            );
-//            $joinInfo[] = array(
-//                'join_table'            => 'user_property',
-//                'join_field'            => array(),
-//                'object_field_name'     => array(),
-//                'compare_field_table'   => "a.{$datacolumn['attribute_name']}",
-//                'compare_field_join'    => 'prop_attribute_name',
-//            );
-//        }
         $qb = $this->entityManager->createQueryBuilder();
         if ($searchBy != 'uname') {
             $qb->select(array('u', 'a', 'p'))
@@ -114,48 +79,27 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
                 ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u');
         }
         
-//        $where = "WHERE tbl.{$userscolumn['uid']} != 1 ";
         $qb->andWhere('u.uid <> 1');
         if ($searchBy == 'uname') {
             $join  = '';
             if (!empty($letter) && preg_match('/[a-z]/i', $letter)) {
-                // are we listing all or "other" ?
-//                $where .= "AND LOWER(tbl.{$userscolumn['uname']}) LIKE '".mb_strtolower($letter)."%' ";
                 $qb->andWhere($qb->expr()->like('u.uname', ':letter'))
                     ->setParameter('letter', $letter.'%');
-                // I guess we are not..
             } else if (!empty($letter)) {
-                // But other are numbers ?
                 static $otherWhere;
                 if (!isset($otherWhere)) {
                     $otherList = array ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
-//                    $otherWhere = array();
                     $or = $qb->expr()->orX();
                     foreach ($otherList as $other) {
-//                        $otherWhere[] = "tbl.{$userscolumn['uname']} LIKE '{$other}%'";
                         $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other.'%')));
                     }
-//                    $otherWhere = 'AND (' . implode(' OR ', $otherWhere) . ') ';
                     $qb->andWhere($or->getParts());
                 }
-                
-//                $where .= $otherWhere;
-
-                // fifers: while this is not the most eloquent solution, it is
-                // cross database compatible.  We could do an if dbtype is mysql
-                // then do the regexp.  consider for performance enhancement.
-                //
-                // if you know a better way to match only the first char
-                // to be a number in uname, open a ticket with the Profile project.
             }
 
         } else if (is_array($searchBy)) {
             if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
                 // args.searchby is all => search_value to loop all the user attributes
-
-//                $value = DataUtil::formatForStore($searchBy['all']);
-//                $where .= "AND a.{$datacolumn['object_type']} = 'users' AND a.{$datacolumn['obj_status']} = 'A' ";
-//                $where .= "AND b.{$propcolumn['prop_weight']} > 0 AND b.{$propcolumn['prop_dtype']} >= 0 AND a.{$datacolumn['value']} LIKE '%{$value}%' ";
                 $qb->andWhere('p.prop_weight > 0')
                     ->andWhere('p.prop_dtype >= 0')
                     ->andWhere($qb->expr()->like('a.value', ':value'))
@@ -163,53 +107,37 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
 
             } else {
                 // args.searchby is an array of the form prop_id => value
-//                $whereList = array();
                 $and = $qb->expr()->andX();
                 foreach ($searchBy as $prop_id => $value) {
-//                    $prop_id = DataUtil::formatForStore($prop_id);
-//                    $value   = DataUtil::formatForStore($value);
-//                    $whereList[] = "(b.{$propcolumn['prop_id']} = '{$prop_id}' AND a.{$datacolumn['value']} LIKE '%{$value}%')";
                     $and->add($qb->expr()->andX(
                         $qb->expr()->eq('p.prop_id', $prop_id),
                         $qb->expr()->like('a.value', $qb->expr()->literal('%'.$value.'%'))
                     ));
                 }
                 // check if there where contitionals
-//                if (!empty($whereList)) {
-//                    $where .= 'AND ' . implode(' AND ', $whereList) . ' ';
-//                }
                 if ($and->count() > 0) {
                     $qb->andWhere($and->getParts());
                 }
             }
 
         } else if (is_numeric($searchBy)) {
-//            $where .= "AND b.{$propcolumn['prop_id']} = '{$searchBy}' AND a.{$datacolumn['value']} LIKE '{$letter}%' ";
             $qb->andWhere('p.prop_id = :searchby')
                 ->setParameter('searchby', $searchBy)
                 ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter.'%')));
         } elseif (isset($propcolumn[$searchBy])) {
-//            $where .= 'AND b.' . $propcolumn[$searchBy] . " LIKE '{$letter}%' ";
             $qb->andWhere($qb->expr()->like('p.'.$propcolumn[$searchBy], $qb->expr()->literal($letter.'%')));
         }
 
         if (ModUtil::getVar('Profile', 'filterunverified')) {
-//            $where .= "AND tbl.{$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
             $qb->andWhere('u.activated = '.Users_Constant::ACTIVATED_ACTIVE);
         }
         
-//        if (array_key_exists($sortBy, $userscolumn)) {
         $orderBy = false;
         if (property_exists('Zikula\Module\UsersModule\Entity\UserEntity', $sortBy)) {
-//            $orderBy = 'tbl.'.$userscolumn[$sortBy] .' '. $sortOrder;
-//            $qb->orderBy('u.'.$sortBy, $sortOrder);
-//        } else {
-//            $orderBy = DataUtil::formatForStore($sortBy) .' '. $sortOrder;
             $qb->orderBy('u.'.$sortBy, $sortOrder);
             $orderBy = true;
         }
         if ($orderBy && $sortBy != 'uname') {
-//            $orderBy .= ", {$userscolumn['uname']} ASC ";
             $qb->addOrderBy('u.uname', 'ASC');
         }
 
@@ -224,16 +152,8 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         }
         
         if ($countOnly) {
-//            $result = DBUtil::selectExpandedObjectCount('users', $joinInfo, $where, true);
             return count($users);
         } else {
-//            $result = DBUtil::selectExpandedFieldArray('users', $joinInfo, 'uid', $where, $orderBy, true, '', null, $startNum, $numItems);
-            
-//            if (!$returnUids) {
-//                foreach ($result as $key => $uid) {
-//                    $result[$key] = UserUtil::getVars($uid);
-//                }
-//            }
             $usersArray = array();
             foreach ($users as $k => $user) {
                 if ($returnUids) {
@@ -245,8 +165,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             return $usersArray;
         }
 
-        // Return the items
-//        return $result;
     }
 
     /**
@@ -354,26 +272,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $query->setParameter('activetime', $activetime);
         $numusers = $query->getSingleScalarResult();
 
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-
-        // It's good practice to name the table and column definitions you are
-        // getting - $table and $column don't cut it in more complex modules
-//        $sessioninfocolumn = $dbtable['session_info_column'];
-//        $sessioninfotable  = $dbtable['session_info'];
-
-//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
-
-//        $where = "$sessioninfocolumn[uid] <> 0 AND $sessioninfocolumn[lastused] > '$activetime'";
-
-//        $result = DBUtil::selectFieldArray('session_info', 'uid', $where, '', true);
-
-//        if ($result === false) {
-//            return LogUtil::registerError($this->__('Error! Could not load data.'));
-//        }
-
-//        $numusers = count($result);
-
         // Return the number of items
         return $numusers;
     }
@@ -400,35 +298,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         } else {
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
-
-
-        // load the database information for the users module
-//        ModUtil::dbInfoLoad('Users');
-
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-
-        // It's good practice to name the table and column definitions you are
-        // getting - $table and $column don't cut it in more complex modules
-//        $userscolumn = $dbtable['users_column'];
-
-        // filter out unverified users
-//        $where = "{$userscolumn['uid']} != 1 ";
-//        if (ModUtil::getVar('Profile', 'filterunverified')) {
-//            $where .= " AND {$userscolumn['activated']} = " . Users_Constant::ACTIVATED_ACTIVE . ' ';
-//        }
-//
-//        $orderby = "uid DESC ";
-//
-//        $result = DBUtil::selectObjectArray('users', $where, $orderby, -1, 1, '', null, null, array('uid'));
-
-        // Check for an error with the database code, and if so set an appropriate
-        // error message and return
-//        if (($result === false) || empty($result) || !isset($result[0]) || empty($result[0]) || !isset($result[0]['uid']) || empty($result[0]['uid'])) {
-//            return LogUtil::registerError($this->__('Error! Could not load data.'));
-//        }
-//
-//        return $result[0]['uid'];
     }
 
     /**
@@ -488,34 +357,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $onlineusers = $query->getArrayResult();
 
         return $onlineusers;
-
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-
-        // define the array to hold the resultant items
-//        $items = array();
-        // It's good practice to name the table and column definitions you are
-        // getting - $table and $column don't cut it in more complex modules
-//        $sessioninfocolumn = $dbtable['session_info_column'];
-//        $sessioninfotable  = $dbtable['session_info'];
-
-        // get active time based on security settings
-//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
-
-//        $where = "WHERE {$sessioninfocolumn['uid']} != 1 AND {$sessioninfocolumn['lastused']} > '{$activetime}' ";
-//
-//        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), true);
-//
-//        if ($result === false) {
-//            return LogUtil::registerError($this->__('Error! Could not load data.'));
-//        }
-//
-//        foreach ($result as $key => $user) {
-//            $result[$key] = UserUtil::getVars($user['uid']);
-//        }
-
-        // Return the items
-//        return $result;
     }
 
     /**
@@ -538,35 +379,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $query->setParameter('activetime', $activetime);
 
         $onlineusers = $query->getArrayResult();
-
-        // Get database setup
-//        $dbtable = DBUtil::getTables();
-
-        // define the array to hold the resultant items
-//        $items = array();
-
-//        $sessioninfotable  = $dbtable['session_info'];
-//        $sessioninfocolumn = &$dbtable['session_info_column'];
-//        $usertbl           = $dbtable['users'];
-//        $usercol           = &$dbtable['users_column'];
-
-        // get active time based on security
-//        $activetime = date('Y-m-d H:i:s', time() - (System::getVar('secinactivemins') * 60));
-
-        
-//        $where = "WHERE {$sessioninfocolumn['lastused']} > '{$activetime}' ";
-        // Check if anonymous session are on
-//        if (System::getVar('anonymoussessions')) {
-//            $where .= "AND {$sessioninfocolumn['uid']} >= 1 ";
-//        } else {
-//            $where .= "AND {$sessioninfocolumn['uid']} > 1 ";
-//        }
-//
-//        $result = DBUtil::selectObjectArray('session_info', $where, '', -1, -1, '', null, null, array('uid'), false);
-//
-//        if ($result === false) {
-//            return LogUtil::registerError($this->__('Error! Could not load data.'));
-//        }
 
         $numguests = 0;
         $unames = array();

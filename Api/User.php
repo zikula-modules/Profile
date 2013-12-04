@@ -39,35 +39,12 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['numitems'])) {
             $args['numitems'] = -1;
         }
-//        if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
-//            $args['index'] = 'prop_label';
-//        }
-
-//        if (!isset($args['startnum']) || !isset($args['numitems'])) {
-//            return LogUtil::registerArgsError();
-//        }
 
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
             return array();
         }
 
-        // We now generate a where-clause
-//        $where   = '';
-//        $orderBy = 'prop_weight';
-//
-//        $permFilter = array();
-//        $permFilter[] = array(
-//            'component_left'   =>  'Profile',
-//            'component_middle' =>  '',
-//            'component_right'  =>  'item',
-//            'instance_left'    =>  'prop_label',
-//            'instance_middle'  =>  '',
-//            'instance_right'   =>  'prop_id',
-//            'level'            =>  ACCESS_READ,
-//        );
-//
-//        $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, $args['startnum']-1, $args['numitems'], $args['index'], $permFilter);
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')->from('Profile_Entity_Property', 'p')
             ->orderBy('p.prop_weight');
@@ -118,17 +95,13 @@ class Profile_Api_User extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
 
-        // Get item with where clause
         /** @var $item Profile_Entity_Property */
         if (isset($args['propid'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int)$args['propid']);
-//            $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
         } elseif (isset($args['proplabel'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_label' => $args['proplabel']));
-//            $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
         } else {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
-//            $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
         }
 
         // Check for no rows found, and if so return
@@ -200,23 +173,6 @@ class Profile_Api_User extends Zikula_AbstractApi
         static $items;
 
         if (!isset($items)) {
-            // Get datbase setup
-//            $dbtable = DBUtil::getTables();
-//            $column  = $dbtable['user_property_column'];
-//            $where   = "WHERE {$column['prop_weight']} > '0'
-//                    AND   {$column['prop_dtype']} >= '0'";
-//            $orderBy = $column['prop_weight'];
-//
-//            $permFilter = array();
-//            $permFilter[] = array('component_left'   =>  'Profile',
-//                    'component_middle' =>  '',
-//                    'component_right'  =>  '',
-//                    'instance_left'    =>  'prop_label',
-//                    'instance_middle'  =>  '',
-//                    'instance_right'   =>  'prop_id',
-//                    'level'            =>  ACCESS_READ);
-//
-//            $items = DBUtil::selectObjectArray('user_property', $where, $orderBy, -1, -1, 'prop_id', $permFilter);
             $qb = $this->entityManager->createQueryBuilder();
             $qb->select('p')->from('Profile_Entity_Property', 'p')
                 ->where('p.prop_weight > 0')
@@ -303,7 +259,6 @@ class Profile_Api_User extends Zikula_AbstractApi
     public function countitems()
     {
         // Return the number of items
-//        return DBUtil::selectObjectCount('user_property');
         $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Profile_Entity_Property p');
         return $query->getSingleScalarResult();
     }
@@ -315,17 +270,9 @@ class Profile_Api_User extends Zikula_AbstractApi
      */
     public function getweightlimits()
     {
-        // Get datbase setup
-//        $dbtable = DBUtil::getTables();
-//        $column  = $dbtable['user_property_column'];
-
-//        $where = "WHERE {$column['prop_weight']} != 0";
-//        $max   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MAX', $where);
         $query = $this->entityManager->createQuery('SELECT MAX(p.prop_weight) FROM Profile_Entity_Property p');
         $max = $query->getSingleScalarResult();
 
-//        $where = "WHERE {$column['prop_weight']} != 0";
-//        $min   = DBUtil::selectFieldMax('user_property', 'prop_weight', 'MIN', $where);
         $query = $this->entityManager->createQuery('SELECT MIN(p.prop_weight) FROM Profile_Entity_Property p');
         $min = $query->getSingleScalarResult();
 
@@ -526,7 +473,7 @@ class Profile_Api_User extends Zikula_AbstractApi
 
         // Needs to merge the existing attributes to not delete any of them
 //        $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
-        $user = UserUtil::getVars($args['uid']); // use 'api' instead?
+        $user = UserUtil::getVars($args['uid']); // @todo use 'api' instead? does this work?
 
         if ($user === false || !isset($user['__ATTRIBUTES__'])) {
             return array('__ATTRIBUTES__' => $dynadata);

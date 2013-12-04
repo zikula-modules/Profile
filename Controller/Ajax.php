@@ -51,8 +51,6 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 continue;
             }
 
-//            $items[] = array('prop_id' => $prop_id,
-//                    'prop_weight' => $weight);
             $props[$prop_id] = $this->entityManager->find('Profile_Entity_Property', $prop_id);
             $props[$prop_id]->setProp_weight($weight);
 
@@ -60,12 +58,7 @@ class Profile_Controller_Ajax extends Zikula_Controller_AbstractAjax
         }
 
         // update the db
-//        $res = DBUtil::updateObjectArray($items, 'user_property', 'prop_id');
         $this->entityManager->flush();
-
-//        if (!$res) {
-//            throw new Zikula_Exception_Fatal($this->__('Error! Could not save your changes.'));
-//        }
 
         return new Zikula_Response_Ajax(array('result' => true));
     }

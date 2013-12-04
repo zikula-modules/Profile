@@ -98,15 +98,7 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         $this->entityManager->persist($prop);
         $this->entityManager->flush();
 
-//        $obj = DBUtil::insertObject($obj, 'user_property', 'prop_id');
-
-        // Check for an error with the database
-//        if (!$obj) {
-//            return LogUtil::registerError($this->__('Error! Could not create the new personal info item.'));
-//        }
-
         // Return the id of the newly created item to the calling process
-//        return $obj['prop_id'];
         return $prop->getProp_id();
     }
 
@@ -134,13 +126,10 @@ class Profile_Api_Dud extends Zikula_AbstractApi
         /** @var $item Profile_Entity_Property */
         if (isset($args['propid'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int)$args['propid']);
-//            $item = DBUtil::selectObjectByID('user_property', (int)$args['propid'], 'prop_id');
         } elseif (isset($args['proplabel'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_label' => $args['proplabel']));
-//            $item = DBUtil::selectObjectByID('user_property', $args['proplabel'], 'prop_label');
         } else {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
-//            $item = DBUtil::selectObjectByID('user_property', $args['propattribute'], 'prop_attribute_name');
         }
 
         // Check for no rows found, and if so return
@@ -159,26 +148,12 @@ class Profile_Api_Dud extends Zikula_AbstractApi
             ->where('a.name = :name')
             ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
-//        $dbtables       = DBUtil::getTables();
-//        $objattr_column = $dbtables['objectdata_attributes_column'];
-//
-//        $delwhere = "WHERE $objattr_column[attribute_name] = '" . DataUtil::formatForStore($item['prop_attribute_name']) . "'
-//                   AND $objattr_column[object_type] = 'users'";
-//
-//        $res = DBUtil::deleteWhere('objectdata_attributes', $delwhere);
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-//        }
 
         // delete the property
         $qb->delete('Profile_Entity_Property', 'p')
             ->where('p.prop_id = :id')
             ->setParameter('id', $item['prop_id']);
         $qb->getQuery()->execute();
-//        $res = DBUtil::deleteObjectByID('user_property', $item['prop_id'], 'prop_id');
-//        if (!$res) {
-//            return LogUtil::registerError($this->__('Error! Could not delete the personal info item.'));
-//        }
 
         // Let the calling process know that we have finished successfully
         return true;
