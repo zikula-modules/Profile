@@ -27,10 +27,11 @@ class Profile_Installer extends Zikula_AbstractInstaller
     protected function getDefaultModVars()
     {
         return array(
-            'memberslistitemsperpage'   => 20,
+            'memberslistitemsperpage' => 20,
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
-            'filterunverified'          => 1,
+            'filterunverified' => 1,
+            'viewregdate' => 0,
         );
     }
 
