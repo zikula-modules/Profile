@@ -71,7 +71,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         $qb = $this->entityManager->createQueryBuilder();
         if ($searchBy != 'uname') {
             $qb->select(array('u', 'a', 'p'))
-                ->from('Zikula\Module\UsersModule\Entity\UserEntity')
+                ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
                 ->leftJoin('u.attributes', 'a')
                 ->leftJoin('Profile_Entity_Property', 'p', 'WITH', 'a.name = p.prop_attribute_name'); // manual join
         } else {
