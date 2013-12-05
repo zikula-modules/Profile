@@ -34,7 +34,7 @@
         </fieldset>
     </div>
     <div id="profile-alphafilter" class="z-center">
-        <strong>[ &nbsp;<a href="{modurl modname='Profile' type='user' func='viewmembers'}">{gt text='All'}</a>&nbsp; | {pagerabc posvar='letter' forwardvars='sortby'}]</strong>
+        {pagerabc posvar="letter" forwardvars='sortby' printempty=true}
     </div>
 </form>
 
