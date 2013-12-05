@@ -1,0 +1,11 @@
+
+
+***
+
+REMOVE THIS ENTIRE DIRECTORY AND FILES
+
+after conversion to namespaces.
+
+the Profile/Resources/public/images is already there.
+
+ANY CHANGES TO THIS DIRECTORY MUST ALSO OCCUR IN THAT FILE.

@@ -12,7 +12,7 @@
             <legend>{gt text='Registered users list settings'}</legend>
             <div class="z-formrow">
                 <label for="profile_viewregdate">{gt text="Display the user's registration date"}</label>
-                {if $pncore.Profile.viewregdate|default:0 eq 1}
+                {if $modvars.Profile.viewregdate|default:0 eq 1}
                 <input id="profile_viewregdate" name="viewregdate" type="checkbox" value="1" checked="checked" />
                 {else}
                 <input id="profile_viewregdate" name="viewregdate" type="checkbox" value="1" />
@@ -20,20 +20,20 @@
             </div>
             <div class="z-formrow">
                 <label for="profile_memberslistitemsperpage">{gt text="Users per page in 'Registered users list'"}</label>
-                <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="{$pncore.Profile.memberslistitemsperpage|safetext}" />
+                <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="{$modvars.Profile.memberslistitemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
                 <label for="profile_onlinemembersitemsperpage">{gt text="Users per page in 'Users currently on-line' page"}</label>
-                <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="{$pncore.Profile.onlinemembersitemsperpage|safetext}" />
+                <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="{$modvars.Profile.onlinemembersitemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
                 <label for="profile_recentmembersitemsperpage">{gt text="Users per page in 'Recent registrations' page"}</label>
-                <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="{$pncore.Profile.recentmembersitemsperpage|safetext}" />
+                <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="{$modvars.Profile.recentmembersitemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
                 <label for="profile_filterunverified">{gt text="Filter unverified users from 'Registered users list'"}</label>
                 <div id="profile_filterunverified">
-                    {if $pncore.Profile.filterunverified eq 1}
+                    {if $modvars.Profile.filterunverified eq 1}
                     <input id="filterunverified1" type="radio" name="filterunverified" value="1" checked="checked" />
                     <label for="filterunverified1">{gt text='Yes'}</label>
                     <input id="filterunverified0" type="radio" name="filterunverified" value="0" />
@@ -55,7 +55,7 @@
                 <div id="profile_dudregshow">
                     {foreach from=$dudfields key='dudid' item='dudlabel'}
                     <div class="z-formlist">
-                        {if in_array($dudid, $pncore.Profile.dudregshow)}
+                        {if in_array($dudid, $modvars.Profile.dudregshow)}
                         <input id="profile_dudregshow_{$dudid|safetext}" type="checkbox" name="dudregshow[]" value="{$dudid|safetext}" checked="checked" />
                         {else}
                         <input id="profile_dudregshow_{$dudid|safetext}" type="checkbox" name="dudregshow[]" value="{$dudid|safetext}" />

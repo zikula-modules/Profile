@@ -12,6 +12,8 @@
  * information regarding copyright and licensing.
  */
 
+use Profile_Entity_Property as PropertyEntity;
+
 /**
  * Profile module installer.
  */
@@ -25,10 +27,11 @@ class Profile_Installer extends Zikula_AbstractInstaller
     protected function getDefaultModVars()
     {
         return array(
-            'memberslistitemsperpage'   => 20,
+            'memberslistitemsperpage' => 20,
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
-            'filterunverified'          => 1,
+            'filterunverified' => 1,
+            'viewregdate' => 0,
         );
     }
 
@@ -39,8 +42,10 @@ class Profile_Installer extends Zikula_AbstractInstaller
      */
     public function install()
     {
-        if (!DBUtil::createTable('user_property')) {
-            return false;
+        try {
+            DoctrineHelper::createSchema($this->entityManager, array('Profile_Entity_Property'));
+        } catch (\Exception $e) {
+            return LogUtil::registerError($e->getMessage());
         }
 
         $this->setVars($this->getDefaultModVars());
@@ -63,33 +68,40 @@ class Profile_Installer extends Zikula_AbstractInstaller
      */
     public function upgrade($oldversion)
     {
+        // Only support upgrade from version 1.6 and up. Notify users if they have a version below that one.
+        if (version_compare($oldversion, '1.6', '<')) {
+            // Inform user about error, and how he can upgrade to $modversion
+            $upgradeToVersion = $this->version->getVersion();
+
+            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to version %s.', $upgradeToVersion));
+        }
+        $connection = $this->entityManager->getConnection();
         switch ($oldversion)
         {
-            case '1.5.2':
-                // 1.5.2 -> 1.6.0
-                EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_UsersUiHandler');
-                $connection = Doctrine_Manager::getInstance()->getConnection('default');
-                $sqlStatements = array();
-                // N.B. statements generated with PHPMyAdmin
-                $sqlStatements[] = 'RENAME TABLE ' . DBUtil::getLimitedTablename('user_property') . " TO user_property";
-                $sqlStatements[] = "ALTER TABLE `user_property` CHANGE  `pn_prop_id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
-CHANGE  `pn_prop_label`  `label` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE  `pn_prop_dtype`  `dtype` INT( 11 ) NOT NULL DEFAULT  '0',
-CHANGE  `pn_prop_modname`  `modname` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE  `pn_prop_weight`  `weight` INT( 11 ) NOT NULL DEFAULT  '0',
-CHANGE  `pn_prop_validation`  `validation` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL";
-                foreach ($sqlStatements as $sql) {
-                    $stmt = $connection->prepare($sql);
-                    try {
-                        $stmt->execute();
-                    } catch (Exception $e) {
-                    }   
-                }
-                
             case '1.6.0':
-            case '1.6.1':
-                // 1.6.0 -> X.X.X when appropriate.
+            case '1.6.1': // released with Core 1.3.6
+                $sqls = array();
+                // copy data from objectdata_attributes to users_attributes
+                // NOTE: this routine *may* copy additional data to the user_property table that does not belong to
+                // the Profile module. It doesn't copy data from the Legal module because Legal attribute names begin
+                // with '_' (note discriminator in query). It is impossible to discern what else may be in the table
+                // that meets the discriminator criteria
+                $sqls[] = "INSERT INTO user_property
+                    (user_id, name, value)
+                    SELECT object_id, attribute_name, value
+                    FROM objectdata_attributes
+                    WHERE object_type = 'users'
+                    AND LEFT(attribute_name, 1) <> '_'
+                    ORDER BY object_id, attribute_name";
+                // remove old data
+                $sqls[] = "DELETE FROM objectdata_attributes
+                    WHERE object_type = 'users'
+                    AND LEFT(attribute_name, 1) <> '_'";
+                foreach ($sqls as $sql) {
+                    $stmt = $connection->prepare($sql);
+                    $stmt->execute();
+                }
+            case '2.0.0': // released with Core 1.3.7
         }
 
         $modVars = $this->getVars();
@@ -120,8 +132,10 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
      */
     public function uninstall()
     {
-        if (!DBUtil::dropTable('user_property')) {
-            return false;
+        try {
+            DoctrineHelper::dropSchema($this->entityManager, array('Profile_Entity_Property'));
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage());
         }
 
         // Delete any module variables
@@ -152,7 +166,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'realname';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _UFAKEMAIL
         $record = array();
@@ -162,7 +178,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'publicemail';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YOURHOMEPAGE
         $record = array();
@@ -172,7 +190,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'url';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _TIMEZONEOFFSET
         $record = array();
@@ -182,7 +202,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'tzoffset';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YOURAVATAR
         $record = array();
@@ -192,7 +214,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'avatar';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YICQ
         $record = array();
@@ -202,7 +226,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'icq';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YAIM
         $record = array();
@@ -212,7 +238,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'aim';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YYIM
         $record = array();
@@ -222,7 +250,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'yim';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YMSNM
         $record = array();
@@ -232,7 +262,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'msnm';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YLOCATION
         $record = array();
@@ -242,7 +274,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'city';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YOCCUPATION
         $record = array();
@@ -252,7 +286,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'occupation';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _SIGNATURE
         $record = array();
@@ -262,7 +298,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'signature';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _EXTRAINFO
         $record = array();
@@ -272,7 +310,9 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'extrainfo';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
 
         // _YINTERESTS
         $record = array();
@@ -282,7 +322,12 @@ CHANGE  `pn_prop_attribute_name`  `attributename` VARCHAR( 80 ) CHARACTER SET ut
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'interests';
 
-        DBUtil::insertObject($record, 'user_property', 'prop_id');
+        $prop = new PropertyEntity();
+        $prop->merge($record);
+        $this->entityManager->persist($prop);
+
+        // flush all persisted entities
+        $this->entityManager->flush();
 
         // set realname, homepage, timezone offset, location and ocupation
         // to be shown in the registration form by default

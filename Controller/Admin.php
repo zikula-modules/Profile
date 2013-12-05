@@ -512,13 +512,10 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $res = DBUtil::incrementObjectFieldByID('user_property', 'prop_weight', $dudid, 'prop_id');
-
-        // The return value of the function is checked here
-        if ($res) {
-            // Success
-            LogUtil::registerStatus($this->__('Done! Saved your changes.'));
-        }
+        /** @var $prop Profile_Entity_Property */
+        $prop = $this->entityManager->find('Profile_Entity_Property', $dudid);
+        $prop->incrementWeight();
+        $this->entityManager->flush();
 
         return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }
@@ -550,13 +547,10 @@ class Profile_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerError($this->__('Error! You cannot decrease the weight of this account property.'), 404);
         }
 
-        $res = DBUtil::incrementObjectFieldByID('user_property', 'prop_weight', $dudid, 'prop_id', -1);
-
-        // The return value of the function is checked here
-        if ($res) {
-            // Success
-            LogUtil::registerStatus($this->__('Done! Saved your changes.'));
-        }
+        /** @var $prop Profile_Entity_Property */
+        $prop = $this->entityManager->find('Profile_Entity_Property', $dudid);
+        $prop->decrementWeight();
+        $this->entityManager->flush();
 
         return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
     }

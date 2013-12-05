@@ -19,34 +19,32 @@ class Profile_Version extends Zikula_AbstractVersion
 {
     /**
      * Provides an array of standard Zikula Extension metadata.
-     * 
+     *
      * @return array Zikula Extension metadata.
      */
     public function getMetaData()
     {
         return array(
-            'displayname'   => $this->__('Profile'),
-            'description'   => $this->__('Provides a personal account control panel for each registered user, an interface to administer the personal information items displayed within it, and a registered users list functionality. Works in close unison with the \'Users\' module.'),
-
-            'url'           => $this->__('profile'),
-
-            'version'       => '1.6.3',
+            'displayname' => $this->__('Profile'),
+            'description' => $this->__('Provides a personal account control panel for each registered user, an interface to administer the personal information items displayed within it, and a registered users list functionality. Works in close unison with the \'Users\' module.'),
+            'url' => $this->__('profile'),
+            'version' => '2.0.0-dev', // released with Core 1.3.7
             'core_min' => '1.3.7',
             'core_max' => '1.3.99',
 
-            'capabilities'  => array(
-                'profile'                   => array(
-                    'version'       => '1.0'
+            'capabilities' => array(
+                'profile' => array(
+                    'version' => '1.0'
                 ),
             ),
 
-            'securityschema'=> array(
-                'Profile::'                 => '::',
-                'Profile::view'             => '::',
-                'Profile::item'             => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
-                'Profile:Members:'          => '::',
-                'Profile:Members:recent'    => '::',
-                'Profile:Members:online'    => '::'
+            'securityschema' => array(
+                'Profile::' => '::',
+                'Profile::view' => '::',
+                'Profile::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
+                'Profile:Members:' => '::',
+                'Profile:Members:recent' => '::',
+                'Profile:Members:online' => '::'
             ),
         );
     }
