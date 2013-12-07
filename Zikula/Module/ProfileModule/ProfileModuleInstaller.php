@@ -108,6 +108,9 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                 if ($profilemodule == 'Profile') {
                     System::setVar('profilemodule', $this->name);
                 }
+                // remove handlers & register new handlers
+                EventUtil::unregisterPersistentModuleHandlers($this->name);
+                EventUtil::registerPersistentEventHandlerClass($this->name, 'Zikula\Module\ProfileModule\Listener\UsersUiListener');
 
             case '2.0.0':
         }
@@ -143,6 +146,8 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         }
         // Delete any module variables
         $this->delVars();
+        // remove handlers
+        EventUtil::unregisterPersistentModuleHandlers($this->name);
         // Deletion successful
         return true;
     }
