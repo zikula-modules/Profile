@@ -11,18 +11,17 @@
  * information regarding copyright and licensing.
  */
 
+namespace Zikula\Module\ProfileModule\Entity;
+
+use Zikula\Core\Doctrine\EntityAccess;
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Property entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="user_property",indexes={@ORM\index(name="prop_label", columns={"label"}),@ORM\index(name="prop_attr", columns={"attributename"})})
  */
-
-namespace Zikula\Module\ProfileModule\Entity;
-
-use Zikula\Core\Doctrine\EntityAccess;
-use Doctrine\ORM\Mapping as ORM;
-
 class PropertyEntity extends EntityAccess
 {
     /**
