@@ -31,6 +31,11 @@ class Profile_Controller_User extends Zikula_AbstractController
         $this->redirect(ModUtil::url('Profile', 'user', 'viewmembers'));
     }
 
+    public function indexAction()
+    {
+        $this->redirect(ModUtil::url('Profile', 'user', 'viewmembers'));
+    }
+
     /**
      * Display item.
      * 
