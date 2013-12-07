@@ -240,7 +240,7 @@ class UserController extends \Zikula_AbstractController
     public function viewmembersAction($args)
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
         // Get parameters from whatever input we need
@@ -335,7 +335,7 @@ class UserController extends \Zikula_AbstractController
     public function recentmembersAction()
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:Members:recent', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':Members:recent', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
         // set the cache id
@@ -394,7 +394,7 @@ class UserController extends \Zikula_AbstractController
     public function onlinemembersAction()
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:Members:online', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':Members:online', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
         // Create output object

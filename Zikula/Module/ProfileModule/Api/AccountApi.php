@@ -55,7 +55,7 @@ class AccountApi extends \Zikula_AbstractApi
                 'module' => $this->name,
                 'title' => $this->__('Profile'),
                 'icon' => 'admin.png');
-            if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
+            if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
                 $items['1'] = array(
                     'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
                     'module' => $this->name,

@@ -31,7 +31,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
      */
     public function init()
     {
-        SecurityUtil::registerPermissionSchema('Profile:MembersOnlineblock:', 'Block title::');
+        SecurityUtil::registerPermissionSchema($this->name.':MembersOnlineblock:', 'Block title::');
     }
 
     /**
@@ -66,7 +66,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:MembersOnlineblock:', "{$blockinfo['title']}::", ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':MembersOnlineblock:', "{$blockinfo['title']}::", ACCESS_READ)) {
             return false;
         }
         // Get variables from content block

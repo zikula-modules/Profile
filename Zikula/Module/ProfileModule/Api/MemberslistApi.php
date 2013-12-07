@@ -72,7 +72,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             $letter = null;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
             return array();
         }
         $qb = $this->entityManager->createQueryBuilder();

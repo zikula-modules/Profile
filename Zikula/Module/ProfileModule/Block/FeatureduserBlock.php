@@ -32,7 +32,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
     public function init()
     {
         // Security
-        SecurityUtil::registerPermissionSchema('Profile:FeaturedUserblock:', 'Block ID::');
+        SecurityUtil::registerPermissionSchema($this->name.':FeaturedUserblock:', 'Block ID::');
     }
 
     /**
@@ -67,7 +67,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:FeaturedUserblock:', "{$blockinfo['bid']}::", ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':FeaturedUserblock:', "{$blockinfo['bid']}::", ACCESS_READ)) {
             return false;
         }
         // Get variables from content block

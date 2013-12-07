@@ -30,7 +30,7 @@ class LastseenBlock extends \Zikula_Controller_AbstractBlock
      */
     public function init()
     {
-        SecurityUtil::registerPermissionSchema('Profile:LastSeenblock:', 'Block title::');
+        SecurityUtil::registerPermissionSchema($this->name.':LastSeenblock:', 'Block title::');
     }
 
     /**
@@ -65,7 +65,7 @@ class LastseenBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile:LastSeenblock:', "{$blockinfo['title']}::", ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.':LastSeenblock:', "{$blockinfo['title']}::", ACCESS_READ)) {
             return false;
         }
         // Get variables from content block
