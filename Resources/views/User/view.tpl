@@ -1,29 +1,32 @@
-{if isset($userinfo.__ATTRIBUTES__)}
+{if (isset($userinfo.__ATTRIBUTES__))}
     {array_field array=$userinfo.__ATTRIBUTES__ field='realname' returnValue=true assign='name'}
 {else}
     {assign var='name' value=''}
 {/if}
-{if !$name}{assign var='name' value=$uname}{/if}
+{if (!$name)}
+	{assign var='name' value=$uname}
+{/if}
 {gt text="Profile for %s" tag1=$name|@ucwords|safetext assign='templatetitle'}
 
 {include file='User/menu.tpl'}
 
 <div id="profile_wrapper">
-    {if isset($dudarray.avatar)}
-    {if $dudarray.avatar eq '' or $dudarray.avatar eq 'blank.gif' or $dudarray.avatar eq 'blank.png'}
-    {img modname='core' src='personal.png' set='icons/large' class='profileavatar'}
-    {else}
-    {modgetvar module='Users_Constant::MODNAME'|constant name='Users_Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
-    <img src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" class="profileavatar" />
+    {if (isset($dudarray.avatar))}
+    	{if (($dudarray.avatar == '') || ($dudarray.avatar == 'blank.gif') || ($dudarray.avatar == 'blank.png'))}
+			{gravatar email_address=$userinfo.email f=true}
+		{elseif ($dudarray.avatar == 'gravatar.gif')}
+			{gravatar email_address=$userinfo.email}
+		{else}
+			{modgetvar module='Users_Constant::MODNAME'|constant name='Users_Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
+			<img src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" class="profileavatar" />
+		{/if}
     {/if}
-    {/if}
-
     <div class="z-form">
         <div class="z-formrow">
             <strong class="z-label">{gt text='User name:'}</strong>
             <span>{$uname|safetext}</span>
         </div>
-        {if ($modvars.Profile.viewregdate|default:1 && $userinfo.user_regdate != '1970-01-01 00:00:00')}
+        {if (($modvars.Profile.viewregdate|default:1) && ($userinfo.user_regdate != '1970-01-01 00:00:00'))}
         	<div class="z-formrow">
             	<strong class="z-label">{gt text='Registration date:'}</strong>
 				<span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
