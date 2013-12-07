@@ -199,7 +199,7 @@ class Profile_Installer extends Zikula_AbstractInstaller
         $record['prop_label']          = no__('_TIMEZONEOFFSET');
         $record['prop_dtype']          = 1;
         $record['prop_weight']         = 4;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
+        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 2, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'tzoffset';
 
         $prop = new PropertyEntity();
