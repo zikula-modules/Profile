@@ -50,7 +50,7 @@ class UserApi extends \Zikula_AbstractApi
             $args['numitems'] = -1;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             return array();
         }
         $qb = $this->entityManager->createQueryBuilder();
@@ -66,7 +66,7 @@ class UserApi extends \Zikula_AbstractApi
         $items = $qb->getQuery()->getArrayResult();
         // Put items into result array.
         foreach (array_keys($items) as $k) {
-            if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
+            if (SecurityUtil::checkPermission($this->name.'::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                 $validationinfo = @unserialize($items[$k]['prop_validation']);
                 unset($items[$k]['prop_validation']);
                 // Expand the item array
@@ -113,7 +113,7 @@ class UserApi extends \Zikula_AbstractApi
             return false;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
             return false;
         }
         // Extract the validation info array
@@ -164,7 +164,7 @@ class UserApi extends \Zikula_AbstractApi
             $args['uid'] = 0;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             return array();
         }
         static $items;
@@ -178,7 +178,7 @@ class UserApi extends \Zikula_AbstractApi
             $items = $qb->getQuery()->getArrayResult();
             foreach (array_keys($items) as $k) {
                 // check permissions
-                if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
+                if (SecurityUtil::checkPermission($this->name.'::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                     // Extract the validation info array
                     $validationinfo = @unserialize($items[$k]['prop_validation']);
                     unset($items[$k]['prop_validation']);
@@ -200,7 +200,7 @@ class UserApi extends \Zikula_AbstractApi
         $currentuser = (int)UserUtil::getVar('uid');
         $ismember = $currentuser >= 2;
         $isowner = $currentuser == (int)$args['uid'];
-        $isadmin = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
+        $isadmin = SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN);
         $result = array();
         foreach ($items as $item) {
             switch ($args['get']) {

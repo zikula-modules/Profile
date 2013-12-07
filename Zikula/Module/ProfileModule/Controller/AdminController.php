@@ -43,7 +43,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function helpAction()
     {
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
         return $this->view->fetch('Admin/help.tpl');
@@ -56,7 +56,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function viewAction()
     {
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
         // Get parameters from whatever input we need.
@@ -118,7 +118,7 @@ class AdminController extends \Zikula_AbstractController
             }
             // Options for the item.
             $options = array();
-            if (SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
+            if (SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
                 $options[] = array(
                     'url' => ModUtil::url($this->name, 'admin', 'modify', array('dudid' => $item['prop_id'])),
                     'image' => 'xedit.png',
@@ -138,7 +138,7 @@ class AdminController extends \Zikula_AbstractController
                         'class' => 'profile_down',
                         'title' => $this->__('Down'));
                 }
-                if (SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
+                if (SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
                     $options[] = array(
                         'url' => ModUtil::url($this->name, 'admin', 'delete', array('dudid' => $item['prop_id'])),
                         'image' => '14_layer_deletelayer.png',
@@ -169,7 +169,7 @@ class AdminController extends \Zikula_AbstractController
     public function newdudAction()
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
         $this->view->assign('displaytypes', array(
@@ -216,7 +216,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $this->checkCsrfToken();
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
         // Get parameters from whatever input we need.
@@ -293,7 +293,7 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$dudid}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$dudid}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
         // backward check to remove any 1.4- forbidden char in listoptions
@@ -406,7 +406,7 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
+        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
             return LogUtil::registerPermissionError();
         }
         // Check for confirmation.
@@ -447,7 +447,7 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
@@ -474,7 +474,7 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
         if ($item['prop_weight'] <= 1) {
@@ -545,7 +545,7 @@ class AdminController extends \Zikula_AbstractController
     public function modifyconfigAction()
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
@@ -587,7 +587,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $this->checkCsrfToken();
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
         // Update module variables.

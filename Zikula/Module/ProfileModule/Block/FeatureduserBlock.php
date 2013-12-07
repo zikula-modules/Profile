@@ -89,7 +89,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         $ismember = $currentuser >= 2;
         $sameuser = $currentuser == $userinfo['uid'];
         $isadmin = false;
-        if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $isadmin = true;
         }
         // get all active profile fields

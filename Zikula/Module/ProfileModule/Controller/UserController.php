@@ -61,7 +61,7 @@ class UserController extends \Zikula_AbstractController
     public function viewAction($args)
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::view', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.'::view', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
         // Get parameters from whatever input we need.
@@ -88,7 +88,7 @@ class UserController extends \Zikula_AbstractController
         $currentuser = UserUtil::getVar('uid');
         $ismember = $currentuser >= 2;
         $isowner = $currentuser == $uid;
-        $isadmin = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
+        $isadmin = SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN);
         // Get all active profile fields
         $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'viewable', 'uid' => $uid));
         $fieldsets = array();
@@ -140,7 +140,7 @@ class UserController extends \Zikula_AbstractController
     public function modifyAction($args)
     {
         // Security check
-        if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
+        if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             return LogUtil::registerPermissionError();
         }
         // The API function is called.

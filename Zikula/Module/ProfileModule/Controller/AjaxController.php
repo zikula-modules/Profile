@@ -39,7 +39,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function changeprofileweightAction()
     {
         $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $profilelist = $this->request->request->get('profilelist', $this->request->query->get('profilelist', null));
@@ -77,7 +77,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function changeprofilestatusAction()
     {
         $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $prop_id = $this->request->request->get('dudid', $this->request->query->get('dudid', null));
@@ -108,7 +108,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function profilesectionAction()
     {
         $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $uid = $this->request->request->get('uid', $this->request->query->get('uid', null));

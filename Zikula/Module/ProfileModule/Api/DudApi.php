@@ -69,7 +69,7 @@ class DudApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "{$args['label']}::", ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission($this->name.'::item', "{$args['label']}::", ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
         if (!ModUtil::getIdFromName($args['modname'])) {
@@ -145,7 +145,7 @@ class DudApi extends \Zikula_AbstractApi
             return false;
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
             return false;
         }
         // delete the property data aka attributes

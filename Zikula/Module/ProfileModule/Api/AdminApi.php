@@ -48,7 +48,7 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "{$args['label']}::", ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission($this->name.'::item', "{$args['label']}::", ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
         // Check if the label or attribute name already exists
@@ -116,10 +116,10 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::Item', "{$item['prop_label']}::{$args['dudid']}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::Item', "{$item['prop_label']}::{$args['dudid']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
-        if (!SecurityUtil::checkPermission('Profile::Item', "{$args['label']}::{$args['dudid']}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission($this->name.'::Item', "{$args['label']}::{$args['dudid']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
         // If there's a new label, check if it already exists
@@ -204,7 +204,7 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! You cannot delete this personal info item.'), 404);
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::Item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
+        if (!SecurityUtil::checkPermission($this->name.'::Item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
             return LogUtil::registerPermissionError();
         }
         // delete the property data aka attributes
@@ -305,25 +305,25 @@ class AdminApi extends \Zikula_AbstractApi
             'text' => $this->__('Users Module'),
             'class' => 'z-icon-es-user',
             'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
-        if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
+        if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'view'),
                 'text' => $this->__('Fields'),
                 'class' => 'z-icon-es-view');
         }
-        if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
+        if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'newdud'),
                 'text' => $this->__('Create new field'),
                 'class' => 'z-icon-es-new');
         }
-        if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'modifyconfig'),
                 'text' => $this->__('User account panel settings'),
                 'class' => 'z-icon-es-config');
         }
-        if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
+        if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'help'),
                 'text' => $this->__('Help'),

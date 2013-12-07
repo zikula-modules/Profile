@@ -39,12 +39,12 @@ class ProfileModuleVersion extends \Zikula_AbstractVersion
                 'profile' => array('version' => '1.0')
             ),
             'securityschema' => array(
-                'Profile::' => '::',
-                'Profile::view' => '::',
-                'Profile::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
-                'Profile:Members:' => '::',
-                'Profile:Members:recent' => '::',
-                'Profile:Members:online' => '::'
+                $this->name.'::' => '::',
+                $this->name.'::view' => '::',
+                $this->name.'::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
+                $this->name.':Members:' => '::',
+                $this->name.':Members:recent' => '::',
+                $this->name.':Members:online' => '::'
             )
         );
     }
