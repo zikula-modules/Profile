@@ -161,8 +161,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _UREALNAME
         $record = array();
         $record['prop_label']          = no__('_UREALNAME');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '1';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 1;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'realname';
 
@@ -173,8 +173,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _UFAKEMAIL
         $record = array();
         $record['prop_label']          = no__('_UFAKEMAIL');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '2';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 2;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'publicemail';
 
@@ -185,8 +185,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YOURHOMEPAGE
         $record = array();
         $record['prop_label']          = no__('_YOURHOMEPAGE');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '3';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 3;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'url';
 
@@ -197,8 +197,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _TIMEZONEOFFSET
         $record = array();
         $record['prop_label']          = no__('_TIMEZONEOFFSET');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '4';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 4;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'tzoffset';
 
@@ -209,8 +209,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YOURAVATAR
         $record = array();
         $record['prop_label']          = no__('_YOURAVATAR');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '5';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 5;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'avatar';
 
@@ -221,8 +221,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YICQ
         $record = array();
         $record['prop_label']          = no__('_YICQ');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '6';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 6;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'icq';
 
@@ -233,8 +233,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YAIM
         $record = array();
         $record['prop_label']          = no__('_YAIM');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '7';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 7;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'aim';
 
@@ -245,8 +245,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YYIM
         $record = array();
         $record['prop_label']          = no__('_YYIM');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '8';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 8;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'yim';
 
@@ -257,8 +257,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YMSNM
         $record = array();
         $record['prop_label']          = no__('_YMSNM');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '9';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 9;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'msnm';
 
@@ -269,8 +269,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YLOCATION
         $record = array();
         $record['prop_label']          = no__('_YLOCATION');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '10';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 10;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'city';
 
@@ -293,8 +293,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _SIGNATURE
         $record = array();
         $record['prop_label']          = no__('_SIGNATURE');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '12';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 12;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'signature';
 
@@ -305,8 +305,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _EXTRAINFO
         $record = array();
         $record['prop_label']          = no__('_EXTRAINFO');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '13';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 13;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'extrainfo';
 
@@ -317,8 +317,8 @@ class Profile_Installer extends Zikula_AbstractInstaller
         // _YINTERESTS
         $record = array();
         $record['prop_label']          = no__('_YINTERESTS');
-        $record['prop_dtype']          = '1';
-        $record['prop_weight']         = '14';
+        $record['prop_dtype']          = 1;
+        $record['prop_weight']         = 14;
         $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'interests';
 
