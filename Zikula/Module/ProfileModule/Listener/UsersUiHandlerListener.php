@@ -14,7 +14,7 @@
 
 namespace Zikula\Module\ProfileModule\Listener;
 
-use Profile_Constant;
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 use ZLanguage;
 use Zikula_View;
 use ModUtil;
@@ -36,7 +36,7 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
      *
      * @var string
      */
-    protected $name = Profile_Constant::MODNAME;
+    protected $name = ProfileConstant::MODNAME;
     /**
      * The language domain for ZLanguage i18n.
      *
@@ -52,7 +52,7 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
     /**
      * Access to the request information.
      *
-     * @var Zikula_Request_Http
+     * @var \Zikula_Request_Http
      */
     protected $request;
     /**
@@ -64,7 +64,7 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
     /**
      * Builds an instance of this class.
      *
-     * @param Zikula_EventManager $eventManager An instance of a Zikula event manager appropriate for this listener.
+     * @param \Zikula_EventManager $eventManager An instance of a Zikula event manager appropriate for this listener.
      */
     // @todo Need to set the correct type hint.
     public function __construct($eventManager)
@@ -108,11 +108,11 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
     /**
      * Render and return profile information for display as part of a hook-like UI event issued from the Users module.
      *
-     * @param Zikula_Event $event The event that triggered this function call, including the subject of the display request.
+     * @param \Zikula_Event $event The event that triggered this function call, including the subject of the display request.
      * 
      * @return void
      */
-    public function uiView(Zikula_Event $event)
+    public function uiView(\Zikula_Event $event)
     {
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
         // The return value of the function is checked here
@@ -133,11 +133,11 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
      * array dynadata If reentering the editing phase after validation errors, an array containing the profile items to store for the user; otherwise not
      *                  provided.
      *
-     * @param Zikula_Event $event The event that triggered this function call, including the id of the user for which profile items should be entered.
+     * @param \Zikula_Event $event The event that triggered this function call, including the id of the user for which profile items should be entered.
      * 
      * @return void
      */
-    public function uiEdit(Zikula_Event $event)
+    public function uiEdit(\Zikula_Event $event)
     {
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
         // The return value of the function is checked here
@@ -184,12 +184,12 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
      * ------------------------------
      * array dynadata An array containing the profile items to store for the user.
      *
-     * @param Zikula_Event $event The event that triggered this function call, including the id of the user for which profile data was entered, and a
+     * @param \Zikula_Event $event The event that triggered this function call, including the id of the user for which profile data was entered, and a
      *                              collection in which to store the validation object created by this function.
      * 
      * @return void
      */
-    public function validateEdit(Zikula_Event $event)
+    public function validateEdit(\Zikula_Event $event)
     {
         if ($this->request->isMethod('POST')) {
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
@@ -216,11 +216,11 @@ class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zi
      * ------------------------------
      * array dynadata An array containing the profile items to store for the user.
      *
-     * @param Zikula_Event $event The event that triggered this function call, containing the id of the user for which profile information should be stored.
+     * @param \Zikula_Event $event The event that triggered this function call, containing the id of the user for which profile information should be stored.
      * 
      * @return void
      */
-    public function processEdit(Zikula_Event $event)
+    public function processEdit(\Zikula_Event $event)
     {
         if ($this->request->isMethod('POST')) {
             if ($this->validation && !$this->validation->hasErrors()) {

@@ -10,7 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Profile_Entity_Property as PropertyEntity;
 
 /**
  * Profile module installer.
@@ -21,7 +20,7 @@ namespace Zikula\Module\ProfileModule;
 use DoctrineHelper;
 use LogUtil;
 use EventUtil;
-use PropertyEntity;
+use Zikula\Module\ProfileModule\Entity\PropertyEntity;
 
 class ProfileModuleInstaller extends \Zikula_AbstractInstaller
 {

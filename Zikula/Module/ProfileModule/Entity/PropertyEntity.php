@@ -10,8 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Zikula\Core\Doctrine\EntityAccess;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Property entity class
@@ -22,8 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Zikula\Module\ProfileModule\Entity;
 
+use Zikula\Core\Doctrine\EntityAccess;
+use Doctrine\ORM\Mapping as ORM;
 
-class PropertyEntity extends \EntityAccess
+class PropertyEntity extends EntityAccess
 {
     /**
      * id
