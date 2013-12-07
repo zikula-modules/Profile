@@ -42,7 +42,9 @@ class AdminApi extends \Zikula_AbstractApi
     public function create($args)
     {
         // Argument check
-        if (!isset($args['label']) || empty($args['label']) || (!isset($args['attribute_name']) || empty($args['attribute_name'])) || (!isset($args['dtype']) || !is_numeric($args['dtype']))) {
+        if (!isset($args['label']) || empty($args['label'])
+            || (!isset($args['attribute_name']) || empty($args['attribute_name']))
+            || (!isset($args['dtype']) || !is_numeric($args['dtype']))) {
             return LogUtil::registerArgsError();
         }
         // Security check

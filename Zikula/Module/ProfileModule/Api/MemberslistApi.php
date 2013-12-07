@@ -49,16 +49,7 @@ class MemberslistApi extends \Zikula_AbstractApi
      *
      * @return array|integer Matching user ids or a count of the matching integers.
      */
-    protected function getOrCountAll(
-        $countOnly,
-        $searchBy,
-        $letter,
-        $sortBy,
-        $sortOrder,
-        $startNum = -1,
-        $numItems = -1,
-        $returnUids = false
-    )
+    protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
         if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string)(int)$startNum || $startNum < -1) {
             throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
@@ -406,7 +397,11 @@ class MemberslistApi extends \Zikula_AbstractApi
         ksort($unames);
         $unames = array_values($unames);
         $numusers = count($unames);
-        $items = array('unames' => $unames, 'numusers' => $numusers, 'numguests' => $numguests, 'total' => $numguests + $numusers);
+        $items = array(
+            'unames' => $unames,
+            'numusers' => $numusers,
+            'numguests' => $numguests,
+            'total' => $numguests + $numusers);
         return $items;
     }
 
