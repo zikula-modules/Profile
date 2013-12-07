@@ -63,6 +63,7 @@ class PropertyEntity extends EntityAccess
      * @ORM\Column(type="string",length=80,name="attributename")
      */
     private $prop_attribute_name = '';
+
     /**
      * @param string $attributename
      */
@@ -70,7 +71,7 @@ class PropertyEntity extends EntityAccess
     {
         $this->prop_attribute_name = $attributename;
     }
-    
+
     /**
      * @return string
      */
@@ -78,7 +79,7 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_attribute_name;
     }
-    
+
     /**
      * @param integer $dtype
      */
@@ -86,7 +87,7 @@ class PropertyEntity extends EntityAccess
     {
         $this->prop_dtype = $dtype;
     }
-    
+
     /**
      * @return integer
      */
@@ -94,7 +95,7 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_dtype;
     }
-    
+
     /**
      * @return integer
      */
@@ -102,7 +103,7 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_id;
     }
-    
+
     /**
      * @param string $label
      */
@@ -110,7 +111,7 @@ class PropertyEntity extends EntityAccess
     {
         $this->prop_label = $label;
     }
-    
+
     /**
      * @return string
      */
@@ -118,7 +119,7 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_label;
     }
-    
+
     /**
      * @param string $modname
      */
@@ -126,7 +127,7 @@ class PropertyEntity extends EntityAccess
     {
         $this->prop_modname = $modname;
     }
-    
+
     /**
      * @return string
      */
@@ -134,7 +135,7 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_modname;
     }
-    
+
     /**
      * @param string|null $validation
      */
@@ -142,7 +143,7 @@ class PropertyEntity extends EntityAccess
     {
         $this->prop_validation = $validation;
     }
-    
+
     /**
      * @return string
      */
@@ -150,7 +151,7 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_validation;
     }
-    
+
     /**
      * @param integer $weight
      */
@@ -158,7 +159,7 @@ class PropertyEntity extends EntityAccess
     {
         $this->prop_weight = $weight;
     }
-    
+
     /**
      * @return integer
      */
@@ -166,12 +167,12 @@ class PropertyEntity extends EntityAccess
     {
         return $this->prop_weight;
     }
-    
+
     public function incrementWeight()
     {
         $this->prop_weight++;
     }
-    
+
     public function decrementWeight()
     {
         $this->prop_weight--;

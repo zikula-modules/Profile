@@ -42,16 +42,30 @@ class DudApi extends \Zikula_AbstractApi
      *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 7: multi checkbox}
      *                   'listoptions' => options for the new field
      *                   'note'        => note to show in edit mode
-     *					 'fieldset' => The fieldset to group the item.
+     *                     'fieldset' => The fieldset to group the item.
      *                   and any other required data.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return boolean True on success or false on failure.
      */
     public function register($args)
     {
-        if (!isset($args['modname']) || empty($args['modname']) || !isset($args['label']) || empty($args['label']) || !isset($args['attribute_name']) || empty($args['attribute_name']) || !isset($args['dtype']) || empty($args['dtype']) || !isset($args['displaytype']) || !is_numeric($args['displaytype']) || (int) $args['displaytype'] < 0 || !isset($args['validationinfo']) || empty($args['validationinfo']) || !is_array($args['validationinfo'])) {
+        if (!isset($args['modname'])
+            || empty($args['modname'])
+            || !isset($args['label'])
+            || empty($args['label'])
+            || !isset($args['attribute_name'])
+            || empty($args['attribute_name'])
+            || !isset($args['dtype'])
+            || empty($args['dtype'])
+            || !isset($args['displaytype'])
+            || !is_numeric($args['displaytype'])
+            || (int)$args['displaytype'] < 0
+            || !isset($args['validationinfo'])
+            || empty($args['validationinfo'])
+            || !is_array($args['validationinfo'])
+        ) {
             return LogUtil::registerArgsError();
         }
         // Security check
@@ -97,7 +111,7 @@ class DudApi extends \Zikula_AbstractApi
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
     }
-    
+
     /**
      * Unregister a specific dynamic user data item.
      *
@@ -106,9 +120,9 @@ class DudApi extends \Zikula_AbstractApi
      * integer  propid        Id of property to unregister; required if proplabel and propattribute are not specified, must not be present if either is specified.
      * string   proplabel     Label of property to unregister; required if propid and propattribute are not specified, ignored if propid specified, must not be present if propattribute specified.
      * string   propattribute Attribute name(?) of property to unregister; required if propid and proplabel are not specified, ignored if propid or proplable specified.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return boolean True on success or false on failure.
      */
     public function unregister($args)
@@ -120,7 +134,7 @@ class DudApi extends \Zikula_AbstractApi
         // Get item with where clause
         /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find((int) $args['propid']);
+            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find((int)$args['propid']);
         } elseif (isset($args['proplabel'])) {
             $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_label' => $args['proplabel']));
         } else {
@@ -136,15 +150,19 @@ class DudApi extends \Zikula_AbstractApi
         }
         // delete the property data aka attributes
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')->where('a.name = :name')->setParameter('name', $item['prop_attribute_name']);
+        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')
+            ->where('a.name = :name')
+            ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
         // delete the property
-        $qb->delete('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->where('p.prop_id = :id')->setParameter('id', $item['prop_id']);
+        $qb->delete('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+            ->where('p.prop_id = :id')
+            ->setParameter('id', $item['prop_id']);
         $qb->getQuery()->execute();
         // Let the calling process know that we have finished successfully
         return true;
     }
-    
+
     /**
      * Update users data
      *
@@ -155,9 +173,9 @@ class DudApi extends \Zikula_AbstractApi
      * string   newfield  Serialized new 'prop_validation' field of the DUD.
      * array    newitem   Array with the new DUD information.
      * string   uservalue Current user value.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return string Updated user value if there were id changes in the listoptions.
      */
     public function updatedata($args)
@@ -214,7 +232,7 @@ class DudApi extends \Zikula_AbstractApi
         // return the updated item
         return $newvalue;
     }
-    
+
     /**
      * Get the options of a DUD field.
      *
@@ -222,9 +240,9 @@ class DudApi extends \Zikula_AbstractApi
      * -------------------------------------
      * string field Serialized 'prop_validation' field of the DUD.
      * array  item  Array with the DUD information.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return array Indexed id => label for the DUD field.
      */
     public function getoptions($args)
@@ -267,8 +285,8 @@ class DudApi extends \Zikula_AbstractApi
                 }
                 break;
             case 5:
-            // DATE
-            // Falls through to case 6 on purpose.
+                // DATE
+                // Falls through to case 6 on purpose.
             case 6:
                 // EXTDATE (deprecated)
                 $options = $item['prop_listoptions'];

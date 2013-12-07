@@ -62,6 +62,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
      * @var Zikula_Hook_ValidationResponse
      */
     protected $validation;
+
     /**
      * Builds an instance of this class.
      *
@@ -75,7 +76,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         $this->serviceManager = $eventManager->getContainer();
         $this->request = $this->serviceManager->get('request');
     }
-    
+
     public function getView()
     {
         if (!$this->view) {
@@ -83,10 +84,10 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         }
         return $this->view;
     }
-    
+
     /**
      * Bind the various functions defined by this class to specific events.
-     * 
+     *
      * @return void
      */
     public function setupHandlerDefinitions()
@@ -105,12 +106,12 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         $this->addHandlerDefinition('module.users.ui.process_edit.new_registration', 'processEdit');
         $this->addHandlerDefinition('module.users.ui.process_edit.modify_registration', 'processEdit');
     }
-    
+
     /**
      * Render and return profile information for display as part of a hook-like UI event issued from the Users module.
      *
      * @param \Zikula_Event $event The event that triggered this function call, including the subject of the display request.
-     * 
+     *
      * @return void
      */
     public function uiView(\Zikula_Event $event)
@@ -125,17 +126,17 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
             $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_view.tpl');
         }
     }
-    
+
     /**
      * Render form elements for display that allow a user to enter profile information for a user account as part of a Users module hook-like UI event.
-     * 
+     *
      * Parameters passed in via POST:
      * ------------------------------
      * array dynadata If reentering the editing phase after validation errors, an array containing the profile items to store for the user; otherwise not
      *                  provided.
      *
      * @param \Zikula_Event $event The event that triggered this function call, including the id of the user for which profile items should be entered.
-     * 
+     *
      * @return void
      */
     public function uiEdit(\Zikula_Event $event)
@@ -173,21 +174,26 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
             } else {
                 $errorFields = array();
             }
-            $this->getView()->setCaching(false)->assign('duderrors', $errorFields)->assign('duditems', $items)->assign('fieldsets', $fieldsets)->assign('userid', $userid);
+            $this->getView()
+                ->setCaching(false)
+                ->assign('duderrors', $errorFields)
+                ->assign('duditems', $items)
+                ->assign('fieldsets', $fieldsets)
+                ->assign('userid', $userid);
             $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_edit.tpl');
         }
     }
-    
+
     /**
      * Validate profile information entered for a user as part of the hook-like user UI events.
-     * 
+     *
      * Parameters passed in via POST:
      * ------------------------------
      * array dynadata An array containing the profile items to store for the user.
      *
      * @param \Zikula_Event $event The event that triggered this function call, including the id of the user for which profile data was entered, and a
      *                              collection in which to store the validation object created by this function.
-     * 
+     *
      * @return void
      */
     public function validateEdit(\Zikula_Event $event)
@@ -209,16 +215,16 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
             $event->data->set(self::EVENT_KEY, $this->validation);
         }
     }
-    
+
     /**
      * Respond to a `module.users.ui.process_edit` event to store profile data gathered when editing or creating a user account.
-     * 
+     *
      * Parameters passed in via POST:
      * ------------------------------
      * array dynadata An array containing the profile items to store for the user.
      *
      * @param \Zikula_Event $event The event that triggered this function call, containing the id of the user for which profile information should be stored.
-     * 
+     *
      * @return void
      */
     public function processEdit(\Zikula_Event $event)
@@ -233,7 +239,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
             }
         }
     }
-    
+
     /**
      * Translate.
      *
@@ -245,11 +251,11 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
     {
         return __($msgid, $this->domain);
     }
-    
+
     /**
      * Translate with sprintf().
      *
-     * @param string       $msgid  String to be translated.
+     * @param string $msgid String to be translated.
      * @param string|array $params Args for sprintf().
      *
      * @return string
@@ -258,13 +264,13 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
     {
         return __f($msgid, $params, $this->domain);
     }
-    
+
     /**
      * Translate plural string.
      *
      * @param string $singular Singular instance.
-     * @param string $plural   Plural instance.
-     * @param string $count    Object count.
+     * @param string $plural Plural instance.
+     * @param string $count Object count.
      *
      * @return string Translated string.
      */
@@ -272,16 +278,17 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         $singular,
         $plural,
         $count
-    ) {
+    )
+    {
         return _n($singular, $plural, $count, $this->domain);
     }
-    
+
     /**
      * Translate plural string with sprintf().
      *
-     * @param string       $sin    Singular instance.
-     * @param string       $plu    Plural instance.
-     * @param string       $n      Object count.
+     * @param string $sin Singular instance.
+     * @param string $plu Plural instance.
+     * @param string $n Object count.
      * @param string|array $params Sprintf() arguments.
      *
      * @return string
@@ -291,7 +298,8 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         $plu,
         $n,
         $params
-    ) {
+    )
+    {
         return _fn($sin, $plu, $n, $params, $this->domain);
     }
 

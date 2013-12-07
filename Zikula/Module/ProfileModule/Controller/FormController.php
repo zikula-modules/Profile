@@ -24,14 +24,14 @@ class FormController extends \Zikula_AbstractController
 {
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.
-     * 
+     *
      * Parameters passed via the $args array, or via POST:
      * ---------------------------------------------------
-     * integer userid   The user id of the user for which the form section is being rendered; optional; defaults to 1, which will result in the use of 
+     * integer userid   The user id of the user for which the form section is being rendered; optional; defaults to 1, which will result in the use of
      *                      default values from the anonymous user.
-     * array   dynadata The dynamic user data with which to populate the form section; if not specified in $args it can be retrieved from a GET, POST, 
+     * array   dynadata The dynamic user data with which to populate the form section; if not specified in $args it can be retrieved from a GET, POST,
      *                      REQUEST, COOKIE, or SESSION variable.
-     * 
+     *
      * @param array $args All parameters passed to this function via an internal call.
      *
      * @return string The rendered template output.
@@ -64,7 +64,7 @@ class FormController extends \Zikula_AbstractController
         // Return the dynamic data section
         return $this->view->fetch('Form/edit.tpl');
     }
-    
+
     /**
      * Display the dynadata section of the search form.
      *
@@ -97,14 +97,14 @@ class FormController extends \Zikula_AbstractController
         // Return the dynamic data section
         return $this->view->fetch('Form/edit.tpl');
     }
-    
+
     /**
      * Fills a z-datatable body with the passed dynadata.
-     * 
+     *
      * Parameters passed via the $args array:
      * --------------------------------------
      * array userinfo The dynadata with which to populate the data table.
-     * 
+     *
      * @param array $args All parameters passed to this function via an internal call.
      *
      * @return string The rendered template output.

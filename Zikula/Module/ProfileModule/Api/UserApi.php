@@ -35,9 +35,9 @@ class UserApi extends \Zikula_AbstractApi
      * int    startnum Starting record number for request; optional; default is to return items beginning with the first.
      * int    numitems Number of records to retrieve; optional; default is to return all items.
      * string index    The field to use as the array index for the returned items; one of 'prop_id', 'prop_label', or 'prop_attribute_name'; optional; default = 'prop_label'.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return array|boolean Array of items, or false on failure.
      */
     public function getall($args)
@@ -54,7 +54,9 @@ class UserApi extends \Zikula_AbstractApi
             return array();
         }
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->orderBy('p.prop_weight');
+        $qb->select('p')
+            ->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+            ->orderBy('p.prop_weight');
         if ($args['startnum'] > 0) {
             $qb->setFirstResult($args['startnum'] - 1);
         }
@@ -68,7 +70,7 @@ class UserApi extends \Zikula_AbstractApi
                 $validationinfo = @unserialize($items[$k]['prop_validation']);
                 unset($items[$k]['prop_validation']);
                 // Expand the item array
-                foreach ((array) $validationinfo as $infolabel => $infofield) {
+                foreach ((array)$validationinfo as $infolabel => $infofield) {
                     $items[$k]["prop_{$infolabel}"] = $infofield;
                 }
             } else {
@@ -78,7 +80,7 @@ class UserApi extends \Zikula_AbstractApi
         // Return the items
         return $items;
     }
-    
+
     /**
      * Get a specific Dynamic user data item.
      *
@@ -87,7 +89,7 @@ class UserApi extends \Zikula_AbstractApi
      * integer propid        Id of the property to get; optional if proplabel or propattribute provided.
      * string  proplabel     Label of the property to get; optional if propid or propattribute provided; ignored if propid provided.
      * string  propattribute Attribute name of the property to get; optional if propid or proplabel provided; ignored if propid or proplabel provided.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return array|boolean Item array, or false on failure.
@@ -100,7 +102,7 @@ class UserApi extends \Zikula_AbstractApi
         }
         /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find((int) $args['propid']);
+            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find((int)$args['propid']);
         } elseif (isset($args['proplabel'])) {
             $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_label' => $args['proplabel']));
         } else {
@@ -118,13 +120,13 @@ class UserApi extends \Zikula_AbstractApi
         $validationinfo = unserialize($item->getProp_validation());
         $item = $item->toArray();
         // Expand the item array
-        foreach ((array) $validationinfo as $infolabel => $infofield) {
+        foreach ((array)$validationinfo as $infolabel => $infofield) {
             $item['prop_' . $infolabel] = $infofield;
         }
         // Return the item array
         return $item;
     }
-    
+
     /**
      * Get all active Dynamic user data fields.
      *
@@ -132,13 +134,13 @@ class UserApi extends \Zikula_AbstractApi
      * -------------------------------------
      * integer startnum Starting record number for request; optional; default is to start with the first record.
      * integer numitems Number of records to retrieve; optional; default is to return all records.
-     * string  index    The field to use as the array index for the returned items; one of 'prop_id', 'prop_label', or 'prop_attribute_name'; 
+     * string  index    The field to use as the array index for the returned items; one of 'prop_id', 'prop_label', or 'prop_attribute_name';
      *                      optional; default = 'prop_attribute_name'.
      * string  get      Which subset of fields to return; one of 'all', 'editable', 'viewable'; optional; default = 'all'.
-     * integer uid      The user id of the user for which data fields are being retrieved, in order to filter the result based on ownership of the data; 
-     *                      optional; defaults to -1, which will not match any user id (i.e., all owner-only fields are not returned unless the current user 
+     * integer uid      The user id of the user for which data fields are being retrieved, in order to filter the result based on ownership of the data;
+     *                      optional; defaults to -1, which will not match any user id (i.e., all owner-only fields are not returned unless the current user
      *                      has ADMIN access).
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return array|boolean Array of items, or false on failure.
@@ -168,7 +170,11 @@ class UserApi extends \Zikula_AbstractApi
         static $items;
         if (!isset($items)) {
             $qb = $this->entityManager->createQueryBuilder();
-            $qb->select('p')->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->where('p.prop_weight > 0')->andWhere('p.prop_dtype >= 0')->orderBy('p.prop_weight');
+            $qb->select('p')
+                ->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+                ->where('p.prop_weight > 0')
+                ->andWhere('p.prop_dtype >= 0')
+                ->orderBy('p.prop_weight');
             $items = $qb->getQuery()->getArrayResult();
             foreach (array_keys($items) as $k) {
                 // check permissions
@@ -176,7 +182,7 @@ class UserApi extends \Zikula_AbstractApi
                     // Extract the validation info array
                     $validationinfo = @unserialize($items[$k]['prop_validation']);
                     unset($items[$k]['prop_validation']);
-                    foreach ((array) $validationinfo as $infolabel => $infofield) {
+                    foreach ((array)$validationinfo as $infolabel => $infofield) {
                         $items[$k]["prop_{$infolabel}"] = $infofield;
                     }
                 } else {
@@ -191,9 +197,9 @@ class UserApi extends \Zikula_AbstractApi
             $items = array_splice($items, $args['startnum'] + 1);
         }
         // Put items into result array and filter if needed
-        $currentuser = (int) UserUtil::getVar('uid');
+        $currentuser = (int)UserUtil::getVar('uid');
         $ismember = $currentuser >= 2;
-        $isowner = $currentuser == (int) $args['uid'];
+        $isowner = $currentuser == (int)$args['uid'];
         $isadmin = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
         $result = array();
         foreach ($items as $item) {
@@ -235,7 +241,7 @@ class UserApi extends \Zikula_AbstractApi
         // Return the items
         return $result;
     }
-    
+
     /**
      * Utility function to count the number of items held by this module.
      *
@@ -247,7 +253,7 @@ class UserApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Zikula\Module\ProfileModule\Entity\PropertyEntity p');
         return $query->getSingleScalarResult();
     }
-    
+
     /**
      * Utility function to get the weight limits.
      *
@@ -262,7 +268,7 @@ class UserApi extends \Zikula_AbstractApi
         // Return the number of items
         return array('min' => $min, 'max' => $max);
     }
-    
+
     /**
      * Utility function to save the data of the user.
      *
@@ -270,7 +276,7 @@ class UserApi extends \Zikula_AbstractApi
      * -------------------------------------
      * integer uid      The user id of the user for which the data should be saved; required.
      * array   dynadata The data for the user to be saved, indexed by prop_attribute_name; required.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return boolean True on success; otherwise false.
@@ -306,13 +312,13 @@ class UserApi extends \Zikula_AbstractApi
         // At this point, the result is true.
         return true;
     }
-    
+
     /**
      * Parses and reformats a date for user entry validation.
      *
      * @param string &$datestring The entered date string to be parsed; NOTE: passed by reference, the value will be changed to a date reformatted with
      *                              the "%d.%m.%Y" date format string; required.
-     * 
+     *
      * @return string The parsed date string, as returned by {@link DateUtil::parseUIDate()}.
      */
     protected function parseDate(&$datestring)
@@ -328,14 +334,14 @@ class UserApi extends \Zikula_AbstractApi
         }
         return $result;
     }
-    
+
     /**
      * Profile_Manager function to check the required missing.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
      * array dynadata The array of user data, index by prop_attribute_name, to check; required, but may be passed in a GET, POST, REQUEST, or SESSION variable.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return array|boolean False on success (no errors); otherwise an array in the form array('result' => true, 'fields' => array of field names).
@@ -385,7 +391,7 @@ class UserApi extends \Zikula_AbstractApi
         // Return the result
         return $error;
     }
-    
+
     /**
      * Checks if a value is empty, however if the $value is 0, it is not considered empty.
      *
@@ -407,7 +413,7 @@ class UserApi extends \Zikula_AbstractApi
         }
         return $empty;
     }
-    
+
     /**
      * Profile_Manager function to retrieve the dynamic data to the user object.
      *
@@ -415,7 +421,7 @@ class UserApi extends \Zikula_AbstractApi
      * -------------------------------------
      * numeric uid      The user id of the user for which the data is to be inserted.
      * array   dynadata The user data to insert, indexed by prop_attribute_name; required, however can be passed by a GET, POST, REQUEST, COOKIE, or SESSION variable.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return array The dynadata array as an array element in the '__ATTRIBUTES__' index of a new array, merged with existing user
@@ -447,14 +453,14 @@ class UserApi extends \Zikula_AbstractApi
         // attach the dynadata as attributes to the user object
         return array('__ATTRIBUTES__' => array_merge($user['__ATTRIBUTES__'], $dynadata));
     }
-    
+
     /**
      * Search the input values through the dynadata.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
      * array dynadata An array of data on which to search; required, but may be passed as a GET, POST, REQUEST, COOKIE, or SESSION variable.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return array An array of uids for users who have matching attributes as specified by the dynadata array; an empty array if there are no matching users.
@@ -487,14 +493,14 @@ class UserApi extends \Zikula_AbstractApi
         }
         return $uids;
     }
-    
+
     /**
      * Decode the custom url string.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
      * array vars The array of URL variables to decode; required.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return bool true if successful, false otherwise
@@ -524,7 +530,7 @@ class UserApi extends \Zikula_AbstractApi
         }
         return true;
     }
-    
+
     /**
      * Create custom url string.
      *
@@ -533,9 +539,9 @@ class UserApi extends \Zikula_AbstractApi
      * string modname The module name for the URL; required.
      * string type    The function type; optional; defaults to 'user'.
      * string func    The function name for the URL; required.
-     * array  args    An array of arguments for the URL's query string; required; if $args['func'] is 'view' then either $args['args']['uname'] 
+     * array  args    An array of arguments for the URL's query string; required; if $args['func'] is 'view' then either $args['args']['uname']
      *                  or $args['args']['uid'] is required.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return string The custom url string.

@@ -31,22 +31,22 @@ class MemberslistApi extends \Zikula_AbstractApi
 {
     /**
      * Get or count users that match the given criteria.
-     * 
+     *
      * @param boolean $countOnly True to only return a count, if false the matching uids are returned in an array.
-     * @param mixed   $searchBy  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
-     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     * @param mixed $searchBy Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
      *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
      *                              a property on which to select.
-     * @param string  $letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
-     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     * @param string $letter If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
      *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
-     * @param string  $letter     Letter to filter by.
-     * @param string  $sortBy     A comma-separated list of fields on which the list of members should be sorted.
-     * @param string  $sortOrder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
-     * @param numeric $startNum   Start number for recordset; ignored if $countOnly is true.
-     * @param numeric $numItems   Number of items to return; ignored if $countOnly is true.
+     * @param string $letter Letter to filter by.
+     * @param string $sortBy A comma-separated list of fields on which the list of members should be sorted.
+     * @param string $sortOrder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
+     * @param numeric $startNum Start number for recordset; ignored if $countOnly is true.
+     * @param numeric $numItems Number of items to return; ignored if $countOnly is true.
      * @param boolean $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true.
-     * 
+     *
      * @return array|integer Matching user ids or a count of the matching integers.
      */
     protected function getOrCountAll(
@@ -58,13 +58,14 @@ class MemberslistApi extends \Zikula_AbstractApi
         $startNum = -1,
         $numItems = -1,
         $returnUids = false
-    ) {
-        if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string) (int) $startNum || $startNum < -1) {
+    )
+    {
+        if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string)(int)$startNum || $startNum < -1) {
             throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
         } elseif ($startNum <= 0) {
             $startNum = -1;
         }
-        if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string) (int) $numItems || $numItems != -1 && $numItems < 1) {
+        if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string)(int)$numItems || $numItems != -1 && $numItems < 1) {
             throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
         }
         if (!isset($sortBy) || empty($sortBy)) {
@@ -85,14 +86,13 @@ class MemberslistApi extends \Zikula_AbstractApi
         }
         $qb = $this->entityManager->createQueryBuilder();
         if ($searchBy != 'uname') {
-            $qb->select(array('u', 'a', 'p'))->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')->leftJoin('u.attributes', 'a')->leftJoin(
-                'Zikula\\Module\\ProfileModule\\Entity\\PropertyEntity',
-                'p',
-                'WITH',
-                'a.name = p.prop_attribute_name'
-            );
+            $qb->select(array('u', 'a', 'p'))
+                ->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')
+                ->leftJoin('u.attributes', 'a')
+                ->leftJoin('Zikula\\Module\\ProfileModule\\Entity\\PropertyEntity', 'p', 'WITH', 'a.name = p.prop_attribute_name');
         } else {
-            $qb->select('u')->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u');
+            $qb->select('u')
+                ->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u');
         }
         $qb->andWhere('u.uid <> 1');
         if ($searchBy == 'uname') {
@@ -116,7 +116,10 @@ class MemberslistApi extends \Zikula_AbstractApi
             if (is_array($searchBy)) {
                 if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
                     // args.searchby is all => search_value to loop all the user attributes
-                    $qb->andWhere('p.prop_weight > 0')->andWhere('p.prop_dtype >= 0')->andWhere($qb->expr()->like('a.value', ':value'))->setParameter('value', "%{$value}%");
+                    $qb->andWhere('p.prop_weight > 0')
+                        ->andWhere('p.prop_dtype >= 0')
+                        ->andWhere($qb->expr()->like('a.value', ':value'))
+                        ->setParameter('value', "%{$value}%");
                 } else {
                     // args.searchby is an array of the form prop_id => value
                     $and = $qb->expr()->andX();
@@ -130,7 +133,9 @@ class MemberslistApi extends \Zikula_AbstractApi
                 }
             } else {
                 if (is_numeric($searchBy)) {
-                    $qb->andWhere('p.prop_id = :searchby')->setParameter('searchby', $searchBy)->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter . '%')));
+                    $qb->andWhere('p.prop_id = :searchby')
+                        ->setParameter('searchby', $searchBy)
+                        ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter . '%')));
                 } elseif (isset($propcolumn[$searchBy])) {
                     $qb->andWhere($qb->expr()->like('p.' . $propcolumn[$searchBy], $qb->expr()->literal($letter . '%')));
                 }
@@ -170,29 +175,29 @@ class MemberslistApi extends \Zikula_AbstractApi
             return $usersArray;
         }
     }
-    
+
     /**
      * Get users that match the given criteria.
-     * 
+     *
      * This API function returns all users ids. This function allows for filtering and for paged selection.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
      * mixed   searchby   Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
-     *                      available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                      available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
      *                      an array indexed by property id containing values for each property on which to select, or a string containing the name of
      *                      a property on which to select.
      * string  letter     If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
-     *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
      *                      is a string containing the name of a property then the string on which to match the begining of the value for that property.
      * string  sortby     A comma-separated list of fields on which the list of members should be sorted.
      * string  sortorder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
      * numeric startnum   Start number for recordset.
      * numeric numitems   Number of items to return.
      * boolean returnUids If true then a simple array containing only uids is returned, if false then an array containing full user records is returned.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return array Matching user ids.
      */
     public function getall($args)
@@ -219,7 +224,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         if (!isset($args['returnUids'])) {
             $args['returnUids'] = false;
         } else {
-            $args['returnUids'] = (bool) $args['returnUids'];
+            $args['returnUids'] = (bool)$args['returnUids'];
         }
         return $this->getOrCountAll(
             false,
@@ -232,24 +237,24 @@ class MemberslistApi extends \Zikula_AbstractApi
             $args['returnUids']
         );
     }
-    
+
     /**
      * Count users that match the given criteria.
-     * 
+     *
      * This API function returns all users ids. This function allows for filtering and for paged selection.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
      * mixed   searchby  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
-     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select, 
+     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
      *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
      *                              a property on which to select.
      * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
-     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or 
+     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
      *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return array Count of matching users.
      */
     public function countitems($args)
@@ -270,7 +275,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             $sortOrder
         );
     }
-    
+
     /**
      * Counts the number of users online.
      *
@@ -291,7 +296,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         // Return the number of items
         return $numusers;
     }
-    
+
     /**
      * Get the latest registered user.
      *
@@ -312,16 +317,16 @@ class MemberslistApi extends \Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
     }
-    
+
     /**
      * Determine if a user is online.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
      * numeric userid The uid of the user for whom a determination should be made; required.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return bool True if the specified user is online; false otherwise.
      */
     public function isonline($args)
@@ -347,7 +352,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         }
         return true;
     }
-    
+
     /**
      * Return registered users online.
      *
@@ -368,7 +373,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $onlineusers = $query->getArrayResult();
         return $onlineusers;
     }
-    
+
     /**
      * Returns all users online.
      *
@@ -404,7 +409,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $items = array('unames' => $unames, 'numusers' => $numusers, 'numguests' => $numguests, 'total' => $numguests + $numusers);
         return $items;
     }
-    
+
     /**
      * Find out which messages module is installed.
      *

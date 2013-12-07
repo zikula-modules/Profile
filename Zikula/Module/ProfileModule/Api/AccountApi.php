@@ -26,11 +26,11 @@ class AccountApi extends \Zikula_AbstractApi
 {
     /**
      * Return an array of items to show in the "user account page".
-     * 
+     *
      * Parameters passed in the $args array:
      * -------------------------------------
      * string uname The user name of the user for whom links should be returned; optional, defaults to the current user.
-     * 
+     *
      * @param array $args All parameters passed to this function.
      *
      * @return   array   array of items, or false on failure
@@ -50,9 +50,17 @@ class AccountApi extends \Zikula_AbstractApi
         // Create an array of links to return
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
-            $items['0'] = array('url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)), 'module' => $this->name, 'title' => $this->__('Profile'), 'icon' => 'admin.png');
+            $items['0'] = array(
+                'url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)),
+                'module' => $this->name,
+                'title' => $this->__('Profile'),
+                'icon' => 'admin.png');
             if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
-                $items['1'] = array('url' => ModUtil::url($this->name, 'user', 'viewmembers'), 'module' => $this->name, 'title' => $this->__('Registered users'), 'icon' => 'members.png');
+                $items['1'] = array(
+                    'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
+                    'module' => $this->name,
+                    'title' => $this->__('Registered users'),
+                    'icon' => 'members.png');
             }
         }
         // Return the items

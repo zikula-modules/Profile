@@ -28,15 +28,15 @@ class AdminApi extends \Zikula_AbstractApi
 {
     /**
      * Create a new dynamic user data item.
-     * 
+     *
      * Parameters passed in the $args array:
      * -------------------------------------
      * string label          The name of the item to be created.
      * string attribute_name The attribute name of the item to be created.
      * string dtype          The DUD type of the item to be created.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return boolean|integer dud item ID on success, false on failure
      */
     public function create($args)
@@ -68,7 +68,13 @@ class AdminApi extends \Zikula_AbstractApi
         }
         // produce the validation array
         $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
-        $validationinfo = array('required' => $args['required'], 'viewby' => $args['viewby'], 'displaytype' => $args['displaytype'], 'listoptions' => $args['listoptions'], 'note' => $args['note'], 'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
+        $validationinfo = array(
+            'required' => $args['required'],
+            'viewby' => $args['viewby'],
+            'displaytype' => $args['displaytype'],
+            'listoptions' => $args['listoptions'],
+            'note' => $args['note'],
+            'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
         $obj = array();
         $obj['prop_label'] = $args['label'];
         $obj['prop_attribute_name'] = $args['attribute_name'];
@@ -82,17 +88,17 @@ class AdminApi extends \Zikula_AbstractApi
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
     }
-    
+
     /**
      * Update a dynamic user data item.
-     * 
+     *
      * Parameters passed in the $args array:
      * -------------------------------------
      * int    dudid The id of the item to be updated.
      * string label The name of the item to be updated.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return bool True on success, false on failure.
      */
     public function update($args)
@@ -144,7 +150,13 @@ class AdminApi extends \Zikula_AbstractApi
             }
             // Produce the validation array
             $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
-            $validationinfo = array('required' => $args['required'], 'viewby' => $args['viewby'], 'displaytype' => $args['displaytype'], 'listoptions' => $args['listoptions'], 'note' => $args['note'], 'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
+            $validationinfo = array(
+                'required' => $args['required'],
+                'viewby' => $args['viewby'],
+                'displaytype' => $args['displaytype'],
+                'listoptions' => $args['listoptions'],
+                'note' => $args['note'],
+                'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
             $obj['prop_validation'] = serialize($validationinfo);
         }
         // let to modify the label for normal fields only
@@ -161,16 +173,16 @@ class AdminApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         return true;
     }
-    
+
     /**
      * Delete a dynamic user data item.
-     * 
+     *
      * Parameters passed in the $args array:
      * -------------------------------------
      * int dudid ID of the item to delete.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return bool true on success, false on failure
      */
     public function delete($args)
@@ -186,7 +198,7 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
         // normal type validation
-        if ((int) $item['prop_dtype'] != 1) {
+        if ((int)$item['prop_dtype'] != 1) {
             return LogUtil::registerError($this->__('Error! You cannot delete this personal info item.'), 404);
         }
         // Security check
@@ -195,26 +207,30 @@ class AdminApi extends \Zikula_AbstractApi
         }
         // delete the property data aka attributes
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')->where('a.name = :name')->setParameter('name', $item['prop_attribute_name']);
+        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')
+            ->where('a.name = :name')
+            ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
         // delete the property
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->where('p.prop_id = :id')->setParameter('id', $dudid);
+        $qb->delete('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+            ->where('p.prop_id = :id')
+            ->setParameter('id', $dudid);
         $qb->getQuery()->execute();
         return true;
     }
-    
+
     /**
      * Activate a dynamic user data item.
-     * 
+     *
      * Parameters passed in the $args array:
      * -------------------------------------
      * int dudid The id of the item to be activated.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return bool true on success, false on failure
-     * 
+     *
      * @todo remove weight; can be got from get API
      */
     public function activate($args)
@@ -230,18 +246,18 @@ class AdminApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         return true;
     }
-    
+
     /**
      * Deactivate a dynamic user data item.
-     * 
+     *
      * Parameters passed in the $args array:
      * -------------------------------------
      * int dudid The id of the item to be deactivated.
-     * 
+     *
      * @param array $args All parameters passed to this function.
-     * 
+     *
      * @return bool true on success, false on failure.
-     * 
+     *
      * @todo remove weight; can be got from get API.
      */
     public function deactivate($args)
@@ -265,32 +281,51 @@ class AdminApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         // Update the other items
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->update('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->set('p.prop_weight', 'p.prop_weight - 1')->where('p.prop_weight > :weight')->setParameter('weight', $item['prop_weight']);
+        $qb->update('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+            ->set('p.prop_weight', 'p.prop_weight - 1')
+            ->where('p.prop_weight > :weight')
+            ->setParameter('weight', $item['prop_weight']);
         $qb->getQuery()->execute();
         return true;
     }
-    
+
     /**
      * Get available admin panel links.
-     * 
+     *
      * @return array An array of admin links.
      */
     public function getlinks()
     {
         $links = array();
         // Add User module links
-        $links[] = array('url' => ModUtil::url($this->name, 'admin', 'view'), 'text' => $this->__('Users Module'), 'class' => 'z-icon-es-user', 'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
+        $links[] = array(
+            'url' => ModUtil::url($this->name, 'admin', 'view'),
+            'text' => $this->__('Users Module'),
+            'class' => 'z-icon-es-user',
+            'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'view'), 'text' => $this->__('Fields'), 'class' => 'z-icon-es-view');
+            $links[] = array(
+                'url' => ModUtil::url($this->name, 'admin', 'view'),
+                'text' => $this->__('Fields'),
+                'class' => 'z-icon-es-view');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
-            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'newdud'), 'text' => $this->__('Create new field'), 'class' => 'z-icon-es-new');
+            $links[] = array(
+                'url' => ModUtil::url($this->name, 'admin', 'newdud'),
+                'text' => $this->__('Create new field'),
+                'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'modifyconfig'), 'text' => $this->__('User account panel settings'), 'class' => 'z-icon-es-config');
+            $links[] = array(
+                'url' => ModUtil::url($this->name, 'admin', 'modifyconfig'),
+                'text' => $this->__('User account panel settings'),
+                'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'help'), 'text' => $this->__('Help'), 'class' => 'z-icon-es-help');
+            $links[] = array(
+                'url' => ModUtil::url($this->name, 'admin', 'help'),
+                'text' => $this->__('Help'),
+                'class' => 'z-icon-es-help');
         }
         return $links;
     }

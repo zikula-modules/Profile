@@ -32,9 +32,14 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
      */
     protected function getDefaultModVars()
     {
-        return array('memberslistitemsperpage' => 20, 'onlinemembersitemsperpage' => 20, 'recentmembersitemsperpage' => 10, 'filterunverified' => 1, 'viewregdate' => 0);
+        return array(
+            'memberslistitemsperpage' => 20,
+            'onlinemembersitemsperpage' => 20,
+            'recentmembersitemsperpage' => 10,
+            'filterunverified' => 1,
+            'viewregdate' => 0);
     }
-    
+
     /**
      * Initialise the dynamic user data  module.
      *
@@ -54,13 +59,13 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         // Initialisation successful
         return true;
     }
-    
+
     /**
      * Upgrade the dynamic user data module from an old version.
-     * 
-     * @param string $oldversion The version from which the upgrade is beginning (the currently installed version); this should be compatible 
+     *
+     * @param string $oldversion The version from which the upgrade is beginning (the currently installed version); this should be compatible
      *                              with {@link version_compare()}.
-     * 
+     *
      * @return boolean True on success or false on failure.
      */
     public function upgrade($oldversion)
@@ -116,7 +121,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         // Update successful
         return true;
     }
-    
+
     /**
      * Delete the dynamic user data module.
      *
@@ -134,7 +139,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         // Deletion successful
         return true;
     }
-    
+
     /**
      * Create the default data for the users module.
      *
@@ -149,100 +154,100 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         }
         // _UREALNAME
         $record = array();
-        $record['prop_label']          = no__('_UREALNAME');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 1;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_UREALNAME');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 1;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'realname';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _UFAKEMAIL
         $record = array();
-        $record['prop_label']          = no__('_UFAKEMAIL');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 2;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_UFAKEMAIL');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 2;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'publicemail';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YOURHOMEPAGE
         $record = array();
-        $record['prop_label']          = no__('_YOURHOMEPAGE');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 3;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YOURHOMEPAGE');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 3;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'url';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _TIMEZONEOFFSET
         $record = array();
-        $record['prop_label']          = no__('_TIMEZONEOFFSET');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 4;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 2, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_TIMEZONEOFFSET');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 4;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 2, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'tzoffset';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YOURAVATAR
         $record = array();
-        $record['prop_label']          = no__('_YOURAVATAR');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 5;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YOURAVATAR');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 5;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 4, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'avatar';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YICQ
         $record = array();
-        $record['prop_label']          = no__('_YICQ');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 6;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YICQ');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 6;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'icq';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YAIM
         $record = array();
-        $record['prop_label']          = no__('_YAIM');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 7;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YAIM');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 7;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'aim';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YYIM
         $record = array();
-        $record['prop_label']          = no__('_YYIM');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 8;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YYIM');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 8;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'yim';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YMSNM
         $record = array();
-        $record['prop_label']          = no__('_YMSNM');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 9;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YMSNM');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 9;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'msnm';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YLOCATION
         $record = array();
-        $record['prop_label']          = no__('_YLOCATION');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 10;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YLOCATION');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 10;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 0, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'city';
         $prop = new PropertyEntity();
         $prop->merge($record);
@@ -259,30 +264,30 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         $this->entityManager->persist($prop);
         // _SIGNATURE
         $record = array();
-        $record['prop_label']          = no__('_SIGNATURE');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 12;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_SIGNATURE');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 12;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'signature';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _EXTRAINFO
         $record = array();
-        $record['prop_label']          = no__('_EXTRAINFO');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 13;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_EXTRAINFO');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 13;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'extrainfo';
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
         // _YINTERESTS
         $record = array();
-        $record['prop_label']          = no__('_YINTERESTS');
-        $record['prop_dtype']          = 1;
-        $record['prop_weight']         = 14;
-        $record['prop_validation']     = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
+        $record['prop_label'] = no__('_YINTERESTS');
+        $record['prop_dtype'] = 1;
+        $record['prop_weight'] = 14;
+        $record['prop_validation'] = serialize(array('required' => 0, 'viewby' => 0, 'displaytype' => 1, 'listoptions' => '', 'note' => ''));
         $record['prop_attribute_name'] = 'interests';
         $prop = new PropertyEntity();
         $prop->merge($record);

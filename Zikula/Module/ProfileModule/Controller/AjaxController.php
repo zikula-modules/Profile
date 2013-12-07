@@ -28,7 +28,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 {
     /**
      * Change the weight of a profile item.
-     * 
+     *
      * Parameters passed in via POST, or via GET:
      * ------------------------------------------
      * array   profilelist An array of dud item ids for which the weight should be changed.
@@ -63,7 +63,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $this->entityManager->flush();
         return new Zikula_Response_Ajax(array('result' => true));
     }
-    
+
     /**
      * Change the status of a profile item.
      *
@@ -71,7 +71,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * ------------------------------------------
      * numeric dudid     Id of the property to update.
      * boolean oldstatus True to activate or false to deactivate the item.
-     * 
+     *
      * @return mixed An AJAX result array containing a result equal to true along with the dud id and new status, or an Ajax error.
      */
     public function changeprofilestatusAction()
@@ -81,7 +81,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $prop_id = $this->request->request->get('dudid', $this->request->query->get('dudid', null));
-        $oldstatus = (bool) $this->request->request->get('oldstatus', $this->request->query->get('oldstatus', null));
+        $oldstatus = (bool)$this->request->request->get('oldstatus', $this->request->query->get('oldstatus', null));
         if (!$prop_id) {
             return array('result' => false);
         }
@@ -93,7 +93,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         return new Zikula_Response_Ajax(array('result' => true, 'dudid' => $prop_id, 'newstatus' => !$oldstatus));
     }
-    
+
     /**
      * Get a profile section for a user.
      *
@@ -102,7 +102,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * numeric uid  Id of the user to query.
      * string  name Name of the section to retrieve.
      * array   args Optional arguments to the API.
-     * 
+     *
      * @return mixed An AJAX result array containing a result equal to the rendered output along with the section name and uid, or an Ajax error.
      */
     public function profilesectionAction()
