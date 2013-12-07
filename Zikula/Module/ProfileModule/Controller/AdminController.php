@@ -424,7 +424,7 @@ class AdminController extends \Zikula_AbstractController
         // The API function is called.
         if (ModUtil::apiFunc($this->name, 'admin', 'delete', array('dudid' => $dudid))) {
             // Success
-            LogUtil::registerStatus($this->__('Done! Deleted the personal info item.'));
+            LogUtil::registerStatus($this->__('Done! The field has been successfully deleted.'));
         }
         // This function generated no output
         return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
