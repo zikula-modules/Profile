@@ -23,6 +23,7 @@ p.profile_usererror {
 }
 #youravatarcontainer {
     margin-bottom: 0;
+    margin-left: -10px !important;
     margin-top: 1em;
     padding: 0;
     text-align: center;
@@ -56,6 +57,7 @@ p.profile_usererror {
     margin-right: 0.5em;
 }
 .z-form div.z-formrow .profile_dateinput {
+	margin-left: -8px !important;
     width: 10em;
 }
 .z-form .z-formrow input.profile_l2input {
@@ -115,4 +117,8 @@ form#profile-search .profile_letter {
 .profile-block-featureduser h5,
 .profile-block-featureduser p {
     text-align: center;
+}
+
+#profile_dudregshow fieldset {
+	margin-left: 28%;	
 }

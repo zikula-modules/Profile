@@ -625,19 +625,20 @@ class Profile_Controller_Admin extends Zikula_AbstractController
 
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
 
+        $fieldsets = array();
+        		
         foreach ($items as $k => $item) {
-            if ($item['prop_required']) {
-                unset($items[$k]);
-                continue;
-            }
-            $items[$k] = $item['prop_label'];
+            $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
+            $items[$k] = (array)$item;
+            $fieldsets[$item['prop_fieldset']] = $item['prop_fieldset'];
         }
-
+		
         // Create output object
         // Appending the module configuration to template
         return $this->view->setCaching(false)
                 ->add_core_data()
                 ->assign('dudfields', $items)
+                ->assign('fieldsets', $fieldsets)
                 ->fetch('Admin/modifyconfig.tpl');
     }
 
