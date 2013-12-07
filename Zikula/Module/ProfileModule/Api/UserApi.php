@@ -54,7 +54,7 @@ class UserApi extends \Zikula_AbstractApi
             return array();
         }
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')->from('Profile_Entity_Property', 'p')->orderBy('p.prop_weight');
+        $qb->select('p')->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->orderBy('p.prop_weight');
         if ($args['startnum'] > 0) {
             $qb->setFirstResult($args['startnum'] - 1);
         }
@@ -100,11 +100,11 @@ class UserApi extends \Zikula_AbstractApi
         }
         /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int) $args['propid']);
+            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find((int) $args['propid']);
         } elseif (isset($args['proplabel'])) {
-            $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_label' => $args['proplabel']));
+            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_label' => $args['proplabel']));
         } else {
-            $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
+            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
         }
         // Check for no rows found, and if so return
         if (!$item) {
@@ -168,7 +168,7 @@ class UserApi extends \Zikula_AbstractApi
         static $items;
         if (!isset($items)) {
             $qb = $this->entityManager->createQueryBuilder();
-            $qb->select('p')->from('Profile_Entity_Property', 'p')->where('p.prop_weight > 0')->andWhere('p.prop_dtype >= 0')->orderBy('p.prop_weight');
+            $qb->select('p')->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')->where('p.prop_weight > 0')->andWhere('p.prop_dtype >= 0')->orderBy('p.prop_weight');
             $items = $qb->getQuery()->getArrayResult();
             foreach (array_keys($items) as $k) {
                 // check permissions
@@ -244,7 +244,7 @@ class UserApi extends \Zikula_AbstractApi
     public function countitems()
     {
         // Return the number of items
-        $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Profile_Entity_Property p');
+        $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Zikula\Module\ProfileModule\Entity\PropertyEntity p');
         return $query->getSingleScalarResult();
     }
     
@@ -255,9 +255,9 @@ class UserApi extends \Zikula_AbstractApi
      */
     public function getweightlimits()
     {
-        $query = $this->entityManager->createQuery('SELECT MAX(p.prop_weight) FROM Profile_Entity_Property p');
+        $query = $this->entityManager->createQuery('SELECT MAX(p.prop_weight) FROM Zikula\Module\ProfileModule\Entity\PropertyEntity p');
         $max = $query->getSingleScalarResult();
-        $query = $this->entityManager->createQuery('SELECT MIN(p.prop_weight) FROM Profile_Entity_Property p');
+        $query = $this->entityManager->createQuery('SELECT MIN(p.prop_weight) FROM Zikula\Module\ProfileModule\Entity\PropertyEntity p');
         $min = $query->getSingleScalarResult();
         // Return the number of items
         return array('min' => $min, 'max' => $max);
