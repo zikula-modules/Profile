@@ -11,7 +11,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Doctrine\ORM\NoResultException;
 
 /**
  * API functions related to member list management.
@@ -26,6 +25,7 @@ use ModUtil;
 use System;
 use DateTime;
 use LogUtil;
+use Doctrine\ORM\NoResultException;
 
 class MemberslistApi extends \Zikula_AbstractApi
 {
