@@ -1,4 +1,5 @@
-<?php/**
+<?php
+/**
  * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -42,7 +43,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
     public function install()
     {
         try {
-            DoctrineHelper::createSchema($this->entityManager, array('Profile_Entity_Property'));
+            DoctrineHelper::createSchema($this->entityManager, array('Zikula\Module\ProfileModule\Entity\PropertyEntity'));
         } catch (\Exception $e) {
             return LogUtil::registerError($e->getMessage());
         }
@@ -124,7 +125,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
     public function uninstall()
     {
         try {
-            DoctrineHelper::dropSchema($this->entityManager, array('Profile_Entity_Property'));
+            DoctrineHelper::dropSchema($this->entityManager, array('Zikula\Module\ProfileModule\Entity\PropertyEntity'));
         } catch (Exception $e) {
             return LogUtil::registerError($e->getMessage());
         }
