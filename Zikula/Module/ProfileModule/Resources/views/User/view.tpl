@@ -26,7 +26,7 @@
             <strong class="z-label">{gt text='User name:'}</strong>
             <span>{$uname|safetext}</span>
         </div>
-        {if (($modvars.ZikulaProfileModule.viewregdate|default:1) && ($userinfo.user_regdate != '1970-01-01 00:00:00'))}
+        {if (($modvars.$module.viewregdate|default:1) && ($userinfo.user_regdate != '1970-01-01 00:00:00'))}
         	<div class="z-formrow">
             	<strong class="z-label">{gt text='Registration date:'}</strong>
 				<span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>

@@ -10,7 +10,7 @@
             <legend>{gt text='Registered users list settings'}</legend>
             <div class="z-formrow">
                 <label for="profile_viewregdate">{gt text="Display the user's registration date"}</label>
-                {if $modvars.ZikulaProfileModule.viewregdate|default:0 eq 1}
+                {if $modvars.$module.viewregdate|default:0 eq 1}
                 <input id="profile_viewregdate" name="viewregdate" type="checkbox" value="1" checked="checked" />
                 {else}
                 <input id="profile_viewregdate" name="viewregdate" type="checkbox" value="1" />
@@ -18,20 +18,20 @@
             </div>
             <div class="z-formrow">
                 <label for="profile_memberslistitemsperpage">{gt text="Users per page in 'Registered users list'"}</label>
-                <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="{$modvars.ZikulaProfileModule.memberslistitemsperpage|safetext}" />
+                <input id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" size="3" value="{$modvars.$module.memberslistitemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
                 <label for="profile_onlinemembersitemsperpage">{gt text="Users per page in 'Users currently on-line' page"}</label>
-                <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="{$modvars.ZikulaProfileModule.onlinemembersitemsperpage|safetext}" />
+                <input id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" size="3" value="{$modvars.$module.onlinemembersitemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
                 <label for="profile_recentmembersitemsperpage">{gt text="Users per page in 'Recent registrations' page"}</label>
-                <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="{$modvars.ZikulaProfileModule.recentmembersitemsperpage|safetext}" />
+                <input id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" size="3" value="{$modvars.$module.recentmembersitemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
                 <label for="profile_filterunverified">{gt text="Filter unverified users from 'Registered users list'"}</label>
                 <div id="profile_filterunverified">
-                    {if $modvars.ZikulaProfileModule.filterunverified eq 1}
+                    {if $modvars.$module.filterunverified eq 1}
                     <input id="filterunverified1" type="radio" name="filterunverified" value="1" checked="checked" />
                     <label for="filterunverified1">{gt text='Yes'}</label>
                     <input id="filterunverified0" type="radio" name="filterunverified" value="0" />
@@ -61,7 +61,7 @@
 											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="hidden" name="dudregshow[]" value="{$key|safetext}" /> 
 											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}_placeholder" type="checkbox" name="dudregshow_placeholder[]" value="{$item.prop_attribute_name|safetext}" checked="checked" disabled="disabled" />
 										{else}
-											{if (in_array($item.prop_attribute_name, $modvars.ZikulaProfileModule.dudregshow))}
+											{if (in_array($item.prop_attribute_name, $modvars.$module.dudregshow))}
 												<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="checkbox" name="dudregshow[]" value="{$item.prop_attribute_name|safetext}" checked="checked" />
 											{else}
 												<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="checkbox" name="dudregshow[]" value="{$item.prop_attribute_name|safetext}" />
