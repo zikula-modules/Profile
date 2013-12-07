@@ -12,6 +12,7 @@
  * information regarding copyright and licensing.
  */
 
+use Zikula\Module\UsersModule\Constant as UsersConstant;
 /**
  * Smarty function to display an editable dynamic user data field.
  *
@@ -163,7 +164,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $uservalue = 'gravatar.gif';
         }
         $render->assign('value', DataUtil::formatForDisplay($uservalue));
-        $avatarPath = ModUtil::getVar(Users_Constant::MODNAME, Users_Constant::MODVAR_AVATAR_IMAGE_PATH, Users_Constant::DEFAULT_AVATAR_IMAGE_PATH);
+        $avatarPath = ModUtil::getVar(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
         $filelist = FileUtil::getFiles($avatarPath, false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
 

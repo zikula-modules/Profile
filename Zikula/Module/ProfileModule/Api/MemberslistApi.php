@@ -21,7 +21,7 @@ namespace Zikula\Module\ProfileModule\Api;
 
 use Zikula_Exception_Fatal;
 use SecurityUtil;
-use Users_Constant;
+use Zikula\Module\UsersModule\Constant as UsersConstant;
 use ModUtil;
 use System;
 use DateTime;
@@ -137,7 +137,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             }
         }
         if (ModUtil::getVar($this->name, 'filterunverified')) {
-            $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
+            $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
         }
         $orderBy = false;
         if (property_exists('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $sortBy)) {
@@ -302,7 +302,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('u')->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')->where('u.uid <> 1');
         if (ModUtil::getVar($this->name, 'filterunverified')) {
-            $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
+            $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
         }
         $qb->orderBy('u.uid', 'DESC')->setMaxResults(1);
         $user = $qb->getQuery()->getSingleResult();
