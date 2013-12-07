@@ -282,7 +282,7 @@ class UserApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         $fields = $args['dynadata'];
-        $duds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
+        $duds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
         foreach ($duds as $attrname => $dud) {
             // exclude avatar update when Avatar module is present
             if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
@@ -347,7 +347,7 @@ class UserApi extends \Zikula_AbstractApi
             throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable'));
         // Initializing Error check
         $error = false;
         foreach ($items as $item) {
@@ -474,7 +474,7 @@ class UserApi extends \Zikula_AbstractApi
         if (count($dynadata) == 1 && in_array('all', array_keys($dynadata))) {
             $params['searchby'] = $dynadata;
         } else {
-            $duditems = ModUtil::apiFunc('Profile', 'user', 'getall');
+            $duditems = ModUtil::apiFunc($this->name, 'user', 'getall');
             $params['searchby'] = array();
             foreach ($duditems as $item) {
                 if (isset($dynadata[$item['prop_attribute_name']]) && !empty($dynadata[$item['prop_attribute_name']])) {
@@ -483,7 +483,7 @@ class UserApi extends \Zikula_AbstractApi
             }
         }
         if (!empty($params['searchby'])) {
-            $uids = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $params);
+            $uids = ModUtil::apiFunc($this->name, 'memberslist', 'getall', $params);
         }
         return $uids;
     }

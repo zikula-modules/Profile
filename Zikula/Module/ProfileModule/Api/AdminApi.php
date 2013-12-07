@@ -51,16 +51,16 @@ class AdminApi extends \Zikula_AbstractApi
         }
         // Check if the label or attribute name already exists
         //@todo The check needs to occur for both the label and fieldset.
-        //$item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+        //$item = ModUtil::apiFunc($this->name, 'user', 'get', array('proplabel' => $args['label']));
         //if ($item) {
         //    return LogUtil::registerError($this->__f("Error! There is already an item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
         //}
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
             return LogUtil::registerError($this->__f('Error! There is already an item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
         }
         // Determine the new weight
-        $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
+        $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
         // a checkbox can't be required
         if ($args['displaytype'] == 2 && $args['required']) {
@@ -103,7 +103,7 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // The user API function is called.
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $args['dudid']));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
@@ -117,7 +117,7 @@ class AdminApi extends \Zikula_AbstractApi
         // If there's a new label, check if it already exists
         //@todo The check needs to occur for both the label and fieldset.
         //if ($args['label'] <> $item['prop_label']) {
-        //  $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+        //  $vitem = ModUtil::apiFunc($this->name, 'user', 'get', array('proplabel' => $args['label']));
         //if ($vitem) {
         //  return LogUtil::registerError($this->__("Error! There is already an item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
         //}
@@ -154,7 +154,7 @@ class AdminApi extends \Zikula_AbstractApi
         // before update it search for option ID change
         // to update the respective user's data
         if ($obj['prop_validation'] != $item['prop_validation']) {
-            ModUtil::apiFunc('Profile', 'dud', 'updatedata', array('item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']));
+            ModUtil::apiFunc($this->name, 'dud', 'updatedata', array('item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']));
         }
         $property = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find($args['dudid']);
         $property->merge($obj);
@@ -181,7 +181,7 @@ class AdminApi extends \Zikula_AbstractApi
         }
         $dudid = $args['dudid'];
         unset($args);
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
@@ -223,7 +223,7 @@ class AdminApi extends \Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-        $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
+        $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $args['dudid']);
         $prop->setProp_weight($weightlimits['max'] + 1);
@@ -250,7 +250,7 @@ class AdminApi extends \Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $args['dudid']));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
@@ -279,18 +279,18 @@ class AdminApi extends \Zikula_AbstractApi
     {
         $links = array();
         // Add User module links
-        $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'), 'text' => $this->__('Users Module'), 'class' => 'z-icon-es-user', 'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
+        $links[] = array('url' => ModUtil::url($this->name, 'admin', 'view'), 'text' => $this->__('Users Module'), 'class' => 'z-icon-es-user', 'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'), 'text' => $this->__('Fields'), 'class' => 'z-icon-es-view');
+            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'view'), 'text' => $this->__('Fields'), 'class' => 'z-icon-es-view');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'newdud'), 'text' => $this->__('Create new field'), 'class' => 'z-icon-es-new');
+            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'newdud'), 'text' => $this->__('Create new field'), 'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'modifyconfig'), 'text' => $this->__('User account panel settings'), 'class' => 'z-icon-es-config');
+            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'modifyconfig'), 'text' => $this->__('User account panel settings'), 'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'help'), 'text' => $this->__('Help'), 'class' => 'z-icon-es-help');
+            $links[] = array('url' => ModUtil::url($this->name, 'admin', 'help'), 'text' => $this->__('Help'), 'class' => 'z-icon-es-help');
         }
         return $links;
     }

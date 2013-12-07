@@ -62,8 +62,8 @@ class AdminController extends \Zikula_AbstractController
         // Get parameters from whatever input we need.
         $startnum = (int) $this->request->query->get('startnum', null);
         $numitems = 20;
-        $items = ModUtil::apiFunc('Profile', 'user', 'getall', array('startnum' => $startnum, 'numitems' => $numitems));
-        $count = ModUtil::apiFunc('Profile', 'user', 'countitems');
+        $items = ModUtil::apiFunc($this->name, 'user', 'getall', array('startnum' => $startnum, 'numitems' => $numitems));
+        $count = ModUtil::apiFunc($this->name, 'user', 'countitems');
         $csrftoken = SecurityUtil::generateCsrfToken();
         $x = 1;
         $duditems = array();
@@ -77,11 +77,11 @@ class AdminController extends \Zikula_AbstractController
                     break;
                 case $item['prop_weight'] != 0:
                     $statusval = 1;
-                    $status = array('url' => ModUtil::url('Profile', 'admin', 'deactivate', array('dudid' => $item['prop_id'], 'weight' => $item['prop_weight'], 'csrftoken' => $csrftoken)), 'image' => 'greenled.png', 'title' => $this->__('Deactivate'));
+                    $status = array('url' => ModUtil::url($this->name, 'admin', 'deactivate', array('dudid' => $item['prop_id'], 'weight' => $item['prop_weight'], 'csrftoken' => $csrftoken)), 'image' => 'greenled.png', 'title' => $this->__('Deactivate'));
                     break;
                 default:
                     $statusval = 0;
-                    $status = array('url' => ModUtil::url('Profile', 'admin', 'activate', array('dudid' => $item['prop_id'], 'csrftoken' => $csrftoken)), 'image' => 'redled.png', 'title' => $this->__('Activate'));
+                    $status = array('url' => ModUtil::url($this->name, 'admin', 'activate', array('dudid' => $item['prop_id'], 'csrftoken' => $csrftoken)), 'image' => 'redled.png', 'title' => $this->__('Activate'));
             }
             // analyzes the DUD type
             switch ($item['prop_dtype']) {
@@ -110,15 +110,15 @@ class AdminController extends \Zikula_AbstractController
             // Options for the item.
             $options = array();
             if (SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
-                $options[] = array('url' => ModUtil::url('Profile', 'admin', 'modify', array('dudid' => $item['prop_id'])), 'image' => 'xedit.png', 'class' => '', 'title' => $this->__('Edit'));
+                $options[] = array('url' => ModUtil::url($this->name, 'admin', 'modify', array('dudid' => $item['prop_id'])), 'image' => 'xedit.png', 'class' => '', 'title' => $this->__('Edit'));
                 if ($item['prop_weight'] > 1) {
-                    $options[] = array('url' => ModUtil::url('Profile', 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])), 'image' => '2uparrow.png', 'class' => 'profile_up', 'title' => $this->__('Up'));
+                    $options[] = array('url' => ModUtil::url($this->name, 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])), 'image' => '2uparrow.png', 'class' => 'profile_up', 'title' => $this->__('Up'));
                 }
                 if ($x < $count) {
-                    $options[] = array('url' => ModUtil::url('Profile', 'admin', 'increase_weight', array('dudid' => $item['prop_id'])), 'image' => '2downarrow.png', 'class' => 'profile_down', 'title' => $this->__('Down'));
+                    $options[] = array('url' => ModUtil::url($this->name, 'admin', 'increase_weight', array('dudid' => $item['prop_id'])), 'image' => '2downarrow.png', 'class' => 'profile_down', 'title' => $this->__('Down'));
                 }
                 if (SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
-                    $options[] = array('url' => ModUtil::url('Profile', 'admin', 'delete', array('dudid' => $item['prop_id'])), 'image' => '14_layer_deletelayer.png', 'class' => '', 'title' => $this->__('Delete'));
+                    $options[] = array('url' => ModUtil::url($this->name, 'admin', 'delete', array('dudid' => $item['prop_id'])), 'image' => '14_layer_deletelayer.png', 'class' => '', 'title' => $this->__('Delete'));
                 }
             }
             $item['status'] = $status;
@@ -191,7 +191,7 @@ class AdminController extends \Zikula_AbstractController
         $listoptions = isset($args['listoptions']) ? $args['listoptions'] : $this->request->request->get('listoptions', null);
         $note = isset($args['note']) ? $args['note'] : $this->request->request->get('note', null);
         $fieldset = isset($args['fieldset']) ? $args['fieldset'] : $this->request->request->get('fieldset', null);
-        $returnurl = ModUtil::url('Profile', 'admin', 'view');
+        $returnurl = ModUtil::url($this->name, 'admin', 'view');
         // Validates and check if empty or already existing...
         if (empty($label)) {
             return LogUtil::registerError($this->__('Error! The item must have a label. An example of a recommended label is: \'_MYDUDLABEL\'.'), null, $returnurl);
@@ -200,15 +200,15 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error! The item must have an attribute name. An example of an acceptable name is: \'mydudfield\'.'), null, $returnurl);
         }
         //@todo The check needs to occur for both the label and fieldset.
-        //if (ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $label, 'propfieldset' => $fieldset))) {
+        //if (ModUtil::apiFunc($this->name, 'user', 'get', array('proplabel' => $label, 'propfieldset' => $fieldset))) {
         //    return LogUtil::registerError($this->__('Error! There is already a label with this naming.'), null, $returnurl);
         //}
-        if (ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $attrname))) {
+        if (ModUtil::apiFunc($this->name, 'user', 'get', array('propattribute' => $attrname))) {
             return LogUtil::registerError($this->__('Error! There is already an attribute name with this naming.'), null, $returnurl);
         }
         $filteredlabel = $label;
         // The API function is called.
-        $dudid = ModUtil::apiFunc('Profile', 'admin', 'create', array('label' => $filteredlabel, 'attribute_name' => $attrname, 'required' => $required, 'viewby' => $viewby, 'dtype' => 1, 'displaytype' => $displaytype, 'listoptions' => $listoptions, 'note' => $note, 'fieldset' => $fieldset));
+        $dudid = ModUtil::apiFunc($this->name, 'admin', 'create', array('label' => $filteredlabel, 'attribute_name' => $attrname, 'required' => $required, 'viewby' => $viewby, 'dtype' => 1, 'displaytype' => $displaytype, 'listoptions' => $listoptions, 'note' => $note, 'fieldset' => $fieldset));
         // The return value of the function is checked here
         if ($dudid != false) {
             // Success
@@ -242,7 +242,7 @@ class AdminController extends \Zikula_AbstractController
             $dudid = $objectid;
         }
         // The user API function is called.
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
@@ -254,7 +254,7 @@ class AdminController extends \Zikula_AbstractController
         $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
         $item['prop_fieldset'] = isset($item['prop_fieldset']) && !empty($item['prop_fieldset']) ? $item['prop_fieldset'] : $this->__('User Information');
         // Create output object
-        $render = Zikula_View::getInstance('Profile', false);
+        $render = Zikula_View::getInstance($this->name, false);
         // Add a hidden variable for the item id.
         $this->view->assign('dudid', $dudid);
         $this->view->assign('displaytypes', array(0 => DataUtil::formatForDisplay($this->__('Text box')), 1 => DataUtil::formatForDisplay($this->__('Text area')), 2 => DataUtil::formatForDisplay($this->__('Checkbox')), 3 => DataUtil::formatForDisplay($this->__('Radio button')), 4 => DataUtil::formatForDisplay($this->__('Dropdown list')), 5 => DataUtil::formatForDisplay($this->__('Date')), 7 => DataUtil::formatForDisplay($this->__('Multiple checkbox set'))));
@@ -303,11 +303,11 @@ class AdminController extends \Zikula_AbstractController
         // The return value of the function is checked here
         $parameters = array('dudid' => $dudid, 'required' => $required, 'viewby' => $viewby, 'label' => $label, 'displaytype' => $displaytype, 'listoptions' => str_replace('
 ', '', $listoptions), 'note' => $note, 'fieldset' => $fieldset);
-        if (ModUtil::apiFunc('Profile', 'admin', 'update', $parameters)) {
+        if (ModUtil::apiFunc($this->name, 'admin', 'update', $parameters)) {
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
         // This function generated no output
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
     
     /**
@@ -334,7 +334,7 @@ class AdminController extends \Zikula_AbstractController
             $dudid = $objectid;
         }
         // The user API function is called.
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
@@ -355,12 +355,12 @@ class AdminController extends \Zikula_AbstractController
         // Check CsrfToken
         $this->checkCsrfToken();
         // The API function is called.
-        if (ModUtil::apiFunc('Profile', 'admin', 'delete', array('dudid' => $dudid))) {
+        if (ModUtil::apiFunc($this->name, 'admin', 'delete', array('dudid' => $dudid))) {
             // Success
             LogUtil::registerStatus($this->__('Done! Deleted the personal info item.'));
         }
         // This function generated no output
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
     
     /**
@@ -375,7 +375,7 @@ class AdminController extends \Zikula_AbstractController
     public function increase_weightAction()
     {
         $dudid = (int) $this->request->query->get('dudid', null);
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
@@ -387,7 +387,7 @@ class AdminController extends \Zikula_AbstractController
         $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $dudid);
         $prop->incrementWeight();
         $this->entityManager->flush();
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
     
     /**
@@ -402,7 +402,7 @@ class AdminController extends \Zikula_AbstractController
     public function decrease_weightAction()
     {
         $dudid = (int) $this->request->query->get('dudid', null);
-        $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
@@ -417,7 +417,7 @@ class AdminController extends \Zikula_AbstractController
         $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $dudid);
         $prop->decrementWeight();
         $this->entityManager->flush();
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
     
     /**
@@ -437,12 +437,12 @@ class AdminController extends \Zikula_AbstractController
         // Get parameters from whatever input we need.
         $dudid = (int) $this->request->query->get('dudid', isset($args['dudid']) ? $args['dudid'] : null);
         // The API function is called.
-        if (ModUtil::apiFunc('Profile', 'admin', 'activate', array('dudid' => $dudid))) {
+        if (ModUtil::apiFunc($this->name, 'admin', 'activate', array('dudid' => $dudid))) {
             // Success
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
         // This function generated no output
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
     
     /**
@@ -462,12 +462,12 @@ class AdminController extends \Zikula_AbstractController
         // Get parameters from whatever input we need.
         $dudid = (int) $this->request->query->get('dudid', isset($args['dudid']) ? $args['dudid'] : null);
         // The API function is called.
-        if (ModUtil::apiFunc('Profile', 'admin', 'deactivate', array('dudid' => $dudid))) {
+        if (ModUtil::apiFunc($this->name, 'admin', 'deactivate', array('dudid' => $dudid))) {
             // Success
             LogUtil::registerStatus($this->__('Done! Saved your changes.'));
         }
         // This function generated no output
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
     
     /**
@@ -481,7 +481,7 @@ class AdminController extends \Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
 
         $fieldsets = array();
         		
@@ -539,7 +539,7 @@ class AdminController extends \Zikula_AbstractController
         // the module configuration has been updated successfuly
         $this->registerStatus($this->__('Done! Saved your settings changes.'));
         // This function generated no output
-        return System::redirect(ModUtil::url('Profile', 'admin', 'view'));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'view'));
     }
 
 }

@@ -39,11 +39,11 @@ class FormController extends \Zikula_AbstractController
     public function editAction($args)
     {
         // can't use this function directly
-        if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url('Profile', 'user', 'viewmembers'));
+        if (ModUtil::getName() == $this->name) {
+            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url($this->name, 'user', 'viewmembers'));
         }
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable'));
         // The return value of the function is checked here
         if ($items == false) {
             return '';
@@ -73,11 +73,11 @@ class FormController extends \Zikula_AbstractController
     public function searchAction()
     {
         // can't use this function directly
-        if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url('Profile', 'user', 'viewmembers'));
+        if (ModUtil::getName() == $this->name) {
+            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url($this->name, 'user', 'viewmembers'));
         }
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive');
         // The return value of the function is checked here
         if ($items == false) {
             return '';
@@ -112,11 +112,11 @@ class FormController extends \Zikula_AbstractController
     public function displayAction($args)
     {
         // can't use this function directly
-        if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url('Profile', 'user', 'viewmembers'));
+        if (ModUtil::getName() == $this->name) {
+            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url($this->name, 'user', 'viewmembers'));
         }
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive');
         // The return value of the function is checked here
         if ($items == false) {
             return '';

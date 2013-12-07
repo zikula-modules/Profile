@@ -87,7 +87,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // update the item status
         $func = $oldstatus ? 'deactivate' : 'activate';
-        $res = ModUtil::apiFunc('Profile', 'admin', $func, array('dudid' => $prop_id));
+        $res = ModUtil::apiFunc($this->name, 'admin', $func, array('dudid' => $prop_id));
         if (!$res) {
             throw new Zikula_Exception_Fatal($this->__('Error! Could not save your changes.'));
         }
@@ -121,7 +121,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $args = array();
         }
         // update the item status
-        $section = ModUtil::apiFunc('Profile', 'section', $name, array_merge($args, array('uid' => $uid)));
+        $section = ModUtil::apiFunc($this->name, 'section', $name, array_merge($args, array('uid' => $uid)));
         if (!$section) {
             throw new Zikula_Exception_Fatal($this->__('Error! Could not load the section.'));
         }

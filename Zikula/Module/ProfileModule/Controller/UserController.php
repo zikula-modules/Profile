@@ -37,7 +37,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function mainAction()
     {
-        $this->redirect(ModUtil::url('Profile', 'user', 'viewmembers'));
+        $this->redirect(ModUtil::url($this->name, 'user', 'viewmembers'));
     }
 
     public function indexAction()
@@ -91,7 +91,7 @@ class UserController extends \Zikula_AbstractController
         $isowner = $currentuser == $uid;
         $isadmin = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
         // Get all active profile fields
-        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'viewable', 'uid' => $uid));
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'viewable', 'uid' => $uid));
         $fieldsets = array();
         $items = $activeduds;
         foreach ($items as $propattr => $propdata) {
@@ -137,7 +137,7 @@ class UserController extends \Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
         // The API function is called.
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('uid' => UserUtil::getVar('uid'), 'get' => 'editable'));
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('uid' => UserUtil::getVar('uid'), 'get' => 'editable'));
         // The return value of the function is checked here
         if ($items === false) {
             return LogUtil::registerError($this->__('Error! Could not load items.'));
@@ -191,21 +191,21 @@ class UserController extends \Zikula_AbstractController
          */
         $dynadata = $this->request->request->get('dynadata', null);
         // Check for required fields - The API function is called.
-        $checkrequired = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
+        $checkrequired = ModUtil::apiFunc($this->name, 'user', 'checkrequired', array('dynadata' => $dynadata));
         if ($checkrequired['result'] == true) {
             LogUtil::registerError($this->__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
             // we do not send the passwords here!
             $params = array('uname' => $uname, 'dynadata' => $dynadata);
-            $this->redirect(ModUtil::url('Profile', 'user', 'modify', $params));
+            $this->redirect(ModUtil::url($this->name, 'user', 'modify', $params));
         }
         // Building the sql and saving - The API function is called.
-        $save = ModUtil::apiFunc('Profile', 'user', 'savedata', array('uid' => $uid, 'dynadata' => $dynadata));
+        $save = ModUtil::apiFunc($this->name, 'user', 'savedata', array('uid' => $uid, 'dynadata' => $dynadata));
         if ($save != true) {
-            $this->redirect(ModUtil::url('Profile', 'user', 'view'));
+            $this->redirect(ModUtil::url($this->name, 'user', 'view'));
         }
         // This function generated no output, we redirect the user
         LogUtil::registerStatus($this->__('Done! Saved your changes to your personal information.'));
-        $this->redirect(ModUtil::url('Profile', 'user', 'view', array('uname' => UserUtil::getVar('uname'))));
+        $this->redirect(ModUtil::url($this->name, 'user', 'view', array('uname' => UserUtil::getVar('uname'))));
     }
     
     /**
@@ -267,16 +267,16 @@ class UserController extends \Zikula_AbstractController
         $cacheid = md5((int) $edit . (int) $delete . $startnum . $letter . $sortby);
         $this->view->setCaching(true)->setCacheId($cacheid);
         // get the number of users to show per page from the module vars
-        $itemsperpage = ModUtil::getVar('Profile', 'memberslistitemsperpage');
+        $itemsperpage = ModUtil::getVar($this->name, 'memberslistitemsperpage');
         // assign values for header
         $this->view->assign('memberslistreg', ModUtil::apiFunc('Users', 'user', 'countitems') - 1);
         // discount annonymous
-        $this->view->assign('memberslistonline', ModUtil::apiFunc('Profile', 'memberslist', 'getregisteredonline'));
-        $this->view->assign('memberslistnewest', UserUtil::getVar('uname', ModUtil::apiFunc('Profile', 'memberslist', 'getlatestuser')));
+        $this->view->assign('memberslistonline', ModUtil::apiFunc($this->name, 'memberslist', 'getregisteredonline'));
+        $this->view->assign('memberslistnewest', UserUtil::getVar('uname', ModUtil::apiFunc($this->name, 'memberslist', 'getlatestuser')));
         $fetchargs = array('letter' => $letter, 'sortby' => $sortby, 'sortorder' => $sortorder, 'searchby' => $searchby, 'startnum' => $startnum, 'numitems' => $itemsperpage, 'returnUids' => false);
         // get full list of user id's
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $fetchargs);
-        $userscount = ModUtil::apiFunc('Profile', 'memberslist', 'countitems', $fetchargs);
+        $users = ModUtil::apiFunc($this->name, 'memberslist', 'getall', $fetchargs);
+        $userscount = ModUtil::apiFunc($this->name, 'memberslist', 'countitems', $fetchargs);
         // Is current user online
         $this->view->assign('loggedin', UserUtil::isLoggedIn());
         // check if we should show the extra admin column
@@ -284,7 +284,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('admindelete', $delete);
         foreach ($users as $userid => $user) {
             //$user = array_merge(UserUtil::getVars($userid['uid']), $userid);
-            $isonline = ModUtil::apiFunc('Profile', 'memberslist', 'isonline', array('userid' => $userid));
+            $isonline = ModUtil::apiFunc($this->name, 'memberslist', 'isonline', array('userid' => $userid));
             // is this user online
             $users[$userid]['onlinestatus'] = $isonline ? 1 : 0;
             // filter out any dummy url's
@@ -293,14 +293,14 @@ class UserController extends \Zikula_AbstractController
             }
         }
         // get all active profile fields
-        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
         foreach ($activeduds as $attr => $activedud) {
             $dudarray[$attr] = $activedud['prop_id'];
         }
         unset($activeduds);
         $this->view->assign('dudarray', $dudarray)->assign('users', $users)->assign('letter', $letter)->assign('sortby', $sortby)->assign('sortorder', $sortorder);
         // check which messaging module is available and add the necessary info
-        $this->view->assign('msgmodule', ModUtil::apiFunc('Profile', 'memberslist', 'getmessagingmodule'));
+        $this->view->assign('msgmodule', ModUtil::apiFunc($this->name, 'memberslist', 'getmessagingmodule'));
         // Assign the values for the smarty plugin to produce a pager
         $this->view->assign('pager', array('numitems' => $userscount, 'itemsperpage' => $itemsperpage));
         // Return the output that has been generated by this function
@@ -328,7 +328,7 @@ class UserController extends \Zikula_AbstractController
         }
         $modvars = $this->getVars();
         // get last x user id's
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', array('sortby' => 'user_regdate', 'numitems' => $modvars['recentmembersitemsperpage'], 'sortorder' => 'DESC', 'returnUids' => false));
+        $users = ModUtil::apiFunc($this->name, 'memberslist', 'getall', array('sortby' => 'user_regdate', 'numitems' => $modvars['recentmembersitemsperpage'], 'sortorder' => 'DESC', 'returnUids' => false));
         // Is current user online
         $this->view->assign('loggedin', UserUtil::isLoggedIn());
         // assign all module vars obtained earlier
@@ -346,15 +346,15 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('adminedit', $edit);
         $this->view->assign('admindelete', $delete);
         foreach (array_keys($users) as $userid) {
-            $isonline = ModUtil::apiFunc('Profile', 'memberslist', 'isonline', array('userid' => $userid));
+            $isonline = ModUtil::apiFunc($this->name, 'memberslist', 'isonline', array('userid' => $userid));
             // display online status
             $users[$userid]['onlinestatus'] = $isonline ? 1 : 0;
         }
         $this->view->assign('users', $users);
         // check which messaging module is available and add the necessary info
-        $this->view->assign('msgmodule', ModUtil::apiFunc('Profile', 'memberslist', 'getmessagingmodule'));
+        $this->view->assign('msgmodule', ModUtil::apiFunc($this->name, 'memberslist', 'getmessagingmodule'));
         // get all active profile fields
-        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
         $dudarray = array_keys($activeduds);
         unset($activeduds);
         $this->view->assign('dudarray', $dudarray);
@@ -382,14 +382,14 @@ class UserController extends \Zikula_AbstractController
             return $this->view->fetch('User/members_online.tpl');
         }
         // get last 10 user id's
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'whosonline');
+        $users = ModUtil::apiFunc($this->name, 'memberslist', 'whosonline');
         // Current user status
         $this->view->assign('loggedin', UserUtil::isLoggedIn());
         $this->view->assign('users', $users);
         // check which messaging module is available and add the necessary info
-        $this->view->assign('msgmodule', ModUtil::apiFunc('Profile', 'memberslist', 'getmessagingmodule'));
+        $this->view->assign('msgmodule', ModUtil::apiFunc($this->name, 'memberslist', 'getmessagingmodule'));
         // get all active profile fields
-        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
         $dudarray = array_keys($activeduds);
         unset($activeduds);
         $this->view->assign('dudarray', $dudarray);

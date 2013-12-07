@@ -40,7 +40,7 @@ class LastseenBlock extends \Zikula_Controller_AbstractBlock
      */
     public function info()
     {
-        return array('module' => 'Profile', 'text_type' => $this->__('Recent visitors'), 'text_type_long' => $this->__('Show registered users having visited the site recently'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true, 'admin_tableless' => true);
+        return array('module' => $this->name, 'text_type' => $this->__('Recent visitors'), 'text_type_long' => $this->__('Show registered users having visited the site recently'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true, 'admin_tableless' => true);
     }
     
     /**
@@ -53,7 +53,7 @@ class LastseenBlock extends \Zikula_Controller_AbstractBlock
     public function display($blockinfo)
     {
         // Check if the Profile module is available or saving of login dates are disabled
-        if (!ModUtil::available('Profile')) {
+        if (!ModUtil::available($this->name)) {
             return false;
         }
         // Security check
@@ -64,7 +64,7 @@ class LastseenBlock extends \Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         $this->view->setCaching(false);
         // get last x logged in user id's
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getall', array('sortby' => 'lastlogin', 'numitems' => $vars['amount'], 'sortorder' => 'DESC'));
+        $users = ModUtil::apiFunc($this->name, 'memberslist', 'getall', array('sortby' => 'lastlogin', 'numitems' => $vars['amount'], 'sortorder' => 'DESC'));
         $this->view->assign('users', $users);
         $blockinfo['content'] = $this->view->fetch('Block/lastseen.tpl');
         return BlockUtil::themeBlock($blockinfo);

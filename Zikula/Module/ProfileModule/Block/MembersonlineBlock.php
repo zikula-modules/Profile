@@ -41,7 +41,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
      */
     public function info()
     {
-        return array('module' => 'Profile', 'text_type' => $this->__('Users on-line'), 'text_type_long' => $this->__('Show which registered users are currently on-line'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true, 'admin_tableless' => true);
+        return array('module' => $this->name, 'text_type' => $this->__('Users on-line'), 'text_type_long' => $this->__('Show which registered users are currently on-line'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true, 'admin_tableless' => true);
     }
     
     /**
@@ -54,7 +54,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
     public function display($blockinfo)
     {
         // Check if the Profile module is available.
-        if (!ModUtil::available('Profile')) {
+        if (!ModUtil::available($this->name)) {
             return false;
         }
         // Security check
@@ -68,7 +68,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
             $vars['lengthmax'] = 30;
         }
         $uid = (int) UserUtil::getVar('uid');
-        $users = ModUtil::apiFunc('Profile', 'memberslist', 'getallonline');
+        $users = ModUtil::apiFunc($this->name, 'memberslist', 'getallonline');
         $usersonline = array();
         if ($users) {
             foreach ($users['unames'] as $user) {
@@ -77,7 +77,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
         }
         $this->view->setCaching(false)->setCacheId($uid);
         // check which messaging module is available and add the necessary info
-        $msgmodule = ModUtil::apiFunc('Profile', 'memberslist', 'getmessagingmodule');
+        $msgmodule = ModUtil::apiFunc($this->name, 'memberslist', 'getmessagingmodule');
         if (!empty($msgmodule) && UserUtil::isLoggedIn()) {
             $this->view->assign('messages', ModUtil::apiFunc($msgmodule, 'user', 'getmessagecount'));
         }

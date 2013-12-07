@@ -27,6 +27,7 @@ use UserUtil;
  */
 class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_TranslatableInterface
 {
+    const MODULENAME = 'ZikulaProfileModule';
     /**
      * The area name that this handler processes.
      */
@@ -114,7 +115,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
      */
     public function uiView(\Zikula_Event $event)
     {
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $items = ModUtil::apiFunc(self::MODULENAME, 'user', 'getallactive');
         // The return value of the function is checked here
         if ($items) {
             $user = $event->getSubject();
@@ -139,7 +140,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
      */
     public function uiEdit(\Zikula_Event $event)
     {
-        $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
+        $items = ModUtil::apiFunc(self::MODULENAME, 'user', 'getallactive', array('get' => 'editable'));
         // The return value of the function is checked here
         if ($items) {
             $fieldsets = array();
@@ -194,7 +195,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         if ($this->request->isMethod('POST')) {
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
             $this->validation = new Zikula_Hook_ValidationResponse('dynadata', $dynadata);
-            $requiredFailures = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
+            $requiredFailures = ModUtil::apiFunc(self::MODULENAME, 'user', 'checkrequired', array('dynadata' => $dynadata));
             $errorCount = 0;
             if ($requiredFailures && $requiredFailures['result']) {
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {

@@ -40,7 +40,7 @@ class AccountApi extends \Zikula_AbstractApi
         $items = array();
         // do not show the account links if Profile is not the Profile manager
         $profilemodule = System::getVar('profilemodule', '');
-        if ($profilemodule != 'Profile') {
+        if ($profilemodule != $this->name) {
             return $items;
         }
         $uname = isset($args['uname']) ? $args['uname'] : null;
@@ -50,9 +50,9 @@ class AccountApi extends \Zikula_AbstractApi
         // Create an array of links to return
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
-            $items['0'] = array('url' => ModUtil::url('Profile', 'user', 'view', array('uid' => $uid)), 'module' => 'Profile', 'title' => $this->__('Profile'), 'icon' => 'admin.png');
+            $items['0'] = array('url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)), 'module' => $this->name, 'title' => $this->__('Profile'), 'icon' => 'admin.png');
             if (SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
-                $items['1'] = array('url' => ModUtil::url('Profile', 'user', 'viewmembers'), 'module' => 'Profile', 'title' => $this->__('Registered users'), 'icon' => 'members.png');
+                $items['1'] = array('url' => ModUtil::url($this->name, 'user', 'viewmembers'), 'module' => $this->name, 'title' => $this->__('Registered users'), 'icon' => 'members.png');
             }
         }
         // Return the items

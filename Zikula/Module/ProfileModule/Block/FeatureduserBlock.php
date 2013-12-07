@@ -42,7 +42,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
      */
     public function info()
     {
-        return array('module' => 'Profile', 'text_type' => $this->__('Featured user'), 'text_type_long' => $this->__('Show featured user'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true, 'admin_tableless' => true);
+        return array('module' => $this->name, 'text_type' => $this->__('Featured user'), 'text_type_long' => $this->__('Show featured user'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true, 'admin_tableless' => true);
     }
     
     /**
@@ -55,7 +55,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
     public function display($blockinfo)
     {
         // Check if the Profile module is available.
-        if (!ModUtil::available('Profile')) {
+        if (!ModUtil::available($this->name)) {
             return false;
         }
         // Security check
@@ -85,7 +85,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             $isadmin = true;
         }
         // get all active profile fields
-        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('index' => 'prop_label'));
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('index' => 'prop_label'));
         foreach ($activeduds as $dudlabel => $activedud) {
             // check if the attribute is set to be shown in the block
             if (!in_array($activedud['prop_attribute_name'], $vars['fieldstoshow'])) {
@@ -140,7 +140,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             $vars['showregdate'] = '';
         }
         // get all active profile fields
-        $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
         foreach ($activeduds as $attr => $activedud) {
             $dudarray[$attr] = $this->__($activedud['prop_label']);
         }
@@ -181,7 +181,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         }
         // validate the passed duds
         if (!empty($vars['fieldstoshow'])) {
-            $activeduds = ModUtil::apiFunc('Profile', 'user', 'getallactive');
+            $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
             $activeduds = array_keys($activeduds);
             foreach ($vars['fieldstoshow'] as $k => $v) {
                 if (!in_array($v, $activeduds)) {

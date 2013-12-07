@@ -136,7 +136,7 @@ class MemberslistApi extends \Zikula_AbstractApi
                 }
             }
         }
-        if (ModUtil::getVar('Profile', 'filterunverified')) {
+        if (ModUtil::getVar($this->name, 'filterunverified')) {
             $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
         }
         $orderBy = false;
@@ -301,7 +301,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('u')->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')->where('u.uid <> 1');
-        if (ModUtil::getVar('Profile', 'filterunverified')) {
+        if (ModUtil::getVar($this->name, 'filterunverified')) {
             $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
         }
         $qb->orderBy('u.uid', 'DESC')->setMaxResults(1);
