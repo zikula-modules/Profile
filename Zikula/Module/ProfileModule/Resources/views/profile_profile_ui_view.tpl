@@ -6,4 +6,3 @@
         {/foreach}
     </fieldset>
 </div>
-
