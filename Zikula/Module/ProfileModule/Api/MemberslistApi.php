@@ -1,5 +1,4 @@
-<?php
-/**
+<?php/**
  * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -16,7 +15,18 @@ use Doctrine\ORM\NoResultException;
 /**
  * API functions related to member list management.
  */
-class Profile_Api_Memberslist extends Zikula_AbstractApi
+
+namespace Zikula\Module\ProfileModule\Api;
+
+use Zikula_Exception_Fatal;
+use SecurityUtil;
+use Users_Constant;
+use ModUtil;
+use System;
+use DateTime;
+use LogUtil;
+
+class MemberslistApi extends \Zikula_AbstractApi
 {
     /**
      * Get or count users that match the given criteria.
@@ -38,18 +48,24 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      * 
      * @return array|integer Matching user ids or a count of the matching integers.
      */
-    protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
-    {
-        if (!isset($startNum) || !is_numeric($startNum) || ($startNum != (string)((int)$startNum)) || ($startNum < -1)) {
+    protected function getOrCountAll(
+        $countOnly,
+        $searchBy,
+        $letter,
+        $sortBy,
+        $sortOrder,
+        $startNum = -1,
+        $numItems = -1,
+        $returnUids = false
+    ) {
+        if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string) (int) $startNum || $startNum < -1) {
             throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
         } elseif ($startNum <= 0) {
             $startNum = -1;
         }
-        
-        if (!isset($numItems) || !is_numeric($numItems) || ($numItems != (string)((int)$numItems)) || (($numItems != -1) && ($numItems < 1))) {
+        if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string) (int) $numItems || $numItems != -1 && $numItems < 1) {
             throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
         }
-        
         if (!isset($sortBy) || empty($sortBy)) {
             $sortBy = 'uname';
         }
@@ -62,85 +78,74 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         if (!isset($letter)) {
             $letter = null;
         }
-
         // Security check
         if (!SecurityUtil::checkPermission('Profile:Members:', '::', ACCESS_READ)) {
             return array();
         }
-
         $qb = $this->entityManager->createQueryBuilder();
         if ($searchBy != 'uname') {
-            $qb->select(array('u', 'a', 'p'))
-                ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
-                ->leftJoin('u.attributes', 'a')
-                ->leftJoin('Profile_Entity_Property', 'p', 'WITH', 'a.name = p.prop_attribute_name'); // manual join
+            $qb->select(array('u', 'a', 'p'))->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')->leftJoin('u.attributes', 'a')->leftJoin(
+                'Profile_Entity_Property',
+                'p',
+                'WITH',
+                'a.name = p.prop_attribute_name'
+            );
         } else {
-            $qb->select('u')
-                ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u');
+            $qb->select('u')->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u');
         }
-        
         $qb->andWhere('u.uid <> 1');
         if ($searchBy == 'uname') {
-            $join  = '';
+            $join = '';
             if (!empty($letter) && preg_match('/[a-z]/i', $letter)) {
-                $qb->andWhere($qb->expr()->like('u.uname', ':letter'))
-                    ->setParameter('letter', $letter.'%');
-            } else if (!empty($letter)) {
-                static $otherWhere;
-                if (!isset($otherWhere)) {
-                    $otherList = array ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
-                    $or = $qb->expr()->orX();
-                    foreach ($otherList as $other) {
-                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other.'%')));
-                    }
-                    $qb->andWhere($or->getParts());
-                }
-            }
-
-        } else if (is_array($searchBy)) {
-            if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
-                // args.searchby is all => search_value to loop all the user attributes
-                $qb->andWhere('p.prop_weight > 0')
-                    ->andWhere('p.prop_dtype >= 0')
-                    ->andWhere($qb->expr()->like('a.value', ':value'))
-                    ->setParameter('value', "%{$value}%");
-
+                $qb->andWhere($qb->expr()->like('u.uname', ':letter'))->setParameter('letter', $letter . '%');
             } else {
-                // args.searchby is an array of the form prop_id => value
-                $and = $qb->expr()->andX();
-                foreach ($searchBy as $prop_id => $value) {
-                    $and->add($qb->expr()->andX(
-                        $qb->expr()->eq('p.prop_id', $prop_id),
-                        $qb->expr()->like('a.value', $qb->expr()->literal('%'.$value.'%'))
-                    ));
-                }
-                // check if there where contitionals
-                if ($and->count() > 0) {
-                    $qb->andWhere($and->getParts());
+                if (!empty($letter)) {
+                    static $otherWhere;
+                    if (!isset($otherWhere)) {
+                        $otherList = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
+                        $or = $qb->expr()->orX();
+                        foreach ($otherList as $other) {
+                            $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%')));
+                        }
+                        $qb->andWhere($or->getParts());
+                    }
                 }
             }
-
-        } else if (is_numeric($searchBy)) {
-            $qb->andWhere('p.prop_id = :searchby')
-                ->setParameter('searchby', $searchBy)
-                ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter.'%')));
-        } elseif (isset($propcolumn[$searchBy])) {
-            $qb->andWhere($qb->expr()->like('p.'.$propcolumn[$searchBy], $qb->expr()->literal($letter.'%')));
+        } else {
+            if (is_array($searchBy)) {
+                if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
+                    // args.searchby is all => search_value to loop all the user attributes
+                    $qb->andWhere('p.prop_weight > 0')->andWhere('p.prop_dtype >= 0')->andWhere($qb->expr()->like('a.value', ':value'))->setParameter('value', "%{$value}%");
+                } else {
+                    // args.searchby is an array of the form prop_id => value
+                    $and = $qb->expr()->andX();
+                    foreach ($searchBy as $prop_id => $value) {
+                        $and->add($qb->expr()->andX($qb->expr()->eq('p.prop_id', $prop_id), $qb->expr()->like('a.value', $qb->expr()->literal('%' . $value . '%'))));
+                    }
+                    // check if there where contitionals
+                    if ($and->count() > 0) {
+                        $qb->andWhere($and->getParts());
+                    }
+                }
+            } else {
+                if (is_numeric($searchBy)) {
+                    $qb->andWhere('p.prop_id = :searchby')->setParameter('searchby', $searchBy)->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter . '%')));
+                } elseif (isset($propcolumn[$searchBy])) {
+                    $qb->andWhere($qb->expr()->like('p.' . $propcolumn[$searchBy], $qb->expr()->literal($letter . '%')));
+                }
+            }
         }
-
         if (ModUtil::getVar('Profile', 'filterunverified')) {
-            $qb->andWhere('u.activated = '.Users_Constant::ACTIVATED_ACTIVE);
+            $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
         }
-        
         $orderBy = false;
-        if (property_exists('Zikula\Module\UsersModule\Entity\UserEntity', $sortBy)) {
-            $qb->orderBy('u.'.$sortBy, $sortOrder);
+        if (property_exists('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $sortBy)) {
+            $qb->orderBy('u.' . $sortBy, $sortOrder);
             $orderBy = true;
         }
         if ($orderBy && $sortBy != 'uname') {
             $qb->addOrderBy('u.uname', 'ASC');
         }
-
         try {
             $users = $qb->getQuery()->getArrayResult();
         } catch (\Exception $e) {
@@ -150,7 +155,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             \System::dump($qb->getQuery()->getSQL());
             \System::dump($qb->getParameters());
         }
-        
         if ($countOnly) {
             return count($users);
         } else {
@@ -164,9 +168,8 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             }
             return $usersArray;
         }
-
     }
-
+    
     /**
      * Get users that match the given criteria.
      * 
@@ -215,12 +218,20 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         if (!isset($args['returnUids'])) {
             $args['returnUids'] = false;
         } else {
-            $args['returnUids'] = (bool)$args['returnUids'];
+            $args['returnUids'] = (bool) $args['returnUids'];
         }
-        
-        return $this->getOrCountAll(false, $args['searchby'], $args['letter'], $args['sortby'], $args['sortorder'], $args['startnum'], $args['numitems'], $args['returnUids']);
+        return $this->getOrCountAll(
+            false,
+            $args['searchby'],
+            $args['letter'],
+            $args['sortby'],
+            $args['sortorder'],
+            $args['startnum'],
+            $args['numitems'],
+            $args['returnUids']
+        );
     }
-
+    
     /**
      * Count users that match the given criteria.
      * 
@@ -248,13 +259,17 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         if (!isset($args['letter'])) {
             $args['letter'] = null;
         }
-        
         $sortBy = 'uname';
         $sortOrder = 'ASC';
-
-        return $this->getOrCountAll(true, $args['searchby'], $args['letter'], $sortBy, $sortOrder);
+        return $this->getOrCountAll(
+            true,
+            $args['searchby'],
+            $args['letter'],
+            $sortBy,
+            $sortOrder
+        );
     }
-
+    
     /**
      * Counts the number of users online.
      *
@@ -262,20 +277,20 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function getregisteredonline()
     {
-        $dql = "SELECT COUNT(s.uid)
-            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s
+        $dql = 'SELECT COUNT(s.uid)
+            FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s
             WHERE s.lastused > :activetime
-            AND s.uid >= 2";
+            AND s.uid >= 2';
         $query = $this->entityManager->createQuery($dql);
-        $activetime = new DateTime(); // @todo maybe need to check TZ here
-        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $activetime = new DateTime();
+        // @todo maybe need to check TZ here
+        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
         $numusers = $query->getSingleScalarResult();
-
         // Return the number of items
         return $numusers;
     }
-
+    
     /**
      * Get the latest registered user.
      *
@@ -284,14 +299,11 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
     public function getlatestuser()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('u')
-            ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
-            ->where('u.uid <> 1');
+        $qb->select('u')->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')->where('u.uid <> 1');
         if (ModUtil::getVar('Profile', 'filterunverified')) {
             $qb->andWhere('u.activated = ' . Users_Constant::ACTIVATED_ACTIVE);
         }
-        $qb->orderBy('u.uid', 'DESC')
-            ->setMaxResults(1);
+        $qb->orderBy('u.uid', 'DESC')->setMaxResults(1);
         $user = $qb->getQuery()->getSingleResult();
         if ($user) {
             return $user->getUid();
@@ -299,7 +311,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! Could not load data.'));
         }
     }
-
+    
     /**
      * Determine if a user is online.
      *
@@ -317,7 +329,6 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         if (!isset($args['userid']) || empty($args['userid']) || !is_numeric($args['userid'])) {
             return false;
         }
-
         $dql = 'SELECT s.uid
                 FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s
                 WHERE s.lastused > :activetime
@@ -333,10 +344,9 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         } catch (NoResultException $e) {
             return false;
         }
-
         return true;
     }
-
+    
     /**
      * Return registered users online.
      *
@@ -344,21 +354,20 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function whosonline()
     {
-        $dql = "SELECT s.uid, u.uname
-            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s, Zikula\Module\UsersModule\Entity\UserEntity u
+        $dql = 'SELECT s.uid, u.uname
+            FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\Module\\UsersModule\\Entity\\UserEntity u
             WHERE s.lastused > :activetime
             AND (s.uid >= 2
-            AND s.uid = u.uid)";
+            AND s.uid = u.uid)';
         $query = $this->entityManager->createQuery($dql);
-        $activetime = new DateTime(); // @todo maybe need to check TZ here
-        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $activetime = new DateTime();
+        // @todo maybe need to check TZ here
+        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
-
         $onlineusers = $query->getArrayResult();
-
         return $onlineusers;
     }
-
+    
     /**
      * Returns all users online.
      *
@@ -366,20 +375,19 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
      */
     public function getallonline()
     {
-        $dql = "SELECT s.uid, u.uname
-            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s, Zikula\Module\UsersModule\Entity\UserEntity u
+        $dql = 'SELECT s.uid, u.uname
+            FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\Module\\UsersModule\\Entity\\UserEntity u
             WHERE s.lastused > :activetime
             AND (s.uid >= 2
             AND s.uid = u.uid)
             OR s.uid = 0
-            GROUP BY s.ipaddr, s.uid";
+            GROUP BY s.ipaddr, s.uid';
         $query = $this->entityManager->createQuery($dql);
-        $activetime = new DateTime(); // @todo maybe need to check TZ here
-        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $activetime = new DateTime();
+        // @todo maybe need to check TZ here
+        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
-
         $onlineusers = $query->getArrayResult();
-
         $numguests = 0;
         $unames = array();
         foreach ($onlineusers as $key => $user) {
@@ -392,17 +400,10 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         ksort($unames);
         $unames = array_values($unames);
         $numusers = count($unames);
-
-        $items = array(
-            'unames'    => $unames,
-            'numusers'  => $numusers,
-            'numguests' => $numguests,
-            'total'     => $numguests + $numusers,
-        );
-
+        $items = array('unames' => $unames, 'numusers' => $numusers, 'numguests' => $numguests, 'total' => $numguests + $numusers);
         return $items;
     }
-
+    
     /**
      * Find out which messages module is installed.
      *
@@ -414,7 +415,7 @@ class Profile_Api_Memberslist extends Zikula_AbstractApi
         if (!ModUtil::available($msgmodule)) {
             $msgmodule = '';
         }
-
         return $msgmodule;
     }
+
 }

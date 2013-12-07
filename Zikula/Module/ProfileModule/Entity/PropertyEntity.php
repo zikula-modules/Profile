@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Copyright Zikula Foundation 2013 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -12,7 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,9 +19,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="user_property",indexes={@ORM\index(name="prop_label", columns={"label"}),@ORM\index(name="prop_attr", columns={"attributename"})})
  */
-class Profile_Entity_Property extends EntityAccess
-{
 
+namespace Zikula\Module\ProfileModule\Entity;
+
+
+class PropertyEntity extends \EntityAccess
+{
     /**
      * id
      *
@@ -33,43 +33,36 @@ class Profile_Entity_Property extends EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $prop_id;
-
     /**
      * Label
      * @ORM\Column(type="string",name="label")
      */
     private $prop_label = '';
-
     /**
      * Dtype
      * @ORM\Column(type="integer",name="dtype")
      */
     private $prop_dtype = 0;
-
     /**
      * Modname
      * @ORM\Column(type="string",length=64,name="modname")
      */
     private $prop_modname = '';
-
     /**
      * Weight
      * @ORM\Column(type="integer",name="weight")
      */
     private $prop_weight = 0;
-
     /**
      * Validation
      * @ORM\Column(type="text",nullable=true,name="validation")
      */
     private $prop_validation = null;
-
     /**
      * Attribute name
      * @ORM\Column(type="string",length=80,name="attributename")
      */
     private $prop_attribute_name = '';
-
     /**
      * @param string $attributename
      */
@@ -77,7 +70,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         $this->prop_attribute_name = $attributename;
     }
-
+    
     /**
      * @return string
      */
@@ -85,7 +78,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_attribute_name;
     }
-
+    
     /**
      * @param integer $dtype
      */
@@ -93,7 +86,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         $this->prop_dtype = $dtype;
     }
-
+    
     /**
      * @return integer
      */
@@ -101,7 +94,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_dtype;
     }
-
+    
     /**
      * @return integer
      */
@@ -109,7 +102,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_id;
     }
-
+    
     /**
      * @param string $label
      */
@@ -117,7 +110,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         $this->prop_label = $label;
     }
-
+    
     /**
      * @return string
      */
@@ -125,7 +118,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_label;
     }
-
+    
     /**
      * @param string $modname
      */
@@ -133,7 +126,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         $this->prop_modname = $modname;
     }
-
+    
     /**
      * @return string
      */
@@ -141,7 +134,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_modname;
     }
-
+    
     /**
      * @param string|null $validation
      */
@@ -149,7 +142,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         $this->prop_validation = $validation;
     }
-
+    
     /**
      * @return string
      */
@@ -157,7 +150,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_validation;
     }
-
+    
     /**
      * @param integer $weight
      */
@@ -165,7 +158,7 @@ class Profile_Entity_Property extends EntityAccess
     {
         $this->prop_weight = $weight;
     }
-
+    
     /**
      * @return integer
      */
@@ -173,12 +166,12 @@ class Profile_Entity_Property extends EntityAccess
     {
         return $this->prop_weight;
     }
-
+    
     public function incrementWeight()
     {
         $this->prop_weight++;
     }
-
+    
     public function decrementWeight()
     {
         $this->prop_weight--;

@@ -12,10 +12,20 @@
  * information regarding copyright and licensing.
  */
 
+namespace Zikula\Module\ProfileModule\Api;
+
+use SecurityUtil;
+use LogUtil;
+use UserUtil;
+use ModUtil;
+use DateUtil;
+use Zikula_Exception_Fatal;
+use System;
+
 /**
  * Operations accessible by non-administrative users.
  */
-class Profile_Api_User extends Zikula_AbstractApi
+class UserApi extends \Zikula_AbstractApi
 {
     /**
      * Get all Dynamic user data fields.
@@ -39,42 +49,36 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['numitems'])) {
             $args['numitems'] = -1;
         }
-
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
             return array();
         }
-
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')->from('Profile_Entity_Property', 'p')
-            ->orderBy('p.prop_weight');
+        $qb->select('p')->from('Profile_Entity_Property', 'p')->orderBy('p.prop_weight');
         if ($args['startnum'] > 0) {
-            $qb->setFirstResult($args['startnum']-1);
+            $qb->setFirstResult($args['startnum'] - 1);
         }
         if ($args['numitems'] > 0) {
-            $qb->setMaxResults($args['numitems']); // have lost the indexby attribute
+            $qb->setMaxResults($args['numitems']);
         }
         $items = $qb->getQuery()->getArrayResult();
-
         // Put items into result array.
         foreach (array_keys($items) as $k) {
-            if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'].'::'.$items[$k]['prop_id'], ACCESS_READ)) {
+            if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                 $validationinfo = @unserialize($items[$k]['prop_validation']);
                 unset($items[$k]['prop_validation']);
-
                 // Expand the item array
-                foreach ((array)$validationinfo as $infolabel => $infofield) {
-                    $items[$k]["prop_$infolabel"] = $infofield;
+                foreach ((array) $validationinfo as $infolabel => $infofield) {
+                    $items[$k]["prop_{$infolabel}"] = $infofield;
                 }
             } else {
                 unset($items[$k]);
             }
         }
-
         // Return the items
         return $items;
     }
-
+    
     /**
      * Get a specific Dynamic user data item.
      *
@@ -94,39 +98,33 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
             return LogUtil::registerArgsError();
         }
-
         /** @var $item Profile_Entity_Property */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int)$args['propid']);
+            $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int) $args['propid']);
         } elseif (isset($args['proplabel'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_label' => $args['proplabel']));
         } else {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
         }
-
         // Check for no rows found, and if so return
         if (!$item) {
             return false;
         }
-
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::', $item->getProp_label().'::'.$item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('Profile::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
             return false;
         }
-
         // Extract the validation info array
         $validationinfo = unserialize($item->getProp_validation());
         $item = $item->toArray();
-
         // Expand the item array
-        foreach ((array)$validationinfo as $infolabel => $infofield) {
-            $item['prop_'.$infolabel] = $infofield;
+        foreach ((array) $validationinfo as $infolabel => $infofield) {
+            $item['prop_' . $infolabel] = $infofield;
         }
-
         // Return the item array
         return $item;
     }
-
+    
     /**
      * Get all active Dynamic user data fields.
      *
@@ -154,7 +152,6 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['numitems']) || $args['numitems'] <= 0) {
             $args['numitems'] = 0;
         }
-
         if (!isset($args['index']) || !in_array($args['index'], array('prop_id', 'prop_label', 'prop_attribute_name'))) {
             $args['index'] = 'prop_attribute_name';
         }
@@ -164,52 +161,41 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['uid']) || !is_numeric($args['uid'])) {
             $args['uid'] = 0;
         }
-
         // Security check
         if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_READ)) {
             return array();
         }
-
         static $items;
-
         if (!isset($items)) {
             $qb = $this->entityManager->createQueryBuilder();
-            $qb->select('p')->from('Profile_Entity_Property', 'p')
-                ->where('p.prop_weight > 0')
-                ->andWhere('p.prop_dtype >= 0')
-                ->orderBy('p.prop_weight');
+            $qb->select('p')->from('Profile_Entity_Property', 'p')->where('p.prop_weight > 0')->andWhere('p.prop_dtype >= 0')->orderBy('p.prop_weight');
             $items = $qb->getQuery()->getArrayResult();
-
             foreach (array_keys($items) as $k) {
                 // check permissions
-                if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'].'::'.$items[$k]['prop_id'], ACCESS_READ)) {
+                if (SecurityUtil::checkPermission('Profile::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                     // Extract the validation info array
                     $validationinfo = @unserialize($items[$k]['prop_validation']);
                     unset($items[$k]['prop_validation']);
-
-                    foreach ((array)$validationinfo as $infolabel => $infofield) {
-                        $items[$k]["prop_$infolabel"] = $infofield;
+                    foreach ((array) $validationinfo as $infolabel => $infofield) {
+                        $items[$k]["prop_{$infolabel}"] = $infofield;
                     }
                 } else {
                     unset($items[$k]);
                 }
             }
         }
-
         // process the startnum and numitems
         if ($args['numitems']) {
-            $items = array_splice($items, $args['startnum']+1, $args['numitems']);
+            $items = array_splice($items, $args['startnum'] + 1, $args['numitems']);
         } else {
-            $items = array_splice($items, $args['startnum']+1);
+            $items = array_splice($items, $args['startnum'] + 1);
         }
-
         // Put items into result array and filter if needed
-        $currentuser = (int)UserUtil::getVar('uid');
-        $ismember    = ($currentuser >= 2);
-        $isowner     = ($currentuser == (int)$args['uid']);
-        $isadmin     = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
-
-        $result  = array();
+        $currentuser = (int) UserUtil::getVar('uid');
+        $ismember = $currentuser >= 2;
+        $isowner = $currentuser == (int) $args['uid'];
+        $isadmin = SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN);
+        $result = array();
         foreach ($items as $item) {
             switch ($args['get']) {
                 case 'editable':
@@ -217,7 +203,7 @@ class Profile_Api_User extends Zikula_AbstractApi
                     if ($item['prop_dtype'] < 0) {
                         break;
                     }
-                    // Fall through to next case on purpose, handle editable and viewable the same at this point.
+                // Fall through to next case on purpose, handle editable and viewable the same at this point.
                 case 'viewable':
                     $isallowed = true;
                     // check the item visibility
@@ -227,11 +213,11 @@ class Profile_Api_User extends Zikula_AbstractApi
                             break;
                         // members only or higher
                         case '1':
-                            $isallowed = ($isowner || $ismember);
+                            $isallowed = $isowner || $ismember;
                             break;
                         // account owner or admin
                         case '2':
-                            $isallowed = ($isowner || $isadmin);
+                            $isallowed = $isowner || $isadmin;
                             break;
                         // admins only
                         case '3':
@@ -246,11 +232,10 @@ class Profile_Api_User extends Zikula_AbstractApi
                     $result[$item[$args['index']]] = $item;
             }
         }
-
         // Return the items
         return $result;
     }
-
+    
     /**
      * Utility function to count the number of items held by this module.
      *
@@ -262,7 +247,7 @@ class Profile_Api_User extends Zikula_AbstractApi
         $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Profile_Entity_Property p');
         return $query->getSingleScalarResult();
     }
-
+    
     /**
      * Utility function to get the weight limits.
      *
@@ -272,14 +257,12 @@ class Profile_Api_User extends Zikula_AbstractApi
     {
         $query = $this->entityManager->createQuery('SELECT MAX(p.prop_weight) FROM Profile_Entity_Property p');
         $max = $query->getSingleScalarResult();
-
         $query = $this->entityManager->createQuery('SELECT MIN(p.prop_weight) FROM Profile_Entity_Property p');
         $min = $query->getSingleScalarResult();
-
         // Return the number of items
         return array('min' => $min, 'max' => $max);
     }
-
+    
     /**
      * Utility function to save the data of the user.
      *
@@ -298,17 +281,13 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['uid'])) {
             return LogUtil::registerArgsError();
         }
-
         $fields = $args['dynadata'];
-
         $duds = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
-
         foreach ($duds as $attrname => $dud) {
             // exclude avatar update when Avatar module is present
             if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
             }
-
             $fieldvalue = '';
             if (isset($fields[$attrname])) {
                 // Process the Date DUD separately
@@ -323,12 +302,11 @@ class Profile_Api_User extends Zikula_AbstractApi
             }
             UserUtil::setVar($attrname, $fieldvalue, $args['uid']);
         }
-
         // Return the result (true = success, false = failure
         // At this point, the result is true.
         return true;
     }
-
+    
     /**
      * Parses and reformats a date for user entry validation.
      *
@@ -337,19 +315,20 @@ class Profile_Api_User extends Zikula_AbstractApi
      * 
      * @return string The parsed date string, as returned by {@link DateUtil::parseUIDate()}.
      */
-    protected function parseDate(&$datestring) {
-        $dateformats = array(null,"%d.%m.%Y", "%Y-%m-%d", "%e.%n.%Y", "%e.%n.%y", "%Y/%m/%d", "%y/%m/%d");
+    protected function parseDate(&$datestring)
+    {
+        $dateformats = array(null, '%d.%m.%Y', '%Y-%m-%d', '%e.%n.%Y', '%e.%n.%y', '%Y/%m/%d', '%y/%m/%d');
         $result = null;
         foreach ($dateformats as $format) {
             $result = DateUtil::parseUIDate($datestring, $format);
             if ($result != null) {
-                $datestring = DateUtil::formatDatetime($result, "%d.%m.%Y", false);
+                $datestring = DateUtil::formatDatetime($result, '%d.%m.%Y', false);
                 break;
             }
         }
         return $result;
     }
-
+    
     /**
      * Profile_Manager function to check the required missing.
      *
@@ -367,13 +346,10 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['dynadata'])) {
             throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
-
         // The API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
-
         // Initializing Error check
         $error = false;
-
         foreach ($items as $item) {
             if ($item['prop_required'] == 1) {
                 // exclude the checkboxes from required check
@@ -384,7 +360,7 @@ class Profile_Api_User extends Zikula_AbstractApi
                     $error['fields'][] = $item['prop_attribute_name'];
                     $error['translatedFields'][] = $this->__($item['prop_label']);
                 } elseif (is_array($args['dynadata'][$item['prop_attribute_name']])) {
-                    while (list(,$value) = each($args['dynadata'][$item['prop_attribute_name']])) {
+                    while (list(, $value) = each($args['dynadata'][$item['prop_attribute_name']])) {
                         if ($this->profileIsEmptyValue($value)) {
                             $error['result'] = true;
                             $error['fields'][] = $item['prop_attribute_name'];
@@ -403,15 +379,13 @@ class Profile_Api_User extends Zikula_AbstractApi
                 }
             }
         }
-
         if (!empty($error)) {
             $error['translatedFieldsStr'] = join(', ', $error['translatedFields']);
         }
-
         // Return the result
         return $error;
     }
-
+    
     /**
      * Checks if a value is empty, however if the $value is 0, it is not considered empty.
      *
@@ -422,22 +396,18 @@ class Profile_Api_User extends Zikula_AbstractApi
     protected function profileIsEmptyValue($value)
     {
         $empty = false;
-
         if (empty($value)) {
             $empty = true;
         }
-
-        if (!$empty && (trim($value) == '')) {
+        if (!$empty && trim($value) == '') {
             $empty = true;
         }
-
         if ($empty && is_numeric($value) && $value == 0) {
             $empty = false;
         }
-
         return $empty;
     }
-
+    
     /**
      * Profile_Manager function to retrieve the dynamic data to the user object.
      *
@@ -457,32 +427,27 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['dynadata'])) {
             throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
-        
         $dynadata = $args['dynadata'];
-
         // Validate if there's no dynadata
         // do not touch the __ATTRIBUTES__ field
         if (empty($dynadata)) {
             return array();
         }
-
         // Validate if it's an existing user
         if (!isset($args['uid'])) {
             return array('__ATTRIBUTES__' => $dynadata);
         }
-
         // Needs to merge the existing attributes to not delete any of them
-//        $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
-        $user = UserUtil::getVars($args['uid']); // @todo use 'api' instead? does this work?
-
+        //        $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
+        $user = UserUtil::getVars($args['uid']);
+        // @todo use 'api' instead? does this work?
         if ($user === false || !isset($user['__ATTRIBUTES__'])) {
             return array('__ATTRIBUTES__' => $dynadata);
         }
-
         // attach the dynadata as attributes to the user object
         return array('__ATTRIBUTES__' => array_merge($user['__ATTRIBUTES__'], $dynadata));
     }
-
+    
     /**
      * Search the input values through the dynadata.
      *
@@ -497,25 +462,19 @@ class Profile_Api_User extends Zikula_AbstractApi
     public function searchdynadata($args)
     {
         $uids = array();
-
         if (!isset($args['dynadata'])) {
             throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
-        
         $dynadata = $args['dynadata'];
-
         // Validate if there's any dynamic data
         if (empty($dynadata) || !is_array($dynadata)) {
             return $uids;
         }
-
         $params = array('returnUids' => true);
         if (count($dynadata) == 1 && in_array('all', array_keys($dynadata))) {
             $params['searchby'] = $dynadata;
-
         } else {
             $duditems = ModUtil::apiFunc('Profile', 'user', 'getall');
-
             $params['searchby'] = array();
             foreach ($duditems as $item) {
                 if (isset($dynadata[$item['prop_attribute_name']]) && !empty($dynadata[$item['prop_attribute_name']])) {
@@ -523,15 +482,12 @@ class Profile_Api_User extends Zikula_AbstractApi
                 }
             }
         }
-
         if (!empty($params['searchby'])) {
             $uids = ModUtil::apiFunc('Profile', 'memberslist', 'getall', $params);
         }
-
         return $uids;
     }
-
-
+    
     /**
      * Decode the custom url string.
      *
@@ -549,15 +505,12 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['vars'])) {
             return LogUtil::registerArgsError();
         }
-
         // let the core handled everything except the view function
         if (!isset($args['vars'][2]) || empty($args['vars'][2]) || $args['vars'][2] != 'view') {
             return false;
         }
-        
         System::queryStringSetVar('type', 'user');
         System::queryStringSetVar('func', 'view');
-
         // identify the correct parameter to identify the user
         if (isset($args['vars'][3])) {
             if (is_numeric($args['vars'][3])) {
@@ -566,14 +519,12 @@ class Profile_Api_User extends Zikula_AbstractApi
                 System::queryStringSetVar('uname', $args['vars'][3]);
             }
         }
-
         if (isset($args['vars'][4])) {
             System::queryStringSetVar('page', $args['vars'][4]);
         }
-
         return true;
     }
-
+    
     /**
      * Create custom url string.
      *
@@ -595,32 +546,27 @@ class Profile_Api_User extends Zikula_AbstractApi
         if (!isset($args['modname']) || !isset($args['func']) || !isset($args['args'])) {
             return LogUtil::registerArgsError();
         }
-
         if (!isset($args['type'])) {
             $args['type'] = 'user';
-        } elseif (!is_string($args['type']) || ($args['type'] != 'user')) {
+        } elseif (!is_string($args['type']) || $args['type'] != 'user') {
             return LogUtil::registerArgsError();
         }
-        
         if (empty($args['func'])) {
             $args['func'] = 'main';
         }
-
         // create an empty string ready for population
         $vars = '';
-
         // let the core handled everything except the view function
         if ($args['func'] == 'view' && (isset($args['args']['uname']) || isset($args['args']['uid']))) {
-            isset($args['args']['uname']) ? $vars = $args['args']['uname'] : $vars = $args['args']['uid'];
+            isset($args['args']['uname']) ? $vars = $args['args']['uname'] : ($vars = $args['args']['uid']);
         } else {
             return false;
         }
-
         if (isset($args['args']['page'])) {
             $vars .= "/{$args['args']['page']}";
         }
-
         // construct the custom url part
         return $args['modname'] . '/' . $args['func'] . '/' . $vars;
     }
+
 }

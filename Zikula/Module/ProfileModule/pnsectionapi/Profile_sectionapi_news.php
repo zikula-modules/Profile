@@ -1,5 +1,4 @@
-<?php
-/**
+<?php/**
  * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -11,7 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 /**
  * Section to show the latest articles of a user.
  *
@@ -30,22 +28,23 @@ function Profile_sectionapi_news($args)
     if (!isset($args['uid']) || empty($args['uid'])) {
         return false;
     }
-
     // assures the number of items to retrieve
     if (!isset($args['numitems']) || empty($args['numitems'])) {
         $args['numitems'] = 5;
     }
-
     // only published articles
     $args['status'] = 0;
-
     // exclude future articles
     $args['filterbydate'] = true;
-
     // removes unallowed parameters
-    if (isset($args['from']))  unset($args['from']);
-    if (isset($args['to']))    unset($args['to']);
-    if (isset($args['query'])) unset($args['query']);
-
+    if (isset($args['from'])) {
+        unset($args['from']);
+    }
+    if (isset($args['to'])) {
+        unset($args['to']);
+    }
+    if (isset($args['query'])) {
+        unset($args['query']);
+    }
     return ModUtil::apiFunc('News', 'user', 'getall', $args);
 }

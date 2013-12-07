@@ -1,5 +1,4 @@
-<?php
-/**
+<?php/**
  * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -11,7 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 /**
  * Section to show the latest comments of a user.
  *
@@ -30,13 +28,11 @@ function Profile_sectionapi_ezcomments($args)
     if (!isset($args['uid']) || empty($args['uid'])) {
         return false;
     }
-
     // assures the number of items to retrieve
     if (!isset($args['numitems']) || empty($args['numitems'])) {
         $args['numitems'] = 5;
     }
     // only approved comments
     $args['status'] = 0;
-
     return ModUtil::apiFunc('EZComments', 'user', 'getall', $args);
 }

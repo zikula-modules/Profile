@@ -12,51 +12,55 @@
  * information regarding copyright and licensing.
  */
 
+namespace Zikula\Module\ProfileModule\Listener;
+
+use Profile_Constant;
+use ZLanguage;
+use Zikula_View;
+use ModUtil;
+use Zikula_Hook_ValidationResponse;
+use LogUtil;
+use UserUtil;
+
 /**
  * Hook-like event handlers for basic profile data.
  */
-class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implements Zikula_TranslatableInterface
+class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zikula_TranslatableInterface
 {
     /**
      * The area name that this handler processes.
      */
     const EVENT_KEY = 'module.profile.users_ui_handler';
-
     /**
      * The common module name.
      *
      * @var string
      */
     protected $name = Profile_Constant::MODNAME;
-    
     /**
      * The language domain for ZLanguage i18n.
      *
      * @var string|null
      */
     protected $domain = null;
-
     /**
      * Access to a Zikula_View instance for the Profile module.
      *
      * @var Zikula_View
      */
     protected $view;
-
     /**
      * Access to the request information.
      *
      * @var Zikula_Request_Http
      */
     protected $request;
-
     /**
      * The validation object instance used when validating information entered during an edit phase.
      *
      * @var Zikula_Hook_ValidationResponse
      */
     protected $validation;
-
     /**
      * Builds an instance of this class.
      *
@@ -64,12 +68,9 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
      */
     // @todo Need to set the correct type hint.
     public function __construct($eventManager)
-    //public function __construct(Zikula_EventManager $eventManager)
     {
         parent::__construct($eventManager);
-        
         $this->domain = ZLanguage::getModuleDomain($this->name);
-        
         $this->serviceManager = $eventManager->getContainer();
         $this->request = $this->serviceManager->get('request');
     }
@@ -79,10 +80,9 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
         if (!$this->view) {
             $this->view = Zikula_View::getInstance($this->name);
         }
-        
         return $this->view;
     }
-
+    
     /**
      * Bind the various functions defined by this class to specific events.
      * 
@@ -91,23 +91,20 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     public function setupHandlerDefinitions()
     {
         $this->addHandlerDefinition('module.users.ui.display_view', 'uiView');
-        
         $this->addHandlerDefinition('module.users.ui.form_edit.new_user', 'uiEdit');
         $this->addHandlerDefinition('module.users.ui.form_edit.modify_user', 'uiEdit');
         $this->addHandlerDefinition('module.users.ui.form_edit.new_registration', 'uiEdit');
         $this->addHandlerDefinition('module.users.ui.form_edit.modify_registration', 'uiEdit');
-        
         $this->addHandlerDefinition('module.users.ui.validate_edit.new_user', 'validateEdit');
         $this->addHandlerDefinition('module.users.ui.validate_edit.modify_user', 'validateEdit');
         $this->addHandlerDefinition('module.users.ui.validate_edit.new_registration', 'validateEdit');
         $this->addHandlerDefinition('module.users.ui.validate_edit.modify_registration', 'validateEdit');
-        
         $this->addHandlerDefinition('module.users.ui.process_edit.new_user', 'processEdit');
         $this->addHandlerDefinition('module.users.ui.process_edit.modify_user', 'processEdit');
         $this->addHandlerDefinition('module.users.ui.process_edit.new_registration', 'processEdit');
         $this->addHandlerDefinition('module.users.ui.process_edit.modify_registration', 'processEdit');
     }
-
+    
     /**
      * Render and return profile information for display as part of a hook-like UI event issued from the Users module.
      *
@@ -118,21 +115,16 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     public function uiView(Zikula_Event $event)
     {
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
-
         // The return value of the function is checked here
         if ($items) {
             $user = $event->getSubject();
-
             // Create output object
-            $this->getView()->setCaching(false)
-                    ->assign('duditems', $items)
-                    ->assign('userinfo', $user);
-
+            $this->getView()->setCaching(false)->assign('duditems', $items)->assign('userinfo', $user);
             // Return the dynamic data rows
             $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_view.tpl');
         }
     }
-
+    
     /**
      * Render form elements for display that allow a user to enter profile information for a user account as part of a Users module hook-like UI event.
      * 
@@ -148,31 +140,25 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     public function uiEdit(Zikula_Event $event)
     {
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
-
         // The return value of the function is checked here
         if ($items) {
-        	$fieldsets = array();
-		
-			foreach ($items as $propattr => $propdata) {
-        		$items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
-				$fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
-			}
-        	
+            $fieldsets = array();
+            foreach ($items as $propattr => $propdata) {
+                $items[$propattr]['prop_fieldset'] = isset($items[$propattr]['prop_fieldset']) && !empty($items[$propattr]['prop_fieldset']) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
+                $fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
+            }
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user
-            $userid   = $event->hasArgument('id') ? $event->getArgument('id') : null;
-
+            $userid = $event->hasArgument('id') ? $event->getArgument('id') : null;
             if (!isset($userid)) {
                 $userid = 1;
             }
-
             // Get the dynamic data that might have been posted
             if ($this->request->isMethod('POST') && $this->request->request->has('dynadata')) {
                 $dynadata = $this->request->request->get('dynadata');
             } else {
                 $dynadata = array();
             }
-
             // merge this temporary dynadata and the errors into the items array
             foreach ($items as $prop_label => $item) {
                 foreach ($dynadata as $propname => $propdata) {
@@ -181,23 +167,16 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
                     }
                 }
             }
-
             if ($this->validation) {
                 $errorFields = $this->validation->getErrors();
             } else {
                 $errorFields = array();
             }
-
-            $this->getView()->setCaching(false)
-                    ->assign('duderrors', $errorFields)
-                    ->assign('duditems', $items)
-                    ->assign('fieldsets', $fieldsets)
-                    ->assign('userid', $userid);
-
+            $this->getView()->setCaching(false)->assign('duderrors', $errorFields)->assign('duditems', $items)->assign('fieldsets', $fieldsets)->assign('userid', $userid);
             $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_edit.tpl');
         }
     }
-
+    
     /**
      * Validate profile information entered for a user as part of the hook-like user UI events.
      * 
@@ -214,10 +193,8 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     {
         if ($this->request->isMethod('POST')) {
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
-
             $this->validation = new Zikula_Hook_ValidationResponse('dynadata', $dynadata);
             $requiredFailures = ModUtil::apiFunc('Profile', 'user', 'checkrequired', array('dynadata' => $dynadata));
-
             $errorCount = 0;
             if ($requiredFailures && $requiredFailures['result']) {
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {
@@ -225,15 +202,13 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
                     $errorCount++;
                 }
             }
-
             if ($errorCount > 0) {
                 LogUtil::registerError(_fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount), $this->domain));
             }
-
             $event->data->set(self::EVENT_KEY, $this->validation);
         }
     }
-
+    
     /**
      * Respond to a `module.users.ui.process_edit` event to store profile data gathered when editing or creating a user account.
      * 
@@ -251,7 +226,6 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
             if ($this->validation && !$this->validation->hasErrors()) {
                 $user = $event->getSubject();
                 $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
-
                 foreach ($dynadata as $dudName => $dudItem) {
                     UserUtil::setVar($dudName, $dudItem, $user['uid']);
                 }
@@ -270,7 +244,7 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     {
         return __($msgid, $this->domain);
     }
-
+    
     /**
      * Translate with sprintf().
      *
@@ -283,7 +257,7 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
     {
         return __f($msgid, $params, $this->domain);
     }
-
+    
     /**
      * Translate plural string.
      *
@@ -293,11 +267,14 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
      *
      * @return string Translated string.
      */
-    public function _n($singular, $plural, $count)
-    {
+    public function _n(
+        $singular,
+        $plural,
+        $count
+    ) {
         return _n($singular, $plural, $count, $this->domain);
     }
-
+    
     /**
      * Translate plural string with sprintf().
      *
@@ -308,8 +285,13 @@ class Profile_Listener_UsersUiHandler extends Zikula_AbstractEventHandler implem
      *
      * @return string
      */
-    public function _fn($sin, $plu, $n, $params)
-    {
+    public function _fn(
+        $sin,
+        $plu,
+        $n,
+        $params
+    ) {
         return _fn($sin, $plu, $n, $params, $this->domain);
     }
+
 }

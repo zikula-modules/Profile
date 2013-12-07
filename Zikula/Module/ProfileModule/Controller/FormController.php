@@ -12,10 +12,15 @@
  * information regarding copyright and licensing.
  */
 
+namespace Zikula\Module\ProfileModule\Controller;
+
+use ModUtil;
+use LogUtil;
+
 /**
  * UI operations related to the display of dynamically defined user attributes.
  */
-class Profile_Controller_Form extends Zikula_AbstractController
+class FormController extends \Zikula_AbstractController
 {
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.
@@ -35,22 +40,18 @@ class Profile_Controller_Form extends Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile', 'user', 'viewmembers'));
+            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url('Profile', 'user', 'viewmembers'));
         }
-
         // The API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive', array('get' => 'editable'));
-
         // The return value of the function is checked here
         if ($items == false) {
             return '';
         }
-
         // check if there's a user to edit
         // or uses uid=1 to pull the default values from the annonymous user
-        $userid   = isset($args['userid']) ? $args['userid'] : 1;
+        $userid = isset($args['userid']) ? $args['userid'] : 1;
         $dynadata = isset($args['dynadata']) ? $args['dynadata'] : $this->request->getPost()->get('dynadata', array());
-
         // merge this temporary dynadata and the errors into the items array
         foreach ($items as $prop_label => $item) {
             foreach ($dynadata as $propname => $propdata) {
@@ -59,16 +60,11 @@ class Profile_Controller_Form extends Zikula_AbstractController
                 }
             }
         }
-
-        $this->view->setCaching(false)
-                    ->add_core_data()
-                    ->assign('duditems', $items)
-                    ->assign('userid', $userid);
-
+        $this->view->setCaching(false)->add_core_data()->assign('duditems', $items)->assign('userid', $userid);
         // Return the dynamic data section
         return $this->view->fetch('Form/edit.tpl');
     }
-
+    
     /**
      * Display the dynadata section of the search form.
      *
@@ -78,17 +74,14 @@ class Profile_Controller_Form extends Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile', 'user', 'viewmembers'));
+            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url('Profile', 'user', 'viewmembers'));
         }
-
         // The API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
-
         // The return value of the function is checked here
         if ($items == false) {
             return '';
         }
-
         // unset the avatar and timezone fields
         if (isset($items['avatar'])) {
             unset($items['avatar']);
@@ -96,20 +89,15 @@ class Profile_Controller_Form extends Zikula_AbstractController
         if (isset($items['tzoffset'])) {
             unset($items['tzoffset']);
         }
-
         // reset the 'required' flags
         foreach (array_keys($items) as $k) {
             $items[$k]['prop_required'] = false;
         }
-
-        $this->view->setCaching(false)
-                    ->assign('duditems', $items)
-                    ->assign('userid', 1);
-
+        $this->view->setCaching(false)->assign('duditems', $items)->assign('userid', 1);
         // Return the dynamic data section
         return $this->view->fetch('Form/edit.tpl');
     }
-
+    
     /**
      * Fills a z-datatable body with the passed dynadata.
      * 
@@ -125,25 +113,19 @@ class Profile_Controller_Form extends Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'Profile') {
-            return LogUtil::registerError($this->__("Error! You cannot access form functions directly." ), null, ModUtil::url('Profile', 'user', 'viewmembers'));
+            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url('Profile', 'user', 'viewmembers'));
         }
-
         // The API function is called.
         $items = ModUtil::apiFunc('Profile', 'user', 'getallactive');
-
         // The return value of the function is checked here
         if ($items == false) {
             return '';
         }
-
         $userinfo = isset($args['userinfo']) ? $args['userinfo'] : array();
-
         // Create output object
-        $this->view->setCaching(false)
-                ->assign('duditems', $items)
-                ->assign('userinfo', $userinfo);
-
+        $this->view->setCaching(false)->assign('duditems', $items)->assign('userinfo', $userinfo);
         // Return the dynamic data rows
         return $this->view->fetch('Form/display.tpl');
     }
+
 }

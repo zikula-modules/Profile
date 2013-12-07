@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -12,15 +10,22 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 use Profile_Entity_Property as PropertyEntity;
 
 /**
  * Administrative API functions for the Profile module.
  */
-class Profile_Api_Admin extends Zikula_AbstractApi
-{
 
+namespace Zikula\Module\ProfileModule\Api;
+
+use LogUtil;
+use SecurityUtil;
+use ModUtil;
+use DataUtil;
+use PropertyEntity;
+
+class AdminApi extends \Zikula_AbstractApi
+{
     /**
      * Create a new dynamic user data item.
      * 
@@ -37,17 +42,13 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     public function create($args)
     {
         // Argument check
-        if ((!isset($args['label']) || empty($args['label'])) ||
-                (!isset($args['attribute_name']) || empty($args['attribute_name'])) ||
-                (!isset($args['dtype']) || !is_numeric($args['dtype']))) {
+        if (!isset($args['label']) || empty($args['label']) || (!isset($args['attribute_name']) || empty($args['attribute_name'])) || (!isset($args['dtype']) || !is_numeric($args['dtype']))) {
             return LogUtil::registerArgsError();
         }
-
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::item', "$args[label]::", ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission('Profile::item', "{$args['label']}::", ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
-
         // Check if the label or attribute name already exists
         //@todo The check needs to occur for both the label and fieldset.
         //$item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
@@ -56,28 +57,18 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         //}
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
-            return LogUtil::registerError($this->__f("Error! There is already an item with the attribute name '%s'.", DataUtil::formatForDisplay($args['attribute_name'])));
+            return LogUtil::registerError($this->__f('Error! There is already an item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
         }
-
         // Determine the new weight
         $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
-
         // a checkbox can't be required
         if ($args['displaytype'] == 2 && $args['required']) {
             $args['required'] = 0;
         }
-
         // produce the validation array
         $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
-        $validationinfo = array('required' => $args['required'],
-            'viewby' => $args['viewby'],
-            'displaytype' => $args['displaytype'],
-            'listoptions' => $args['listoptions'],
-            'note' => $args['note'],
-            'fieldset' => ((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information')
-        );
-
+        $validationinfo = array('required' => $args['required'], 'viewby' => $args['viewby'], 'displaytype' => $args['displaytype'], 'listoptions' => $args['listoptions'], 'note' => $args['note'], 'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
         $obj = array();
         $obj['prop_label'] = $args['label'];
         $obj['prop_attribute_name'] = $args['attribute_name'];
@@ -88,11 +79,10 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         $prop->merge($obj);
         $this->entityManager->persist($prop);
         $this->entityManager->flush();
-
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
     }
-
+    
     /**
      * Update a dynamic user data item.
      * 
@@ -112,87 +102,66 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if ((!isset($args['label'])) || (!isset($args['dudid'])) || (!is_numeric($args['dudid']))) {
             return LogUtil::registerArgsError();
         }
-
         // The user API function is called.
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
-
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
-
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::Item', "$item[prop_label]::$args[dudid]", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission('Profile::Item', "{$item['prop_label']}::{$args['dudid']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
-
-        if (!SecurityUtil::checkPermission('Profile::Item', "$args[label]::$args[dudid]", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission('Profile::Item', "{$args['label']}::{$args['dudid']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
-
         // If there's a new label, check if it already exists
         //@todo The check needs to occur for both the label and fieldset.
         //if ($args['label'] <> $item['prop_label']) {
-          //  $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
-            //if ($vitem) {
-              //  return LogUtil::registerError($this->__("Error! There is already an item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
-            //}
+        //  $vitem = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $args['label']));
+        //if ($vitem) {
+        //  return LogUtil::registerError($this->__("Error! There is already an item with the label '%s'.", DataUtil::formatForDisplay($args['label'])));
         //}
-
+        //}
         if (isset($args['prop_weight'])) {
             if ($args['prop_weight'] == 0) {
                 unset($args['prop_weight']);
-            } elseif ($args['prop_weight'] <> $item['prop_weight']) {
+            } elseif ($args['prop_weight'] != $item['prop_weight']) {
                 /** @var $property Profile_Entity_Property */
                 $property = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_weight' => $args['prop_weight']));
                 $property->setProp_weight($item['prop_weight']);
                 $this->entityManager->flush($property);
             }
         }
-
         // create the object to update
         $obj = array();
-        $obj['prop_dtype'] = (isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype']);
-        $obj['prop_weight'] = (isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight']);
-
+        $obj['prop_dtype'] = isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype'];
+        $obj['prop_weight'] = isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight'];
         // assumes if displaytype is set, all the validation info is
         if (isset($args['displaytype'])) {
             // a checkbox can't be required
             if ($args['displaytype'] == 2 && $args['required']) {
                 $args['required'] = 0;
             }
-
             // Produce the validation array
             $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
-            $validationinfo = array('required' => $args['required'],
-                'viewby' => $args['viewby'],
-                'displaytype' => $args['displaytype'],
-                'listoptions' => $args['listoptions'],
-                'note' => $args['note'],
-                'fieldset' => ((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information')
-            );
-
+            $validationinfo = array('required' => $args['required'], 'viewby' => $args['viewby'], 'displaytype' => $args['displaytype'], 'listoptions' => $args['listoptions'], 'note' => $args['note'], 'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
             $obj['prop_validation'] = serialize($validationinfo);
         }
-
         // let to modify the label for normal fields only
         if ($item['prop_dtype'] == 1) {
             $obj['prop_label'] = $args['label'];
         }
-
         // before update it search for option ID change
         // to update the respective user's data
         if ($obj['prop_validation'] != $item['prop_validation']) {
-            ModUtil::apiFunc('Profile', 'dud', 'updatedata', array('item' => $item['prop_validation'],
-                'newitem' => $obj['prop_validation']));
+            ModUtil::apiFunc('Profile', 'dud', 'updatedata', array('item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']));
         }
-
         $property = $this->entityManager->getRepository('Profile_Entity_Property')->find($args['dudid']);
         $property->merge($obj);
         $this->entityManager->flush();
-
         return true;
     }
-
+    
     /**
      * Delete a dynamic user data item.
      * 
@@ -210,43 +179,31 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-
         $dudid = $args['dudid'];
         unset($args);
-
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $dudid));
-
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'));
         }
-
         // normal type validation
-        if ((int)$item['prop_dtype'] != 1) {
+        if ((int) $item['prop_dtype'] != 1) {
             return LogUtil::registerError($this->__('Error! You cannot delete this personal info item.'), 404);
         }
-
         // Security check
-        if (!SecurityUtil::checkPermission('Profile::Item', "$item[prop_label]::$dudid", ACCESS_DELETE)) {
+        if (!SecurityUtil::checkPermission('Profile::Item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
             return LogUtil::registerPermissionError();
         }
-
         // delete the property data aka attributes
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\Module\UsersModule\Entity\UserAttributeEntity', 'a')
-            ->where('a.name = :name')
-            ->setParameter('name', $item['prop_attribute_name']);
+        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')->where('a.name = :name')->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
-
         // delete the property
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Profile_Entity_Property', 'p')
-            ->where('p.prop_id = :id')
-            ->setParameter('id', $dudid);
+        $qb->delete('Profile_Entity_Property', 'p')->where('p.prop_id = :id')->setParameter('id', $dudid);
         $qb->getQuery()->execute();
-
         return true;
     }
-
+    
     /**
      * Activate a dynamic user data item.
      * 
@@ -266,17 +223,14 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-
         $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
-
         /** @var $prop Profile_Entity_Property */
         $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
         $prop->setProp_weight($weightlimits['max'] + 1);
         $this->entityManager->flush();
-
         return true;
     }
-
+    
     /**
      * Deactivate a dynamic user data item.
      * 
@@ -296,35 +250,26 @@ class Profile_Api_Admin extends Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             return LogUtil::registerArgsError();
         }
-
         $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propid' => $args['dudid']));
-
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
         }
-
         // type validation
         if ($item['prop_dtype'] < 1) {
             return LogUtil::registerError($this->__('Error! You cannot deactivate this personal info item.'), 404);
         }
-
         // Update the item
         /** @var $prop Profile_Entity_Property */
         $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
         $prop->setProp_weight(0);
         $this->entityManager->flush();
-
         // Update the other items
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->update('Profile_Entity_Property', 'p')
-            ->set('p.prop_weight', 'p.prop_weight - 1')
-            ->where('p.prop_weight > :weight')
-            ->setParameter('weight', $item['prop_weight']);
+        $qb->update('Profile_Entity_Property', 'p')->set('p.prop_weight', 'p.prop_weight - 1')->where('p.prop_weight > :weight')->setParameter('weight', $item['prop_weight']);
         $qb->getQuery()->execute();
-
         return true;
     }
-
+    
     /**
      * Get available admin panel links.
      * 
@@ -333,34 +278,20 @@ class Profile_Api_Admin extends Zikula_AbstractApi
     public function getlinks()
     {
         $links = array();
-
         // Add User module links
-        $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'),
-            'text' => $this->__('Users Module'),
-            'class' => 'z-icon-es-user',
-            'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
-
+        $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'), 'text' => $this->__('Users Module'), 'class' => 'z-icon-es-user', 'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'),
-                'text' => $this->__('Fields'),
-                'class' => 'z-icon-es-view');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'view'), 'text' => $this->__('Fields'), 'class' => 'z-icon-es-view');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADD)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'newdud'),
-                'text' => $this->__('Create new field'),
-                'class' => 'z-icon-es-new');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'newdud'), 'text' => $this->__('Create new field'), 'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_ADMIN)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'modifyconfig'),
-                'text' => $this->__('User account panel settings'),
-                'class' => 'z-icon-es-config');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'modifyconfig'), 'text' => $this->__('User account panel settings'), 'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('Profile::', '::', ACCESS_EDIT)) {
-            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'help'),
-                'text' => $this->__('Help'),
-                'class' => 'z-icon-es-help');
+            $links[] = array('url' => ModUtil::url('Profile', 'admin', 'help'), 'text' => $this->__('Help'), 'class' => 'z-icon-es-help');
         }
-
         return $links;
     }
 
