@@ -21,6 +21,7 @@ namespace Zikula\Module\ProfileModule;
 use DoctrineHelper;
 use LogUtil;
 use EventUtil;
+use System;
 use Zikula\Module\ProfileModule\Entity\PropertyEntity;
 
 class ProfileModuleInstaller extends \Zikula_AbstractInstaller
@@ -102,6 +103,12 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                     $stmt = $connection->prepare($sql);
                     $stmt->execute();
                 }
+                // check core for profile setting and update name
+                $profilemodule = System::getVar('profilemodule', '');
+                if ($profilemodule == 'Profile') {
+                    System::setVar('profilemodule', $this->name);
+                }
+
             case '2.0.0':
         }
         $modVars = $this->getVars();
