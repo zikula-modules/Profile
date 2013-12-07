@@ -11,7 +11,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Zikula\Core\Event\GenericEvent;
 
 /**
  * UI operations executable by general users.
@@ -24,7 +23,7 @@ use LogUtil;
 use SecurityUtil;
 use UserUtil;
 use DataUtil;
-use GenericEvent;
+use Zikula\Core\Event\GenericEvent;
 
 class UserController extends \Zikula_AbstractController
 {
