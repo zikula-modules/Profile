@@ -61,7 +61,7 @@
 											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="hidden" name="dudregshow[]" value="{$key|safetext}" /> 
 											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}_placeholder" type="checkbox" name="dudregshow_placeholder[]" value="{$item.prop_attribute_name|safetext}" checked="checked" disabled="disabled" />
 										{else}
-											{if (in_array($item.prop_attribute_name, $modvars.Profile.dudregshow))}
+											{if (in_array($item.prop_attribute_name, $modvars.ZikulaProfileModule.dudregshow))}
 												<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="checkbox" name="dudregshow[]" value="{$item.prop_attribute_name|safetext}" checked="checked" />
 											{else}
 												<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="checkbox" name="dudregshow[]" value="{$item.prop_attribute_name|safetext}" />
