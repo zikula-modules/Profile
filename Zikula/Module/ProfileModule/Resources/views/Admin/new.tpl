@@ -61,7 +61,7 @@
             </div>
             <div class="z-formrow">
                 <label for="profile_fieldset">{gt text='Fieldset'}</label>
-                <input id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" />
+                <input id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" placeholder="{gt text='User Information'}" />
             </div>
         </fieldset>
 
