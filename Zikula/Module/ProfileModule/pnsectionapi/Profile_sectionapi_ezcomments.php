@@ -1,4 +1,5 @@
-<?php/**
+<?php
+/**
  * Copyright Zikula Foundation 2011 - Profile module for Zikula
  *
  * This work is contributed to the Zikula Foundation under one or more
