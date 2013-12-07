@@ -383,7 +383,7 @@ class AdminController extends \Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Profile::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             return LogUtil::registerPermissionError();
         }
-        /** @var $prop Profile_Entity_Property */
+        /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Profile_Entity_Property', $dudid);
         $prop->incrementWeight();
         $this->entityManager->flush();
@@ -413,7 +413,7 @@ class AdminController extends \Zikula_AbstractController
         if ($item['prop_weight'] <= 1) {
             return LogUtil::registerError($this->__('Error! You cannot decrease the weight of this account property.'), 404);
         }
-        /** @var $prop Profile_Entity_Property */
+        /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Profile_Entity_Property', $dudid);
         $prop->decrementWeight();
         $this->entityManager->flush();

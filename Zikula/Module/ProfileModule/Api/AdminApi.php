@@ -10,7 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Profile_Entity_Property as PropertyEntity;
 
 /**
  * Administrative API functions for the Profile module.
@@ -22,7 +21,7 @@ use LogUtil;
 use SecurityUtil;
 use ModUtil;
 use DataUtil;
-use PropertyEntity;
+use Zikula\Module\ProfileModule\Entity\PropertyEntity;
 
 class AdminApi extends \Zikula_AbstractApi
 {
@@ -126,7 +125,7 @@ class AdminApi extends \Zikula_AbstractApi
             if ($args['prop_weight'] == 0) {
                 unset($args['prop_weight']);
             } elseif ($args['prop_weight'] != $item['prop_weight']) {
-                /** @var $property Profile_Entity_Property */
+                /** @var $property \Zikula\Module\ProfileModule\Entity\PropertyEntity */
                 $property = $this->entityManager->getRepository('Profile_Entity_Property')->findOneBy(array('prop_weight' => $args['prop_weight']));
                 $property->setProp_weight($item['prop_weight']);
                 $this->entityManager->flush($property);
@@ -224,7 +223,7 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         $weightlimits = ModUtil::apiFunc('Profile', 'user', 'getweightlimits');
-        /** @var $prop Profile_Entity_Property */
+        /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
         $prop->setProp_weight($weightlimits['max'] + 1);
         $this->entityManager->flush();
@@ -259,7 +258,7 @@ class AdminApi extends \Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! You cannot deactivate this personal info item.'), 404);
         }
         // Update the item
-        /** @var $prop Profile_Entity_Property */
+        /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Profile_Entity_Property', $args['dudid']);
         $prop->setProp_weight(0);
         $this->entityManager->flush();

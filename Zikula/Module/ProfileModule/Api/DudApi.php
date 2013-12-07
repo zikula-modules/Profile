@@ -10,7 +10,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Profile_Entity_Property as PropertyEntity;
 
 /**
  * API functions related to dynamic user data field management.
@@ -23,7 +22,7 @@ use SecurityUtil;
 use DataUtil;
 use ModUtil;
 use System;
-use PropertyEntity;
+use Zikula\Module\ProfileModule\Entity\PropertyEntity;
 
 class DudApi extends \Zikula_AbstractApi
 {
@@ -118,7 +117,7 @@ class DudApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // Get item with where clause
-        /** @var $item Profile_Entity_Property */
+        /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int) $args['propid']);
         } elseif (isset($args['proplabel'])) {

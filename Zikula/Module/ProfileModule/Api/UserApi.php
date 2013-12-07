@@ -98,7 +98,7 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
             return LogUtil::registerArgsError();
         }
-        /** @var $item Profile_Entity_Property */
+        /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
             $item = $this->entityManager->getRepository('Profile_Entity_Property')->find((int) $args['propid']);
         } elseif (isset($args['proplabel'])) {
