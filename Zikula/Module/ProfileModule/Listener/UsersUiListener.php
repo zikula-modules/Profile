@@ -25,7 +25,7 @@ use UserUtil;
 /**
  * Hook-like event handlers for basic profile data.
  */
-class UsersUiHandlerListener extends \Zikula_AbstractEventHandler implements \Zikula_TranslatableInterface
+class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_TranslatableInterface
 {
     /**
      * The area name that this handler processes.

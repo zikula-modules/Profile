@@ -50,7 +50,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVars($this->getDefaultModVars());
         // create the default data for the module
         $this->defaultdata();
-        EventUtil::registerPersistentEventHandlerClass($this->name, 'Profile_Listener_UsersUiHandler');
+        EventUtil::registerPersistentEventHandlerClass($this->name, 'Zikula\Module\ProfileModule\Listener\UsersUiListener');
         // Initialisation successful
         return true;
     }
