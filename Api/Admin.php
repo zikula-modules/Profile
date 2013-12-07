@@ -14,6 +14,7 @@
  */
 
 use Profile_Entity_Property as PropertyEntity;
+
 /**
  * Administrative API functions for the Profile module.
  */
@@ -106,9 +107,9 @@ class Profile_Api_Admin extends Zikula_AbstractApi
      */
     public function update($args)
     {
+
         // Argument check
-        if (!isset($args['label']) || stristr($args['label'], '-') ||
-                !isset($args['dudid']) || !is_numeric($args['dudid'])) {
+        if ((!isset($args['label'])) || (!isset($args['dudid'])) || (!is_numeric($args['dudid']))) {
             return LogUtil::registerArgsError();
         }
 
