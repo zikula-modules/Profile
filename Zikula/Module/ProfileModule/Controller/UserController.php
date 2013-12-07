@@ -41,7 +41,7 @@ class UserController extends \Zikula_AbstractController
 
     public function indexAction()
     {
-        $this->redirect(ModUtil::url('Profile', 'user', 'viewmembers'));
+        $this->redirect(ModUtil::url($this->name, 'user', 'viewmembers'));
     }
 
     /**
