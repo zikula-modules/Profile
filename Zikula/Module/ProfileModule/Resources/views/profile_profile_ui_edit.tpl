@@ -1,4 +1,4 @@
-{ajaxheader modname='Profile' filename='Profile.UI.Edit.js' noscriptaculous=true effects=true}
+{ajaxheader modname='ZikulaProfileModule' filename='Profile.UI.Edit.js' noscriptaculous=true effects=true}
 {foreach from=$fieldsets item='fieldset'}
 	<fieldset>
     	<legend>{$fieldset}</legend>

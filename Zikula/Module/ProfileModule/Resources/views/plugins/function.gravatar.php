@@ -13,6 +13,7 @@
  * information regarding copyright and licensing.
  */
 
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 /**
  * Get either a Gravatar URL or complete image tag for a specified email address.
  *
@@ -32,7 +33,7 @@
 function smarty_function_gravatar(array $params = array(), Zikula_View $view)
 {
 
-	$dom = ZLanguage::getModuleDomain('Profile');
+	$dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
 
 	if (!isset($params['email_address'])) {
 		return false;

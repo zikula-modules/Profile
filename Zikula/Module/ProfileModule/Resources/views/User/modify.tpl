@@ -3,7 +3,7 @@
 
 {include file='User/menu.tpl'}
 
-<form id="modifyprofileform" class="z-form" action="{modurl modname='Profile' type='user' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="modifyprofileform" class="z-form" action="{modurl modname=$module type='user' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
 	<p>{gt text="Items marked with an asterisk (*) are required entries."}</p>
 	{foreach from=$fieldsets item='fieldset'}
@@ -18,7 +18,7 @@
     {/foreach}
     <div class="z-formbuttons z-buttons">
         {button src='button_ok.png' set='icons/small' __alt='Save' __title='Save' __text='Save'}
-        <a href="{modurl modname='Profile' type='user' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
+        <a href="{modurl modname=$module type='user' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
     </div>
 </form>
 

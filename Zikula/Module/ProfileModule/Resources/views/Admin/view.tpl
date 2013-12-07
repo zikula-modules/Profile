@@ -1,4 +1,4 @@
-{ajaxheader modname='Profile' filename='profile.js'}
+{ajaxheader modname=$module filename='profile.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="view" size="small"}

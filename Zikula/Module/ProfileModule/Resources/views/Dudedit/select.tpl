@@ -37,7 +37,7 @@
 </div>
 
 {if $attributename eq 'avatar'}
-{ajaxheader modname='Profile' filename='showavatar.js'}
+{ajaxheader modname=$module filename='showavatar.js'}
 <script type="text/javascript">
     // <![CDATA[
     Event.observe($('prop_avatar'), 'change', showavatar);

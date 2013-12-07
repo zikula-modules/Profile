@@ -1,11 +1,11 @@
-{ajaxheader modname='Profile' filename='profile_edit_property.js' nobehaviour=true noscriptaculous=true}
+{ajaxheader modname=$module filename='profile_edit_property.js' nobehaviour=true noscriptaculous=true}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="edit" size="small"}
     <h3>{gt text='Edit field'}</h3>
 </div>
 
-<form class="z-form" action="{modurl modname='Profile' type='admin' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
+<form class="z-form" action="{modurl modname=$module type='admin' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="dudid" value="{$dudid}" />
@@ -16,7 +16,7 @@
                 <label for="profile_label">{gt text='Label'}</label>
                 <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|safetext}" />
 
-                {modurl modname='Profile' type='admin' func='help' fqurl=true assign='helpurl'}
+                {modurl modname=$module type='admin' func='help' fqurl=true assign='helpurl'}
                 <div class="z-formnote z-informationmsg">{gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|safetext}</div>
             </div>
             <div class="z-formrow">
@@ -69,7 +69,7 @@
 
         <div class="z-formbuttons z-buttons">
             {button src='button_ok.png' set='icons/small' __alt='Save' __title='Save' __text='Save'}
-            <a href="{modurl modname='Profile' type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
+            <a href="{modurl modname=$module type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
         </div>
     </div>
 </form>

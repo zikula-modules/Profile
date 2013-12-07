@@ -12,6 +12,7 @@
  * information regarding copyright and licensing.
  */
 
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 /**
  * Smarty function to display a section of the user profile.
  *
@@ -46,14 +47,14 @@ function smarty_function_profilesection($params, &$smarty)
     $params['name'] = strtolower($params['name']);
 
     // extract the items to list
-    $section = ModUtil::apiFunc('Profile', 'section', $params['name'], $params);
+    $section = ModUtil::apiFunc(ProfileConstant::MODNAME, 'section', $params['name'], $params);
 
     if ($section === false) {
         return '';
     }
 
     // build the output
-    $render = Zikula_View::getInstance('Profile', false, null, true);
+    $render = Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
 
     // check the tmeplate existance
     $template = "sections/profile_section_{$params['name']}.tpl";

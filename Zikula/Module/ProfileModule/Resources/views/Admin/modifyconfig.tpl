@@ -3,7 +3,7 @@
     {icon type="config" size="small"}
     <h3>{gt text='User account panel settings'}</h3>
 </div>
-<form class="z-form" action="{modurl modname='Profile' type='admin' func='updateconfig'}" method="post" enctype="application/x-www-form-urlencoded">
+<form class="z-form" action="{modurl modname=$module type='admin' func='updateconfig'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <fieldset>
@@ -78,7 +78,7 @@
         </fieldset>
         <div class="z-formbuttons z-buttons">
             {button src='button_ok.png' set='icons/small' __alt='Save' __title='Save' __text='Save'}
-            <a href="{modurl modname='Profile' type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
+            <a href="{modurl modname=$module type='admin' func='view'}" title="{gt text="Cancel"}">{img modname='core' src='button_cancel.png' set='icons/small' __alt='Cancel' __title='Cancel'} {gt text="Cancel"}</a>
         </div>
     </div>
 </form>

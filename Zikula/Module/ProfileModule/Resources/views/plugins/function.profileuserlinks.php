@@ -12,6 +12,7 @@
  * information regarding copyright and licensing.
  */
 
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 /**
  * Smarty function to display user links for the Profile module
  *
@@ -54,7 +55,7 @@ function smarty_function_profileuserlinks($params, &$smarty)
         return $params['default'];
     }
 
-    $dom = ZLanguage::getModuleDomain('Profile');
+    $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
 
     $func = FormUtil::getPassedValue('func', 'main', 'GET');
     
@@ -75,13 +76,13 @@ function smarty_function_profileuserlinks($params, &$smarty)
             $linksarray[] = '<a href="' . ModUtil::url('Users', 'user', 'main') . '">' . __('User account panel', $dom) . '</a>';
         }
         if ($currentfunc != 'viewmembers') {
-            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'viewmembers') . '">' . __('Registered users', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url(ProfileConstant::MODNAME, 'user', 'viewmembers') . '">' . __('Registered users', $dom) . '</a>';
         }
         if ($currentfunc != 'recentmembers') {
-            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'recentmembers') . '">' . __f('Last %s registered users', ModUtil::getVar('Profile', 'recentmembersitemsperpage'), $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url(ProfileConstant::MODNAME, 'user', 'recentmembers') . '">' . __f('Last %s registered users', ModUtil::getVar(ProfileConstant::MODNAME, 'recentmembersitemsperpage'), $dom) . '</a>';
         }
         if ($currentfunc != 'onlinemembers') {
-            $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'onlinemembers') . '">' . __('Users currently on-line', $dom) . '</a>';
+            $linksarray[] = '<a href="' . ModUtil::url(ProfileConstant::MODNAME, 'user', 'onlinemembers') . '">' . __('Users currently on-line', $dom) . '</a>';
         }
 
         $userlinks .= implode(" $params[seperator] ", $linksarray);
@@ -113,11 +114,11 @@ function smarty_function_profileuserlinks($params, &$smarty)
     }
 
     if ($smarty->_tpl_vars['sameuser'] && $currentfunc != 'modify') {
-        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'modify') . '">' . __('Edit profile', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url(ProfileConstant::MODNAME, 'user', 'modify') . '">' . __('Edit profile', $dom) . '</a>';
     }
 
     if ($smarty->_tpl_vars['ismember'] && $currentfunc != 'view') {
-        $linksarray[] = '<a href="' . ModUtil::url('Profile', 'user', 'view', array('uid' => $currentuser)) . '">' . __('View profile', $dom) . '</a>';
+        $linksarray[] = '<a href="' . ModUtil::url(ProfileConstant::MODNAME, 'user', 'view', array('uid' => $currentuser)) . '">' . __('View profile', $dom) . '</a>';
     }
 
     if (!$smarty->_tpl_vars['sameuser']) {

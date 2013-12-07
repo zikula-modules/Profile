@@ -13,6 +13,7 @@
  */
 
 use Zikula\Module\UsersModule\Constant as UsersConstant;
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 /**
  * Smarty function to display an editable dynamic user data field.
  *
@@ -45,15 +46,15 @@ function smarty_function_duditemdisplay($params, &$smarty)
     extract($params);
     unset($params);
 
-    if (!ModUtil::available('Profile')) {
+    if (!ModUtil::available(ProfileConstant::MODNAME)) {
         return '';
     }
 
     if (!isset($item)) {
         if (isset($proplabel)) {
-            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $proplabel));
+            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', array('proplabel' => $proplabel));
         } else if (isset($propattribute)) {
-            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
+            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', array('propattribute' => $propattribute));
         } else {
             return false;
         }
@@ -63,7 +64,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         return false;
     }
 
-    $dom = ZLanguage::getModuleDomain('Profile');
+    $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
 
     // check for a template set
     if (!isset($tplset)) {
@@ -110,7 +111,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     // build the output
     $output = '';
-    $render = Zikula_View::getInstance('Profile', false, null, true);
+    $render = Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
     $render->assign('userinfo',  $userinfo);
     $render->assign('uservalue', $uservalue);
 
@@ -171,13 +172,13 @@ function smarty_function_duditemdisplay($params, &$smarty)
 		}
     } elseif ($item['prop_displaytype'] == 3) {
         // radio
-        $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
         // process the user value and get the translated label
         $output = isset($options[$uservalue]) ? $options[$uservalue] : $default;
     } elseif ($item['prop_displaytype'] == 4) {
         // select
-        $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
         $output = array();
         foreach ((array)$uservalue as $id) {
@@ -187,7 +188,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         }
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
         // date
-        $format = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
         //! This is from the core domain (datebrief)
         $format = !empty($format) ? $format : __('%b %d, %Y');
 
@@ -196,7 +197,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     } elseif ($item['prop_displaytype'] == 7) {
         // multicheckbox
-        $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+        $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
         // process the user values and get the translated label
         $uservalue = @unserialize($uservalue);

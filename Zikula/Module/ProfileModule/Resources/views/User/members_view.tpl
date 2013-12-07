@@ -2,7 +2,7 @@
 
 {include file='User/menu.tpl'}
 
-<form id="profile-search" class="z-form" action="{modurl modname='Profile' type='user' func='viewmembers'}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="profile-search" class="z-form" action="{modurl modname=$module type='user' func='viewmembers'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <fieldset>
@@ -63,7 +63,7 @@
         <tr class="{cycle values='z-odd,z-even'}">
             <td>
                 {if $user.onlinestatus eq 1}
-                <a href="{modurl modname='Profile' type='user' func='onlinemembers'}">{img modname='core' src='greenled.png' set='icons/extrasmall' __title='On-line' __alt='On-line'}</a>
+                <a href="{modurl modname=$module type='user' func='onlinemembers'}">{img modname='core' src='greenled.png' set='icons/extrasmall' __title='On-line' __alt='On-line'}</a>
                 {else}
                 {img modname='core' src='redled.png' set='icons/extrasmall' __title='Off-line' __alt='Off-line'}
                 {/if}
@@ -104,6 +104,6 @@
 <h3>{gt text='Membership statistics'}</h3>
 <ul id="profile_status">
     <li><strong>{gt text='Registered:'} </strong>{$memberslistreg|safetext}</li>
-    <li><strong>{gt text='On-line:'} </strong><a href="{modurl modname='Profile' type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
-    <li><strong>{gt text='Newest user:'} </strong><a href="{modurl modname='Profile' type='user' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
+    <li><strong>{gt text='On-line:'} </strong><a href="{modurl modname=$module type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
+    <li><strong>{gt text='Newest user:'} </strong><a href="{modurl modname=$module type='user' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
 </ul>

@@ -23,5 +23,5 @@ class Constant
     /**
      * The common module name.
      */
-    const MODNAME = 'Profile';
+    const MODNAME = 'ZikulaProfileModule';
 }

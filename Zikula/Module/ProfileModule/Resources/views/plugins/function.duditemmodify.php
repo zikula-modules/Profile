@@ -13,6 +13,7 @@
  */
 
 use Zikula\Module\UsersModule\Constant as UsersConstant;
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 /**
  * Smarty function to display an editable dynamic user data field.
  *
@@ -44,15 +45,15 @@ function smarty_function_duditemmodify($params, &$smarty)
     extract($params);
     unset($params);
 
-    if (!ModUtil::available('Profile')) {
+    if (!ModUtil::available(ProfileConstant::MODNAME)) {
         return '';
     }
 
     if (!isset($item)) {
         if (isset($proplabel)) {
-            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('proplabel' => $proplabel));
+            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', array('proplabel' => $proplabel));
         } else if (isset($propattribute)) {
-            $item = ModUtil::apiFunc('Profile', 'user', 'get', array('propattribute' => $propattribute));
+            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', array('propattribute' => $propattribute));
         } else {
             return false;
         }
@@ -73,13 +74,13 @@ function smarty_function_duditemmodify($params, &$smarty)
 
     // skip the field if not configured to be on the registration form 
     if ($onregistrationform && !$item['prop_required']) {
-        $dudregshow = ModUtil::getVar('Profile', 'dudregshow', array());
+        $dudregshow = ModUtil::getVar(ProfileConstant::MODNAME, 'dudregshow', array());
         if (!in_array($item['prop_id'], $dudregshow)) {
             return '';
         }
     }
 
-    $dom = ZLanguage::getModuleDomain('Profile');
+    $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
 
     if (!isset($uid)) {
         $uid = UserUtil::getVar('uid');
@@ -108,7 +109,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
     }
 
-    $render = $smarty;//Zikula_View::getInstance('Profile', false, null, true);
+    $render = $smarty;//Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
 
     // assign the default values for the control
     $render->assign('class',         $class);
@@ -218,7 +219,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         case 3: // RADIO
             $type = 'radio';
 
-            $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
             $render->assign('listoptions', array_keys($options));
             $render->assign('listoutput', array_values($options));
@@ -235,7 +236,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $selectmultiple = $options[0] ? ' multiple="multiple"' : '';
             $render->assign('selectmultiple', $selectmultiple);
 
-            $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
             $render->assign('listoptions', array_keys($options));
             $render->assign('listoutput', array_values($options));
@@ -245,7 +246,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $type = 'date';
 
             // gets the format to use
-            $format = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
             
             switch (trim(strtolower($format)))
             {
@@ -308,7 +309,7 @@ function smarty_function_duditemmodify($params, &$smarty)
             $type = 'multicheckbox';
             $render->assign('value', (array)unserialize($uservalue));
 
-            $options = ModUtil::apiFunc('Profile', 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
             $render->assign('fields', $options);
             break;
