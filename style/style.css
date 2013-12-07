@@ -23,6 +23,7 @@ p.profile_usererror {
 }
 #youravatarcontainer {
     margin-bottom: 0;
+    margin-left: -10px !important;
     margin-top: 1em;
     padding: 0;
     text-align: center;
