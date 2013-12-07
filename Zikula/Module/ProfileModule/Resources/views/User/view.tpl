@@ -13,7 +13,7 @@
 <div id="profile_wrapper">
     {if (isset($dudarray.avatar))}
     	{if (($dudarray.avatar == '') || ($dudarray.avatar == 'blank.gif') || ($dudarray.avatar == 'blank.png'))}
-			{gravatar email_address=$userinfo.email f=true}
+			{gravatar email_address=$userinfo.email}
 		{elseif ($dudarray.avatar == 'gravatar.gif')}
 			{gravatar email_address=$userinfo.email}
 		{else}
