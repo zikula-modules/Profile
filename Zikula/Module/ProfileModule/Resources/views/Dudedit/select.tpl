@@ -11,11 +11,11 @@
     {gt text='Select' assign='gt'}
     {if (($attributename == 'country') || (strpos($attributename, '_country') !== false))}
         {if ($error)}
-    	    {selector_countries allText=$gt allValue='' class='z-form-error' id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue= $value}
+    	    {selector_countries allText=$gt allValue='' class='z-form-error' id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue=$value}
         {elseif ($required)}
-    	    {selector_countries allText=$gt allValue='' class='required' id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue= $value}
+    	    {selector_countries allText=$gt allValue='' class='required' id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue=$value}
     	{else}
-    	    {selector_countries allText=$gt allValue='' id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue= $value}
+    	    {selector_countries allText=$gt allValue='' id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue=$value}
     	{/if}
     {else}
     	<select id="prop_{$attributename}" name="dynadata[{$attributename}]{if ($selectmultiple)}[]{/if}"{$selectmultiple} class="{if ($required)}required{/if} {if ($error)}z-form-error{/if}">
