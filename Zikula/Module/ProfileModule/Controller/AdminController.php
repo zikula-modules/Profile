@@ -60,8 +60,8 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
         // Get parameters from whatever input we need.
-        $startnum = (int)$this->request->query->get('startnum', null);
-        $numitems = 20;
+        $startnum = (int)$this->request->query->get('startnum', 1);
+        $numitems = (int)$this->request->query->get('numitems', -1);
         $items = ModUtil::apiFunc($this->name, 'user', 'getall', array('startnum' => $startnum, 'numitems' => $numitems));
         $count = ModUtil::apiFunc($this->name, 'user', 'countitems');
         $csrftoken = SecurityUtil::generateCsrfToken();
