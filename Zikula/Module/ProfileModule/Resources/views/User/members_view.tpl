@@ -1,4 +1,4 @@
-{gt text='Registered users list' assign='templatetitle'}
+{gt text='Registered Users' assign='templatetitle'}
 
 {include file='User/menu.tpl'}
 
@@ -10,24 +10,24 @@
                 <label for="profile_letter" class="profile_letter">{gt text='Search'}</label>
                 <div>
                     <input id="profile_letter" type="text" name="letter" value="" maxlength="50" />
-                    <input type="submit" value="{gt text="Go search"}" />
+                    <input type="submit" value="{gt text='Submit'}" />
                 </div>
             </div>
             <div class="z-formrow">
                 <div class="z-formnote">
                     <input id="profile_nickname" type="radio" name="searchby" value="uname" checked="checked" />
-                    <label for="profile_nickname">{gt text='Search in user names'}</label>
+                    <label for="profile_nickname">{gt text='Search in User Names'}</label>
                 </div>
                 {if isset($dudarray.realname)}
                 <div class="z-formnote">
                     <input id="profile_realname" type="radio" name="searchby" value="{$dudarray.realname}" />
-                    <label for="profile_realname">{gt text='Search in real names'}</label>
+                    <label for="profile_realname">{gt text='Search in Real Names'}</label>
                 </div>
                 {/if}
                 {if isset($dudarray.url)}
                 <div class="z-formnote">
                     <input id="profile_url" type="radio" name="searchby" value="{$dudarray.url}" />
-                    <label for="profile_url">{gt text='Search in site'}</label>
+                    <label for="profile_url">{gt text='Search in Site'}</label>
                 </div>
                 {/if}
             </div>
@@ -42,12 +42,12 @@
     <thead>
         <tr>
             <th>&nbsp;</th>
-            <th>{gt text='User name'}</th>
+            <th>{gt text='User Name'}</th>
             {if isset($dudarray.realname)}
             <th>{gt text='Real name'}</th>
             {/if}
             {if $msgmodule}
-            <th>{gt text='PM'}</th>
+            <th>{gt text='Messages'}</th>
             {/if}
             {if isset($dudarray.url)}
             <th>{gt text='Site'}</th>
@@ -63,9 +63,9 @@
         <tr class="{cycle values='z-odd,z-even'}">
             <td>
                 {if $user.onlinestatus eq 1}
-                <a href="{modurl modname=$module type='user' func='onlinemembers'}">{img modname='core' src='greenled.png' set='icons/extrasmall' __title='On-line' __alt='On-line'}</a>
+                <a href="{modurl modname=$module type='user' func='onlinemembers'}">{img modname='core' src='greenled.png' set='icons/extrasmall' __title='Online' __alt='Online'}</a>
                 {else}
-                {img modname='core' src='redled.png' set='icons/extrasmall' __title='Off-line' __alt='Off-line'}
+                {img modname='core' src='redled.png' set='icons/extrasmall' __title='Offline' __alt='Off-line'}
                 {/if}
             </td>
             <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
@@ -73,7 +73,7 @@
             <td>{if isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.realname)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
             {/if}
             {if $msgmodule}
-            <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send private message'}</a></td>
+            <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send Private Message'}</a></td>
             {/if}
             {if isset($dudarray.url)}
             <td>
@@ -101,9 +101,9 @@
 
 {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='startnum' shift=1}
 
-<h3>{gt text='Membership statistics'}</h3>
+<h3>{gt text='Statistics'}</h3>
 <ul id="profile_status">
     <li><strong>{gt text='Registered:'} </strong>{$memberslistreg|safetext}</li>
-    <li><strong>{gt text='On-line:'} </strong><a href="{modurl modname=$module type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
-    <li><strong>{gt text='Newest user:'} </strong><a href="{modurl modname=$module type='user' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
+    <li><strong>{gt text='Online:'} </strong><a href="{modurl modname=$module type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
+    <li><strong>{gt text='Newest User:'} </strong><a href="{modurl modname=$module type='user' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
 </ul>

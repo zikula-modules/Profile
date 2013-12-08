@@ -1,13 +1,13 @@
-{gt text='Users currently on-line' assign='templatetitle'}
+{gt text='Users Online' assign='templatetitle'}
 {include file='User/menu.tpl'}
 
 <table class="z-datatable">
     <thead>
         <tr>
-            <th>{gt text='User name'}</th>
-            <th>{gt text='Real name'}</th>
+            <th>{gt text='User Name'}</th>
+            <th>{gt text='Real Name'}</th>
             {if $msgmodule}
-            <th>{gt text='PM'}</th>
+            <th>{gt text='Messages'}</th>
             {/if}
             <th>{gt text='Site'}</th>
         </tr>
@@ -29,7 +29,7 @@
             </td>
         </tr>
         {foreachelse}
-        <tr class="z-datatableempty"><td colspan="4">{gt text='No registered users are currently on-line.'}</td></tr>
+        <tr class="z-datatableempty"><td colspan="4">{gt text='No registered users are currently online.'}</td></tr>
         {/foreach}
     </tbody>
 </table>

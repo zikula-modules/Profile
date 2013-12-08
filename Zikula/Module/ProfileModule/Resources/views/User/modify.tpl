@@ -1,4 +1,4 @@
-{gt text='Edit profile' assign='templatetitle'}
+{gt text='Edit Profile' assign='templatetitle'}
 {ajaxheader validation=true}
 
 {include file='User/menu.tpl'}

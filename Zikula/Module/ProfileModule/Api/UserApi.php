@@ -592,15 +592,15 @@ class UserApi extends \Zikula_AbstractApi
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             $links[0] = array(
                 'url' => ModUtil::url($this->name, 'user', 'view'),
-                'text' => $this->__('My profile'),
+                'text' => $this->__('Your Profile'),
                 'icon' => 'user',
                 'links' => array(
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'view'),
-                        'text' => $this->__('View profile')),
+                        'text' => $this->__('View Profile')),
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'modify'),
-                        'text' => $this->__('Edit profile')),
+                        'text' => $this->__('Edit Profile')),
                 ));
             $msgmodule = System::getVar('messagemodule');
             if (ModUtil::available($msgmodule)) {
@@ -610,18 +610,18 @@ class UserApi extends \Zikula_AbstractApi
             }
             $links[1] = array(
                 'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
-                'text' => $this->__('Member List'),
+                'text' => $this->__('Members'),
                 'icon' => 'list',
                 'links' => array(
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
-                        'text' => $this->__('Registered users')),
+                        'text' => $this->__('Registered Users')),
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'recentmembers'),
-                        'text' => $this->__f('Last %s registered users', $this->getVar('recentmembersitemsperpage'))),
+                        'text' => $this->__f('Last %s Registered Users', $this->getVar('recentmembersitemsperpage'))),
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'onlinemembers'),
-                        'text' => $this->__('Users currently on-line')),
+                        'text' => $this->__('Users Online')),
                 ));
         }
 

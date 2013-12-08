@@ -14,10 +14,10 @@
 
 namespace Zikula\Module\ProfileModule\Api;
 
-use System;
-use UserUtil;
 use ModUtil;
 use SecurityUtil;
+use System;
+use UserUtil;
 
 /**
  * The Account API provides links for modules on the "user account page"; this class provides them for the Profile module.
@@ -53,13 +53,13 @@ class AccountApi extends \Zikula_AbstractApi
             $items['0'] = array(
                 'url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)),
                 'module' => $this->name,
-                'title' => $this->__('Profile'),
+                'title' => $this->__('View Profile'),
                 'icon' => 'admin.png');
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
                 $items['1'] = array(
                     'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
                     'module' => $this->name,
-                    'title' => $this->__('Registered users'),
+                    'title' => $this->__('Registered Users'),
                     'icon' => 'members.png');
             }
         }
