@@ -94,8 +94,8 @@ class UserController extends \Zikula_AbstractController
         $fieldsets = array();
         $items = $activeduds;
         foreach ($items as $propattr => $propdata) {
-            $items[$propattr]['prop_fieldset'] = isset($items[$propattr]['prop_fieldset']) && !empty($items[$propattr]['prop_fieldset']) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
-            $fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
+            $items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
+            $fieldsets[DataUtil::formatPermalink($items[$propattr]['prop_fieldset'])] = $items[$propattr]['prop_fieldset'];
         }
         $activeduds = $items;
         // Fill the DUD values array
@@ -154,8 +154,8 @@ class UserController extends \Zikula_AbstractController
         $dynadata = $this->request->query->get('dynadata', isset($args['dynadata']) ? $args['dynadata'] : array());
         $fieldsets = array();
         foreach ($items as $propattr => $propdata) {
-            $items[$propattr]['prop_fieldset'] = isset($items[$propattr]['prop_fieldset']) && !empty($items[$propattr]['prop_fieldset']) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
-            $fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
+            $items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
+            $fieldsets[DataUtil::formatPermalink($items[$propattr]['prop_fieldset'])] = $items[$propattr]['prop_fieldset'];
         }
         // merge this temporary dynadata and the errors into the items array
         foreach ($dynadata as $propattr => $propdata) {

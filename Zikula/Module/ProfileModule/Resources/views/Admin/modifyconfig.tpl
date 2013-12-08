@@ -51,8 +51,8 @@
             <div class="z-formrow">
                 <label for="profile_dudregshow">{gt text='Personal info items to include in user registration form'}</label>
                 <div id="profile_dudregshow">
-					{foreach from=$fieldsets item='fieldset'}
-						<fieldset>
+					{foreach from=$fieldsets key="key" item='fieldset'}
+						<fieldset class="{$key}">
 							<legend>{$fieldset}</legend>
 							{foreach from=$dudfields key='key' item='item'}
 								{if ($fieldset == $item.prop_fieldset)}

@@ -155,7 +155,7 @@ class AdminController extends \Zikula_AbstractController
             $item['statusval'] = $statusval;
             $item['options'] = $options;
             $item['dtype'] = $data_type_text;
-            $item['prop_fieldset'] = isset($item['prop_fieldset']) && !empty($item['prop_fieldset']) ? $item['prop_fieldset'] : $this->__('User Information');
+            $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
             $duditems[] = $item;
             $x++;
         }
@@ -233,7 +233,7 @@ class AdminController extends \Zikula_AbstractController
         $displaytype = isset($args['displaytype']) ? $args['displaytype'] : $this->request->request->get('displaytype', null);
         $listoptions = isset($args['listoptions']) ? $args['listoptions'] : $this->request->request->get('listoptions', null);
         $note = isset($args['note']) ? $args['note'] : $this->request->request->get('note', null);
-        $fieldset = isset($args['fieldset']) ? $args['fieldset'] : $this->request->request->get('fieldset', null);
+        $fieldset = (isset($args['fieldset'])) ? $args['fieldset'] : $this->request->request->get('fieldset', null);
         $returnurl = ModUtil::url($this->name, 'admin', 'view');
         // Validates and check if empty or already existing...
         if (empty($label)) {
@@ -260,7 +260,8 @@ class AdminController extends \Zikula_AbstractController
             'displaytype' => $displaytype,
             'listoptions' => $listoptions,
             'note' => $note,
-            'fieldset' => $fieldset));
+            'fieldset' => $fieldset
+        ));
         // The return value of the function is checked here
         if ($dudid != false) {
             // Success
@@ -304,7 +305,7 @@ class AdminController extends \Zikula_AbstractController
         }
         // backward check to remove any 1.4- forbidden char in listoptions
         $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
-        $item['prop_fieldset'] = isset($item['prop_fieldset']) && !empty($item['prop_fieldset']) ? $item['prop_fieldset'] : $this->__('User Information');
+        $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
         // Create output object
         $render = Zikula_View::getInstance($this->name, false);
         // Add a hidden variable for the item id.
@@ -360,7 +361,7 @@ class AdminController extends \Zikula_AbstractController
         $displaytype = $this->request->request->get('displaytype', isset($args['displaytype']) ? $args['displaytype'] : null);
         $listoptions = $this->request->request->get('listoptions', isset($args['listoptions']) ? $args['listoptions'] : null);
         $note = $this->request->request->get('note', isset($args['note']) ? $args['note'] : null);
-        $fieldset = $this->request->request->get('fieldset', isset($args['fieldset']) ? $args['fieldset'] : null);
+        $fieldset = $this->request->request->get('fieldset', (isset($args['fieldset'])) ? $args['fieldset'] : null);
         // At this stage we check to see if we have been passed $objectid
         if (!empty($objectid)) {
             $dudid = $objectid;
@@ -561,7 +562,7 @@ class AdminController extends \Zikula_AbstractController
         foreach ($items as $k => $item) {
             $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
             $items[$k] = (array)$item;
-            $fieldsets[$item['prop_fieldset']] = $item['prop_fieldset'];
+            $fieldsets[DataUtil::formatPermalink($item['prop_fieldset'])] = $item['prop_fieldset'];
         }
 		
         // Create output object

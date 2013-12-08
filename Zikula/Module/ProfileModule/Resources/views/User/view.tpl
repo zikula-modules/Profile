@@ -32,7 +32,7 @@
 				<span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
 			</div>
         {/if}
-        {foreach from=$fieldsets item='fieldset'}
+        {foreach from=$fieldsets key="key" item='fieldset'}
     		<h2>{$fieldset}</h2>
 			{foreach from=$fields item='item'}
 				{if (($fieldset == $item.prop_fieldset) && ($item.prop_attribute_name != 'avatar'))}

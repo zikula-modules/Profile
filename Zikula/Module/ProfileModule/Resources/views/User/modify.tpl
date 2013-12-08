@@ -6,8 +6,8 @@
 <form id="modifyprofileform" class="z-form" action="{modurl modname=$module type='user' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
 	<p>{gt text="Items marked with an asterisk (*) are required entries."}</p>
-	{foreach from=$fieldsets item='fieldset'}
-    	<fieldset>
+	{foreach from=$fieldsets key="key" item='fieldset'}
+    	<fieldset class="{$key}">
         	<legend>{$fieldset}</legend>
 			{foreach from=$duditems item='item'}
 				{if ($fieldset == $item.prop_fieldset)}
