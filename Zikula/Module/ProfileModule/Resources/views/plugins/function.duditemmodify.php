@@ -12,8 +12,10 @@
  * information regarding copyright and licensing.
  */
 
+use Symfony\Component\HttpFoundation\Request;
 use Zikula\Module\UsersModule\Constant as UsersConstant;
 use Zikula\Module\ProfileModule\Constant as ProfileConstant;
+
 /**
  * Smarty function to display an editable dynamic user data field.
  *
@@ -36,12 +38,15 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
  * string error         Property error message.
  * 
  * @param array  $params  All attributes passed to this function from the template.
- * @param object &$smarty Reference to the Zikula_View/Smarty object.
+ * @param object $view Reference to the Zikula_View object.
  * 
  * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
-function smarty_function_duditemmodify($params, &$smarty)
+function smarty_function_duditemmodify(array $params = array(), Zikula_View $view)
 {
+
+    $request = Request::createFromGlobals();
+    
     extract($params);
     unset($params);
 
@@ -58,25 +63,23 @@ function smarty_function_duditemmodify($params, &$smarty)
             return false;
         }
     }
-    if (!isset($item) || empty ($item)) {
+    if (!isset($item) || empty($item)) {
         return false;
     }
 
     // detect if we are in the registration form
     $onregistrationform = false;
     
-    // TODO - will these globals always be available? Is there a utility method out there somewhere to get these?
-    global $module, $func;
-    
-    if (strtolower($module) == 'users' && strtolower($func) == 'register') {
+    if ((strtolower($request->query->get('module')) == 'users') && (strtolower($request->query->get('type')) == 'user') && (strtolower($request->query->get('func')) == 'register')) {
         $onregistrationform = true;
     }
 
     // skip the field if not configured to be on the registration form 
-    if ($onregistrationform && !$item['prop_required']) {
+    if (($onregistrationform) && (!$item['prop_required'])) {
         $dudregshow = ModUtil::getVar(ProfileConstant::MODNAME, 'dudregshow', array());
-        if (!in_array($item['prop_id'], $dudregshow)) {
-            return '';
+
+        if (!in_array($item['prop_attribute_name'], $dudregshow)) {
+            return;
         }
     }
 
@@ -92,7 +95,7 @@ function smarty_function_duditemmodify($params, &$smarty)
     if (isset($item['temp_propdata'])) {
         $uservalue = $item['temp_propdata'];
     } elseif ($uid >= 0) {
-        // TODO - This is a bit of a hack for admin editing. Need to know if it is a reg.
+        // @todo - This is a bit of a hack for admin editing. Need to know if it is a reg.
         $user = UserUtil::getVars($uid);
         $isRegistration = UserUtil::isRegistration($uid);
         $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid, false, $isRegistration); // ($alias, $uid);
@@ -109,17 +112,15 @@ function smarty_function_duditemmodify($params, &$smarty)
         }
     }
 
-    $render = $smarty;//Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
-
     // assign the default values for the control
-    $render->assign('class',         $class);
-    $render->assign('value',         DataUtil::formatForDisplay($uservalue));
+    $view->assign('class',         $class);
+    $view->assign('value',         DataUtil::formatForDisplay($uservalue));
     
-    $render->assign('attributename', $item['prop_attribute_name']);
-    $render->assign('proplabeltext', $item['prop_label']);
-    $render->assign('note',          $item['prop_note']);
-    $render->assign('required',      (bool)$item['prop_required']);
-    $render->assign('error',         isset($error) ? $error : '');
+    $view->assign('attributename', $item['prop_attribute_name']);
+    $view->assign('proplabeltext', $item['prop_label']);
+    $view->assign('note',          $item['prop_note']);
+    $view->assign('required',      (bool)$item['prop_required']);
+    $view->assign('error',         isset($error) ? $error : '');
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
@@ -129,11 +130,11 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         $tzinfo = DateUtil::getTimezones();
 
-        $render->assign('value',          isset($tzinfo["$uservalue"]) ? "$uservalue" : null);
-        $render->assign('selectmultiple', '');
-        $render->assign('listoptions',    array_keys($tzinfo));
-        $render->assign('listoutput',     array_values($tzinfo));
-        return $render->fetch('Dudedit/select.tpl');
+        $view->assign('value',          isset($tzinfo["$uservalue"]) ? "$uservalue" : null);
+        $view->assign('selectmultiple', '');
+        $view->assign('listoptions',    array_keys($tzinfo));
+        $view->assign('listoutput',     array_values($tzinfo));
+        return $view->fetch('Dudedit/select.tpl');
     }
 
     if ($item['prop_attribute_name'] == 'avatar') {
@@ -149,12 +150,12 @@ function smarty_function_duditemmodify($params, &$smarty)
             if (UserUtil::getVar('uid') != $uid) {
                 return '';
             }
-            $render->assign('linktext', __('Go to the Avatar manager', $dom));
-            $render->assign('linkurl', ModUtil::url('Avatar', 'user', 'main'));
-            $output = $render->fetch('Dudedit/link.tpl');
+            $view->assign('linktext', __('Go to the Avatar manager', $dom));
+            $view->assign('linkurl', ModUtil::url('Avatar', 'user', 'main'));
+            $output = $view->fetch('Dudedit/link.tpl');
             // add a hidden input if this is required
             if ($item['prop_required']) {
-                $output .= $render->fetch('Dudedit/hidden.tpl');
+                $output .= $view->fetch('Dudedit/hidden.tpl');
             }
            
             return $output;
@@ -164,7 +165,7 @@ function smarty_function_duditemmodify($params, &$smarty)
         if (empty($uservalue)) {
             $uservalue = 'gravatar.gif';
         }
-        $render->assign('value', DataUtil::formatForDisplay($uservalue));
+        $view->assign('value', DataUtil::formatForDisplay($uservalue));
         $avatarPath = ModUtil::getVar(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
         $filelist = FileUtil::getFiles($avatarPath, false, true, array('gif', 'jpg', 'png'), 'f');
         asort($filelist);
@@ -181,11 +182,11 @@ function smarty_function_duditemmodify($params, &$smarty)
 //            $selectedvalue = $uservalue;
 //        }
 
-        $render->assign('value',          $selectedvalue);
-        $render->assign('selectmultiple', '');
-        $render->assign('listoptions',    $listoptions);
-        $render->assign('listoutput',     $listoutput);
-        return $render->fetch('Dudedit/select.tpl');
+        $view->assign('value',          $selectedvalue);
+        $view->assign('selectmultiple', '');
+        $view->assign('listoptions',    $listoptions);
+        $view->assign('listoutput',     $listoutput);
+        return $view->fetch('Dudedit/select.tpl');
     }
 
     switch ($item['prop_displaytype'])
@@ -211,7 +212,7 @@ function smarty_function_duditemmodify($params, &$smarty)
 			 	 */
 			 	if (substr($item['prop_listoptions'], 0, 2) != '@@') {
 		 			$label = array_shift($options);
-		 			$render->assign('proplabeltext', __($label, $dom));
+		 			$view->assign('proplabeltext', __($label, $dom));
 		 		}
 		 	}
 
@@ -221,25 +222,25 @@ function smarty_function_duditemmodify($params, &$smarty)
 
             $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
-            $render->assign('listoptions', array_keys($options));
-            $render->assign('listoutput', array_values($options));
+            $view->assign('listoptions', array_keys($options));
+            $view->assign('listoutput', array_values($options));
             break;
 
         case 4: // SELECT
             $type = 'select';
             if (DataUtil::is_serialized($uservalue)) {
-                $render->assign('value', unserialize($uservalue));
+                $view->assign('value', unserialize($uservalue));
             }
 
             // multiple flag is the first field
             $options = explode('@@', $item['prop_listoptions'], 2);
             $selectmultiple = $options[0] ? ' multiple="multiple"' : '';
-            $render->assign('selectmultiple', $selectmultiple);
+            $view->assign('selectmultiple', $selectmultiple);
 
             $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
-            $render->assign('listoptions', array_keys($options));
-            $render->assign('listoutput', array_values($options));
+            $view->assign('listoptions', array_keys($options));
+            $view->assign('listoutput', array_values($options));
             break;
 
         case 5: // DATE
@@ -295,9 +296,9 @@ function smarty_function_duditemmodify($params, &$smarty)
                 $timestamp = DateUtil::makeTimestamp($uservalue);
             }
 
-            $render->assign('value',     $uservalue);
-            $render->assign('timestamp', $timestamp);
-            $render->assign('dudformat', $format);
+            $view->assign('value',     $uservalue);
+            $view->assign('timestamp', $timestamp);
+            $view->assign('dudformat', $format);
             break;
 
         case 6: // EXTDATE (deprecated)
@@ -307,11 +308,11 @@ function smarty_function_duditemmodify($params, &$smarty)
 
         case 7: // MULTICHECKBOX
             $type = 'multicheckbox';
-            $render->assign('value', (array)unserialize($uservalue));
+            $view->assign('value', (array)unserialize($uservalue));
 
             $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
-            $render->assign('fields', $options);
+            $view->assign('fields', $options);
             break;
 
         default: // TEXT
@@ -319,5 +320,5 @@ function smarty_function_duditemmodify($params, &$smarty)
             break;
     }
 
-    return $render->fetch('Dudedit/'.$type.'.tpl');
+    return $view->fetch('Dudedit/'.$type.'.tpl');
 }
