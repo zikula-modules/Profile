@@ -302,34 +302,34 @@ class AdminApi extends \Zikula_AbstractApi
     {
         $links = array();
         // Add User module links
-        $links[] = array(
-            'url' => ModUtil::url($this->name, 'admin', 'view'),
-            'text' => $this->__('Users Module'),
-            'class' => 'z-icon-es-user',
-            'links' => ModUtil::apiFunc('Users', 'admin', 'getlinks'));
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'view'),
                 'text' => $this->__('Fields'),
-                'class' => 'z-icon-es-view');
+                'icon' => 'list');
         }
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'newdud'),
                 'text' => $this->__('Create new field'),
-                'class' => 'z-icon-es-new');
+                'icon' => 'plus text-success');
         }
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'modifyconfig'),
-                'text' => $this->__('User account panel settings'),
-                'class' => 'z-icon-es-config');
+                'text' => $this->__('Settings'),
+                'icon' => 'wrench');
         }
+        $links[] = array(
+            'url' => ModUtil::url('ZikulaUsersModule', 'admin', 'view'),
+            'text' => $this->__('Users Module'),
+            'icon' => 'user',
+            'links' => ModUtil::apiFunc('ZikulaUsersModule', 'admin', 'getlinks'));
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'help'),
                 'text' => $this->__('Help'),
-                'class' => 'z-icon-es-help');
+                'icon' => 'ambulance text-danger');
         }
         return $links;
     }

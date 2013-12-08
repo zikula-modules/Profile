@@ -19,6 +19,7 @@ use LogUtil;
 use UserUtil;
 use ModUtil;
 use DateUtil;
+use FormUtil;
 use Zikula_Exception_Fatal;
 use System;
 
@@ -573,6 +574,58 @@ class UserApi extends \Zikula_AbstractApi
         }
         // construct the custom url part
         return $args['modname'] . '/' . $args['func'] . '/' . $vars;
+    }
+
+    /**
+     * get module links
+     *
+     * @return array array of admin links
+     */
+    public function getlinks()
+    {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_OVERVIEW)) {
+            return;
+        }
+
+        $links = array();
+
+        if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
+            $links[0] = array(
+                'url' => ModUtil::url($this->name, 'user', 'view'),
+                'text' => $this->__('My profile'),
+                'icon' => 'user',
+                'links' => array(
+                    array(
+                        'url' => ModUtil::url($this->name, 'user', 'view'),
+                        'text' => $this->__('View profile')),
+                    array(
+                        'url' => ModUtil::url($this->name, 'user', 'modify'),
+                        'text' => $this->__('Edit profile')),
+                ));
+            $msgmodule = System::getVar('messagemodule');
+            if (ModUtil::available($msgmodule)) {
+                $links[0]['links'][] = array(
+                    'url' => ModUtil::url($msgmodule, 'user', 'main'),
+                    'text' => $this->__('Private messages'));
+            }
+            $links[1] = array(
+                'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
+                'text' => $this->__('Member List'),
+                'icon' => 'list',
+                'links' => array(
+                    array(
+                        'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
+                        'text' => $this->__('Registered users')),
+                    array(
+                        'url' => ModUtil::url($this->name, 'user', 'recentmembers'),
+                        'text' => $this->__f('Last %s registered users', $this->getVar('recentmembersitemsperpage'))),
+                    array(
+                        'url' => ModUtil::url($this->name, 'user', 'onlinemembers'),
+                        'text' => $this->__('Users currently on-line')),
+                ));
+        }
+
+        return $links;
     }
 
 }

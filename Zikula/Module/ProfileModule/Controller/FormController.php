@@ -60,7 +60,9 @@ class FormController extends \Zikula_AbstractController
                 }
             }
         }
-        $this->view->setCaching(false)->add_core_data()->assign('duditems', $items)->assign('userid', $userid);
+        $this->view->setCaching(false)
+            ->assign('duditems', $items)
+            ->assign('userid', $userid);
         // Return the dynamic data section
         return $this->view->fetch('Form/edit.tpl');
     }
