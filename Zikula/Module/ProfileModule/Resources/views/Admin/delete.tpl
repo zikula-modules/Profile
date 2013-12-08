@@ -1,4 +1,4 @@
-{nocache}{adminheader}{/nocache}
+{adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="delete" size="small"}
     <h3>{gt text='Delete personal info item'}</h3>
@@ -8,7 +8,7 @@
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="confirmation" value="1" />
-        <input type="hidden" name="dudid" value="{nocache}{$dudid}{/nocache}" />
+        <input type="hidden" name="dudid" value="{$dudid}" />
         <fieldset>
             <legend>{gt text='Confirmation prompt'}</legend>
             <div class="z-formbuttons z-buttons">
