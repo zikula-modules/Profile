@@ -58,7 +58,7 @@
 								{if ($fieldset == $item.prop_fieldset)}
 									<div>
 										{if ($item.prop_required)}
-											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="hidden" name="dudregshow[]" value="{$key|safetext}" /> 
+											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}" type="hidden" name="dudregshow[]" value="{$item.prop_attribute_name|safetext}" /> 
 											<input id="profile_dudregshow_{$item.prop_attribute_name|safetext}_placeholder" type="checkbox" name="dudregshow_placeholder[]" value="{$item.prop_attribute_name|safetext}" checked="checked" disabled="disabled" />
 										{else}
 											{if (in_array($item.prop_attribute_name, $modvars.$module.dudregshow))}
