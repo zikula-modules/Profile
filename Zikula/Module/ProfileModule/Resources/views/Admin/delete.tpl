@@ -1,15 +1,14 @@
-{adminheader}
+{nocache}{adminheader}{/nocache}
 <div class="z-admin-content-pagetitle">
     {icon type="delete" size="small"}
     <h3>{gt text='Delete personal info item'}</h3>
 </div>
-
 <p class="z-warningmsg">{gt text='Do you really want to delete this personal info item?'}</p>
 <form class="z-form" action="{modurl modname=$module type='admin' func='delete'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="confirmation" value="1" />
-        <input type="hidden" name="dudid" value="{$dudid}" />
+        <input type="hidden" name="dudid" value="{nocache}{$dudid}{/nocache}" />
         <fieldset>
             <legend>{gt text='Confirmation prompt'}</legend>
             <div class="z-formbuttons z-buttons">
