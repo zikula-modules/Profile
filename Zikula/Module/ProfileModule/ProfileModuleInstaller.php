@@ -306,8 +306,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         $this->entityManager->persist($prop);
         // flush all persisted entities
         $this->entityManager->flush();
-        // set realname, homepage, timezone offset, location and ocupation
-        // to be shown in the registration form by default
-        $this->setVar('dudregshow', array(1, 3, 4, 10, 11));
+        // Set "tzoffset" and "avatar" to be shown in the registration form by default.
+        $this->setVar('dudregshow', array('tzoffset', 'avatar'));
     }
 }
