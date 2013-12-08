@@ -18,11 +18,11 @@
 
 namespace Zikula\Module\ProfileModule\Controller;
 
-use ModUtil;
+use DataUtil;
 use LogUtil;
+use ModUtil;
 use SecurityUtil;
 use UserUtil;
-use DataUtil;
 use Zikula\Core\Event\GenericEvent;
 
 class UserController extends \Zikula_AbstractController

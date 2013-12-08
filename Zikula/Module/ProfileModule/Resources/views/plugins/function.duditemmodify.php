@@ -13,8 +13,8 @@
  */
 
 use Symfony\Component\HttpFoundation\Request;
-use Zikula\Module\UsersModule\Constant as UsersConstant;
 use Zikula\Module\ProfileModule\Constant as ProfileConstant;
+use Zikula\Module\UsersModule\Constant as UsersConstant;
 
 /**
  * Smarty function to display an editable dynamic user data field.

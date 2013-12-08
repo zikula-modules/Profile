@@ -14,13 +14,14 @@
 
 namespace Zikula\Module\ProfileModule\Listener;
 
-use Zikula\Module\ProfileModule\Constant as ProfileConstant;
-use ZLanguage;
-use Zikula_View;
-use ModUtil;
-use Zikula_Hook_ValidationResponse;
+use DataUtil;
 use LogUtil;
+use ModUtil;
 use UserUtil;
+use Zikula\Module\ProfileModule\Constant as ProfileConstant;
+use Zikula_Hook_ValidationResponse;
+use Zikula_View;
+use ZLanguage;
 
 /**
  * Hook-like event handlers for basic profile data.
@@ -146,8 +147,8 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
         if ($items) {
             $fieldsets = array();
             foreach ($items as $propattr => $propdata) {
-                $items[$propattr]['prop_fieldset'] = isset($items[$propattr]['prop_fieldset']) && !empty($items[$propattr]['prop_fieldset']) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
-                $fieldsets[$items[$propattr]['prop_fieldset']] = $items[$propattr]['prop_fieldset'];
+                $items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : $this->__('User Information');
+                $fieldsets[DataUtil::formatPermalink($items[$propattr]['prop_fieldset'])] = $items[$propattr]['prop_fieldset'];
             }
             // check if there's a user to edit
             // or uses uid=1 to pull the default values from the annonymous user

@@ -18,10 +18,10 @@
 
 namespace Zikula\Module\ProfileModule\Api;
 
-use LogUtil;
-use SecurityUtil;
 use DataUtil;
+use LogUtil;
 use ModUtil;
+use SecurityUtil;
 use System;
 use Zikula\Module\ProfileModule\Entity\PropertyEntity;
 

@@ -18,10 +18,10 @@
 
 namespace Zikula\Module\ProfileModule\Api;
 
-use LogUtil;
-use SecurityUtil;
-use ModUtil;
 use DataUtil;
+use LogUtil;
+use ModUtil;
+use SecurityUtil;
 use Zikula\Module\ProfileModule\Entity\PropertyEntity;
 
 class AdminApi extends \Zikula_AbstractApi
