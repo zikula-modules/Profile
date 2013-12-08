@@ -23,12 +23,12 @@
     {/if}
     <div class="z-form">
         <div class="z-formrow">
-            <strong class="z-label">{gt text='User name:'}</strong>
+            <strong class="z-label">{gt text='User Name:'}</strong>
             <span>{$uname|safetext}</span>
         </div>
         {if (($modvars.$module.viewregdate|default:1) && ($userinfo.user_regdate != '1970-01-01 00:00:00'))}
         	<div class="z-formrow">
-            	<strong class="z-label">{gt text='Registration date:'}</strong>
+            	<strong class="z-label">{gt text='Registration Date:'}</strong>
 				<span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
 			</div>
         {/if}
