@@ -126,7 +126,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             throw new Zikula_Exception_Fatal($this->__('Error! Could not load the section.'));
         }
         // build the output
-        $this->view->setCaching(false)->add_core_data();
+        $this->view->setCaching(false);
         // check the tmeplate existance
         $template = "sections/profile_section_{$name}.tpl";
         if (!$this->view->template_exists($template)) {
