@@ -3,7 +3,7 @@
     {icon type="config" size="small"}
     <h3>{gt text='User account panel settings'}</h3>
 </div>
-<form class="z-form" action="{modurl modname=$module type='admin' func='updateconfig'}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="modifyconfig" class="z-form" action="{modurl modname=$module type='admin' func='updateconfig'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <fieldset>
