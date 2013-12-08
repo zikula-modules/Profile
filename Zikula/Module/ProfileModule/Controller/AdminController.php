@@ -26,6 +26,12 @@ use Zikula_View;
  */
 class AdminController extends \Zikula_AbstractController
 {
+    public function postInitialize()
+    {
+        // disable view caching for all admin functions
+        $this->view->setCaching(false);
+    }
+
     /**
      * The default entrypoint.
      *
