@@ -138,11 +138,6 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
     }
 
     if ($item['prop_attribute_name'] == 'avatar') {
-        // detect if it's the registration form to skip this
-        if ($onregistrationform) {
-            return '';
-        }
-
         // only shows a link to the Avatar module if available
         if (ModUtil::available('Avatar')) {
             // TODO Add a change-link to the admins
