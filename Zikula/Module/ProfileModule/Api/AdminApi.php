@@ -76,7 +76,8 @@ class AdminApi extends \Zikula_AbstractApi
             'displaytype' => $args['displaytype'],
             'listoptions' => $args['listoptions'],
             'note' => $args['note'],
-            'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
+            'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information'))
+        );
         $obj = array();
         $obj['prop_label'] = $args['label'];
         $obj['prop_attribute_name'] = $args['attribute_name'];
@@ -158,7 +159,8 @@ class AdminApi extends \Zikula_AbstractApi
                 'displaytype' => $args['displaytype'],
                 'listoptions' => $args['listoptions'],
                 'note' => $args['note'],
-                'fieldset' => isset($args['fieldset']) && !empty($args['fieldset']) ? $args['fieldset'] : $this->__('User Information'));
+                'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information'))
+            );
             $obj['prop_validation'] = serialize($validationinfo);
         }
         // let to modify the label for normal fields only
