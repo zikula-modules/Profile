@@ -81,21 +81,24 @@ class AdminController extends \Zikula_AbstractController
                     $statusval = 1;
                     $status = array(
                         'url' => '',
-                        'image' => 'greenled.png',
+                        'labelClass' => 'label label-success',
+                        'current' => $this->__('Active'),
                         'title' => $this->__('Required'));
                     break;
                 case $item['prop_weight'] != 0:
                     $statusval = 1;
                     $status = array(
                         'url' => ModUtil::url($this->name, 'admin', 'deactivate', array('dudid' => $item['prop_id'], 'weight' => $item['prop_weight'], 'csrftoken' => $csrftoken)),
-                        'image' => 'greenled.png',
+                        'labelClass' => 'label label-success',
+                        'current' => $this->__('Active'),
                         'title' => $this->__('Deactivate'));
                     break;
                 default:
                     $statusval = 0;
                     $status = array(
                         'url' => ModUtil::url($this->name, 'admin', 'activate', array('dudid' => $item['prop_id'], 'csrftoken' => $csrftoken)),
-                        'image' => 'redled.png',
+                        'labelClass' => 'label label-danger',
+                        'current' => $this->__('Inactive'),
                         'title' => $this->__('Activate'));
             }
             // analyzes the DUD type
@@ -127,28 +130,28 @@ class AdminController extends \Zikula_AbstractController
             if (SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
                 $options[] = array(
                     'url' => ModUtil::url($this->name, 'admin', 'modify', array('dudid' => $item['prop_id'])),
-                    'image' => 'xedit.png',
                     'class' => '',
+                    'iconClass' => 'fa fa-pencil fa-lg',
                     'title' => $this->__('Edit'));
                 if ($item['prop_weight'] > 1) {
                     $options[] = array(
                         'url' => ModUtil::url($this->name, 'admin', 'decrease_weight', array('dudid' => $item['prop_id'])),
-                        'image' => '2uparrow.png',
                         'class' => 'profile_up',
+                        'iconClass' => 'fa fa-arrow-up fa-lg',
                         'title' => $this->__('Up'));
                 }
                 if ($x < $count) {
                     $options[] = array(
                         'url' => ModUtil::url($this->name, 'admin', 'increase_weight', array('dudid' => $item['prop_id'])),
-                        'image' => '2downarrow.png',
                         'class' => 'profile_down',
+                        'iconClass' => 'fa fa-arrow-down fa-lg',
                         'title' => $this->__('Down'));
                 }
                 if (SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
                     $options[] = array(
                         'url' => ModUtil::url($this->name, 'admin', 'delete', array('dudid' => $item['prop_id'])),
-                        'image' => '14_layer_deletelayer.png',
-                        'class' => '', 'title' => $this->__('Delete'));
+                        'class' => '', 'title' => $this->__('Delete'),
+                        'iconClass' => 'fa fa-trash-o fa-lg text-danger');
                 }
             }
             $item['status'] = $status;
