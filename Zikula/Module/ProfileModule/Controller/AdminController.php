@@ -302,7 +302,7 @@ class AdminController extends \Zikula_AbstractController
         // Add a hidden variable for the item id.
         $this->view->assign('dudid', $dudid);
 
-        return $this->view->fetch('Admin/modify.tpl');
+        return $this->view->fetch('Admin/edit.tpl');
     }
 
     /**
