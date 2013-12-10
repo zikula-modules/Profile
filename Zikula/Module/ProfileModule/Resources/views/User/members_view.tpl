@@ -82,14 +82,14 @@
                 <td>{if isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.realname)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
                 {/if}
                 {if $msgmodule}
-                <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}">{img modname='core' set='icons/extrasmall' src="mail_new.png" __alt='Send Private Message'}</a></td>
+                <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {/if}
                 {if isset($dudarray.url)}
                 <td>
                     {if !(isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.url)) || ($user.__ATTRIBUTES__.url == '')}
                     &nbsp;
                     {else}
-                    <a href="{$user.__ATTRIBUTES__.url|safetext}" rel="nofollow">{img modname=core set=icons/extrasmall src="agt_internet.png" title=$user.__ATTRIBUTES__.url alt=$user.__ATTRIBUTES__.url}</a>
+                    <a href="{$user.__ATTRIBUTES__.url|safetext}" rel="nofollow"><i class="fa fa-envelope-o fa-lg" title='{$user.__ATTRIBUTES__.url}'></i></a>
                     {/if}
                 </td>
                 {/if}
