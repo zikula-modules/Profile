@@ -95,9 +95,9 @@
                 {/if}
                 {if $adminedit}
                 <td>
-                    <a href="{modurl modname=Users type=admin func=modify userid=$user.uid}">{img modname='core' set='icons/extrasmall' src="xedit.png" __alt='Edit'}</a>
+                    <a href="{modurl modname=Users type=admin func=modify userid=$user.uid}"><i class="fa fa-pencil fa-lg"></i></a>
                     {if $admindelete}
-                    <a href="{modurl modname=Users type=admin func=deleteusers userid=$user.uid}">{img modname='core' set='icons/extrasmall' src="14_layer_deletelayer.png" __alt='Delete'}</a>
+                    <a href="{modurl modname=Users type=admin func=deleteusers userid=$user.uid}"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
                     {/if}
                 </td>
                 {/if}
