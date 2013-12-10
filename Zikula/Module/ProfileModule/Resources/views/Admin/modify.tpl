@@ -1,11 +1,15 @@
 {ajaxheader modname=$module filename='profile_edit_property.js' nobehaviour=true noscriptaculous=true}
 {adminheader}
-<div class="z-admin-content-pagetitle">
-    {icon type="edit" size="small"}
-    <h3>{gt text='Edit field'}</h3>
-</div>
+<h3>
+    {if !empty($item)}
+        <span class="fa fa-pencil"></span>&nbsp;{gt text="Edit Field"}
+    {else}
+        <span class="fa fa-plus-square"></span>&nbsp;{gt text="New Field"}
+    {/if}
 
-<form class="z-form" action="{modurl modname=$module type='admin' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
+</h3>
+
+<form class="z-form" action="{modurl modname=$module type='admin' func='modify'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="dudid" value="{$dudid}" />
@@ -14,37 +18,42 @@
             <div class="z-formnote z-warningmsg">{gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."}</div>
             <div class="z-formrow">
                 <label for="profile_label">{gt text='Label'}</label>
-                <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|safetext}" />
+                <input id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|default:''|safetext}" />
 
                 {modurl modname=$module type='admin' func='help' fqurl=true assign='helpurl'}
                 <div class="z-formnote z-informationmsg">{gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|safetext}</div>
             </div>
             <div class="z-formrow">
                 <label for="profile_attributename">{gt text='Attribute name'}</label>
-                <span id="profile_attributename">{$item.prop_attribute_name}</span>
+                {if !empty($item)}
+                    <span id="profile_attributename">{$item.prop_attribute_name|default:''}</span>
+                {else}
+                    <input id="profile_attributename" name="attributename" type="text" size="20" maxlength="80" />
+                    <div class="z-formnote z-warningmsg">{gt text="Notice: The attribute name you enter cannot be changed afterwards, so you should choose it carefully."}</div>
+                {/if}
             </div>
             <div class="z-formrow">
                 <label for="profile_required">{gt text="Make this a 'Required' item"}</label>
                 <select id="profile_required" name="required">
-                    {html_options options=$requiredoptions selected=$item.prop_required}
+                    {html_options options=$requiredoptions selected=$item.prop_required|default:0}
                 </select>
             </div>
             <div class="z-formrow">
                 <label for="profile_viewby">{gt text='Visibility'}</label>
                 <select id="profile_viewby" name="viewby">
-                    {html_options options=$viewbyoptions selected=$item.prop_viewby}
+                    {html_options options=$viewbyoptions selected=$item.prop_viewby|default:0}
                 </select>
             </div>
-            <input type="hidden" name="dtype" value="{$item.prop_dtype|safetext}" />
+            <input type="hidden" name="dtype" value="{$item.prop_dtype|default:''|safetext}" />
             <div class="z-formrow">
                 <label for="profile_displaytype">{gt text='Type of control to display'}</label>
                 <select id="profile_displaytype" name="displaytype">
-                    {html_options options=$displaytypes selected=$item.prop_displaytype}
+                    {html_options options=$displaytypes selected=$item.prop_displaytype|default:0}
                 </select>
             </div>
             <div class="z-formrow" id="profile_content_wrapper">
                 <label for="profile_listoptions">{gt text='Content'}</label>
-                <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|safetext}</textarea>
+                <textarea id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|default:''|safetext}</textarea>
 
                 <p class="z-formnote z-informationmsg" id="profile_help_type2">{gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. The order is important. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'. All the values are translatable."}</p>
                 <p class="z-formnote z-informationmsg" id="profile_help_type3">{gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3'. The options are translatable."}</p>
@@ -59,11 +68,11 @@
             </div>
             <div class="z-formrow">
                 <label for="profile_note">{gt text='Notice to display with personal info item'}</label>
-                <textarea id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|safetext}</textarea>
+                <textarea id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|default:''|safetext}</textarea>
             </div>
             <div class="z-formrow">
                 <label for="profile_fieldset">{gt text='Fieldset'}</label>
-                <input id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" value="{$item.prop_fieldset|safetext}" />
+                <input id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" value="{$item.prop_fieldset|default:''|safetext}" placeholder="{gt text='User Information'}" />
             </div>
         </fieldset>
 
