@@ -35,7 +35,7 @@ class AccountApi extends \Zikula_AbstractApi
      *
      * @return   array   array of items, or false on failure
      */
-    public function getall($args)
+    public function getall(array $args = array())
     {
         $items = array();
         // do not show the account links if Profile is not the Profile manager
@@ -50,13 +50,13 @@ class AccountApi extends \Zikula_AbstractApi
         // Create an array of links to return
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
-            $items['0'] = array(
+            $items[] = array(
                 'url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)),
                 'module' => $this->name,
                 'title' => $this->__('View Profile'),
                 'icon' => 'admin.png');
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
-                $items['1'] = array(
+                $items[] = array(
                     'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
                     'module' => $this->name,
                     'title' => $this->__('Registered Users'),
