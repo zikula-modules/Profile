@@ -106,7 +106,6 @@ class AdminApi extends \Zikula_AbstractApi
      */
     public function update($args)
     {
-
         // Argument check
         if ((!isset($args['label'])) || (!isset($args['dudid'])) || (!is_numeric($args['dudid']))) {
             return LogUtil::registerArgsError();
@@ -175,7 +174,7 @@ class AdminApi extends \Zikula_AbstractApi
         $property = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find($args['dudid']);
         $property->merge($obj);
         $this->entityManager->flush();
-        return true;
+        return $property->getProp_id();
     }
 
     /**
@@ -310,7 +309,7 @@ class AdminApi extends \Zikula_AbstractApi
         }
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'newdud'),
+                'url' => ModUtil::url($this->name, 'admin', 'edit'),
                 'text' => $this->__('Create new field'),
                 'icon' => 'plus text-success');
         }
