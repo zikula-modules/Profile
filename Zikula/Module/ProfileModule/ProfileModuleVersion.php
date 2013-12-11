@@ -14,7 +14,6 @@
 
 namespace Zikula\Module\ProfileModule;
 
-
 /**
  * Profile module version information and other metadata.
  */
