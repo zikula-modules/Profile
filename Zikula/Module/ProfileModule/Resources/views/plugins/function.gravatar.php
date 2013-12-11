@@ -51,7 +51,7 @@ function smarty_function_gravatar(array $params = array(), Zikula_View $view)
     $result .= ($params['f']) ? '&amp;f='.$params['f'] : '';
     
     if ($params['img']) {
-        $result = '<img src="'.$result.'" class="profileavatar" alt="'.__('Avatar', $dom).'" />';
+        $result = '<img src="'.$result.'" class="img-thumbnail" alt="'.__('Avatar', $dom).'" />';
     }
     
     return $result;

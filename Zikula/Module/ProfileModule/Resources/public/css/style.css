@@ -83,10 +83,6 @@ p.profile_usererror {
 }
 
 .profile-information img {
-    background: #FFFFFF;
-    border-color: #D9E0E6 #C8CDD2 #C8CDD2 #D9E0E6;
-    border-style: solid;
-    border-width: 1px;
     padding: 4px;
     position: absolute;
     right: 1em;
