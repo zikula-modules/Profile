@@ -79,17 +79,17 @@
                     {/if}
                 </td>
                 {if isset($dudarray.realname)}
-                <td>{if isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.realname)}{$user.__ATTRIBUTES__.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
+                <td>{if isset($user.attributes) && isset($user.attributes.realname)}{$user.attributes.realname|safetext|default:"&nbsp;"}{else}&nbsp;{/if}</td>
                 {/if}
                 {if $msgmodule}
                 <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {/if}
                 {if isset($dudarray.url)}
                 <td>
-                    {if !(isset($user.__ATTRIBUTES__) && isset($user.__ATTRIBUTES__.url)) || ($user.__ATTRIBUTES__.url == '')}
+                    {if !(isset($user.attributes) && isset($user.attributes.url)) || ($user.attributes.url == '')}
                     &nbsp;
                     {else}
-                    <a href="{$user.__ATTRIBUTES__.url|safetext}" rel="nofollow"><i class="fa fa-envelope-o fa-lg" title='{$user.__ATTRIBUTES__.url}'></i></a>
+                    <a href="{$user.attributes.url|safetext}" rel="nofollow"><i class="fa fa-globe fa-lg" title='{$user.attributes.url}'></i></a>
                     {/if}
                 </td>
                 {/if}

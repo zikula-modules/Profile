@@ -75,19 +75,14 @@ class MemberslistApi extends \Zikula_AbstractApi
         if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
             return array();
         }
+        // begin the construction of the query
         $qb = $this->entityManager->createQueryBuilder();
-        if ($searchBy != 'uname') {
-            $qb->select(array('u', 'a', 'p'))
-                ->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')
-                ->leftJoin('u.attributes', 'a')
-                ->leftJoin('Zikula\\Module\\ProfileModule\\Entity\\PropertyEntity', 'p', 'WITH', 'a.name = p.prop_attribute_name');
-        } else {
-            $qb->select('u')
-                ->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u');
-        }
-        $qb->andWhere('u.uid <> 1');
+        $qb->select(array('u', 'a'))
+            ->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')
+            ->leftJoin('u.attributes', 'a')
+            ->andWhere('u.uid > 1');
+
         if ($searchBy == 'uname') {
-            $join = '';
             if (!empty($letter) && preg_match('/[a-z]/i', $letter)) {
                 $qb->andWhere($qb->expr()->like('u.uname', ':letter'))->setParameter('letter', $letter . '%');
             } else {
@@ -161,6 +156,10 @@ class MemberslistApi extends \Zikula_AbstractApi
                     $usersArray[$k] = $user['uid'];
                 } else {
                     $usersArray[$user['uid']] = $user;
+                    // reformat attributes array
+                    foreach($user['attributes'] as $name => $attr) {
+                        $usersArray[$user['uid']]['attributes'][$name] = $attr['value'];
+                    }
                 }
             }
             return $usersArray;
@@ -351,8 +350,9 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     public function whosonline()
     {
-        $dql = 'SELECT s.uid, u.uname
+        $dql = 'SELECT u, a
             FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\Module\\UsersModule\\Entity\\UserEntity u
+            LEFT JOIN u.attributes a
             WHERE s.lastused > :activetime
             AND (s.uid >= 2
             AND s.uid = u.uid)';
@@ -362,6 +362,12 @@ class MemberslistApi extends \Zikula_AbstractApi
         $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
         $onlineusers = $query->getArrayResult();
+        foreach ($onlineusers as $k => $user) {
+            // reformat attributes array
+            foreach($user['attributes'] as $name => $attr) {
+                $onlineusers[$k]['attributes'][$name] = $attr['value'];
+            }
+        }
         return $onlineusers;
     }
 

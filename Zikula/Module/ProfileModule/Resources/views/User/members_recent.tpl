@@ -34,17 +34,17 @@
                 </td>
                 <td>{$user.user_regdate|dateformat|default:"&nbsp;"}</td>
                 {if @isset($dudarray.realname)}
-                <td>{$user.__ATTRIBUTES__.realname|default:"&nbsp;"}</td>
+                <td>{$user.attributes.realname|default:"&nbsp;"}</td>
                 {/if}
                 {if $msgmodule}
                 <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {/if}
                 {if @isset($dudarray.url)}
                 <td>
-                    {if $user.__ATTRIBUTES__.url eq ''}
+                    {if $user.attributes.url eq ''}
                     &nbsp;
                     {else}
-                    <a href="{$user.__ATTRIBUTES__.url|safetext}"><i class="fa fa-envelope-o fa-lg" title='{$user.__ATTRIBUTES__.url}'></i></a>
+                    <a href="{$user.attributes.url|safetext}"><i class="fa fa-envelope-o fa-lg" title='{$user.attributes.url}'></i></a>
                     {/if}
                 </td>
                 {/if}

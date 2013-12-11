@@ -17,13 +17,13 @@
             {foreach from=$users item='user'}
             <tr>
                 <td><strong>{$user.uname|profilelinkbyuname}</strong></td>
-                <td>{$user.__ATTRIBUTES__.realname|default:'&nbsp;'}</td>
+                <td>{$user.attributes.realname|default:'&nbsp;'}</td>
                 {if $msgmodule}
                 <td><a href="{modurl modname=$msgmodule type='user' func='newpm' uid=$user.uid}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {/if}
                 <td>
-                    {if @isset($user.__ATTRIBUTES__.url) and $user.__ATTRIBUTES__.url neq '' and $user.__ATTRIBUTES__.url neq 'http://'}
-                    <a href="{$user.__ATTRIBUTES__.url|safetext}"><i class="fa fa-envelope-o fa-lg" title='{$user.__ATTRIBUTES__.url}'></i></a>
+                    {if @isset($user.attributes.url) and $user.attributes.url neq '' and $user.attributes.url neq 'http://'}
+                    <a href="{$user.attributes.url|safetext}"><i class="fa fa-globe fa-lg" title='{$user.attributes.url}'></i></a>
                     {else}
                     &nbsp;
                     {/if}
