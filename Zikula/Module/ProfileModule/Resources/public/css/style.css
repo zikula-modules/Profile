@@ -29,18 +29,6 @@ p.profile_usererror {
     text-align: center;
     width: 69%;
 }
-#youravatardisplay {
-    background: #FFFFFF;
-    border-color: #D9E0E6 #C8CDD2 #C8CDD2 #D9E0E6;
-    border-style: solid;
-    border-width: 1px;
-    padding: 4px;
-}
-.z-form .custom-advice {
-    color: red;
-    font-weight: bold;
-    margin: 0;
-}
 #modifyprofileform p.z-formnote {
     font-style: italic;
 }

@@ -84,11 +84,10 @@
                     <p class="alert alert-info" id="profile_help_type4">{gt text="Notice: Use the following format for each option: '@@label@id'. Example for a simple list: '@@option 1@id1@@option 2@id2@@option 3@id3'. Example for a multiple checkbox set: '1@@option 1@id1@@option 2@id2@@option 3@id3'. The options are translatable."}</p>
                     <p class="alert alert-info" id="profile_help_type5">{gt text="Notice: You can specify the date format to use, either via Zikula core templating variables ('datelong', 'datebrief', 'datestring', 'datestring2', 'datetimebrief', 'datetimelong', 'timebrief' or 'timelong'), or via a custom format such as '%b %d of %Y', possibly using PHP options (see the <a href=\"http://www.php.net/manual/en/function.strftime.php\">PHP documentation</a> for more information). The format is translatable."}</p>
                     <p class="alert alert-info" id="profile_help_type7">{gt text="Notice: Use the following format for each option: 'id,label;'. Example: 'id1,label1;id2,label2;id3,label3'. Each property should be separated with a semicolon (';'). The ID and label of each property should be separated by a comma (','). The labels are translatable."}</p>
-                </div>
-
-                <div class="alert alert-warning" id="profile_warn_ids">
-                    {gt text="Warning! If you want to edit the ID of an option without losing associated user data in the database, its label must not be renamed simultaneously. Also, do not assign IDs and labels the same naming. You are recommended to give each option an unique ID and a unique name, and to try to avoid renaming an ID once it has been created."}<br />
-                    {gt text="Notice: Entering an ID is optional. If you do not specify an ID, the option position will be used for the ID (starting from zero), instead of the user-defined ID you can enter here. You are recommended to choose an ID that is unique, and to avoid subsequently modifying it."}
+                    <div class="alert alert-warning" id="profile_warn_ids">
+                        {gt text="Warning! If you want to edit the ID of an option without losing associated user data in the database, its label must not be renamed simultaneously. Also, do not assign IDs and labels the same naming. You are recommended to give each option an unique ID and a unique name, and to try to avoid renaming an ID once it has been created."}<br />
+                        {gt text="Notice: Entering an ID is optional. If you do not specify an ID, the option position will be used for the ID (starting from zero), instead of the user-defined ID you can enter here. You are recommended to choose an ID that is unique, and to avoid subsequently modifying it."}
+                    </div>
                 </div>
             </div>
             <div class="form-group">

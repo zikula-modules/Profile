@@ -1,14 +1,17 @@
-<div class="{$class|default:'z-formrow'}">
+<div class="{$class|default:'form-group'}{if $error} has-error{/if}">
     {if $required}
-    <p id="advice-required-prop_{$attributename}" class="custom-advice z-formnote" style="display:none">
+        <p id="advice-required-prop_{$attributename}" class="alert alert-warning" style="display:none">
         {gt text='Sorry! A required personal info item is missing. Please correct and try again.'}
     </p>
     {/if}
-
-    <label for="prop_{$attributename}">{gt text=$proplabeltext}{if $required}<span class="z-form-mandatory-flag">{gt text='*'}</span>{/if}</label>
-    <input id="prop_{$attributename}" type="text" name="dynadata[{$attributename}]" value="{$value}" size="30" class="{if $required}required{/if} {if $error}z-form-error{/if}" />
-    {if $note}
-    <em class="z-sub z-formnote">{$note}</em>
-    {/if}
-    <p id="prop_{$attributename}_error" class="z-formnote z-errormsg {if !$error}z-hide{/if}">{if $error}{$error}{/if}</p>
+    <div class="col-lg-3 control-label">
+        <label for="prop_{$attributename}"{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
+    </div>
+    <div class="col-lg-9">
+        <input class="form-control{if $required} required{/if}" id="prop_{$attributename}" type="text" name="dynadata[{$attributename}]" value="{$value}" />
+        {if $note}
+        <em class="help-block">{$note}</em>
+        {/if}
+        <p id="prop_{$attributename}_error" class="alert alert-danger {if !$error}hidden{/if}">{if $error}{$error}{/if}</p>
+    </div>
 </div>
