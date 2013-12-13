@@ -23,6 +23,7 @@ use LogUtil;
 use ModUtil;
 use SecurityUtil;
 use UserUtil;
+use System;
 use Zikula\Core\Event\GenericEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
