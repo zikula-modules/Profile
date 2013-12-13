@@ -14,12 +14,12 @@
 
 namespace Zikula\Module\ProfileModule\Controller;
 
-use Zikula_Exception_Forbidden;
 use SecurityUtil;
-use AjaxUtil;
-use Zikula_Response_Ajax;
 use ModUtil;
-use Zikula_Exception_Fatal;
+use Symfony\Component\Debug\Exception\FatalErrorException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\Core\Response\Ajax\BadDataResponse;
+use Zikula\Core\Response\Ajax\AjaxResponse;
 
 /**
  * AJAX query and response functions.
@@ -40,12 +40,12 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     {
         $this->checkAjaxToken();
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
+            throw new AccessDeniedException($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $profilelist = $this->request->request->get('profilelist', $this->request->query->get('profilelist', null));
         $startnum = $this->request->request->get('startnum', $this->request->query->get('startnum', null));
         if ($startnum < 0) {
-            AjaxUtil::error($this->__f('Error! Invalid \'%s\' passed.', 'startnum'));
+            return new BadDataResponse(array(), $this->__f('Error! Invalid \'%s\' passed.', 'startnum'));
         }
         // update the items with the new weights
         $props = array();
@@ -61,7 +61,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // update the db
         $this->entityManager->flush();
-        return new Zikula_Response_Ajax(array('result' => true));
+        return new AjaxResponse(array('result' => true));
     }
 
     /**
@@ -78,7 +78,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     {
         $this->checkAjaxToken();
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
+            throw new AccessDeniedException($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $prop_id = $this->request->request->get('dudid', $this->request->query->get('dudid', null));
         $oldstatus = (bool)$this->request->request->get('oldstatus', $this->request->query->get('oldstatus', null));
@@ -91,7 +91,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         if (!$res) {
             throw new Zikula_Exception_Fatal($this->__('Error! Could not save your changes.'));
         }
-        return new Zikula_Response_Ajax(array('result' => true, 'dudid' => $prop_id, 'newstatus' => !$oldstatus));
+        return new AjaxResponse(array('result' => true, 'dudid' => $prop_id, 'newstatus' => !$oldstatus));
     }
 
     /**
@@ -109,7 +109,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     {
         $this->checkAjaxToken();
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
-            throw new Zikula_Exception_Forbidden($this->__('Sorry! You do not have authorisation for this module.'));
+            throw new AccessDeniedException($this->__('Sorry! You do not have authorisation for this module.'));
         }
         $uid = $this->request->request->get('uid', $this->request->query->get('uid', null));
         $name = $this->request->request->get('name', $this->request->query->get('name', null));
@@ -123,7 +123,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         // update the item status
         $section = ModUtil::apiFunc($this->name, 'section', $name, array_merge($args, array('uid' => $uid)));
         if (!$section) {
-            throw new Zikula_Exception_Fatal($this->__('Error! Could not load the section.'));
+            throw new FatalErrorException($this->__('Error! Could not load the section.'));
         }
         // build the output
         $this->view->setCaching(false);
@@ -134,7 +134,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // assign and render the output
         $this->view->assign('section', $section);
-        return new Zikula_Response_Ajax(array('result' => $this->view->fetch($template, $uid), 'name' => $name, 'uid' => $uid));
+        return new AjaxResponse(array('result' => $this->view->fetch($template, $uid), 'name' => $name, 'uid' => $uid));
     }
 
 }

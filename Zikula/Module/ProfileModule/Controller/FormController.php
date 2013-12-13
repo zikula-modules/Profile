@@ -22,6 +22,11 @@ use LogUtil;
  */
 class FormController extends \Zikula_AbstractController
 {
+    public function postInitialize()
+    {
+        // disable view caching for all admin functions
+        $this->view->setCaching(false);
+    }
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.
      *
@@ -60,11 +65,10 @@ class FormController extends \Zikula_AbstractController
                 }
             }
         }
-        $this->view->setCaching(false)
-            ->assign('duditems', $items)
+        $this->view->assign('duditems', $items)
             ->assign('userid', $userid);
         // Return the dynamic data section
-        return $this->view->fetch('Form/edit.tpl');
+        return $this->response($this->view->fetch('Form/edit.tpl'));
     }
 
     /**
@@ -95,9 +99,10 @@ class FormController extends \Zikula_AbstractController
         foreach (array_keys($items) as $k) {
             $items[$k]['prop_required'] = false;
         }
-        $this->view->setCaching(false)->assign('duditems', $items)->assign('userid', 1);
+        $this->view->assign('duditems', $items)
+            ->assign('userid', 1);
         // Return the dynamic data section
-        return $this->view->fetch('Form/edit.tpl');
+        return $this->response($this->view->fetch('Form/edit.tpl'));
     }
 
     /**
@@ -125,9 +130,10 @@ class FormController extends \Zikula_AbstractController
         }
         $userinfo = isset($args['userinfo']) ? $args['userinfo'] : array();
         // Create output object
-        $this->view->setCaching(false)->assign('duditems', $items)->assign('userinfo', $userinfo);
+        $this->view->assign('duditems', $items)
+            ->assign('userinfo', $userinfo);
         // Return the dynamic data rows
-        return $this->view->fetch('Form/display.tpl');
+        return $this->response($this->view->fetch('Form/display.tpl'));
     }
 
 }
