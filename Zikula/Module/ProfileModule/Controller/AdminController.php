@@ -18,9 +18,9 @@ use DataUtil;
 use LogUtil;
 use ModUtil;
 use SecurityUtil;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use System;
 use Zikula_View;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdminController extends \Zikula_AbstractController
 {
