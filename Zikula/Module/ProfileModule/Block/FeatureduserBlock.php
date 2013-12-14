@@ -93,6 +93,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             $isadmin = true;
         }
         // get all active profile fields
+        $dudarray = array();
         $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('index' => 'prop_label'));
         foreach ($activeduds as $dudlabel => $activedud) {
             // check if the attribute is set to be shown in the block
@@ -149,6 +150,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         }
         // get all active profile fields
         $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
+        $dudarray = array();
         foreach ($activeduds as $attr => $activedud) {
             $dudarray[$attr] = $this->__($activedud['prop_label']);
         }
@@ -181,9 +183,9 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         // Get current content
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // alter the corresponding variables
-        $vars['username'] = $this->request->getPost()->get('username', null);
-        $vars['fieldstoshow'] = $this->request->getPost()->get('fieldstoshow', null);
-        $vars['showregdate'] = (bool)$this->request->getPost()->get('showregdate', null);
+        $vars['username'] = $this->request->request->get('username', null);
+        $vars['fieldstoshow'] = $this->request->request->get('fieldstoshow', null);
+        $vars['showregdate'] = (bool)$this->request->request->get('showregdate', null);
         if (!isset($vars['fieldstoshow']) || !is_array($vars['fieldstoshow']) || empty($vars['fieldstoshow'])) {
             $vars['fieldstoshow'] = array();
         }
