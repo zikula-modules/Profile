@@ -18,7 +18,6 @@
 
 namespace Zikula\Module\ProfileModule\Api;
 
-use Zikula_Exception_Fatal;
 use SecurityUtil;
 use Zikula\Module\UsersModule\Constant as UsersConstant;
 use ModUtil;
@@ -26,6 +25,7 @@ use System;
 use DateTime;
 use LogUtil;
 use Doctrine\ORM\NoResultException;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 
 class MemberslistApi extends \Zikula_AbstractApi
 {
@@ -43,8 +43,8 @@ class MemberslistApi extends \Zikula_AbstractApi
      * @param string $letter Letter to filter by.
      * @param string $sortBy A comma-separated list of fields on which the list of members should be sorted.
      * @param string $sortOrder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
-     * @param numeric $startNum Start number for recordset; ignored if $countOnly is true.
-     * @param numeric $numItems Number of items to return; ignored if $countOnly is true.
+     * @param integer $startNum Start number for recordset; ignored if $countOnly is true.
+     * @param integer $numItems Number of items to return; ignored if $countOnly is true.
      * @param boolean $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true.
      *
      * @return array|integer Matching user ids or a count of the matching integers.
@@ -52,12 +52,12 @@ class MemberslistApi extends \Zikula_AbstractApi
     protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
         if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string)(int)$startNum || $startNum < -1) {
-            throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
+            throw new FatalErrorException($this->__f('Invalid %1$s.', array('startNum')));
         } elseif ($startNum <= 0) {
             $startNum = -1;
         }
         if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string)(int)$numItems || $numItems != -1 && $numItems < 1) {
-            throw new Zikula_Exception_Fatal($this->__f('Invalid %1$s.', array('startNum')));
+            throw new FatalErrorException($this->__f('Invalid %1$s.', array('startNum')));
         }
         if (!isset($sortBy) || empty($sortBy)) {
             $sortBy = 'uname';
@@ -87,43 +87,51 @@ class MemberslistApi extends \Zikula_AbstractApi
                 $qb->andWhere($qb->expr()->like('u.uname', ':letter'))->setParameter('letter', $letter . '%');
             } else {
                 if (!empty($letter)) {
-                    static $otherWhere;
-                    if (!isset($otherWhere)) {
-                        $otherList = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
-                        $or = $qb->expr()->orX();
-                        foreach ($otherList as $other) {
-                            $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%')));
-                        }
-                        $qb->andWhere($or->getParts());
+                    $otherList = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
+                    $or = $qb->expr()->orX();
+                    foreach ($otherList as $other) {
+                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%')));
                     }
+                    $qb->andWhere($or->getParts());
                 }
             }
         } else {
             if (is_array($searchBy)) {
+                /**
+                 * @todo
+                 * This section is unused when the form uses radio buttons as it currently does
+                 * If the form were converted to checkmarks or a multiselect then this section would be needed
+                 * in fact the 'p' table alias below will break it. and the logic below is flawed and based on the
+                 * existence of the property table which is no longer in the query
+                 */
                 if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
                     // args.searchby is all => search_value to loop all the user attributes
                     $qb->andWhere('p.prop_weight > 0')
                         ->andWhere('p.prop_dtype >= 0')
                         ->andWhere($qb->expr()->like('a.value', ':value'))
-                        ->setParameter('value', "%{$value}%");
+                        ->setParameter('value', "%{$searchBy}%");
                 } else {
                     // args.searchby is an array of the form prop_id => value
                     $and = $qb->expr()->andX();
                     foreach ($searchBy as $prop_id => $value) {
                         $and->add($qb->expr()->andX($qb->expr()->eq('p.prop_id', $prop_id), $qb->expr()->like('a.value', $qb->expr()->literal('%' . $value . '%'))));
                     }
-                    // check if there where contitionals
+                    // check if there where conditionals
                     if ($and->count() > 0) {
                         $qb->andWhere($and->getParts());
                     }
                 }
             } else {
+                $activePropertiesByName = ModUtil::apiFunc($this->name, 'user', 'getallactive');
                 if (is_numeric($searchBy)) {
-                    $qb->andWhere('p.prop_id = :searchby')
+                    $activeProperties = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('index' => 'prop_id'));
+                    $qb->andWhere('a.name = :searchby')
+                        ->setParameter('searchby', $activeProperties[$searchBy]['prop_attribute_name'])
+                        ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal('%' . $letter . '%')));
+                } elseif (array_key_exists($searchBy, $activePropertiesByName)) {
+                    $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $searchBy)
-                        ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal($letter . '%')));
-                } elseif (isset($propcolumn[$searchBy])) {
-                    $qb->andWhere($qb->expr()->like('p.' . $propcolumn[$searchBy], $qb->expr()->literal($letter . '%')));
+                        ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal('%' . $letter . '%')));
                 }
             }
         }
@@ -146,6 +154,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             \System::dump($qb->getQuery()->getDQL());
             \System::dump($qb->getQuery()->getSQL());
             \System::dump($qb->getParameters());
+            throw new FatalErrorException($this->__('Query failed.'));
         }
         if ($countOnly) {
             return count($users);
