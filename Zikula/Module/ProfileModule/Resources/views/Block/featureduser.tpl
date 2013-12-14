@@ -1,13 +1,16 @@
 {modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
 
-<div class="profile-block-featureduser">
+<div class="text-center">
     <h5>{$userinfo.uname|profilelinkbyuname}</h5>
     <p>
-        {if @isset($userinfo.__ATTRIBUTES__.avatar) and $userinfo.__ATTRIBUTES__.avatar neq '' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.gif' and $userinfo.__ATTRIBUTES__.avatar neq 'blank.png'}
-        {$userinfo.uname|profilelinkbyuname:'':"`$avatarpath`/`$userinfo.__ATTRIBUTES__.avatar`"}
+        {if isset($userinfo.__ATTRIBUTES__.avatar) and (($userinfo.__ATTRIBUTES__.avatar == '') || ($userinfo.__ATTRIBUTES__.avatar == 'blank.gif') || ($userinfo.__ATTRIBUTES__.avatar == 'blank.png') || ($userinfo.__ATTRIBUTES__.avatar == 'gravatar.gif'))}
+            {gravatar email_address=$userinfo.email}
+        {elseif isset($userinfo.__ATTRIBUTES__.avatar)}
+            {$userinfo.uname|profilelinkbyuname:'':"`$avatarpath`/`$userinfo.__ATTRIBUTES__.avatar`"}
+            {img modname='core' src='personal.png' set='icons/large' assign='profileicon'}
+            {$userinfo.uname|profilelinkbyuname:'profileicon':$profileicon}
         {else}
-        {img modname='core' src='personal.png' set='icons/large' assign='profileicon'}
-        {$userinfo.uname|profilelinkbyuname:'profileicon':$profileicon}
+            {gravatar email_address=$userinfo.email}
         {/if}
     </p>
     {foreach from=$dudarray key='dudlabel' item='dudvalue'}
