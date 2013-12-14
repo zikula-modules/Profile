@@ -19,8 +19,7 @@ use LogUtil;
 use UserUtil;
 use ModUtil;
 use DateUtil;
-use FormUtil;
-use Zikula_Exception_Fatal;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use System;
 
 /**
@@ -351,7 +350,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         // Argument check
         if (!isset($args['dynadata'])) {
-            throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+            throw new FatalErrorException($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable'));
@@ -432,7 +431,7 @@ class UserApi extends \Zikula_AbstractApi
     public function insertdyndata($args)
     {
         if (!isset($args['dynadata'])) {
-            throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+            throw new FatalErrorException($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         $dynadata = $args['dynadata'];
         // Validate if there's no dynadata
@@ -470,7 +469,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         $uids = array();
         if (!isset($args['dynadata'])) {
-            throw new Zikula_Exception_Fatal($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+            throw new FatalErrorException($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         $dynadata = $args['dynadata'];
         // Validate if there's any dynamic data
