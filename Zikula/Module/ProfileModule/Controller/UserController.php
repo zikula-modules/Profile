@@ -23,9 +23,9 @@ use LogUtil;
 use ModUtil;
 use SecurityUtil;
 use UserUtil;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use System;
 use Zikula\Core\Event\GenericEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends \Zikula_AbstractController
 {
