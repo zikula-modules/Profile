@@ -113,7 +113,7 @@ class LastxusersBlock extends \Zikula_Controller_AbstractBlock
         // Get current content
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // alter the corresponding variable
-        $vars['amount'] = (int)$this->request->request->get('amount', null);
+        $vars['amount'] = (int)$this->request->request->get('amount', 0);
         // write back the new contents
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
         // clear the block cache
