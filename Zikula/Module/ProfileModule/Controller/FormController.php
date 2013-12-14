@@ -56,7 +56,7 @@ class FormController extends \Zikula_AbstractController
         // check if there's a user to edit
         // or uses uid=1 to pull the default values from the annonymous user
         $userid = isset($args['userid']) ? $args['userid'] : 1;
-        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : $this->request->getPost()->get('dynadata', array());
+        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : $this->request->request->get('dynadata', array());
         // merge this temporary dynadata and the errors into the items array
         foreach ($items as $prop_label => $item) {
             foreach ($dynadata as $propname => $propdata) {

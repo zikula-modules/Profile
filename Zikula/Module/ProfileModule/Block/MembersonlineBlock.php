@@ -134,7 +134,7 @@ class MembersonlineBlock extends \Zikula_Controller_AbstractBlock
         // Get current content
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // alter the corresponding variable
-        $vars['lengthmax'] = (int)$this->request->getPost()->get('lengthmax', null);
+        $vars['lengthmax'] = (int)$this->request->request->get('lengthmax', null);
         // write back the new contents
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
         // clear the block cache
