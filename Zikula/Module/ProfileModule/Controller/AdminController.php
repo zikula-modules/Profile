@@ -20,7 +20,6 @@ use ModUtil;
 use SecurityUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use System;
-use Zikula_View;
 
 class AdminController extends \Zikula_AbstractController
 {

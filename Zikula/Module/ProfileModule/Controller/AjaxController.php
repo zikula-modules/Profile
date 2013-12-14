@@ -89,7 +89,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $func = $oldstatus ? 'deactivate' : 'activate';
         $res = ModUtil::apiFunc($this->name, 'admin', $func, array('dudid' => $prop_id));
         if (!$res) {
-            throw new Zikula_Exception_Fatal($this->__('Error! Could not save your changes.'));
+            throw new FatalErrorException($this->__('Error! Could not save your changes.'));
         }
         return new AjaxResponse(array('result' => true, 'dudid' => $prop_id, 'newstatus' => !$oldstatus));
     }
