@@ -378,7 +378,7 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     public function getallonline()
     {
-        $dql = 'SELECT s.uid, u.uname
+        $dql = 'SELECT u
             FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\Module\\UsersModule\\Entity\\UserEntity u
             WHERE s.lastused > :activetime
             AND (s.uid >= 2
@@ -395,7 +395,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $unames = array();
         foreach ($onlineusers as $key => $user) {
             if ($user['uid'] != 1) {
-                $unames[$user['uname']] = $user->toArray();
+                $unames[$user['uname']] = $user;
             } else {
                 $numguests++;
             }
