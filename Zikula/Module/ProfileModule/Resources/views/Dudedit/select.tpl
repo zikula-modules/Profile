@@ -14,7 +14,7 @@
         {gt text='Select' assign='gt'}
         {if (($attributename == 'country') || (strpos($attributename, '_country') !== false))}
             {if $required}{assign value="form-control required" var="class"}{else}{assign value="form-control" var="class"}{/if}
-            {selector_countries allText=$gt allValue='' class=$class id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue=$value}
+            {selector_countries allText=$gt allValue='' class=$class id="prop_`$attributename`" name=$field_name selectedValue=$value}
         {else}
             <select id="prop_{$attributename}" name="{$field_name}{if ($selectmultiple)}[]{/if}"{$selectmultiple} class="form-control{if $required} required{/if}">
                 <option label="{gt text='Select'}" value="">{gt text='Select'}</option>
