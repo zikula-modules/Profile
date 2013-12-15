@@ -150,7 +150,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
 
     } elseif ($item['prop_displaytype'] == 2) {
         // checkbox
-        $options = array('No', 'Yes');
+        $item['prop_listoptions'] = (empty($item['prop_listoptions'])) ? '@@No@@Yes' : $item['prop_listoptions'];
         
         if (!empty($item['prop_listoptions'])) {
 		 	$options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
@@ -162,15 +162,12 @@ function smarty_function_duditemdisplay($params, &$smarty)
 		 		$label = array_shift($options);
 		 		$item['prop_label'] = __($label, $dom);
 		 	}
+		 	
+		 	$uservalue = (isset($uservalue)) ? (bool)$uservalue : 0;
+			$output = __($options[$uservalue], $dom);
+        } else {
+	    	$output = $uservalue;
         }
-        
-        $key = array_search($uservalue, $options);
-		
-		if ($key !== false) {
-			$output = __($options[$key], $dom);
-		} else {
-			$output = '';
-		}
     } elseif ($item['prop_displaytype'] == 3) {
         // radio
         $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
