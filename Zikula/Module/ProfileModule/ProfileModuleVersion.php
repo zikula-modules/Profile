@@ -31,7 +31,7 @@ class ProfileModuleVersion extends \Zikula_AbstractVersion
             'oldnames' => array('Profile'),
             'description' => $this->__('Provides a personal account control panel for each registered user, an interface to administer the personal information items displayed within it, and a registered users list functionality. Works in close unison with the \'Users\' module.'),
             'url' => $this->__('profile'),
-            'version' => '2.0.0-dev',
+            'version' => '2.0.0-beta',
             'core_min' => '1.3.7',
             'core_max' => '1.3.99',
             'capabilities' => array(
