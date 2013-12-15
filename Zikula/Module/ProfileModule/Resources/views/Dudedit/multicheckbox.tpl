@@ -4,7 +4,7 @@
     </div>
     <div class="col-lg-9">
         <div id="prop_{$attributename}">
-            {html_checkboxes name="dynadata[`$attributename`]" labels=true options=$fields selected=$value assign='fields'}
+            {html_checkboxes name=$field_name labels=true options=$fields selected=$value assign='fields'}
             {foreach from=$fields item='field'}
             <div class="checkbox">
                 {$field}

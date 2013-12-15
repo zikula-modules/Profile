@@ -8,7 +8,7 @@
         <label for="prop_{$attributename}"{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
     </div>
     <div class="col-lg-9">
-        <input class="form-control{if $required} required{/if}" id="prop_{$attributename}" type="text" name="dynadata[{$attributename}]" value="{$value}" />
+        <input class="form-control{if $required} required{/if}" id="prop_{$attributename}" type="text" name="{$field_name}" value="{$value}" />
         {if $note}
         <em class="help-block">{$note}</em>
         {/if}

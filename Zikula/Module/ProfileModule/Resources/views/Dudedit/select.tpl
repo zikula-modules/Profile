@@ -16,7 +16,7 @@
             {if $required}{assign value="form-control required" var="class"}{else}{assign value="form-control" var="class"}{/if}
             {selector_countries allText=$gt allValue='' class=$class id="prop_`$attributename`" name="dynadata[`$attributename`]" selectedValue=$value}
         {else}
-            <select id="prop_{$attributename}" name="dynadata[{$attributename}]{if ($selectmultiple)}[]{/if}"{$selectmultiple} class="form-control{if $required} required{/if}">
+            <select id="prop_{$attributename}" name="{$field_name}{if ($selectmultiple)}[]{/if}"{$selectmultiple} class="form-control{if $required} required{/if}">
                 <option label="{gt text='Select'}" value="">{gt text='Select'}</option>
                 {html_options id=$attributename values=$listoptions output=$listoutput selected=$value}
             </select>

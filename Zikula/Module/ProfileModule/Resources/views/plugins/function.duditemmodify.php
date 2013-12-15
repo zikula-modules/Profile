@@ -28,14 +28,19 @@ use Zikula\Module\UsersModule\Constant as UsersConstant;
  * Example
  * {duditemmodify item=$item}
  *
+ * Example
+ * {duditemmodify item=$item field_name=false}
+ *
  * Parameters passed in via the $params array:
  * -------------------------------------------
- * string item          The Profile DUD item.
- * string uid           User ID to display the field value for (-1 = do not load).
- * string class         CSS class to assign to the table row/form row div (optional).
- * string proplabel     Property label to display (optional overrides the preformated dud item $item).
+ * string item The Profile DUD item.
+ * string uid User ID to display the field value for (-1 = do not load).
+ * string class CSS class to assign to the table row/form row div (optional).
+ * string proplabel Property label to display (optional overrides the preformated dud item $item).
  * string propattribute Property attribute to display.
- * string error         Property error message.
+ * string error Property error message.
+ * bool|string field_name The name of the array of elements that comprise the fields. Defaults to "dynadata[example]".
+ *		Set to FALSE for fields without an array.
  * 
  * @param array  $params  All attributes passed to this function from the template.
  * @param object $view Reference to the Zikula_View object.
@@ -112,15 +117,18 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         }
     }
 
+	$field_name = ((isset($field_name)) ? ((!$field_name) ? $item['prop_attribute_name'] : $field_name.'['.$item['prop_attribute_name'].']') : 'dynadata['.$item['prop_attribute_name'].']');
+
     // assign the default values for the control
     $view->assign('class',         $class);
+    $view->assign('field_name', $field_name);
     $view->assign('value',         DataUtil::formatForDisplay($uservalue));
     
     $view->assign('attributename', $item['prop_attribute_name']);
     $view->assign('proplabeltext', $item['prop_label']);
     $view->assign('note',          $item['prop_note']);
     $view->assign('required',      (bool)$item['prop_required']);
-    $view->assign('error',         isset($error) ? $error : '');
+    $view->assign('error', ((isset($error)) ? $error : ''));
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {

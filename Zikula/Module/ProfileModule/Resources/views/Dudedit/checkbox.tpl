@@ -4,7 +4,7 @@
     </div>
     <div class="col-lg-9">
         <div class="checkbox">
-            <input id="prop_{$attributename}" type="checkbox" name="dynadata[{$attributename}]" value="1"{if $value} checked="checked"{/if} />
+            <input id="prop_{$attributename}" type="checkbox" name="{$field_name}" value="1"{if $value} checked="checked"{/if} />
         </div>
         {if $note neq ''}
         <em class="help-block">{$note}</em>

@@ -1,1 +1,1 @@
-<input id="prop_{$attributename}" type="hidden" name="dynadata[{$attributename}]" value="{$value}" />
+<input id="prop_{$attributename}" type="hidden" name="{$field_name}" value="{$value}" />

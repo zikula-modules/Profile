@@ -9,7 +9,7 @@
         <label{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
     </div>
     <div class="col-lg-9">
-        {html_radios name="dynadata[`$attributename`]" values=$listoptions output=$listoutput checked=$value labels=false assign='listoptions'}
+        {html_radios name=$field_name values=$listoptions output=$listoutput checked=$value labels=false assign='listoptions'}
         {foreach from=$listoptions item='item'}
         <div class="radio">
             {$item}
