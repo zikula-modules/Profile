@@ -240,10 +240,22 @@ class UserApi extends \Zikula_AbstractApi
             }
         }
 
-        $event_subject = UserUtil::getVars(UserUtil::getVar('uid'));
-        $event_args = $result;
-        $event = new GenericEvent($event_subject, $event_args);
+        $event_subject = UserUtil::getVars($args['uid']);
+        $event_args = array(
+            'get' => $args['get'],
+            'index' => $args['index'],
+            'numitems' => $args['numitems'],
+            'startnum' => $args['startnum'],
+            'uid' => $args['uid']
+        );
+        $event_data = $result;
+
+        $event = new GenericEvent($event_subject, $event_args, $event_data);
         $event = $this->getDispatcher()->dispatch('module.profile.get_all_active', $event);
+        
+        if ($event->isPropagationStopped()) {
+            $result = $event->getData();
+        }
 
         // Return the items
         return $result;
