@@ -21,6 +21,7 @@ use ModUtil;
 use DateUtil;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use System;
+use Zikula\Core\Event\GenericEvent;
 
 /**
  * Operations accessible by non-administrative users.
@@ -238,6 +239,12 @@ class UserApi extends \Zikula_AbstractApi
                     $result[$item[$args['index']]] = $item;
             }
         }
+
+        $event_subject = UserUtil::getVars(UserUtil::getVar('uid'));
+        $event_args = $result;
+        $event = new GenericEvent($event_subject, $event_args);
+        $event = $this->getDispatcher()->dispatch('module.profile.get_all_active', $event);
+
         // Return the items
         return $result;
     }
