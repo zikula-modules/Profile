@@ -40,18 +40,18 @@ use Zikula\Module\UsersModule\Constant as UsersConstant;
  * string propattribute Property attribute to display.
  * string error Property error message.
  * bool|string field_name The name of the array of elements that comprise the fields. Defaults to "dynadata[example]".
- *		Set to FALSE for fields without an array.
- * 
- * @param array  $params  All attributes passed to this function from the template.
+ *        Set to FALSE for fields without an array.
+ *
+ * @param array $params All attributes passed to this function from the template.
  * @param object $view Reference to the Zikula_View object.
- * 
+ *
  * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
 function smarty_function_duditemmodify(array $params = array(), Zikula_View $view)
 {
 
     $request = Request::createFromGlobals();
-    
+
     extract($params);
     unset($params);
 
@@ -74,9 +74,11 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
     // detect if we are in the registration form
     $onregistrationform = false;
-    
-    if ((strtolower($request->query->get('module')) == 'users') && (strtolower($request->query->get('type')) == 'user') && (strtolower($request->query->get('func')) == 'register')) {
-        $onregistrationform = true;
+
+    if ((strtolower($request->query->get('module')) == 'users')
+        && (strtolower($request->query->get('type')) == 'user')
+        && (strtolower($request->query->get('func')) == 'register')) {
+            $onregistrationform = true;
     }
 
     // skip the field if not configured to be on the registration form 
@@ -109,25 +111,25 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
     // try to get the DUD output if it's Third Party
     if ($item['prop_dtype'] != 1) {
         $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit',
-                               array('item'      => $item,
-                                     'uservalue' => $uservalue,
-                                     'class'     => $class));
+            array('item' => $item,
+                'uservalue' => $uservalue,
+                'class' => $class));
         if ($output) {
             return $output;
         }
     }
 
-	$field_name = ((isset($field_name)) ? ((!$field_name) ? $item['prop_attribute_name'] : $field_name.'['.$item['prop_attribute_name'].']') : 'dynadata['.$item['prop_attribute_name'].']');
+    $field_name = ((isset($field_name)) ? ((!$field_name) ? $item['prop_attribute_name'] : $field_name . '[' . $item['prop_attribute_name'] . ']') : 'dynadata[' . $item['prop_attribute_name'] . ']');
 
     // assign the default values for the control
-    $view->assign('class',         $class);
+    $view->assign('class', $class);
     $view->assign('field_name', $field_name);
-    $view->assign('value',         DataUtil::formatForDisplay($uservalue));
-    
+    $view->assign('value', DataUtil::formatForDisplay($uservalue));
+
     $view->assign('attributename', $item['prop_attribute_name']);
     $view->assign('proplabeltext', $item['prop_label']);
-    $view->assign('note',          $item['prop_note']);
-    $view->assign('required',      (bool)$item['prop_required']);
+    $view->assign('note', $item['prop_note']);
+    $view->assign('required', (bool)$item['prop_required']);
     $view->assign('error', ((isset($error)) ? $error : ''));
 
     // Excluding Timezone of the generics
@@ -138,10 +140,10 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
         $tzinfo = DateUtil::getTimezones();
 
-        $view->assign('value',          isset($tzinfo["$uservalue"]) ? "$uservalue" : null);
+        $view->assign('value', isset($tzinfo["$uservalue"]) ? "$uservalue" : null);
         $view->assign('selectmultiple', '');
-        $view->assign('listoptions',    array_keys($tzinfo));
-        $view->assign('listoutput',     array_values($tzinfo));
+        $view->assign('listoptions', array_keys($tzinfo));
+        $view->assign('listoutput', array_values($tzinfo));
         return $view->fetch('Dudedit/select.tpl');
     }
 
@@ -160,7 +162,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             if ($item['prop_required']) {
                 $output .= $view->fetch('Dudedit/hidden.tpl');
             }
-           
+
             return $output;
         }
 
@@ -177,7 +179,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
         // strip the extension of the output list
         foreach ($listoutput as $k => $output) {
-            $listoutput[$k] = $output;//substr($output, 0, strrpos($output, '.'));
+            $listoutput[$k] = $output; //substr($output, 0, strrpos($output, '.'));
         }
 
         $selectedvalue = $uservalue;
@@ -185,15 +187,14 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 //            $selectedvalue = $uservalue;
 //        }
 
-        $view->assign('value',          $selectedvalue);
+        $view->assign('value', $selectedvalue);
         $view->assign('selectmultiple', '');
-        $view->assign('listoptions',    $listoptions);
-        $view->assign('listoutput',     $listoutput);
+        $view->assign('listoptions', $listoptions);
+        $view->assign('listoutput', $listoutput);
         return $view->fetch('Dudedit/select.tpl');
     }
 
-    switch ($item['prop_displaytype'])
-    {
+    switch ($item['prop_displaytype']) {
         case 0: // TEXT
             $type = 'text';
             break;
@@ -204,20 +205,20 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
         case 2: // CHECKBOX
             $type = 'checkbox';
-          
-			$options = array('No', 'Yes');
-        
-			if (!empty($item['prop_listoptions'])) {
-		 		$options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
 
-		 		/**
-			 	 * Detect if the list options include the modification of the label.
-			 	 */
-			 	if (substr($item['prop_listoptions'], 0, 2) != '@@') {
-		 			$label = array_shift($options);
-		 			$view->assign('proplabeltext', __($label, $dom));
-		 		}
-		 	}
+            $options = array('No', 'Yes');
+
+            if (!empty($item['prop_listoptions'])) {
+                $options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
+
+                /**
+                 * Detect if the list options include the modification of the label.
+                 */
+                if (substr($item['prop_listoptions'], 0, 2) != '@@') {
+                    $label = array_shift($options);
+                    $view->assign('proplabeltext', __($label, $dom));
+                }
+            }
 
             break;
         case 3: // RADIO
@@ -251,9 +252,8 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
             // gets the format to use
             $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
-            
-            switch (trim(strtolower($format)))
-            {
+
+            switch (trim(strtolower($format))) {
                 case 'datelong':
                     //! This is from the core domain (datelong)
                     $format = __('%A, %B %d, %Y');
@@ -299,7 +299,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
                 $timestamp = DateUtil::makeTimestamp($uservalue);
             }
 
-            $view->assign('value',     $uservalue);
+            $view->assign('value', $uservalue);
             $view->assign('timestamp', $timestamp);
             $view->assign('dudformat', $format);
             break;
@@ -323,5 +323,5 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             break;
     }
 
-    return $view->fetch('Dudedit/'.$type.'.tpl');
+    return $view->fetch('Dudedit/' . $type . '.tpl');
 }

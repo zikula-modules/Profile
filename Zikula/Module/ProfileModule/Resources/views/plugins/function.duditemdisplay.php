@@ -36,10 +36,10 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
  * string  propattribute Property attribute to display.
  * string  default       Default content for an empty DUD.
  * boolean showlabel     Show the label? default = true.
- * 
- * @param array  $params  All attributes passed to this function from the template.
+ *
+ * @param array $params All attributes passed to this function from the template.
  * @param object &$smarty Reference to the Zikula_View/Smarty object.
- * 
+ *
  * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
 function smarty_function_duditemdisplay($params, &$smarty)
@@ -101,10 +101,10 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // try to get the DUD output if it's Third Party
     if ($item['prop_dtype'] != 1) {
         $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit',
-                               array('item'      => $item,
-                                     'userinfo'  => $userinfo,
-                                     'uservalue' => $uservalue,
-                                     'default'   => $default));
+            array('item' => $item,
+                'userinfo' => $userinfo,
+                'uservalue' => $uservalue,
+                'default' => $default));
         if ($output) {
             return $output;
         }
@@ -113,13 +113,13 @@ function smarty_function_duditemdisplay($params, &$smarty)
     // build the output
     $output = '';
     $render = Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
-    $render->assign('userinfo',  $userinfo);
+    $render->assign('userinfo', $userinfo);
     $render->assign('uservalue', $uservalue);
 
     // detects the template to use
-    $template = $tplset.'_'.$item['prop_id'].'.tpl';
+    $template = $tplset . '_' . $item['prop_id'] . '.tpl';
     if (!$render->template_exists($template)) {
-        $template = $tplset.'_generic.tpl';
+        $template = $tplset . '_generic.tpl';
     }
 
     $output = '';
@@ -151,22 +151,22 @@ function smarty_function_duditemdisplay($params, &$smarty)
     } elseif ($item['prop_displaytype'] == 2) {
         // checkbox
         $item['prop_listoptions'] = (empty($item['prop_listoptions'])) ? '@@No@@Yes' : $item['prop_listoptions'];
-        
-        if (!empty($item['prop_listoptions'])) {
-		 	$options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
 
-		 	/**
-		 	 * Detect if the list options include the modification of the label.
-		 	 */
-		 	if (substr($item['prop_listoptions'], 0, 2) != '@@') {
-		 		$label = array_shift($options);
-		 		$item['prop_label'] = __($label, $dom);
-		 	}
-		 	
-		 	$uservalue = (isset($uservalue)) ? (bool)$uservalue : 0;
-			$output = __($options[$uservalue], $dom);
+        if (!empty($item['prop_listoptions'])) {
+            $options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
+
+            /**
+             * Detect if the list options include the modification of the label.
+             */
+            if (substr($item['prop_listoptions'], 0, 2) != '@@') {
+                $label = array_shift($options);
+                $item['prop_label'] = __($label, $dom);
+            }
+
+            $uservalue = (isset($uservalue)) ? (bool)$uservalue : 0;
+            $output = __($options[$uservalue], $dom);
         } else {
-	    	$output = $uservalue;
+            $output = $uservalue;
         }
     } elseif ($item['prop_displaytype'] == 3) {
         // radio
@@ -212,7 +212,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
         // url
         if (!empty($uservalue) && $uservalue != 'http://') {
             //! string to describe the user's site
-            $output = '<a href="'.DataUtil::formatForDisplay($uservalue).'" title="'.__f("%s's site", $userinfo['uname'], $dom).'" rel="nofollow">'.DataUtil::formatForDisplay($uservalue).'</a>';
+            $output = '<a href="' . DataUtil::formatForDisplay($uservalue) . '" title="' . __f("%s's site", $userinfo['uname'], $dom) . '" rel="nofollow">' . DataUtil::formatForDisplay($uservalue) . '</a>';
         }
 
     } elseif (empty($uservalue)) {
@@ -235,7 +235,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
     }
 
     $render->assign('item', $item);
-    
+
     // omit this field if is empty after the process
     if (empty($output)) {
         return '';

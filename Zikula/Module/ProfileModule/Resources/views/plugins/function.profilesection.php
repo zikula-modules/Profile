@@ -13,6 +13,7 @@
  */
 
 use Zikula\Module\ProfileModule\Constant as ProfileConstant;
+
 /**
  * Smarty function to display a section of the user profile.
  *
@@ -23,10 +24,10 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
  * -------------------------------------------
  * numeric uid  The user account id of the user for which this profile section should be displayed.
  * string  name Section name to render.
- * 
- * @param array  $params  All parameters passed to this section from the template.
+ *
+ * @param array $params All parameters passed to this section from the template.
  * @param object &$smarty Reference to the Smarty object.
- * 
+ *
  * @return string|boolean The rendered section; empty string if the section is not defined; false if error.
  */
 function smarty_function_profilesection($params, &$smarty)

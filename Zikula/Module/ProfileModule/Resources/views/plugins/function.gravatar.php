@@ -14,6 +14,7 @@
  */
 
 use Zikula\Module\ProfileModule\Constant as ProfileConstant;
+
 /**
  * Get either a Gravatar URL or complete image tag for a specified email address.
  *
@@ -33,27 +34,27 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 function smarty_function_gravatar(array $params = array(), Zikula_View $view)
 {
 
-	$dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
+    $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
 
-	if (!isset($params['email_address'])) {
-		return false;
-	}
-    
+    if (!isset($params['email_address'])) {
+        return false;
+    }
+
     $params['d'] = (isset($params['d'])) ? (string)$params['d'] : 'mm';
     $params['f'] = (isset($params['f'])) ? (bool)$params['f'] : false;
-	$params['img'] = (isset($params['img'])) ? (bool)$params['img'] : true;
+    $params['img'] = (isset($params['img'])) ? (bool)$params['img'] : true;
     $params['r'] = (isset($params['r'])) ? (string)$params['r'] : 'g';
     $params['s'] = (isset($params['s'])) ? (int)$params['s'] : 80;
-     
-    $result  = (System::serverGetVar('HTTPS', 'off') != 'off') ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
-    $result .= md5(strtolower(trim($params['email_address']))).'.jpg';
-    $result .= '?d='.$params['d'].'&amp;r='.$params['r'].'&amp;s='.$params['s'];
-    $result .= ($params['f']) ? '&amp;f='.$params['f'] : '';
-    
+
+    $result = (System::serverGetVar('HTTPS', 'off') != 'off') ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
+    $result .= md5(strtolower(trim($params['email_address']))) . '.jpg';
+    $result .= '?d=' . $params['d'] . '&amp;r=' . $params['r'] . '&amp;s=' . $params['s'];
+    $result .= ($params['f']) ? '&amp;f=' . $params['f'] : '';
+
     if ($params['img']) {
-        $result = '<img src="'.$result.'" class="img-thumbnail" alt="'.__('Avatar', $dom).'" />';
+        $result = '<img src="' . $result . '" class="img-thumbnail" alt="' . __('Avatar', $dom) . '" />';
     }
-    
+
     return $result;
 
 }
