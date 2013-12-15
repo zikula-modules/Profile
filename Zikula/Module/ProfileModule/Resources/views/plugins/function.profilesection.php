@@ -26,21 +26,21 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
  * string  name Section name to render.
  *
  * @param array $params All parameters passed to this section from the template.
- * @param object &$smarty Reference to the Smarty object.
+ * @param Zikula_View $view Reference to the Zikula_View object.
  *
  * @return string|boolean The rendered section; empty string if the section is not defined; false if error.
  */
-function smarty_function_profilesection($params, &$smarty)
+function smarty_function_profilesection($params, Zikula_View $view)
 {
     // validation
     if (!isset($params['name']) || empty($params['name'])) {
-        $smarty->trigger_error(__f('Error! in %1$s: the %2$s parameter must be specified.', array('profilesection', 'name')));
+        $view->trigger_error(__f('Error! in %1$s: the %2$s parameter must be specified.', array('profilesection', 'name')));
         return false;
     }
     if (!isset($params['uid']) || empty($params['uid'])) {
-        $params['uid'] = $smarty->get_template_vars('uid');
+        $params['uid'] = $view->get_template_vars('uid');
         if (empty($params['uid'])) {
-            $smarty->trigger_error(__f('Error! in %1$s: the %2$s parameter must be specified.', array('profilesection', 'uid')));
+            $view->trigger_error(__f('Error! in %1$s: the %2$s parameter must be specified.', array('profilesection', 'uid')));
             return false;
         }
     }
@@ -55,17 +55,17 @@ function smarty_function_profilesection($params, &$smarty)
     }
 
     // build the output
-    $render = Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
+    $view->setCaching(0);
 
     // check the tmeplate existance
     $template = "sections/profile_section_{$params['name']}.tpl";
 
-    if (!$render->template_exists($template)) {
+    if (!$view->template_exists($template)) {
         return '';
     }
 
     // assign and render the output
-    $render->assign('section', $section);
+    $view->assign('section', $section);
 
-    return $render->fetch($template, $params['uid']);
+    return $view->fetch($template, $params['uid']);
 }

@@ -38,11 +38,11 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
  * boolean showlabel     Show the label? default = true.
  *
  * @param array $params All attributes passed to this function from the template.
- * @param object &$smarty Reference to the Zikula_View/Smarty object.
+ * @param Zikula_View $view Reference to the Zikula_View/Smarty object.
  *
  * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
-function smarty_function_duditemdisplay($params, &$smarty)
+function smarty_function_duditemdisplay($params, Zikula_View $view)
 {
     extract($params);
     unset($params);
@@ -111,19 +111,17 @@ function smarty_function_duditemdisplay($params, &$smarty)
     }
 
     // build the output
-    $output = '';
-    $render = Zikula_View::getInstance(ProfileConstant::MODNAME, false, null, true);
-    $render->assign('userinfo', $userinfo);
-    $render->assign('uservalue', $uservalue);
+    $view->setCaching(0);
+    $view->assign('userinfo', $userinfo);
+    $view->assign('uservalue', $uservalue);
 
     // detects the template to use
     $template = $tplset . '_' . $item['prop_id'] . '.tpl';
-    if (!$render->template_exists($template)) {
+    if (!$view->template_exists($template)) {
         $template = $tplset . '_generic.tpl';
     }
 
     $output = '';
-
 
     // checks the different attributes and types
     // avatar
@@ -147,7 +145,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
             return '';
         }
 
-
     } elseif ($item['prop_displaytype'] == 2) {
         // checkbox
         $item['prop_listoptions'] = (empty($item['prop_listoptions'])) ? '@@No@@Yes' : $item['prop_listoptions'];
@@ -168,12 +165,14 @@ function smarty_function_duditemdisplay($params, &$smarty)
         } else {
             $output = $uservalue;
         }
+
     } elseif ($item['prop_displaytype'] == 3) {
         // radio
         $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
         // process the user value and get the translated label
         $output = isset($options[$uservalue]) ? $options[$uservalue] : $default;
+
     } elseif ($item['prop_displaytype'] == 4) {
         // select
         $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
@@ -184,6 +183,7 @@ function smarty_function_duditemdisplay($params, &$smarty)
                 $output[] = $options[$id];
             }
         }
+
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
         // date
         $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
@@ -191,7 +191,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
         $format = !empty($format) ? $format : __('%b %d, %Y');
 
         $output = DateUtil::getDatetime(strtotime($uservalue), $format);
-
 
     } elseif ($item['prop_displaytype'] == 7) {
         // multicheckbox
@@ -206,7 +205,6 @@ function smarty_function_duditemdisplay($params, &$smarty)
                 $output[] = $options[$id];
             }
         }
-
 
     } elseif ($item['prop_attribute_name'] == 'url') {
         // url
@@ -228,19 +226,18 @@ function smarty_function_duditemdisplay($params, &$smarty)
             $output[] = __($option, $dom);
         }
 
-
     } else {
         // a string
         $output .= __($uservalue, $dom);
     }
 
-    $render->assign('item', $item);
+    $view->assign('item', $item);
 
     // omit this field if is empty after the process
     if (empty($output)) {
         return '';
     }
 
-    return $render->assign('output', is_array($output) ? $output : array($output))
+    return $view->assign('output', is_array($output) ? $output : array($output))
         ->fetch($template);
 }

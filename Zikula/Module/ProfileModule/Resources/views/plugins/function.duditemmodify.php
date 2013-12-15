@@ -43,13 +43,12 @@ use Zikula\Module\UsersModule\Constant as UsersConstant;
  *        Set to FALSE for fields without an array.
  *
  * @param array $params All attributes passed to this function from the template.
- * @param object $view Reference to the Zikula_View object.
+ * @param Zikula_View $view Reference to the Zikula_View object.
  *
  * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
 function smarty_function_duditemmodify(array $params = array(), Zikula_View $view)
 {
-
     $request = Request::createFromGlobals();
 
     extract($params);
@@ -221,6 +220,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             }
 
             break;
+
         case 3: // RADIO
             $type = 'radio';
 

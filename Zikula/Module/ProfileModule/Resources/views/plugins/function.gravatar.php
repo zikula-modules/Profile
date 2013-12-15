@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright Zikula Foundation 2009 - Profile module for Zikula
  *
@@ -22,18 +21,24 @@ use Zikula\Module\ProfileModule\Constant as ProfileConstant;
  *
  * {gravatar email_address='user@example.com'}
  *
- * @source http://gravatar.com/site/implement/images/php/
- * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
- * @param string $email_address The email address.
- * @param bool $f Force default image. Defaults to FALSE.
- * @param bool $img TRUE to return a complete IMG tag, FALSE for just the URL.
- * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
- * @param int $s Size in pixels. Defaults to 80px. [ 1 - 2048 ]
+ * @see http://gravatar.com/site/implement/images/php/
+ *
+ * Parameters passed in via the $params array:
+ * -------------------------------------------
+ * string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
+ * string $email_address The email address.
+ * bool $f Force default image. Defaults to FALSE.
+ * bool $img TRUE to return a complete IMG tag, FALSE for just the URL.
+ * string $r Maximum rating (inclusive) [ g | pg | r | x ]
+ * int $s Size in pixels. Defaults to 80px. [ 1 - 2048 ]
+ *
+ * @param array $params All attributes passed to this function from the template.
+ * @param Zikula_View $view Reference to the Zikula_View object.
+ *
  * @return string Containing either just a URL or a complete image tag.
  */
 function smarty_function_gravatar(array $params = array(), Zikula_View $view)
 {
-
     $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
 
     if (!isset($params['email_address'])) {
