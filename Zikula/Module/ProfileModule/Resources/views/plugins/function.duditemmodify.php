@@ -291,7 +291,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             $format = !empty($format) ? $format : __('%b %d, %Y');
 
             // process the temporal data if any
-            $timestamp = null;
+            $timestamp = time();
             if (isset($item['temp_propdata'])) {
                 $timestamp = DateUtil::parseUIDate($item['temp_propdata']);
                 $uservalue = DateUtil::transformInternalDate($timestamp);

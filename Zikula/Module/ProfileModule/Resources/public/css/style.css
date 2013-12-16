@@ -13,3 +13,7 @@
     right: 1em;
     top: 1em;
 }
+.profile_dateinput {
+    display: inline-block;
+    width: 50%;
+}
