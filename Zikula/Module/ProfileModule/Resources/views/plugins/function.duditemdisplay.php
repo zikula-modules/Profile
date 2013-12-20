@@ -187,10 +187,20 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
         // date
         $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
-        //! This is from the core domain (datebrief)
-        $format = !empty($format) ? $format : __('%b %d, %Y');
-
-        $output = DateUtil::getDatetime(strtotime($uservalue), $format);
+        switch (trim(strtolower($format))) {
+            case 'us':
+                $dateformat = 'F j, Y';
+                break;
+            case 'db':
+                $dateformat = 'Y-m-d';
+                break;
+            default:
+            case 'eur':
+                $dateformat = 'j F Y';
+                break;
+        }
+        $date = new DateTime($uservalue);
+        $output = $date->format($dateformat);
 
     } elseif ($item['prop_displaytype'] == 7) {
         // multicheckbox

@@ -254,41 +254,27 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
 
             switch (trim(strtolower($format))) {
-                case 'datelong':
-                    //! This is from the core domain (datelong)
-                    $format = __('%A, %B %d, %Y');
+                case 'us':
+                    $formats = array(
+                        'dt' => 'F j, Y',
+                        'js' => 'MM d, yy',
+                    );
                     break;
-                case 'datebrief':
-                    //! This is from the core domain (datebrief)
-                    $format = __('%b %d, %Y');
+                case 'db':
+                    $formats = array(
+                        'dt' => 'Y-m-d',
+                        'js' => 'yy-mm-dd',
+                    );
                     break;
-                case 'datestring':
-                    //! This is from the core domain (datestring)
-                    $format = __('%A, %B %d @ %H:%M:%S');
-                    break;
-                case 'datestring2':
-                    //! This is from the core domain (datestring2)
-                    $format = __('%A, %B %d');
-                    break;
-                case 'datetimebrief':
-                    //! This is from the core domain (datetimebrief)
-                    $format = __('%b %d, %Y - %I:%M %p');
-                    break;
-                case 'datetimelong':
-                    //! This is from the core domain (datetimelong)
-                    $format = __('%A, %B %d, %Y - %I:%M %p');
-                    break;
-                case 'timebrief':
-                    //! This is from the core domain (timebrief)
-                    $format = __('%I:%M %p');
-                    break;
-                case 'timelong':
-                    //! This is from the core domain (timelong)
-                    $format = __('%T %p');
+                default:
+                case 'eur':
+                    $formats = array(
+                        'dt' => 'j F Y',
+                        'js' => 'd MM yy',
+                    );
+
                     break;
             }
-            //! This is from the core domain (datebrief)
-            $format = !empty($format) ? $format : __('%b %d, %Y');
 
             // process the temporal data if any
             $timestamp = time();
@@ -298,15 +284,9 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             } elseif (!empty($uservalue)) {
                 $timestamp = DateUtil::makeTimestamp($uservalue);
             }
-
-            $view->assign('value', $uservalue);
+            $view->assign('valueDateTime', new DateTime($uservalue));
             $view->assign('timestamp', $timestamp);
-            $view->assign('dudformat', $format);
-            break;
-
-        case 6: // EXTDATE (deprecated)
-            // TODO [deprecate completely]
-            $type = 'hidden';
+            $view->assign('formats', $formats);
             break;
 
         case 7: // MULTICHECKBOX
