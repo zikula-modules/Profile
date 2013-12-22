@@ -39,13 +39,13 @@ class UserController extends \Zikula_AbstractController
     public function mainAction()
     {
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
-        $response->send();
+        return $response;
     }
 
     public function indexAction()
     {
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
-        $response->send();
+        return $response;
     }
 
     /**
@@ -217,7 +217,7 @@ class UserController extends \Zikula_AbstractController
         // This function generated no output, we redirect the user
         LogUtil::registerStatus($this->__('Done! Saved your changes to your personal information.'));
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'view', array('uname' => UserUtil::getVar('uname')))));
-        $response->send();
+        return $response;
     }
 
     /**

@@ -37,13 +37,13 @@ class AdminController extends \Zikula_AbstractController
     public function mainAction()
     {
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')), 301);
-        $response->send();
+        return $response;
     }
 
     public function indexAction()
     {
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')), 301);
-        $response->send();
+        return $response;
     }
 
     /**
@@ -248,7 +248,7 @@ class AdminController extends \Zikula_AbstractController
             LogUtil::registerStatus($successMessage);
         }
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
     /**
@@ -358,7 +358,7 @@ class AdminController extends \Zikula_AbstractController
         }
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
     /**
@@ -386,7 +386,7 @@ class AdminController extends \Zikula_AbstractController
         $prop->incrementWeight();
         $this->entityManager->flush();
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
     /**
@@ -417,7 +417,7 @@ class AdminController extends \Zikula_AbstractController
         $prop->decrementWeight();
         $this->entityManager->flush();
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
     /**
@@ -443,7 +443,7 @@ class AdminController extends \Zikula_AbstractController
         }
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
     /**
@@ -469,7 +469,7 @@ class AdminController extends \Zikula_AbstractController
         }
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
     /**
@@ -538,7 +538,7 @@ class AdminController extends \Zikula_AbstractController
         LogUtil::registerStatus($this->__('Done! Saved your settings changes.'));
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        $response->send();
+        return $response;
     }
 
 }
