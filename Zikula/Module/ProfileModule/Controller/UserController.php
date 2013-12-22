@@ -38,13 +38,13 @@ class UserController extends \Zikula_AbstractController
      */
     public function mainAction()
     {
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
         $response->send();
     }
 
     public function indexAction()
     {
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
         $response->send();
     }
 
