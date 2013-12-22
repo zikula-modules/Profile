@@ -284,7 +284,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             } elseif (!empty($uservalue)) {
                 $timestamp = DateUtil::makeTimestamp($uservalue);
             }
-            $view->assign('valueDateTime', new DateTime($uservalue));
+            $view->assign('valueDateTime', ((!empty($uservalue)) ? new DateTime($uservalue) : null));
             $view->assign('timestamp', $timestamp);
             $view->assign('formats', $formats);
             break;
