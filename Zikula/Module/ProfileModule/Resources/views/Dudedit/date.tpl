@@ -13,7 +13,7 @@
         displayelement="display_`$attributename`"
         displayformat_datetime=$formats.dt
         displayformat_javascript=$formats.js
-        object='dynadata'
+        object=$field_object
         displayelement_class='form-control'
         readonly=false
         valuestorageelement=$attributename

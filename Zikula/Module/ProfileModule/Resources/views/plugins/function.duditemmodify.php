@@ -118,11 +118,13 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         }
     }
 
+	$field_object = ((isset($field_name)) ? ((!$field_name) ? null : $field_name) : 'dynadata');
     $field_name = ((isset($field_name)) ? ((!$field_name) ? $item['prop_attribute_name'] : $field_name . '[' . $item['prop_attribute_name'] . ']') : 'dynadata[' . $item['prop_attribute_name'] . ']');
 
     // assign the default values for the control
     $view->assign('class', $class);
     $view->assign('field_name', $field_name);
+    $view->assign('field_object', $field_object);
     $view->assign('value', DataUtil::formatForDisplay($uservalue));
 
     $view->assign('attributename', $item['prop_attribute_name']);
