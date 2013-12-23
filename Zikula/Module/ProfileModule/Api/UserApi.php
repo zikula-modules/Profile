@@ -608,25 +608,29 @@ class UserApi extends \Zikula_AbstractApi
         $links = array();
 
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
-            $links[0] = array(
-                'url' => ModUtil::url($this->name, 'user', 'view'),
-                'text' => $this->__('Your Profile'),
-                'icon' => 'user',
-                'links' => array(
+            if (UserUtil::isLoggedIn()) {
+                $links[] = array(
+                    'url' => ModUtil::url($this->name, 'user', 'view'),
+                    'text' => $this->__('Your Profile'),
+                    'icon' => 'user',
+                    'links' => array(
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'view'),
-                        'text' => $this->__('View Profile')),
+                        'text' => $this->__('View Profile')
+                    ),
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'modify'),
-                        'text' => $this->__('Edit Profile')),
+                        'text' => $this->__('Edit Profile')
+                    ),
                 ));
+            }
             $msgmodule = System::getVar('messagemodule');
             if (ModUtil::available($msgmodule)) {
-                $links[0]['links'][] = array(
+                $links[]['links'][] = array(
                     'url' => ModUtil::url($msgmodule, 'user', 'main'),
-                    'text' => $this->__('Private messages'));
+                    'text' => $this->__('Messages'));
             }
-            $links[1] = array(
+            $links[] = array(
                 'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
                 'text' => $this->__('Members'),
                 'icon' => 'list',
