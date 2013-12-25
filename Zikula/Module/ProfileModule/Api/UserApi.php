@@ -15,7 +15,6 @@
 namespace Zikula\Module\ProfileModule\Api;
 
 use SecurityUtil;
-use LogUtil;
 use UserUtil;
 use ModUtil;
 use DateUtil;
@@ -94,12 +93,14 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return array|boolean Item array, or false on failure.
+     *
+     * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function get($args)
     {
         // Argument check
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
@@ -299,12 +300,14 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return boolean True on success; otherwise false.
+     *
+     * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function savedata($args)
     {
         // Argument check
         if (!isset($args['uid'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $fields = $args['dynadata'];
         $duds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable', 'uid' => $args['uid']));
@@ -523,12 +526,14 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return bool true if successful, false otherwise
+     *
+     * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function decodeurl($args)
     {
         // check we actually have some vars to work with...
         if (!isset($args['vars'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // let the core handled everything except the view function
         if (!isset($args['vars'][2]) || empty($args['vars'][2]) || $args['vars'][2] != 'view') {
@@ -564,17 +569,19 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return string The custom url string.
+     *
+     * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function encodeurl($args)
     {
         // check we have the required input
         if (!isset($args['modname']) || !isset($args['func']) || !isset($args['args'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if (!isset($args['type'])) {
             $args['type'] = 'user';
         } elseif (!is_string($args['type']) || $args['type'] != 'user') {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if (empty($args['func'])) {
             $args['func'] = 'main';

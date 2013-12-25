@@ -23,7 +23,6 @@ use Zikula\Module\UsersModule\Constant as UsersConstant;
 use ModUtil;
 use System;
 use DateTime;
-use LogUtil;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 
@@ -313,7 +312,8 @@ class MemberslistApi extends \Zikula_AbstractApi
         if ($user) {
             return $user->getUid();
         } else {
-            return LogUtil::registerError($this->__('Error! Could not load data.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load data.'));
+            return false;
         }
     }
 

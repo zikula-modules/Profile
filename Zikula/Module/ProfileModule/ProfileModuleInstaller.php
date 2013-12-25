@@ -19,7 +19,6 @@
 namespace Zikula\Module\ProfileModule;
 
 use DoctrineHelper;
-use LogUtil;
 use EventUtil;
 use System;
 use Zikula\Module\ProfileModule\Entity\PropertyEntity;
@@ -51,7 +50,8 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         try {
             DoctrineHelper::createSchema($this->entityManager, array('Zikula\Module\ProfileModule\Entity\PropertyEntity'));
         } catch (\Exception $e) {
-            return LogUtil::registerError($e->getMessage());
+            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            return false;
         }
         $this->setVars($this->getDefaultModVars());
         // create the default data for the module
@@ -75,7 +75,8 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         if (version_compare($oldversion, '1.6', '<')) {
             // Inform user about error, and how he can upgrade to $modversion
             $upgradeToVersion = $this->version->getVersion();
-            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to version %s.', $upgradeToVersion));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to version %s.', $upgradeToVersion));
+            return false;
         }
         $connection = $this->entityManager->getConnection();
         switch ($oldversion) {
@@ -142,7 +143,8 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         try {
             DoctrineHelper::dropSchema($this->entityManager, array('Zikula\Module\ProfileModule\Entity\PropertyEntity'));
         } catch (Exception $e) {
-            return LogUtil::registerError($e->getMessage());
+            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            return false;
         }
         // Delete any module variables
         $this->delVars();

@@ -15,11 +15,11 @@
 namespace Zikula\Module\ProfileModule\Controller;
 
 use DataUtil;
-use LogUtil;
 use ModUtil;
 use SecurityUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use System;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdminController extends \Zikula_AbstractController
 {
@@ -32,29 +32,29 @@ class AdminController extends \Zikula_AbstractController
     /**
      * The default entrypoint.
      *
-     * @return void
+     * @return RedirectResponse
      */
     public function mainAction()
     {
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')), 301);
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')), 301);
     }
 
     public function indexAction()
     {
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')), 301);
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')), 301);
     }
 
     /**
      * The Profile help page.
      *
      * @return string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function helpAction()
     {
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         return $this->response($this->view->fetch('Admin/help.tpl'));
     }
@@ -63,11 +63,13 @@ class AdminController extends \Zikula_AbstractController
      * View all items managed by this module.
      *
      * @return string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function viewAction()
     {
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need.
         $startnum = (int)$this->request->query->get('startnum', 1);
@@ -166,7 +168,9 @@ class AdminController extends \Zikula_AbstractController
             $duditems[] = $item;
             $x++;
         }
-        $this->view->setCaching(false)->assign('startnum', $startnum)->assign('duditems', $duditems);
+        $this->view->setCaching(false)
+            ->assign('startnum', $startnum)
+            ->assign('duditems', $duditems);
         // assign the values for the smarty plugin to produce a pager in case of there
         // being many items to display.
         $this->view->assign('pager', array('numitems' => $count, 'itemsperpage' => $numitems));
@@ -189,14 +193,16 @@ class AdminController extends \Zikula_AbstractController
      * string  note          Note for the item.
      * string  fieldset      The fieldset to group the item.
      *
-     * @return void|boolean  redirects on success|false on failure
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function modifyAction()
     {
         $this->checkCsrfToken();
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need.
         $dudid = (int)$this->request->request->get('dudid', 0);
@@ -210,17 +216,21 @@ class AdminController extends \Zikula_AbstractController
         $fieldset = $this->request->request->get('fieldset', null);
         // Validates and check if empty or already existing...
         if (empty($label)) {
-            return LogUtil::registerError($this->__('Error! The item must have a label. An example of a recommended label is: \'_MYDUDLABEL\'.'), null, $returnurl);
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The item must have a label. An example of a recommended label is: \'_MYDUDLABEL\'.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
         }
         if (empty($dudid) && empty($attrname)) {
-            return LogUtil::registerError($this->__('Error! The item must have an attribute name. An example of an acceptable name is: \'mydudfield\'.'), null, $returnurl);
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The item must have an attribute name. An example of an acceptable name is: \'mydudfield\'.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
         }
         //@todo The check needs to occur for both the label and fieldset.
         //if (ModUtil::apiFunc($this->name, 'user', 'get', array('proplabel' => $label, 'propfieldset' => $fieldset))) {
-        //    return LogUtil::registerError($this->__('Error! There is already a label with this naming.'), null, $returnurl);
+        //    $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already a label with this name.'));
+        //    return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
         //}
         if (isset($attrname) && (ModUtil::apiFunc($this->name, 'user', 'get', array('propattribute' => $attrname)))) {
-            return LogUtil::registerError($this->__('Error! There is already an attribute name with this naming.'), null, $returnurl);
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an attribute name with this naming.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
         }
         $filteredlabel = $label;
 
@@ -245,10 +255,9 @@ class AdminController extends \Zikula_AbstractController
         }
         if ($dudid != false) {
             // Success
-            LogUtil::registerStatus($successMessage);
+            $this->request->getSession()->getFlashBag()->add('status', $successMessage);
         }
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
     }
 
     /**
@@ -259,6 +268,8 @@ class AdminController extends \Zikula_AbstractController
      * int dudid    The id of the item to be modified.
      *
      * @return string The rendered template.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function editAction()
     {
@@ -268,11 +279,11 @@ class AdminController extends \Zikula_AbstractController
         if (!empty($dudid)) {
             $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
             if ($item == false) {
-                return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
+                return $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
             }
             // Security check
             if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$dudid}", ACCESS_EDIT)) {
-                return LogUtil::registerPermissionError();
+                throw new AccessDeniedException();
             }
             // backward check to remove any 1.4- forbidden char in listoptions 10 = New Line /n and 13 = Carriage Return /r
             $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
@@ -281,7 +292,7 @@ class AdminController extends \Zikula_AbstractController
             $this->view->assign('item', $item);
         } else {
             if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
-                return LogUtil::registerPermissionError();
+                throw new AccessDeniedException();
             }
         }
         // create arrays for select boxes
@@ -319,6 +330,8 @@ class AdminController extends \Zikula_AbstractController
      * @param array $args All parameters passed to this function via an internal call.
      *
      * @return boolean|string If no confirmation then the rendered output of a template to get confirmation; otherwise true if delete successful, false otherwise.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function deleteAction($args)
     {
@@ -333,11 +346,11 @@ class AdminController extends \Zikula_AbstractController
         // The user API function is called.
         $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
-            return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
+            return $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Check for confirmation.
         if (empty($confirmation)) {
@@ -354,7 +367,7 @@ class AdminController extends \Zikula_AbstractController
         // The API function is called.
         if (ModUtil::apiFunc($this->name, 'admin', 'delete', array('dudid' => $dudid))) {
             // Success
-            LogUtil::registerStatus($this->__('Done! The field has been successfully deleted.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! The field has been successfully deleted.'));
         }
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
@@ -369,17 +382,19 @@ class AdminController extends \Zikula_AbstractController
      * int dudid The id of the item to be updated.
      *
      * @return boolean True if update successful, false otherwise.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function increase_weightAction()
     {
         $dudid = (int)$this->request->query->get('dudid', null);
         $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
-            return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
+            return $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $dudid);
@@ -397,20 +412,22 @@ class AdminController extends \Zikula_AbstractController
      * int dudid The id of the item to be updated.
      *
      * @return boolean True if update successful, false otherwise.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function decrease_weightAction()
     {
         $dudid = (int)$this->request->query->get('dudid', null);
         $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propid' => $dudid));
         if ($item == false) {
-            return LogUtil::registerError($this->__('Error! No such personal info item found.'), 404);
+            return $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         if ($item['prop_weight'] <= 1) {
-            return LogUtil::registerError($this->__('Error! You cannot decrease the weight of this account property.'), 404);
+            return $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot decrease the weight of this account property.'));
         }
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $dudid);
@@ -439,7 +456,7 @@ class AdminController extends \Zikula_AbstractController
         // The API function is called.
         if (ModUtil::apiFunc($this->name, 'admin', 'activate', array('dudid' => $dudid))) {
             // Success
-            LogUtil::registerStatus($this->__('Done! Saved your changes.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your changes.'));
         }
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
@@ -465,7 +482,7 @@ class AdminController extends \Zikula_AbstractController
         // The API function is called.
         if (ModUtil::apiFunc($this->name, 'admin', 'deactivate', array('dudid' => $dudid))) {
             // Success
-            LogUtil::registerStatus($this->__('Done! Saved your changes.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your changes.'));
         }
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
@@ -476,12 +493,14 @@ class AdminController extends \Zikula_AbstractController
      * This is a standard function to modify the configuration parameters of the module.
      *
      * @return string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function modifyconfigAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable', 'index' => 'prop_id'));
 
@@ -512,6 +531,8 @@ class AdminController extends \Zikula_AbstractController
      *
      * @return boolean True if update successful, false otherwise.
      *
+     * @throws AccessDeniedException on failed permission check
+     *
      * @see    Profile_admin_modifyconfig()
      */
     public function updateconfigAction()
@@ -519,7 +540,7 @@ class AdminController extends \Zikula_AbstractController
         $this->checkCsrfToken();
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Update module variables.
         $viewregdate = (bool)$this->request->request->get('viewregdate', 0);
@@ -535,7 +556,7 @@ class AdminController extends \Zikula_AbstractController
         $dudregshow = $this->request->request->get('dudregshow', array());
         $this->setVar('dudregshow', $dudregshow);
         // the module configuration has been updated successfuly
-        LogUtil::registerStatus($this->__('Done! Saved your settings changes.'));
+        $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your settings changes.'));
         // This function generated no output
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
         return $response;

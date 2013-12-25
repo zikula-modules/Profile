@@ -19,11 +19,11 @@
 namespace Zikula\Module\ProfileModule\Api;
 
 use DataUtil;
-use LogUtil;
 use ModUtil;
 use SecurityUtil;
 use System;
 use Zikula\Module\ProfileModule\Entity\PropertyEntity;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DudApi extends \Zikula_AbstractApi
 {
@@ -48,6 +48,9 @@ class DudApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return boolean True on success or false on failure.
+     *
+     * @throws AccessDeniedException on failed permission check
+     * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function register($args)
     {
@@ -66,19 +69,21 @@ class DudApi extends \Zikula_AbstractApi
             || empty($args['validationinfo'])
             || !is_array($args['validationinfo'])
         ) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::item', "{$args['label']}::", ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         if (!ModUtil::getIdFromName($args['modname'])) {
-            return LogUtil::registerError($this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
+            return false;
         }
         // parses the DUD type
         $dtypes = array(-1 => 'noneditable', 0 => 'mandatory', 2 => 'normal');
         if (!in_array($args['dtype'], $dtypes)) {
-            return LogUtil::registerError($this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
+            return false;
         }
         // Clean the label
         $permsep = System::getVar('shorturlsseparator', '-');
@@ -87,11 +92,13 @@ class DudApi extends \Zikula_AbstractApi
         // Check if the label or attribute name already exists
         $item = ModUtil::apiFunc($this->name, 'user', 'get', array('proplabel' => $args['label']));
         if ($item) {
-            return LogUtil::registerError($this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+            return false;
         }
         $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propattribute' => $args['attribute_name']));
         if ($item) {
-            return LogUtil::registerError($this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
+            return false;
         }
         // Determine the new weight
         $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
@@ -124,12 +131,14 @@ class DudApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return boolean True on success or false on failure.
+     *
+     * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function unregister($args)
     {
         // Argument check
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // Get item with where clause
         /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */

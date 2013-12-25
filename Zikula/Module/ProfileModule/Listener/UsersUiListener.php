@@ -15,7 +15,6 @@
 namespace Zikula\Module\ProfileModule\Listener;
 
 use DataUtil;
-use LogUtil;
 use ModUtil;
 use UserUtil;
 use Zikula\Module\ProfileModule\Constant as ProfileConstant;
@@ -211,7 +210,7 @@ class UsersUiListener extends \Zikula_AbstractEventHandler implements \Zikula_Tr
                 }
             }
             if ($errorCount > 0) {
-                LogUtil::registerError(_fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount), $this->domain));
+                $this->request->getSession()->getFlashBag()->add('error', _fn('There was a problem with one of the personal information fields.', 'There were problems with %1$d personal information fields.', $errorCount, array($errorCount), $this->domain));
             }
             $event->data->set(self::EVENT_KEY, $this->validation);
         }

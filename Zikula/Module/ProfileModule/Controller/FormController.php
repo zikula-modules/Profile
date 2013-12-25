@@ -15,7 +15,8 @@
 namespace Zikula\Module\ProfileModule\Controller;
 
 use ModUtil;
-use LogUtil;
+use System;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * UI operations related to the display of dynamically defined user attributes.
@@ -45,7 +46,8 @@ class FormController extends \Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == $this->name) {
-            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url($this->name, 'user', 'viewmembers'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable'));
@@ -80,7 +82,8 @@ class FormController extends \Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == $this->name) {
-            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url($this->name, 'user', 'viewmembers'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive');
@@ -120,7 +123,8 @@ class FormController extends \Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == $this->name) {
-            return LogUtil::registerError($this->__('Error! You cannot access form functions directly.'), null, ModUtil::url($this->name, 'user', 'viewmembers'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive');

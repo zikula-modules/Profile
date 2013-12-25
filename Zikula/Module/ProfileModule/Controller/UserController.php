@@ -19,7 +19,6 @@
 namespace Zikula\Module\ProfileModule\Controller;
 
 use DataUtil;
-use LogUtil;
 use ModUtil;
 use SecurityUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,18 +33,16 @@ class UserController extends \Zikula_AbstractController
      *
      * This redirects back to the default entry point for the Users module.
      *
-     * @return void
+     * @return RedirectResponse
      */
     public function mainAction()
     {
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
     }
 
     public function indexAction()
     {
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
     }
 
     /**
@@ -60,13 +57,15 @@ class UserController extends \Zikula_AbstractController
      *
      * @param array $args All parameters passed to this function via an internal call.
      *
-     * @return string The rendered template output.
+     * @return RedirectResponse|string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function viewAction($args)
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::view', '::', ACCESS_READ)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need.
         $uid = (int)$this->request->query->get('uid', isset($args['uid']) ? $args['uid'] : null);
@@ -80,12 +79,14 @@ class UserController extends \Zikula_AbstractController
         }
         // Check for an invalid uid (uid = 1 is the anonymous user)
         if ($uid < 2) {
-            return LogUtil::registerError($this->__('Error! Could not find this user.'), 404);
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not find this user.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
         }
         // Get all the user data
         $userinfo = UserUtil::getVars($uid);
         if (!$userinfo) {
-            return LogUtil::registerError($this->__('Error! Could not find this user.'), 404);
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not find this user.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
         }
         // Check if the user is watching its own profile or if he is admin
         // TODO maybe remove the four lines below
@@ -123,7 +124,8 @@ class UserController extends \Zikula_AbstractController
             if ($this->view->template_exists("User/view_{$page}.tpl")) {
                 return $this->view->fetch("User/view_{$page}.tpl", $uid);
             } else {
-                return LogUtil::registerError($this->__f('Error! Could not find profile page [%s].', DataUtil::formatForDisplay($page)), 404);
+                $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find profile page [%s].', DataUtil::formatForDisplay($page)));
+                return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
             }
         }
         return $this->response($this->view->fetch('User/view.tpl', $uid));
@@ -139,19 +141,22 @@ class UserController extends \Zikula_AbstractController
      *
      * @param array $args All parameters passed to this function via an internal call.
      *
-     * @return string The rendered template output.
+     * @return RedirectResponse|string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function modifyAction($args)
     {
         // Security check
         if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('uid' => UserUtil::getVar('uid'), 'get' => 'editable'));
         // The return value of the function is checked here
         if ($items === false) {
-            return LogUtil::registerError($this->__('Error! Could not load items.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load items.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
         }
         // check if we get called form the update function in case of an error
         $uname = $this->request->query->get('uname', isset($args['uname']) ? $args['uname'] : null);
@@ -181,7 +186,7 @@ class UserController extends \Zikula_AbstractController
      * string uname    The user name of the account for which profile information should be updated.
      * array  dynadata An array containing the updated profile information for the user account.
      *
-     * @return void
+     * @return RedirectResponse
      *
      * @throws Zikula_Exception_Forbidden Thrown if the csrftoken is not confirmed.
      */
@@ -204,20 +209,19 @@ class UserController extends \Zikula_AbstractController
         // Check for required fields - The API function is called.
         $checkrequired = ModUtil::apiFunc($this->name, 'user', 'checkrequired', array('dynadata' => $dynadata));
         if ($checkrequired['result'] == true) {
-            LogUtil::registerError($this->__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
             // we do not send the passwords here!
             $params = array('uname' => $uname, 'dynadata' => $dynadata);
-            $this->redirect(ModUtil::url($this->name, 'user', 'modify', $params));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'modify', $params)));
         }
         // Building the sql and saving - The API function is called.
         $save = ModUtil::apiFunc($this->name, 'user', 'savedata', array('uid' => $uid, 'dynadata' => $dynadata));
         if ($save != true) {
-            $this->redirect(ModUtil::url($this->name, 'user', 'view'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'view')));
         }
         // This function generated no output, we redirect the user
-        LogUtil::registerStatus($this->__('Done! Saved your changes to your personal information.'));
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'view', array('uname' => UserUtil::getVar('uname')))));
-        return $response;
+        $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your changes to your personal information.'));
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'view', array('uname' => UserUtil::getVar('uname')))));
     }
 
     /**
@@ -241,12 +245,14 @@ class UserController extends \Zikula_AbstractController
      * @param array $args All parameters passed to this function via an internal call.
      *
      * @return string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function viewmembersAction($args)
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need
         $startnum = $this->request->query->get('startnum', isset($args['startnum']) ? $args['startnum'] : null);
@@ -336,12 +342,14 @@ class UserController extends \Zikula_AbstractController
      * This function displays the last X users who registered at this site available from the module.
      *
      * @return string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function recentmembersAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.':Members:recent', '::', ACCESS_READ)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // set the cache id
         $this->view->setCacheId('recent' . (int)UserUtil::isLoggedIn());
@@ -395,12 +403,14 @@ class UserController extends \Zikula_AbstractController
      * This function displays the currently online users.
      *
      * @return string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
      */
     public function onlinemembersAction()
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.':Members:online', '::', ACCESS_READ)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Create output object
         $this->view->setCacheId('onlinemembers' . (int)UserUtil::isLoggedIn());
