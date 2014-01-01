@@ -28,7 +28,7 @@
     {/foreach}
     <div class="col-lg-offset-3 col-lg-9">
         <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
-        <a class="btn btn-danger" href="{modurl modname=$module type='admin' func='view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+        <a class="btn btn-danger" href="{modurl modname=$module type='user' func='view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
     </div>
 </form>
 
