@@ -55,7 +55,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             if (empty($prop_id)) {
                 continue;
             }
-            $props[$prop_id] = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $prop_id);
+            $props[$prop_id] = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $prop_id);
             $props[$prop_id]->setProp_weight($weight);
             $weight++;
         }

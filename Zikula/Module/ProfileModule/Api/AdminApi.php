@@ -145,7 +145,7 @@ class AdminApi extends \Zikula_AbstractApi
                 unset($args['prop_weight']);
             } elseif ($args['prop_weight'] != $item['prop_weight']) {
                 /** @var $property \Zikula\Module\ProfileModule\Entity\PropertyEntity */
-                $property = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_weight' => $args['prop_weight']));
+                $property = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(array('prop_weight' => $args['prop_weight']));
                 $property->setProp_weight($item['prop_weight']);
                 $this->entityManager->flush($property);
             }
@@ -181,7 +181,7 @@ class AdminApi extends \Zikula_AbstractApi
         if ($obj['prop_validation'] != $item['prop_validation']) {
             ModUtil::apiFunc($this->name, 'dud', 'updatedata', array('item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']));
         }
-        $property = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find($args['dudid']);
+        $property = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->find($args['dudid']);
         $property->merge($obj);
         $this->entityManager->flush();
         return $property->getProp_id();
@@ -231,7 +231,7 @@ class AdminApi extends \Zikula_AbstractApi
         $qb->getQuery()->execute();
         // delete the property
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+        $qb->delete('ZikulaProfileModule:PropertyEntity', 'p')
             ->where('p.prop_id = :id')
             ->setParameter('id', $dudid);
         $qb->getQuery()->execute();
@@ -261,7 +261,7 @@ class AdminApi extends \Zikula_AbstractApi
         }
         $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
-        $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $args['dudid']);
+        $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $args['dudid']);
         $prop->setProp_weight($weightlimits['max'] + 1);
         $this->entityManager->flush();
         return true;
@@ -300,12 +300,12 @@ class AdminApi extends \Zikula_AbstractApi
         }
         // Update the item
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
-        $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $args['dudid']);
+        $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $args['dudid']);
         $prop->setProp_weight(0);
         $this->entityManager->flush();
         // Update the other items
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->update('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+        $qb->update('ZikulaProfileModule:PropertyEntity', 'p')
             ->set('p.prop_weight', 'p.prop_weight - 1')
             ->where('p.prop_weight > :weight')
             ->setParameter('weight', $item['prop_weight']);

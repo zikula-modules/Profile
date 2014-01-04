@@ -397,7 +397,7 @@ class AdminController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
-        $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $dudid);
+        $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
         $prop->incrementWeight();
         $this->entityManager->flush();
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
@@ -430,7 +430,7 @@ class AdminController extends \Zikula_AbstractController
             return $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot decrease the weight of this account property.'));
         }
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
-        $prop = $this->entityManager->find('Zikula\Module\ProfileModule\Entity\PropertyEntity', $dudid);
+        $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
         $prop->decrementWeight();
         $this->entityManager->flush();
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));

@@ -55,7 +55,7 @@ class UserApi extends \Zikula_AbstractApi
         }
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')
-            ->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+            ->from('ZikulaProfileModule:PropertyEntity', 'p')
             ->orderBy('p.prop_weight');
         if ($args['startnum'] > 0) {
             $qb->setFirstResult($args['startnum'] - 1);
@@ -104,11 +104,11 @@ class UserApi extends \Zikula_AbstractApi
         }
         /** @var $item \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->find((int)$args['propid']);
+            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->find((int)$args['propid']);
         } elseif (isset($args['proplabel'])) {
-            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_label' => $args['proplabel']));
+            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(array('prop_label' => $args['proplabel']));
         } else {
-            $item = $this->entityManager->getRepository('Zikula\Module\ProfileModule\Entity\PropertyEntity')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
+            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
         }
         // Check for no rows found, and if so return
         if (!$item) {
@@ -173,7 +173,7 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($items)) {
             $qb = $this->entityManager->createQueryBuilder();
             $qb->select('p')
-                ->from('Zikula\Module\ProfileModule\Entity\PropertyEntity', 'p')
+                ->from('ZikulaProfileModule:PropertyEntity', 'p')
                 ->where('p.prop_weight > 0')
                 ->andWhere('p.prop_dtype >= 0')
                 ->orderBy('p.prop_weight');
