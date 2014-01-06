@@ -96,20 +96,19 @@ class MemberslistApi extends \Zikula_AbstractApi
             }
         } else {
             if (is_array($searchBy)) {
-                /**
-                 * @todo
-                 * This section is unused when the form uses radio buttons as it currently does
-                 * If the form were converted to checkmarks or a multiselect then this section would be needed
-                 * in fact the 'p' table alias below will break it. and the logic below is flawed and based on the
-                 * existence of the property table which is no longer in the query
-                 */
+                // searching via search module when this module is set as profile module
                 if (count($searchBy) == 1 && in_array('all', array_keys($searchBy))) {
                     // args.searchby is all => search_value to loop all the user attributes
-                    $qb->andWhere('p.prop_weight > 0')
-                        ->andWhere('p.prop_dtype >= 0')
-                        ->andWhere($qb->expr()->like('a.value', ':value'))
-                        ->setParameter('value', "%{$searchBy}%");
+                    $qb->andWhere($qb->expr()->like('a.value', ':value'))
+                        ->setParameter('value', "%{$searchBy['all']}%");
                 } else {
+                    /**
+                     * @todo
+                     * This section is unused when the form uses radio buttons as it currently does
+                     * If the form were converted to checkmarks or a multiselect then this section would be needed
+                     * in fact the 'p' table alias below will break it. and the logic below is flawed and based on the
+                     * existence of the property table which is no longer in the query
+                     */
                     // args.searchby is an array of the form prop_id => value
                     $and = $qb->expr()->andX();
                     foreach ($searchBy as $prop_id => $value) {
