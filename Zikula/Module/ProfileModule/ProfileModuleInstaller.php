@@ -110,7 +110,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                     System::setVar('profilemodule', $this->name);
                 }
                 // remove handlers & register new handlers
-                EventUtil::unregisterPersistentModuleHandlers($this->name);
+                EventUtil::unregisterPersistentModuleHandlers('Profile'); // use old name on purpose here
                 EventUtil::registerPersistentEventHandlerClass($this->name, 'Zikula\Module\ProfileModule\Listener\UsersUiListener');
 
             case '2.0.0':
