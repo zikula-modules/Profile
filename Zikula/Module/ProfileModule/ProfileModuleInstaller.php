@@ -56,7 +56,6 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVars($this->getDefaultModVars());
         // create the default data for the module
         $this->defaultdata();
-        EventUtil::registerPersistentEventHandlerClass($this->name, 'Zikula\Module\ProfileModule\Listener\UsersUiListener');
         // Initialisation successful
         return true;
     }
@@ -111,7 +110,6 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                 }
                 // remove handlers & register new handlers
                 EventUtil::unregisterPersistentModuleHandlers('Profile'); // use old name on purpose here
-                EventUtil::registerPersistentEventHandlerClass($this->name, 'Zikula\Module\ProfileModule\Listener\UsersUiListener');
 
             case '2.0.0':
         }
@@ -142,14 +140,12 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
     {
         try {
             DoctrineHelper::dropSchema($this->entityManager, array('Zikula\Module\ProfileModule\Entity\PropertyEntity'));
-        } catch (Exception $e) {
+        } catch (\PDOException $e) {
             $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
             return false;
         }
         // Delete any module variables
         $this->delVars();
-        // remove handlers
-        EventUtil::unregisterPersistentModuleHandlers($this->name);
         // Deletion successful
         return true;
     }
