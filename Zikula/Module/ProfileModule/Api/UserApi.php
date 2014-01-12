@@ -617,14 +617,16 @@ class UserApi extends \Zikula_AbstractApi
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             if (UserUtil::isLoggedIn()) {
                 $links[] = array(
+                    'icon' => 'wrench',
+                    'text' => $this->__('Account Settings'),
+                    'url' => ModUtil::url('ZikulaUsersModule', 'user', 'main')
+                );
+      
+                $links[] = array(
                     'url' => ModUtil::url($this->name, 'user', 'view'),
                     'text' => $this->__('Your Profile'),
                     'icon' => 'user',
                     'links' => array(
-                    array(
-                        'url' => ModUtil::url($this->name, 'user', 'view'),
-                        'text' => $this->__('View Profile')
-                    ),
                     array(
                         'url' => ModUtil::url($this->name, 'user', 'modify'),
                         'text' => $this->__('Edit Profile')
