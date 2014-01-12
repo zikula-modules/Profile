@@ -4,9 +4,7 @@
         {gt text='Sorry! A required personal info item is missing. Please correct and try again.'}
     </p>
     {/if}
-    <div class="col-lg-3 control-label">
-        <label for="prop_{$attributename}"{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
-    </div>
+    <label for="prop_{$attributename}" class="col-lg-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
     <div class="col-lg-9">
         <textarea class="form-control{if $required} required{/if}" id="prop_{$attributename}" name="{$field_name}">{$value}</textarea><br />
         {if $note}

@@ -5,9 +5,7 @@
     </p>
     {/if}
 
-    <div class="col-lg-3 control-label">
-        <label{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
-    </div>
+    <label for="prop_{$attributename}" class="col-lg-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
     <div class="col-lg-9">
         {html_radios name=$field_name values=$listoptions output=$listoutput checked=$value labels=false assign='listoptions'}
         {foreach from=$listoptions item='item'}

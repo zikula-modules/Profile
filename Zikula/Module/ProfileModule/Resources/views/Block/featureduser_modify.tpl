@@ -1,16 +1,12 @@
 <div class="form-group">
-    <div class="col-lg-3 control-label">
-        <label for="profile_featured_username">{gt text='User name'}</label>
-    </div>
+    <label class="col-lg-3 control-label" for="profile_featured_username">{gt text='User name'}</label>
     <div class="col-lg-9">
         <input class="form-control" id="profile_featured_username" type="text" name="username" value="{$username|safehtml}" maxlength="255" />
     </div>
 </div>
 
 <div class="form-group">
-    <div class="col-lg-3 control-label">
-        <label for="profile_block_fields">{gt text='Information to show'}</label>
-    </div>
+    <label class="col-lg-3 control-label" for="profile_block_fields">{gt text='Information to show'}</label>
     <div class="col-lg-9" id="profile_block_fields">
         {foreach from=$dudarray key='dud_label' item='dud_display'}
         <div class="checkbox">
@@ -24,9 +20,7 @@
 </div>
 
 <div class="form-group">
-    <div class="col-lg-3 control-label">
-        <label for="profile_featured_regdate">{gt text='Show registration date'}</label>
-    </div>
+    <label class="col-lg-3 control-label" for="profile_featured_regdate">{gt text='Show registration date'}</label>
     <div class="col-lg-9">
         <div class="checkbox">
             <input id="profile_featured_regdate" type="checkbox" name="showregdate" value="1"{if $showregdate} checked="checked"{/if} />

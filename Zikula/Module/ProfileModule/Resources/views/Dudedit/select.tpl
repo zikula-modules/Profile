@@ -7,9 +7,7 @@
     </p>
     {/if}
 
-    <div class="col-lg-3 control-label">
-        <label for="prop_{$attributename}"{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
-    </div>
+    <label for="prop_{$attributename}" class="col-lg-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
     <div class="col-lg-9">
         {gt text='Select' assign='gt'}
         {if (($attributename == 'country') || (strpos($attributename, '_country') !== false))}

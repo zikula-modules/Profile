@@ -1,7 +1,5 @@
 <div class="{$class|default:'form-group'}">
-    <div class="col-lg-3 control-label">
-        <label for="prop_{$attributename}"{if $required} class="required"{/if}>{gt text=$proplabeltext}</label>
-    </div>
+    <label for="prop_{$attributename}" class="col-lg-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
     <div class="col-lg-9">
         <div id="prop_{$attributename}">
             {html_checkboxes name=$field_name labels=true options=$fields selected=$value assign='fields'}

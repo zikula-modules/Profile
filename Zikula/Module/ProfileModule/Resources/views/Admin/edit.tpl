@@ -19,9 +19,7 @@
                 <div class="col-lg-offset-3 col-lg-9">
                     <div class="alert alert-warning">{gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."}</div>
                 </div>
-                <div class="col-lg-3 control-label">
-                    <label for="profile_label">{gt text='Label'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_label">{gt text='Label'}</label>
                 <div class="col-lg-9">
                     <input class="form-control" id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|default:''|safetext}" />
                     {modurl modname=$module type='admin' func='help' fqurl=true assign='helpurl'}
@@ -29,9 +27,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_attributename">{gt text='Attribute name'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_attributename">{gt text='Attribute name'}</label>
                 <div class="col-lg-9">
                     {if !empty($item)}
                         <span id="profile_attributename">{$item.prop_attribute_name|default:''}</span>
@@ -42,9 +38,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_required">{gt text="Make this a 'Required' item"}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_required">{gt text="Make this a 'Required' item"}</label>
                 <div class="col-lg-9">
                     <select class="form-control" id="profile_required" name="required">
                     {html_options options=$requiredoptions selected=$item.prop_required|default:0}
@@ -52,9 +46,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_viewby">{gt text='Visibility'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_viewby">{gt text='Visibility'}</label>
                 <div class="col-lg-9">
                     <select class="form-control" id="profile_viewby" name="viewby">
                     {html_options options=$viewbyoptions selected=$item.prop_viewby|default:0}
@@ -63,9 +55,7 @@
             </div>
             <input type="hidden" name="dtype" value="{$item.prop_dtype|default:''|safetext}" />
             <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_displaytype">{gt text='Type of control to display'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_displaytype">{gt text='Type of control to display'}</label>
                 <div class="col-lg-9">
                     <select class="form-control" id="profile_displaytype" name="displaytype">
                     {html_options options=$displaytypes selected=$item.prop_displaytype|default:0}
@@ -73,9 +63,7 @@
                 </div>
             </div>
             <div class="form-group" id="profile_content_wrapper">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_listoptions">{gt text='Content'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_listoptions">{gt text='Content'}</label>
                 <div class="col-lg-9">
                     <textarea class="form-control" id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|default:''|safetext}</textarea>
     
@@ -91,17 +79,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_note">{gt text='Notice to display with personal info item'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_note">{gt text='Notice to display with personal info item'}</label>
                 <div class="col-lg-9">
                     <textarea class="form-control" id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|default:''|safetext}</textarea>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="profile_fieldset">{gt text='Fieldset'}</label>
-                </div>
+                <label class="col-lg-3 control-label" for="profile_fieldset">{gt text='Fieldset'}</label>
                 <div class="col-lg-9">
                     <input class="form-control" id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" value="{$item.prop_fieldset|default:''|safetext}" placeholder="{gt text='User Information'}" />
                 </div>
