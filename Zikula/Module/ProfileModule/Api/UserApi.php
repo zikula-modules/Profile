@@ -316,19 +316,29 @@ class UserApi extends \Zikula_AbstractApi
             if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
             }
-            $fieldvalue = '';
-            if (isset($fields[$attrname])) {
-                // Process the Date DUD separately
-                if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
-                    $fieldvalue = $this->parseDate($fields[$attrname]);
-                    $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
-                } elseif (is_array($fields[$attrname])) {
-                    $fieldvalue = serialize(array_values($fields[$attrname]));
-                } else {
-                    $fieldvalue = $fields[$attrname];
+            
+            /**
+             * Only set the user var, if the attribute name is within the array of fields (dynadata).
+             */
+            $array_keys = array_keys($fields);
+            
+            if (in_array($attrname, $array_keys)) {
+                $fieldvalue = '';
+                
+                if (isset($fields[$attrname])) {
+                    // Process the Date DUD separately
+                    if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
+                        $fieldvalue = $this->parseDate($fields[$attrname]);
+                        $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
+                    } elseif (is_array($fields[$attrname])) {
+                        $fieldvalue = serialize(array_values($fields[$attrname]));
+                    } else {
+                        $fieldvalue = $fields[$attrname];
+                    }
                 }
+
+                UserUtil::setVar($attrname, $fieldvalue, $args['uid']);
             }
-            UserUtil::setVar($attrname, $fieldvalue, $args['uid']);
         }
         // Return the result (true = success, false = failure
         // At this point, the result is true.
