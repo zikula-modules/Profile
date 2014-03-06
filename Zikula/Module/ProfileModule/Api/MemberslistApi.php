@@ -89,7 +89,7 @@ class MemberslistApi extends \Zikula_AbstractApi
                     $otherList = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
                     $or = $qb->expr()->orX();
                     foreach ($otherList as $other) {
-                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%')));
+                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%'))); // allowed 'literal' because var from internal array
                     }
                     $qb->andWhere($or->getParts());
                 }
@@ -111,8 +111,11 @@ class MemberslistApi extends \Zikula_AbstractApi
                      */
                     // args.searchby is an array of the form prop_id => value
                     $and = $qb->expr()->andX();
+                    $i = 1;
                     foreach ($searchBy as $prop_id => $value) {
-                        $and->add($qb->expr()->andX($qb->expr()->eq('p.prop_id', $prop_id), $qb->expr()->like('a.value', $qb->expr()->literal('%' . $value . '%'))));
+                        $and->add($qb->expr()->andX($qb->expr()->eq('p.prop_id', $prop_id), $qb->expr()->like('a.value', "?$i")));
+                        $qb->setParameter($i, '%' . $value . '%');
+                        $i++;
                     }
                     // check if there where conditionals
                     if ($and->count() > 0) {
@@ -125,11 +128,11 @@ class MemberslistApi extends \Zikula_AbstractApi
                     $activeProperties = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('index' => 'prop_id'));
                     $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $activeProperties[$searchBy]['prop_attribute_name'])
-                        ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal('%' . $letter . '%')));
+                        ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%' . $letter . '%');
                 } elseif (array_key_exists($searchBy, $activePropertiesByName)) {
                     $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $searchBy)
-                        ->andWhere($qb->expr()->like('a.value', $qb->expr()->literal('%' . $letter . '%')));
+                        ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%' . $letter . '%');
                 }
             }
         }
