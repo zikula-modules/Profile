@@ -41,6 +41,7 @@
                 <label class="col-lg-3 control-label" for="profile_required">{gt text="Make this a 'Required' item"}</label>
                 <div class="col-lg-9">
                     <select class="form-control" id="profile_required" name="required">
+                    <option value="">{gt text='Select'}</option>
                     {html_options options=$requiredoptions selected=$item.prop_required|default:0}
                     </select>
                 </div>
@@ -49,6 +50,7 @@
                 <label class="col-lg-3 control-label" for="profile_viewby">{gt text='Visibility'}</label>
                 <div class="col-lg-9">
                     <select class="form-control" id="profile_viewby" name="viewby">
+                    <option value="">{gt text='Select'}</option>
                     {html_options options=$viewbyoptions selected=$item.prop_viewby|default:0}
                     </select>
                 </div>
@@ -58,6 +60,7 @@
                 <label class="col-lg-3 control-label" for="profile_displaytype">{gt text='Type of control to display'}</label>
                 <div class="col-lg-9">
                     <select class="form-control" id="profile_displaytype" name="displaytype">
+                    <option value="">{gt text='Select'}</option>
                     {html_options options=$displaytypes selected=$item.prop_displaytype|default:0}
                     </select>
                 </div>
