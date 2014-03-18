@@ -127,6 +127,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
     $view->assign('field_object', $field_object);
     $view->assign('value', DataUtil::formatForDisplay($uservalue));
 
+    $view->assign('item', $item);
     $view->assign('attributename', $item['prop_attribute_name']);
     $view->assign('proplabeltext', $item['prop_label']);
     $view->assign('note', $item['prop_note']);
