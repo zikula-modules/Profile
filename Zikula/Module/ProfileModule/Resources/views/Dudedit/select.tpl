@@ -4,8 +4,9 @@
     <label for="prop_{$attributename}" class="col-lg-3 control-label{if ($required)} required{/if}">{gt text=$proplabeltext}</label>
     <div class="col-lg-9">
         {gt text='Select' assign='gt'}
+        {gt text='&quot;%1$s: %2$s&quot; is required. Please select an option.' tag1=$item.prop_fieldset tag2=$item.prop_label assign='title'}
         {if (($attributename == 'country') || (strpos($attributename, '_country') !== false))}
-            {selector_countries allText=$gt allValue='' class='form-control' id="prop_`$attributename`" name=$field_name selectedValue=$value}
+            {selector_countries allText=$gt allValue='' class='form-control' id="prop_`$attributename`" name=$field_name selectedValue=$value required=true title=$title}
         {else}
             <select id="prop_{$attributename}" name="{$field_name}{if ($selectmultiple)}[]{/if}"{$selectmultiple} class="form-control" required="required" title="{gt text='&quot;%1$s: %2$s&quot; is required. Please select an option.' tag1=$item.prop_fieldset tag2=$item.prop_label}" x-moz-errormessage="{gt text='&quot;%1$s: %2$s&quot; is required. Please select an option.' tag1=$item.prop_fieldset tag2=$item.prop_label}" oninvalid="this.setCustomValidity('{gt text='Please select an item in the list.'}');" onchange="this.setCustomValidity('');" onblur="this.checkValidity();">
                 <option label="{gt text='Select'}" value="">{gt text='Select'}</option>
