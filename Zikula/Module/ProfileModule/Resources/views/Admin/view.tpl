@@ -27,7 +27,7 @@
                 <span class="z-itemcell z-w10">
                     {if $duditem.status.url ne ''}
                     <a href="{$duditem.status.url|safetext}" id="profilestatus_{$duditem.prop_id}" class="profilestatus_{$duditem.statusval}">
-                        <span class="{$duditem.status.labelClass}" title="{gt text='click to '}{$duditem.status.title}">{$duditem.status.current}</span>
+                        <span class="{$duditem.status.labelClass}" title="{gt text='click to'} {$duditem.status.title}">{$duditem.status.current}</span>
                         <strong>{$duditem.status.title}</strong>
                     </a>
                     {else}
@@ -53,6 +53,9 @@
     // <![CDATA[
     var msgProfileStatusDeactivate = '{{gt text="Deactivate"}}';
     var msgProfileStatusActivate = '{{gt text="Activate"}}';
+    var msgProfileStatusInactive = '{{gt text="Inactive"}}';
+    var msgProfileStatusActive = '{{gt text="Active"}}';
+    var msgProfileStatusClickTo = '{{gt text="click to"}}';
     Event.observe(window, 'load', profileinit, false);
     // ]]>
 </script>

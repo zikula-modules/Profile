@@ -47,7 +47,7 @@ function profileinit()
  * from the Sortable when a 'drop' action has been detected
  *
  * @params none;
- * @return none;
+ * @return void;
  * @author Frank Schummertz
  */
 function profileweightchanged()
@@ -69,7 +69,7 @@ function profileweightchanged()
  * Ajax response function for updating new sort order: cleanup
  *
  * @params none;
- * @return none;
+ * @return void;
  * @author Frank Schummertz
  */
 function profileweightchanged_response(req)
@@ -87,7 +87,7 @@ function profileweightchanged_response(req)
  *
  * @params prop_id property ID;
  * @params oldstatus current value to switch;
- * @return none;
+ * @return void;
  * @author Mateo Tibaquira
  */
 function profilestatuschanged(prop_id, oldstatus)
@@ -109,7 +109,7 @@ function profilestatuschanged(prop_id, oldstatus)
  * Ajax response function for updating new sort order: cleanup
  *
  * @params none;
- * @return none;
+ * @return void;
  * @author Mateo Tibaquira
  */
 function profilestatuschanged_response(req)
@@ -145,16 +145,18 @@ function profilestatuschanged_response(req)
     // update the 
     $A(link.childElements()).each(
         function (node) {
-            if (node.tagName == 'IMG') {
+            if (node.tagName == 'SPAN') {
                 if (data.newstatus) {
-                    node.src = node.src.replace('redled', 'greenled');
-                    node.title = msgProfileStatusDeactivate;
+                    node.title = msgProfileStatusClickTo + ' ' + msgProfileStatusDeactivate;
                     node.alt = msgProfileStatusDeactivate;
+                    node.update(msgProfileStatusActive);
+                    node.className = 'label label-success';
                 } else {
-                    node.src = node.src.replace('greenled', 'redled');
-                    node.title = msgProfileStatusActivate;
+                    node.title = msgProfileStatusClickTo + ' ' + msgProfileStatusActivate;
                     node.alt = msgProfileStatusActivate;
-                };
+                    node.update(msgProfileStatusInactive);
+                    node.className = 'label label-danger';
+                }
             } else if (node.tagName == 'STRONG') {
                 if (data.newstatus) {
                     node.innerHTML = msgProfileStatusDeactivate;
