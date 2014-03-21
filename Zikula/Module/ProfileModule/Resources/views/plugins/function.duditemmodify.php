@@ -13,6 +13,7 @@
  */
 
 use Symfony\Component\HttpFoundation\Request;
+use Zikula\Core\Event\GenericEvent;
 use Zikula\Module\ProfileModule\Constant as ProfileConstant;
 use Zikula\Module\UsersModule\Constant as UsersConstant;
 
@@ -245,6 +246,19 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             $view->assign('selectmultiple', $selectmultiple);
 
             $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
+
+            $event_subject = $user;
+            $event_args = array(
+                'item' => $item
+            );
+            $event_data = $options;
+
+            $event = new GenericEvent($event_subject, $event_args, $event_data);
+            $event = $view->getDispatcher()->dispatch('module.profile.dud_item_modify', $event);
+        
+            if ($event->isPropagationStopped()) {
+                $options = $event->getData();
+            }
 
             $view->assign('listoptions', array_keys($options));
             $view->assign('listoutput', array_values($options));
