@@ -99,11 +99,12 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         $class = '';
     }
 
+    $user = UserUtil::getVars($uid);
+
     if (isset($item['temp_propdata'])) {
         $uservalue = $item['temp_propdata'];
     } elseif ($uid >= 0) {
         // @todo - This is a bit of a hack for admin editing. Need to know if it is a reg.
-        $user = UserUtil::getVars($uid);
         $isRegistration = UserUtil::isRegistration($uid);
         $uservalue = UserUtil::getVar($item['prop_attribute_name'], $uid, false, $isRegistration); // ($alias, $uid);
     }
