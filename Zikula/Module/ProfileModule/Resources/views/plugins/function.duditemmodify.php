@@ -148,7 +148,8 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         $view->assign('selectmultiple', '');
         $view->assign('listoptions', array_keys($tzinfo));
         $view->assign('listoutput', array_values($tzinfo));
-        return $view->fetch('Dudedit/select.tpl');
+
+        return $view->fetch('file:'.System::serverGetVar('DOCUMENT_ROOT').'/'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/select.tpl');
     }
 
     if ($item['prop_attribute_name'] == 'avatar') {
@@ -161,10 +162,12 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             }
             $view->assign('linktext', __('Go to the Avatar manager', $dom));
             $view->assign('linkurl', ModUtil::url('Avatar', 'user', 'main'));
-            $output = $view->fetch('Dudedit/link.tpl');
+
+            $output = $view->fetch('file:'.System::serverGetVar('DOCUMENT_ROOT').'/'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/link.tpl');
+            
             // add a hidden input if this is required
             if ($item['prop_required']) {
-                $output .= $view->fetch('Dudedit/hidden.tpl');
+                $output .= $view->fetch('file:'.System::serverGetVar('DOCUMENT_ROOT').'/'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/hidden.tpl');
             }
 
             return $output;
@@ -195,7 +198,8 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         $view->assign('selectmultiple', '');
         $view->assign('listoptions', $listoptions);
         $view->assign('listoutput', $listoutput);
-        return $view->fetch('Dudedit/select.tpl');
+
+        return $view->fetch('file:'.System::serverGetVar('DOCUMENT_ROOT').'/'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/select.tpl');
     }
 
     switch ($item['prop_displaytype']) {
@@ -321,5 +325,6 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             break;
     }
 
-    return $view->fetch('Dudedit/' . $type . '.tpl');
+    return $view->fetch('file:'.System::serverGetVar('DOCUMENT_ROOT').'/'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/'.$type.'.tpl');
+
 }
