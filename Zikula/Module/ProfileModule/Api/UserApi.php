@@ -634,13 +634,21 @@ class UserApi extends \Zikula_AbstractApi
       
                 $links[] = array(
                     'url' => ModUtil::url($this->name, 'user', 'view'),
-                    'text' => $this->__('Your Profile'),
+                    'text' => $this->__('Profile'),
                     'icon' => 'user',
                     'links' => array(
                     array(
-                        'url' => ModUtil::url($this->name, 'user', 'modify'),
-                        'text' => $this->__('Edit Profile')
+                        'text' => $this->__('Edit Profile'),
+                        'url' => ModUtil::url($this->name, 'user', 'modify')
                     ),
+                    array(
+                        'text' => $this->__('Change Email Address'),
+                        'url' => ModUtil::url('ZikulaUsersModule', 'user', 'changeEmail')
+                    ),
+                    array(
+                        'text' => $this->__('Change Password'),
+                        'url' => ModUtil::url('ZikulaUsersModule', 'user', 'changePassword')
+                    )
                 ));
             }
             $msgmodule = System::getVar('messagemodule');
