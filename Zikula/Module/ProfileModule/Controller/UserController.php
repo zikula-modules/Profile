@@ -22,6 +22,7 @@ use DataUtil;
 use ModUtil;
 use SecurityUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use System;
 use UserUtil;
 use Zikula\Core\Event\GenericEvent;
