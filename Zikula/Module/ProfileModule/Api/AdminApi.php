@@ -298,6 +298,14 @@ class AdminApi extends \Zikula_AbstractApi
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot deactivate this personal info item.'));
             return false;
         }
+
+        /**
+         * Return TRUE, if the item is already deactivated.
+         */
+        if ($item['prop_weight'] == 0) {
+            return true;
+        }
+
         // Update the item
         /** @var $prop \Zikula\Module\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $args['dudid']);
