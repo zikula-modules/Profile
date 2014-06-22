@@ -1,4 +1,3 @@
-{ajaxheader modname='ZikulaProfileModule' filename='Profile.UI.Edit.js' noscriptaculous=true effects=true}
 {foreach from=$fieldsets key='key' item='fieldset'}
     {capture name='capture_fieldset' assign='capture_fieldset'}
         <fieldset class="{$key}">
