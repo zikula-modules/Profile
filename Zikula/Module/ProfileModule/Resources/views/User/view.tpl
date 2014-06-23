@@ -49,12 +49,16 @@
             </div>
         {/if}
         {if (isset($dudarray.avatar))}
-            {if (($dudarray.avatar == '') || ($dudarray.avatar == 'blank.gif') || ($dudarray.avatar == 'blank.png') || ($dudarray.avatar == 'gravatar.gif'))}
-                {gravatar email_address=$userinfo.email}
+            {if ((empty($dudarray.avatar)) || ($dudarray.avatar == 'blank.gif') || ($dudarray.avatar == 'blank.png') || ($dudarray.avatar == 'gravatar.jpg'))}
+                {if ($modvars.ZikulaUsersModule.allowgravatars)}
+                    {gravatar email_address=$userinfo.email}
+                {/if}
             {else}
                 {modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
                 <img class="img-thumbnail" src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" />
             {/if}
+        {elseif ($modvars.ZikulaUsersModule.allowgravatars)}
+            {gravatar email_address=$userinfo.email}
         {/if}
     </div>
 </div>
