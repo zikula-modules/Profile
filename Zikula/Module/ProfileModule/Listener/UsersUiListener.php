@@ -190,21 +190,28 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function validateEdit(GenericEvent $event)
     {
+
         if ($this->request->isMethod('POST')) {
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
             $this->validation = new ValidationResponse('dynadata', $dynadata);
-            $requiredFailures = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'checkrequired', array('dynadata' => $dynadata));
+            $requiredFailures = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'checkrequired', array(
+                'dynadata' => $dynadata
+            ));
+            
             $errorCount = 0;
-            if ($requiredFailures && $requiredFailures['result']) {
+    
+            if (($requiredFailures) && ($requiredFailures['result'])) {
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {
                     $this->validation->addError($fieldName, __f(
                         'The \'%1$s\' field is required.',
                         array($requiredFailures['translatedFields'][$key]),
                         $this->domain)
                     );
+
                     $errorCount++;
                 }
             }
+
             if ($errorCount > 0) {
                 $this->request
                     ->getSession()
@@ -217,8 +224,10 @@ class UsersUiListener implements EventSubscriberInterface
                         $this->domain)
                     );
             }
+
             $event->data->set(self::EVENT_KEY, $this->validation);
         }
+
     }
 
     /**
