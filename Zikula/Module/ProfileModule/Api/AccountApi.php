@@ -53,7 +53,7 @@ class AccountApi extends \Zikula_AbstractApi
             $items[] = array(
                 'url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)),
                 'module' => $this->name,
-                'title' => $this->__('Your Profile'),
+                'title' => $this->__('Profile'),
                 'icon' => 'admin.png');
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
                 $items[] = array(
