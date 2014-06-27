@@ -627,7 +627,7 @@ class UserApi extends \Zikula_AbstractApi
             $links[] = array(
                 'icon' => 'wrench',
                 'text' => $this->__('Account Settings'),
-                'url' => ModUtil::url($this->name, 'user', 'main')
+                'url' => ModUtil::url('ZikulaUsersModule', 'user', 'main')
             );
         }
 
