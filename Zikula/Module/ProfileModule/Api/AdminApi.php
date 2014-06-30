@@ -84,7 +84,7 @@ class AdminApi extends \Zikula_AbstractApi
             'listoptions' => $args['listoptions'],
             'note' => $args['note'],
             'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information')),
-            'pattern' => $args['pattern']
+            'pattern' => (((isset($args['pattern'])) && (!empty($args['pattern']))) ? $args['pattern'] : null)
         );
 
         $obj = array();
@@ -176,7 +176,7 @@ class AdminApi extends \Zikula_AbstractApi
                 'listoptions' => $args['listoptions'],
                 'note' => $args['note'],
                 'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information')),
-                'pattern' => $args['pattern']
+                'pattern' => (((isset($args['pattern'])) && (!empty($args['pattern']))) ? $args['pattern'] : null)
             );
 
             $obj['prop_validation'] = serialize($validationinfo);
