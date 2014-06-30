@@ -65,11 +65,16 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" for="profile_pattern">{gt text='Pattern'}</label>
+                <div class="col-lg-9">
+                    <input class="form-control" id="profile_pattern" name="pattern" type="text" size="20" maxlength="80" value="{$item.prop_pattern|default:''|safetext}" />
+                </div>
+            </div>
             <div class="form-group" id="profile_content_wrapper">
                 <label class="col-lg-3 control-label" for="profile_listoptions">{gt text='Content'}</label>
                 <div class="col-lg-9">
                     <textarea class="form-control" id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|default:''|safetext}</textarea>
-    
                     <p class="alert alert-info" id="profile_help_type2">{gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. The order is important. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'. All the values are translatable."}</p>
                     <p class="alert alert-info" id="profile_help_type3">{gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3'. The options are translatable."}</p>
                     <p class="alert alert-info" id="profile_help_type4">{gt text="Notice: Use the following format for each option: '@@label@id'. Example for a simple list: '@@option 1@id1@@option 2@id2@@option 3@id3'. Example for a multiple checkbox set: '1@@option 1@id1@@option 2@id2@@option 3@id3'. The options are translatable."}</p>
@@ -94,7 +99,6 @@
                 </div>
             </div>
         </fieldset>
-
         <div class="col-lg-offset-3 col-lg-9">
             <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
             <a class="btn btn-danger" href="{modurl modname=$module type='admin' func='view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>

@@ -199,11 +199,13 @@ class AdminController extends \Zikula_AbstractController
      */
     public function modifyAction()
     {
+
         $this->checkCsrfToken();
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
+    
         // Get parameters from whatever input we need.
         $dudid = (int)$this->request->request->get('dudid', 0);
         $label = $this->request->request->get('label', null);
@@ -214,6 +216,8 @@ class AdminController extends \Zikula_AbstractController
         $listoptions = $this->request->request->get('listoptions', null);
         $note = $this->request->request->get('note', null);
         $fieldset = $this->request->request->get('fieldset', null);
+        $pattern = $this->request->request->get('pattern', null);
+    
         // Validates and check if empty or already existing...
         if (empty($label)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The item must have a label. An example of a recommended label is: \'_MYDUDLABEL\'.'));
@@ -244,7 +248,8 @@ class AdminController extends \Zikula_AbstractController
             'displaytype' => $displaytype,
             'listoptions' => $listoptions,
             'note' => $note,
-            'fieldset' => $fieldset
+            'fieldset' => $fieldset,
+            'pattern' => $pattern
         );
         if (empty($dudid)) {
             $dudid = ModUtil::apiFunc($this->name, 'admin', 'create', $parameters);
@@ -258,6 +263,7 @@ class AdminController extends \Zikula_AbstractController
             $this->request->getSession()->getFlashBag()->add('status', $successMessage);
         }
         return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'view')));
+
     }
 
     /**

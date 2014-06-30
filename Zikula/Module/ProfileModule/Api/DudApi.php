@@ -37,23 +37,22 @@ class DudApi extends \Zikula_AbstractApi
      * string  attribute_name Name of the attribute to use inside the user's data.
      * string  dtype          Dud type to create {normal, mandatory, noneditable}.
      * array   validationinfo Validation info for the new field with the following fields:
-     *                   'required'    => {0: no, 1: mandatory}
-     *                   'viewby'      => viewable by {0: Everyone, 1: Registered users only, 2: Admins only}
-     *                   'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 7: multi checkbox}
-     *                   'listoptions' => options for the new field
-     *                   'note'        => note to show in edit mode
-     *                     'fieldset' => The fieldset to group the item.
-     *                   and any other required data.
+     *                          'required' => {0: no, 1: mandatory}
+     *                          'viewby' => viewable by {0: Everyone, 1: Registered users only, 2: Admins only}
+     *                          'displaytype' => {0: text box, 1: textarea, 2: checkbox, 3: radio, 4: select, 5: date, 7: multi checkbox}
+     *                          'listoptions' => options for the new field
+     *                          'note' => note to show in edit mode
+     *                          'fieldset' => The fieldset to group the item.
+     *                          'pattern' => The pattern attribute specifies a regular expression that the <input> element's value is checked against.
      *
      * @param array $args All parameters passed to this function.
-     *
      * @return boolean True on success or false on failure.
-     *
      * @throws AccessDeniedException on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      */
     public function register($args)
     {
+
         if (!isset($args['modname'])
             || empty($args['modname'])
             || !isset($args['label'])
@@ -103,6 +102,7 @@ class DudApi extends \Zikula_AbstractApi
         // Determine the new weight
         $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
+        
         // insert the new field
         $obj = array();
         $obj['prop_label'] = $args['label'];
@@ -117,6 +117,7 @@ class DudApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
+
     }
 
     /**

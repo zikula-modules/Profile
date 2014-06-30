@@ -177,7 +177,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
         // display the avatar selector
         if (empty($uservalue)) {
-            $uservalue = 'gravatar.gif';
+            $uservalue = 'gravatar.jpg';
         }
         $view->assign('value', DataUtil::formatForDisplay($uservalue));
         $avatarPath = ModUtil::getVar(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);

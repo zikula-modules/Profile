@@ -44,6 +44,7 @@ class AdminApi extends \Zikula_AbstractApi
      */
     public function create($args)
     {
+
         // Argument check
         if (!isset($args['label']) || empty($args['label'])
             || (!isset($args['attribute_name']) || empty($args['attribute_name']))
@@ -75,14 +76,17 @@ class AdminApi extends \Zikula_AbstractApi
         }
         // produce the validation array
         $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
+
         $validationinfo = array(
             'required' => $args['required'],
             'viewby' => $args['viewby'],
             'displaytype' => $args['displaytype'],
             'listoptions' => $args['listoptions'],
             'note' => $args['note'],
-            'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information'))
+            'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information')),
+            'pattern' => $args['pattern']
         );
+
         $obj = array();
         $obj['prop_label'] = $args['label'];
         $obj['prop_attribute_name'] = $args['attribute_name'];
@@ -95,6 +99,7 @@ class AdminApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
+
     }
 
     /**
@@ -114,6 +119,7 @@ class AdminApi extends \Zikula_AbstractApi
      */
     public function update($args)
     {
+
         // Argument check
         if ((!isset($args['label'])) || (!isset($args['dudid'])) || (!is_numeric($args['dudid']))) {
             throw new \InvalidArgumentException();
@@ -154,6 +160,7 @@ class AdminApi extends \Zikula_AbstractApi
         $obj = array();
         $obj['prop_dtype'] = isset($args['dtype']) ? $args['dtype'] : $item['prop_dtype'];
         $obj['prop_weight'] = isset($args['prop_weight']) ? $args['prop_weight'] : $item['prop_weight'];
+
         // assumes if displaytype is set, all the validation info is
         if (isset($args['displaytype'])) {
             // a checkbox can't be required
@@ -168,10 +175,13 @@ class AdminApi extends \Zikula_AbstractApi
                 'displaytype' => $args['displaytype'],
                 'listoptions' => $args['listoptions'],
                 'note' => $args['note'],
-                'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information'))
+                'fieldset' => (((isset($args['fieldset'])) && (!empty($args['fieldset']))) ? $args['fieldset'] : $this->__('User Information')),
+                'pattern' => $args['pattern']
             );
+
             $obj['prop_validation'] = serialize($validationinfo);
         }
+
         // let to modify the label for normal fields only
         if ($item['prop_dtype'] == 1) {
             $obj['prop_label'] = $args['label'];
@@ -185,6 +195,7 @@ class AdminApi extends \Zikula_AbstractApi
         $property->merge($obj);
         $this->entityManager->flush();
         return $property->getProp_id();
+
     }
 
     /**
