@@ -616,7 +616,7 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @return array array of admin links
      */
-    public function getlinks()
+    public function getLinks()
     {
 
         $message_module = System::getVar('messagemodule');

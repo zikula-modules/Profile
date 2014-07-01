@@ -337,7 +337,7 @@ class AdminApi extends \Zikula_AbstractApi
      *
      * @return array An array of admin links.
      */
-    public function getlinks()
+    public function getLinks()
     {
         $links = array();
         // Add User module links
@@ -363,7 +363,7 @@ class AdminApi extends \Zikula_AbstractApi
             'url' => ModUtil::url('ZikulaUsersModule', 'admin', 'view'),
             'text' => $this->__('Users Module'),
             'icon' => 'user',
-            'links' => ModUtil::apiFunc('ZikulaUsersModule', 'admin', 'getlinks'));
+            'links' => ModUtil::apiFunc('ZikulaUsersModule', 'admin', 'getLinks'));
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'help'),
