@@ -88,7 +88,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                 // the Profile module. It doesn't copy data from the Legal module because Legal attribute names begin
                 // with '_' (note discriminator in query). It is impossible to discern what else may be in the table
                 // that meets the discriminator criteria
-                $sqls[] = 'INSERT INTO user_property
+                $sqls[] = 'INSERT INTO users_attributes
                     (user_id, name, value)
                     SELECT object_id, attribute_name, value
                     FROM objectdata_attributes
@@ -113,20 +113,20 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
 
             case '2.0.0':
         }
-        $modVars = $this->getVars();
-        $defaultModVars = $this->getDefaultModVars();
-        // Remove modvars no longer in the default set.
-        foreach ($modVars as $modVar => $value) {
-            if (!array_key_exists($modVar, $defaultModVars)) {
-                $this->delVar($modVar);
-            }
-        }
-        // Add vars defined in the default set, but missing from the current set.
-        foreach ($defaultModVars as $modVar => $value) {
-            if (!array_key_exists($modVar, $modVars)) {
-                $this->setVar($modVar, $value);
-            }
-        }
+//        $modVars = $this->getVars();
+//        $defaultModVars = $this->getDefaultModVars();
+//        // Remove modvars no longer in the default set.
+//        foreach ($modVars as $modVar => $value) {
+//            if (!array_key_exists($modVar, $defaultModVars)) {
+//                $this->delVar($modVar);
+//            }
+//        }
+//        // Add vars defined in the default set, but missing from the current set.
+//        foreach ($defaultModVars as $modVar => $value) {
+//            if (!array_key_exists($modVar, $modVars)) {
+//                $this->setVar($modVar, $value);
+//            }
+//        }
         // Update successful
         return true;
     }
