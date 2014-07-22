@@ -215,22 +215,26 @@ class UserApi extends \Zikula_AbstractApi
                 case 'viewable':
                     $isallowed = true;
                     // check the item visibility
-                    switch ($item['prop_viewby']) {
-                        // everyone, do nothing
-                        case '0':
-                            break;
-                        // members only or higher
-                        case '1':
-                            $isallowed = $isowner || $ismember;
-                            break;
-                        // account owner or admin
-                        case '2':
-                            $isallowed = $isowner || $isadmin;
-                            break;
-                        // admins only
-                        case '3':
-                            $isallowed = $isadmin;
-                            break;
+                    if (isset($item['prop_viewby'])) {
+                        switch ($item['prop_viewby']) {
+                            // everyone, do nothing
+                            case '0':
+                                break;
+                            // members only or higher
+                            case '1':
+                                $isallowed = $isowner || $ismember;
+                                break;
+                            // account owner or admin
+                            case '2':
+                                $isallowed = $isowner || $isadmin;
+                                break;
+                            // admins only
+                            case '3':
+                                $isallowed = $isadmin;
+                                break;
+                        }
+                    } else {
+                        $isallowed = false;
                     }
                     // break if it's not viewable
                     if (!$isallowed) {
@@ -253,7 +257,7 @@ class UserApi extends \Zikula_AbstractApi
 
         $event = new GenericEvent($event_subject, $event_args, $event_data);
         $event = $this->getDispatcher()->dispatch('module.profile.get_all_active', $event);
-        
+
         if ($event->isPropagationStopped()) {
             $result = $event->getData();
         }
@@ -316,15 +320,15 @@ class UserApi extends \Zikula_AbstractApi
             if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
             }
-            
+
             /**
              * Only set the user var, if the attribute name is within the array of fields (dynadata).
              */
             $array_keys = array_keys($fields);
-            
+
             if (in_array($attrname, $array_keys)) {
                 $fieldvalue = '';
-                
+
                 if (isset($fields[$attrname])) {
                     // Process the Date DUD separately
                     if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
@@ -649,7 +653,7 @@ class UserApi extends \Zikula_AbstractApi
                     )
                 ),
                 'text' => $this->__('Profile'),
-                'url' => ModUtil::url($this->name, 'user', 'view') 
+                'url' => ModUtil::url($this->name, 'user', 'view')
             );
         }
 
@@ -657,8 +661,8 @@ class UserApi extends \Zikula_AbstractApi
             $links[] = array(
                 'icon' => 'envelope',
                 'text' => $this->__('Messages'),
-                'url' => ModUtil::url($message_module, 'user', 'main') 
-            );  
+                'url' => ModUtil::url($message_module, 'user', 'main')
+            );
         }
 
         if ((ModUtil::available($this->name)) && (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ))) {
@@ -674,24 +678,24 @@ class UserApi extends \Zikula_AbstractApi
                     )
                 ),
                 'text' => $this->__('Registered Users'),
-                'url' => ModUtil::url($this->name, 'user', 'viewmembers')                
+                'url' => ModUtil::url($this->name, 'user', 'viewmembers')
             );
-            
+
             if (SecurityUtil::checkPermission($this->name.':Members:recent', '::', ACCESS_READ)) {
                 $key = key($links);
-            
+
                 $links[$key]['links'][] = array(
                     'text' => $this->__f('Last %s Registered Users', ModUtil::getVar($this->name, 'recentmembersitemsperpage')),
-                    'url' => ModUtil::url($this->name, 'user', 'recentmembers')      
+                    'url' => ModUtil::url($this->name, 'user', 'recentmembers')
                 );
             }
 
             if (SecurityUtil::checkPermission($this->name.':Members:online', '::', ACCESS_READ)) {
                 $key = key($links);
-            
+
                 $links[$key]['links'][] = array(
                     'text' => $this->__('Users Online'),
-                    'url' => ModUtil::url($this->name, 'user', 'online')       
+                    'url' => ModUtil::url($this->name, 'user', 'online')
                 );
             }
         }
