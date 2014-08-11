@@ -56,7 +56,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             $startNum = -1;
         }
         if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string)(int)$numItems || $numItems != -1 && $numItems < 1) {
-            throw new FatalErrorException($this->__f('Invalid %1$s.', array('startNum')));
+            throw new FatalErrorException($this->__f('Invalid %1$s.', array('numItems')));
         }
         if (!isset($sortBy) || empty($sortBy)) {
             $sortBy = 'uname';
@@ -146,6 +146,14 @@ class MemberslistApi extends \Zikula_AbstractApi
         }
         if ($orderBy && $sortBy != 'uname') {
             $qb->addOrderBy('u.uname', 'ASC');
+        }
+        // add offset if not getting only count
+        if (!$countOnly && ($startNum > 0)) {
+            $qb->setFirstResult($startNum);
+        }
+        // add limit if not getting only count
+        if (!$countOnly && ($numItems > 0)) {
+            $qb->setMaxResults($numItems);
         }
         try {
             $users = $qb->getQuery()->getArrayResult();
