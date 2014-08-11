@@ -286,10 +286,10 @@ class UserController extends \Zikula_AbstractController
         $cacheid = md5((int)$edit . (int)$delete . $startnum . $letter . $sortby);
         $this->view->setCaching(true)->setCacheId($cacheid);
         // get the number of users to show per page from the module vars
-        $itemsperpage = ModUtil::getVar($this->name, 'memberslistitemsperpage');
+        $itemsperpage = $this->getVar('memberslistitemsperpage', 20);
         // assign values for header
         $this->view->assign('memberslistreg', ModUtil::apiFunc('Users', 'user', 'countitems') - 1);
-        // discount annonymous
+        // discount anonymous
         $this->view->assign('memberslistonline', ModUtil::apiFunc($this->name, 'memberslist', 'getregisteredonline'));
         $this->view->assign('memberslistnewest', UserUtil::getVar('uname', ModUtil::apiFunc($this->name, 'memberslist', 'getlatestuser')));
         $fetchargs = array(
