@@ -3,7 +3,7 @@
 
 {include file='User/menu.tpl'}
 
-<form id="modifyprofileform" class="form-horizontal" action="{modurl modname=$module type='user' func='update'}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="modifyprofileform" class="form-horizontal" action="{modurl modname=$module type='user' func='update' uid=$uid}" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
 	<p class="alert alert-info">{gt text="Items marked with an asterisk (*) are required entries."}</p>
 	{foreach from=$fieldsets key='key' item='fieldset'}
@@ -13,7 +13,7 @@
                 {foreach from=$duditems item='item' key='itemlabel'}
     		        {if ($fieldset == $item.prop_fieldset)}
     		            {capture name='capture_fields' assign='capture_fields'}
-    		                {duditemmodify item=$item}
+    		                {duditemmodify item=$item uid=$uid}
                         {/capture}
                         {if ($capture_fields|trim != '')}
                             {$capture_fields}
