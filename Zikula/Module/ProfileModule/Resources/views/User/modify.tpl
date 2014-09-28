@@ -26,9 +26,12 @@
             {$capture_fieldset}
         {/if}
     {/foreach}
-    <div class="col-lg-offset-3 col-lg-9">
-        <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
-        <a class="btn btn-danger" href="{modurl modname=$module type='user' func='view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+    <div class="form-group">
+        <div class="col-lg-offset-3 col-lg-9">
+            <input class="btn btn-success" type="submit" value="{gt text='Submit'}" />
+            <a class="btn btn-danger" href="{modurl modname=$module type='user' func='view'}" title="{gt text='Cancel'}">{gt text='Cancel'}</a>
+            <input class="btn btn-default" type="reset" value="{gt text='Reset'}" />
+        </div>
     </div>
 </form>
 
