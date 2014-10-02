@@ -27,7 +27,7 @@
             <tr>
                 <td><strong>{$user.uname|profilelinkbyuname}</strong>&nbsp;&nbsp;
                     {if $user.onlinestatus eq 1}
-                        <a href="{modurl modname=$module type='user' func='onlinemembers'}"><span class="label label-success">{gt text='Online'}</span></a>
+                        <a href="{route name='zikulaprofilemodule_user_onlinemembers'}"><span class="label label-success">{gt text='Online'}</span></a>
                     {else}
                         <span class="label label-danger">{gt text='Offline'}</span>
                     {/if}

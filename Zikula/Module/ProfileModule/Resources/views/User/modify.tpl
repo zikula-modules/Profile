@@ -3,7 +3,7 @@
 
 {include file='User/menu.tpl'}
 
-<form id="modifyprofileform" class="form-horizontal" action="{modurl modname=$module type='user' func='update' uid=$uid}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="modifyprofileform" class="form-horizontal" action="{route name='zikulaprofilemodule_user_update' uid=$uid}" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
 	<p class="alert alert-info">{gt text="Items marked with an asterisk (*) are required entries."}</p>
 	{foreach from=$fieldsets key='key' item='fieldset'}
@@ -29,7 +29,7 @@
     <div class="form-group">
         <div class="col-lg-offset-3 col-lg-9">
             <input class="btn btn-success" type="submit" value="{gt text='Submit'}" />
-            <a class="btn btn-danger" href="{modurl modname=$module type='user' func='view'}" title="{gt text='Cancel'}">{gt text='Cancel'}</a>
+            <a class="btn btn-danger" href="{route name='zikulaprofilemodule_user_view'}" title="{gt text='Cancel'}">{gt text='Cancel'}</a>
             <input class="btn btn-default" type="reset" value="{gt text='Reset'}" />
         </div>
     </div>

@@ -2,7 +2,7 @@
 <h3>
     <span class="fa fa-wrench"></span>&nbsp;{gt text="Settings"}
 </h3>
-<form id="modifyconfig" class="form-horizontal" role="form" action="{modurl modname=$module type='admin' func='updateconfig'}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="modifyconfig" class="form-horizontal" role="form" action="{route name='zikulaprofilemodule_admin_updateconfig'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <fieldset>
@@ -76,7 +76,7 @@
         </fieldset>
         <div class="col-lg-offset-3 col-lg-9">
             <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
-            <a class="btn btn-danger" href="{modurl modname=$module type='admin' func='view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+            <a class="btn btn-danger" href="{route name='zikulaprofilemodule_admin_view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
         </div>
     </div>
 </form>

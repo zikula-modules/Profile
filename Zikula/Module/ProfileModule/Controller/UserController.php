@@ -12,24 +12,33 @@
  * information regarding copyright and licensing.
  */
 
-/**
- * UI operations executable by general users.
- */
-
 namespace Zikula\Module\ProfileModule\Controller;
 
 use DataUtil;
 use ModUtil;
 use SecurityUtil;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use System;
 use UserUtil;
 use Zikula\Core\Event\GenericEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
+use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * UI operations executable by general users.
+ *
+ * Class UserController
+ * @package Zikula\Module\ProfileModule\Controller
+ */
 class UserController extends \Zikula_AbstractController
 {
     /**
+     * Route not needed here because this is a legacy-only method
+     *
      * The default entry point.
      *
      * This redirects back to the default entry point for the Users module.
@@ -38,40 +47,51 @@ class UserController extends \Zikula_AbstractController
      */
     public function mainAction()
     {
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
-    }
-
-    public function indexAction()
-    {
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')), 301);
+        return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_view', array(), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
+     * @Route("")
+     *
+     * The default entry point.
+     *
+     * This redirects back to the default entry point for the Users module.
+     *
+     * @return RedirectResponse
+     */
+    public function indexAction()
+    {
+        return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_view', array(), RouterInterface::ABSOLUTE_URL));
+    }
+
+    /**
+     * @Route("/view")
+     * 
      * Display item.
      *
-     * Parameters passed via the $args array, or via GET:
+     * @param Request $request
+     *
+     * Parameters passed via GET:
      * --------------------------------------------------
      * numeric uid   The user account id (uid) of the user for whom to display profile information; optional, ignored if uname is supplied, if not provided
      *                  and if uname is not supplied then defaults to the current user.
      * string  uname The user name of the user for whom to display profile information; optional, if not supplied, then uid is used to determine the user.
      * string  page  The name of the Profile "page" (view template) to display; optional, if not provided then the standard view template is used.
      *
-     * @param array $args All parameters passed to this function via an internal call.
-     *
      * @return RedirectResponse|string The rendered template output.
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function viewAction($args)
+    public function viewAction(Request $request)
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need.
-        $uid = (int)$this->request->query->get('uid', isset($args['uid']) ? $args['uid'] : null);
-        $uname = $this->request->query->get('uname', isset($args['uname']) ? $args['uname'] : null);
-        $page = $this->request->query->get('page', isset($args['page']) ? $args['page'] : null);
+        $uid = (int)$request->query->get('uid', null);
+        $uname = $request->query->get('uname', null);
+        $page = $request->query->get('page', null);
         // Getting uid by uname
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
@@ -80,14 +100,16 @@ class UserController extends \Zikula_AbstractController
         }
         // Check for an invalid uid (uid = 1 is the anonymous user)
         if ($uid < 2) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not find this user.'));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not find this user.'));
+
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
         }
         // Get all the user data
         $userinfo = UserUtil::getVars($uid);
         if (!$userinfo) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not find this user.'));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not find this user.'));
+
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
         }
         // Check if the user is watching its own profile or if he is admin
         // TODO maybe remove the four lines below
@@ -123,37 +145,42 @@ class UserController extends \Zikula_AbstractController
         // Return the output that has been generated by this function
         if (!empty($page)) {
             if ($this->view->template_exists("User/view_{$page}.tpl")) {
-                return $this->view->fetch("User/view_{$page}.tpl", $uid);
+
+                return new Response($this->view->fetch("User/view_{$page}.tpl", $uid));
             } else {
-                $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find profile page [%s].', DataUtil::formatForDisplay($page)));
-                return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
+                $request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find profile page [%s].', DataUtil::formatForDisplay($page)));
+
+                return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
             }
         }
-        return $this->response($this->view->fetch('User/view.tpl', $uid));
+
+        return new Response($this->view->fetch('User/view.tpl', $uid));
     }
 
     /**
+     * @Route("/modify")
+     *
      * Modify a users profile information.
      *
-     * Parameters passed via the $args array, or via GET:
+     * @param Request $request
+     *
+     * Parameters passed via GET:
      * --------------------------------------------------
      * string   uname The user name of the account for which profile information should be modified; defaults to the uname of the current user.
      * dynadata array The modified profile information passed into this function in case of an error in the update function.
-     *
-     * @param array $args All parameters passed to this function via an internal call.
      *
      * @return RedirectResponse|string The rendered template output.
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function modifyAction($args)
+    public function modifyAction(Request $request)
     {
         // Security check
         if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         
-        $uid = $this->request->query->get('uid', ((isset($args['uid'])) ? (int)$args['uid'] : UserUtil::getVar('uid')));
+        $uid = $request->query->get('uid', UserUtil::getVar('uid'));
         
         if ($uid != UserUtil::getVar('uid')) {
             if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
@@ -169,13 +196,14 @@ class UserController extends \Zikula_AbstractController
 
         // The return value of the function is checked here
         if ($items === false) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load items.'));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewmembers')));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load items.'));
+
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
         }
         
         // check if we get called form the update function in case of an error
-        $uname = $this->request->query->get('uname', ((isset($args['uname'])) ? (string)$args['uname'] : UserUtil::getVar('uname')));
-        $dynadata = $this->request->query->get('dynadata', isset($args['dynadata']) ? $args['dynadata'] : array());
+        $uname = $request->query->get('uname', UserUtil::getVar('uname'));
+        $dynadata = $request->query->get('dynadata', array());
         $fieldsets = array();
         
         foreach ($items as $propattr => $propdata) {
@@ -197,13 +225,16 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('uid', $uid);
         $this->view->assign('uname', $uname);
 
-        // Return the output that has been generated by this function
-        return $this->response($this->view->fetch('User/modify.tpl'));
+        return new Response($this->view->fetch('User/modify.tpl'));
 
     }
 
     /**
+     * @Route("/update")
+     *
      * Update a users profile.
+     *
+     * @param Request $request
      *
      * Parameters passed via POST:
      * ---------------------------
@@ -211,62 +242,62 @@ class UserController extends \Zikula_AbstractController
      * array  dynadata An array containing the updated profile information for the user account.
      *
      * @return RedirectResponse
-     *
-     * @throws Zikula_Exception_Forbidden Thrown if the csrftoken is not confirmed.
      */
-    public function updateAction()
+    public function updateAction(Request $request)
     {
-
         $this->checkCsrfToken();
-        $uid = $this->request->query->get('uid', UserUtil::getVar('uid'));
+        $uid = $request->query->get('uid', UserUtil::getVar('uid'));
         $user = UserUtil::getVars($uid);
-        $dynadata = $this->request->request->get('dynadata', null);
+        $dynadata = $request->request->get('dynadata', null);
         $event_args = array('uid' => $uid, 'dynadata' => $dynadata);
         $event = new GenericEvent($user, $event_args);
         $event = $this->getDispatcher()->dispatch('module.profile.update', $event);
         
         // Get parameters from whatever input we need.
-        $uname = $this->request->request->get('uname', null);
+        $uname = $request->request->get('uname', null);
         
         /**
          * Set $dynadata again, in case it has been modified by
          * a persistent module handler.
          */
-        $dynadata = $this->request->request->get('dynadata', null);
+        $dynadata = $request->request->get('dynadata', null);
         
         // Check for required fields - The API function is called.
         
         $checkrequired = ModUtil::apiFunc($this->name, 'user', 'checkrequired', array('dynadata' => $dynadata));
         
         if ($checkrequired['result'] == true) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! A required profile item [%s] is missing.', $checkrequired['translatedFieldsStr']));
             // we do not send the passwords here!
             $params = array('uname' => $uname, 'dynadata' => $dynadata);
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'modify', $params)));
+
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_modify', $params, RouterInterface::ABSOLUTE_URL));
         }
         
         // Building the sql and saving - The API function is called.
         $save = ModUtil::apiFunc($this->name, 'user', 'savedata', array('uid' => $uid, 'dynadata' => $dynadata));
         
         if ($save != true) {
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'view')));
+
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_view', array(), RouterInterface::ABSOLUTE_URL));
         }
         
         // This function generated no output, we redirect the user
-        $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! The profile has been successfully updated.'));
+        $request->getSession()->getFlashBag()->add('status', $this->__('Done! The profile has been successfully updated.'));
         
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'view', array(
-            'uid' => $uid
-        ))));
-
+        return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_view', array('uid' => $uid), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
+     * @Route("/viewmembers")
+     *
      * View members list.
      *
      * This function provides the main members list view.
      *
-     * Parameters passed via the $args array, or via GET, or via POST:
+     * @param Request $request
+     *
+     * Parameters passed via GET or via POST:
      * ---------------------------------------------------------------
      * numeric startnum The ordinal number of the record at which to begin displaying records; not obtained via POST.
      * string  sortby    A comma-separated list of fields on which the list of members should be sorted.
@@ -279,24 +310,22 @@ class UserController extends \Zikula_AbstractController
      *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
      *                      is a string containing the name of a property then the string on which to match the begining of the value for that property.
      *
-     * @param array $args All parameters passed to this function via an internal call.
-     *
      * @return string The rendered template output.
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function viewmembersAction($args)
+    public function viewmembersAction(Request $request)
     {
         // Security check
         if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need
-        $startnum = $this->request->query->get('startnum', isset($args['startnum']) ? $args['startnum'] : null);
-        $sortby = $this->request->query->get('sortby', $this->request->request->get('sortby', isset($args['sortby']) ? $args['sortby'] : null));
-        $searchby = $this->request->query->get('searchby', $this->request->request->get('searchby', isset($args['searchby']) ? $args['searchby'] : null));
-        $sortorder = $this->request->query->get('sortorder', $this->request->request->get('sortorder', isset($args['sortorder']) ? $args['sortorder'] : null));
-        $letter = $this->request->query->get('letter', $this->request->request->get('letter', isset($args['letter']) ? $args['letter'] : null));
+        $startnum = $request->query->get('startnum', null);
+        $sortby = $request->get('sortby', null);
+        $searchby = $request->get('searchby', null);
+        $sortorder = $request->get('sortorder', null);
+        $letter = $request->get('letter', null);
         // Set some defaults
         if (empty($sortby)) {
             $sortby = 'uname';
@@ -369,11 +398,13 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('msgmodule', ModUtil::apiFunc($this->name, 'memberslist', 'getmessagingmodule'));
         // Assign the values for the smarty plugin to produce a pager
         $this->view->assign('pager', array('numitems' => $userscount, 'itemsperpage' => $itemsperpage));
-        // Return the output that has been generated by this function
-        return $this->response($this->view->fetch('User/members_view.tpl'));
+
+        return new Response($this->view->fetch('User/members_view.tpl'));
     }
 
     /**
+     * @Route("/recentmembers")
+     *
      * Displays last X registered users.
      *
      * This function displays the last X users who registered at this site available from the module.
@@ -392,7 +423,8 @@ class UserController extends \Zikula_AbstractController
         $this->view->setCacheId('recent' . (int)UserUtil::isLoggedIn());
         // check out if the contents are cached.
         if ($this->view->is_cached('User/members_recent.tpl')) {
-            return $this->view->fetch('User/members_recent.tpl');
+
+            return new Response($this->view->fetch('User/members_recent.tpl'));
         }
         $modvars = $this->getVars();
         // get last x user id's
@@ -430,11 +462,13 @@ class UserController extends \Zikula_AbstractController
         $dudarray = array_keys($activeduds);
         unset($activeduds);
         $this->view->assign('dudarray', $dudarray);
-        // Return the output that has been generated by this function
-        return $this->response($this->view->fetch('User/members_recent.tpl'));
+
+        return new Response($this->view->fetch('User/members_recent.tpl'));
     }
 
     /**
+     * @Route("/membersonline")
+     *
      * View users online.
      *
      * This function displays the currently online users.
@@ -453,7 +487,8 @@ class UserController extends \Zikula_AbstractController
         $this->view->setCacheId('onlinemembers' . (int)UserUtil::isLoggedIn());
         // check out if the contents are cached.
         if ($this->view->is_cached('User/members_online.tpl')) {
-            return $this->view->fetch('User/members_online.tpl');
+
+            return new Response($this->view->fetch('User/members_online.tpl'));
         }
         // get last 10 user id's
         $users = ModUtil::apiFunc($this->name, 'memberslist', 'whosonline');
@@ -467,8 +502,7 @@ class UserController extends \Zikula_AbstractController
         $dudarray = array_keys($activeduds);
         unset($activeduds);
         $this->view->assign('dudarray', $dudarray);
-        // Return the output that has been generated by this function
-        return $this->response($this->view->fetch('User/members_online.tpl'));
-    }
 
+        return new Response($this->view->fetch('User/members_online.tpl'));
+    }
 }

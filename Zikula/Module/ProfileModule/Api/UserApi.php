@@ -18,7 +18,6 @@ use SecurityUtil;
 use UserUtil;
 use ModUtil;
 use DateUtil;
-use Symfony\Component\Debug\Exception\FatalErrorException;
 use System;
 use Zikula\Core\Event\GenericEvent;
 
@@ -382,7 +381,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         // Argument check
         if (!isset($args['dynadata'])) {
-            throw new FatalErrorException($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+            throw new \Exception($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable'));
@@ -463,7 +462,7 @@ class UserApi extends \Zikula_AbstractApi
     public function insertdyndata($args)
     {
         if (!isset($args['dynadata'])) {
-            throw new FatalErrorException($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+            throw new \Exception($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         $dynadata = $args['dynadata'];
         // Validate if there's no dynadata
@@ -501,7 +500,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         $uids = array();
         if (!isset($args['dynadata'])) {
-            throw new FatalErrorException($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
+            throw new \Exception($this->__f('Missing dynamic data array in call to %1$s', array('checkrequired')));
         }
         $dynadata = $args['dynadata'];
         // Validate if there's any dynamic data
@@ -624,37 +623,37 @@ class UserApi extends \Zikula_AbstractApi
         $links = array();
 
         if ((UserUtil::isLoggedIn()) && (SecurityUtil::checkPermission('ZikulaUsersModule::', '::', ACCESS_READ))) {
-            $links[] = array(
+            $links[0] = array(
                 'icon' => 'wrench',
                 'text' => $this->__('Account Settings'),
-                'url' => ModUtil::url('ZikulaUsersModule', 'user', 'main')
+                'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_main')
             );
         }
 
         if ((UserUtil::isLoggedIn()) && (ModUtil::available($this->name)) && (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ))) {
-            $links[] = array(
+            $links[1] = array(
                 'icon' => 'user',
                 'links' => array(
                     array(
                         'text' => $this->__('Edit Profile'),
-                        'url' => ModUtil::url($this->name, 'user', 'modify')
+                        'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_modify')
                     ),
                     array(
                         'text' => $this->__('Change Email Address'),
-                        'url' => ModUtil::url('ZikulaUsersModule', 'user', 'changeEmail')
+                        'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_changeemail')
                     ),
                     array(
                         'text' => $this->__('Change Password'),
-                        'url' => ModUtil::url('ZikulaUsersModule', 'user', 'changePassword')
+                        'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_changepassword')
                     )
                 ),
                 'text' => $this->__('Profile'),
-                'url' => ModUtil::url($this->name, 'user', 'view') 
+                'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_view') 
             );
         }
 
         if ((UserUtil::isLoggedIn()) && (ModUtil::available($message_module)) && (SecurityUtil::checkPermission($message_module.'::', '::', ACCESS_READ))) {
-            $links[] = array(
+            $links[2] = array(
                 'icon' => 'envelope',
                 'text' => $this->__('Messages'),
                 'url' => ModUtil::url($message_module, 'user', 'main') 
@@ -662,36 +661,23 @@ class UserApi extends \Zikula_AbstractApi
         }
 
         if ((ModUtil::available($this->name)) && (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ))) {
-            $links[] = array(
-                'icon' => 'list',
-                'links' => array(
-                    array(
-                        'url' => ModUtil::url($this->name, 'user', 'recentmembers'),
-                        'text' => $this->__f('Last %s Registered Users', ModUtil::getVar($this->name, 'recentmembersitemsperpage'))),
-                    array(
-                        'url' => ModUtil::url($this->name, 'user', 'onlinemembers'),
-                        'text' => $this->__('Users Online')
-                    )
-                ),
+            $links[3] = array(
                 'text' => $this->__('Registered Users'),
-                'url' => ModUtil::url($this->name, 'user', 'viewmembers')                
+                'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_viewmembers'),
+                'icon' => 'list'
             );
             
             if (SecurityUtil::checkPermission($this->name.':Members:recent', '::', ACCESS_READ)) {
-                $key = key($links);
-            
-                $links[$key]['links'][] = array(
+                $links[3]['links'][] = array(
                     'text' => $this->__f('Last %s Registered Users', ModUtil::getVar($this->name, 'recentmembersitemsperpage')),
-                    'url' => ModUtil::url($this->name, 'user', 'recentmembers')      
+                    'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_recentmembers')      
                 );
             }
 
             if (SecurityUtil::checkPermission($this->name.':Members:online', '::', ACCESS_READ)) {
-                $key = key($links);
-            
-                $links[$key]['links'][] = array(
+                $links[3]['links'][] = array(
                     'text' => $this->__('Users Online'),
-                    'url' => ModUtil::url($this->name, 'user', 'online')       
+                    'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_onlinemembers')       
                 );
             }
         }

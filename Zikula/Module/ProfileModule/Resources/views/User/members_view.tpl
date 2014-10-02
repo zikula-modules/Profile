@@ -2,7 +2,7 @@
 
 {include file='User/menu.tpl'}
 
-<form id="profile-search" class="form-horizontal" action="{modurl modname=$module type='user' func='viewmembers'}" method="post" enctype="application/x-www-form-urlencoded">
+<form id="profile-search" class="form-horizontal" action="{route name='zikulaprofilemodule_user_viewmembers'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <div class="well">
@@ -44,7 +44,7 @@
         </div>
     </div>
     <div id="profile-alphafilter" class="text-center">
-        {pagerabc posvar="letter" forwardvars='sortby' printempty=true}
+        {pagerabc posvar="letter" forwardvars='sortby' printempty=true route='zikulaprofilemodule_user_viewmembers'}
     </div>
 </form>
 
@@ -73,7 +73,7 @@
             <tr>
                 <td><strong>{$user.uname|profilelinkbyuname}</strong>&nbsp;&nbsp;
                     {if $user.onlinestatus eq 1}
-                        <a href="{modurl modname=$module type='user' func='onlinemembers'}"><span class="label label-success">{gt text='Online'}</span></a>
+                        <a href="{route name='zikulaprofilemodule_user_onlinemembers'}"><span class="label label-success">{gt text='Online'}</span></a>
                     {else}
                         <span class="label label-danger">{gt text='Offline'}</span>
                     {/if}
@@ -109,11 +109,11 @@
     </table>
 </div>
 
-{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='startnum' shift=1}
+{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='startnum' shift=1 route='zikulaprofilemodule_user_viewmembers'}
 
 <h3>{gt text='Statistics'}</h3>
 <ul id="profile_status">
     <li><strong>{gt text='Registered:'} </strong>{$memberslistreg|safetext}</li>
-    <li><strong>{gt text='Online:'} </strong><a href="{modurl modname=$module type='user' func='onlinemembers'}">{$memberslistonline}</a></li>
-    <li><strong>{gt text='Newest User:'} </strong><a href="{modurl modname=$module type='user' func='view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
+    <li><strong>{gt text='Online:'} </strong><a href="{route name='zikulaprofilemodule_user_onlinemembers'}">{$memberslistonline}</a></li>
+    <li><strong>{gt text='Newest User:'} </strong><a href="{route name='zikulaprofilemodule_user_view' uname=$memberslistnewest}">{$memberslistnewest}</a></li>
 </ul>

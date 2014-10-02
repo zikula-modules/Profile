@@ -9,7 +9,7 @@
 
 </h3>
 
-<form class="form-horizontal" action="{modurl modname=$module type='admin' func='modify'}" method="post" enctype="application/x-www-form-urlencoded">
+<form class="form-horizontal" action="{route name='zikulaprofilemodule_admin_modify'}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="dudid" value="{$dudid}" />
@@ -22,7 +22,7 @@
                 <label class="col-lg-3 control-label" for="profile_label">{gt text='Label'}</label>
                 <div class="col-lg-9">
                     <input class="form-control" id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|default:''|safetext}" />
-                    {modurl modname=$module type='admin' func='help' fqurl=true assign='helpurl'}
+                    {route name='zikulaprofilemodule_admin_help' fqurl=true assign='helpurl'}
                     <div class="alert alert-info">{gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|safetext}</div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
         </fieldset>
         <div class="col-lg-offset-3 col-lg-9">
             <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
-            <a class="btn btn-danger" href="{modurl modname=$module type='admin' func='view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+            <a class="btn btn-danger" href="{route name='zikulaprofilemodule_admin_view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
         </div>
     </div>
 </form>

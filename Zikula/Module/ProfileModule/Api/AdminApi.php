@@ -343,30 +343,30 @@ class AdminApi extends \Zikula_AbstractApi
         // Add User module links
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'view'),
+                'url' => $this->get('router')->generate('zikulaprofilemodule_admin_view'),
                 'text' => $this->__('Fields'),
                 'icon' => 'list');
         }
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'edit'),
+                'url' => $this->get('router')->generate('zikulaprofilemodule_admin_edit'),
                 'text' => $this->__('Create new field'),
                 'icon' => 'plus text-success');
         }
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'modifyconfig'),
+                'url' => $this->get('router')->generate('zikulaprofilemodule_admin_modifyconfig'),
                 'text' => $this->__('Settings'),
                 'icon' => 'wrench');
         }
         $links[] = array(
-            'url' => ModUtil::url('ZikulaUsersModule', 'admin', 'view'),
+            'url' => $this->get('router')->generate('zikulaprofilemodule_admin_view'),
             'text' => $this->__('Users Module'),
             'icon' => 'user',
             'links' => ModUtil::apiFunc('ZikulaUsersModule', 'admin', 'getLinks'));
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'help'),
+                'url' => $this->get('router')->generate('zikulaprofilemodule_admin_help'),
                 'text' => $this->__('Help'),
                 'icon' => 'ambulance text-danger');
         }

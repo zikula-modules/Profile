@@ -51,13 +51,13 @@ class AccountApi extends \Zikula_AbstractApi
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
             $items[] = array(
-                'url' => ModUtil::url($this->name, 'user', 'view', array('uid' => $uid)),
+                'url' => $this->get('router')->generate('zikulaprofilemodule_admin_view', array('uid' => $uid)),
                 'module' => $this->name,
                 'title' => $this->__('Profile'),
                 'icon' => 'admin.png');
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
                 $items[] = array(
-                    'url' => ModUtil::url($this->name, 'user', 'viewmembers'),
+                    'url' => $this->get('router')->generate('zikulaprofilemodule_admin_viewmembers'),
                     'module' => $this->name,
                     'title' => $this->__('Registered Users'),
                     'icon' => 'members.png');

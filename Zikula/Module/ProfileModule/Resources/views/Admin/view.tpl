@@ -46,7 +46,7 @@
     </div>
 </form>
 
-{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='startnum' shift=1}
+{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='startnum' shift=1 route='zikulaprofilemodule_admin_view'}
 {adminfooter}
 
 <script type="text/javascript">

@@ -51,12 +51,12 @@ class MemberslistApi extends \Zikula_AbstractApi
     protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
         if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string)(int)$startNum || $startNum < -1) {
-            throw new FatalErrorException($this->__f('Invalid %1$s.', array('startNum')));
+            throw new \Exception($this->__f('Invalid %1$s.', array('startNum')));
         } elseif ($startNum <= 0) {
             $startNum = -1;
         }
         if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string)(int)$numItems || $numItems != -1 && $numItems < 1) {
-            throw new FatalErrorException($this->__f('Invalid %1$s.', array('numItems')));
+            throw new \Exception($this->__f('Invalid %1$s.', array('numItems')));
         }
         if (!isset($sortBy) || empty($sortBy)) {
             $sortBy = 'uname';
@@ -163,7 +163,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             \System::dump($qb->getQuery()->getDQL());
             \System::dump($qb->getQuery()->getSQL());
             \System::dump($qb->getParameters());
-            throw new FatalErrorException($this->__('Query failed.'));
+            throw new \Exception($this->__('Query failed.'));
         }
         if ($countOnly) {
             return count($users);
