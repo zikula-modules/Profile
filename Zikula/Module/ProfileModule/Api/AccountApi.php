@@ -57,7 +57,7 @@ class AccountApi extends \Zikula_AbstractApi
                 'icon' => 'admin.png');
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
                 $items[] = array(
-                    'url' => $this->get('router')->generate('zikulaprofilemodule_admin_viewmembers'),
+                    'url' => $this->get('router')->generate('zikulaprofilemodule_user_viewmembers'),
                     'module' => $this->name,
                     'title' => $this->__('Registered Users'),
                     'icon' => 'members.png');
