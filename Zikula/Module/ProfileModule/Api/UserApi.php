@@ -626,7 +626,7 @@ class UserApi extends \Zikula_AbstractApi
             $links[0] = array(
                 'icon' => 'wrench',
                 'text' => $this->__('Account Settings'),
-                'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_main')
+                'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_index')
             );
         }
 
