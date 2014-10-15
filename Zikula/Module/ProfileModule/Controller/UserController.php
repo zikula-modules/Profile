@@ -158,11 +158,12 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/modify")
+     * @Route("/modify/{uid}", requirements={"uid" = "\d+"})
      *
      * Modify a users profile information.
      *
      * @param Request $request
+     * @param integer $uid
      *
      * Parameters passed via GET:
      * --------------------------------------------------
@@ -173,14 +174,14 @@ class UserController extends \Zikula_AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function modifyAction(Request $request)
+    public function modifyAction(Request $request, $uid = null)
     {
         // Security check
         if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         
-        $uid = $request->query->get('uid', UserUtil::getVar('uid'));
+        $uid = isset($uid) ? $uid : UserUtil::getVar('uid');
         
         if ($uid != UserUtil::getVar('uid')) {
             if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
