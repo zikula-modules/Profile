@@ -176,12 +176,16 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     } elseif ($item['prop_displaytype'] == 4) {
         // select
         $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
-
         $output = array();
-        foreach ((array)$uservalue as $id) {
-            if (isset($options[$id])) {
-                $output[] = $options[$id];
+        
+        if(is_array($uservalue)) {
+            foreach ((array)$uservalue as $id) {
+                if (isset($options[$id])) {
+                    $output[] = $options[$id];
+                }
             }
+        } else {
+            $output[] = $options[$uservalue];
         }
 
     } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
