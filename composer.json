@@ -1,0 +1,23 @@
+{
+    "name": "zikula/profile-module",
+    "description": "Extends Zikula's user management.",
+    "type": "zikula-module",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Zikula Development Team",
+            "homepage": "http://zikula.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Zikula\\ProfileModule\\": "" }
+    },
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "extra": {
+        "zikula": {
+            "class": "Zikula\\ProfileModule\\ZikulaProfileModule"
+        }
+    }
+}
