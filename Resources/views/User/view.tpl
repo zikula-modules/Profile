@@ -1,4 +1,4 @@
-{pageaddvar name='stylesheet' value='modules/Profile/Zikula/Module/ProfileModule/Resources/public/css/ribbon.css'}
+{pageaddvar name='stylesheet' value='@ZikulaProfileModule/Resources/public/css/ribbon.css'}
 
 {if (isset($userinfo.__ATTRIBUTES__))}
     {array_field array=$userinfo.__ATTRIBUTES__ field='user_information_first_name' returnValue=true assign='user_information_first_name'}
