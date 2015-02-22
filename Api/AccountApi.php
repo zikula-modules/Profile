@@ -51,7 +51,7 @@ class AccountApi extends \Zikula_AbstractApi
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
             $items[] = array(
-                'url' => $this->get('router')->generate('zikulaprofilemodule_admin_view', array('uid' => $uid)),
+                'url' => $this->get('router')->generate('zikulaprofilemodule_user_view', array('uid' => $uid)),
                 'module' => $this->name,
                 'title' => $this->__('Profile'),
                 'icon' => 'admin.png');
