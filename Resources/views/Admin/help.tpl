@@ -7,7 +7,7 @@
 <p>
     {gt text="There are some details that you may know about Profile and how it let you translate the Account Properties labels and values of your site."}
     {gt text="First of all, it's recommended to move the translation files of Profile to the /config directory to custom them there."}
-    {gt text="Copy all the files of the /modules/Profile/locale directory to /config/locale. There you will customize the catalog module_profile.pot and the translations afterwards."}
+    {gt text="Copy all the files of the modules/zikula/profile-module/Resources/locale directory to /config/locale. There you will customize the catalog module_zikulaprofilemodule.pot and the translations afterwards."}
 </p>
 
 <h3>{gt text='About the property labels'}</h3>
