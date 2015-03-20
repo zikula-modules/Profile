@@ -640,4 +640,143 @@ class Profile_Api_User extends Zikula_AbstractApi
         // construct the custom url part
         return $args['modname'] . '/' . $args['func'] . '/' . $vars;
     }
+
+    /**
+     * Get module links
+     *
+     * @return array array of links
+     */
+    public function getLinks()
+    {
+        if (!SecurityUtil::checkPermission('Profile::', '::', ACCESS_OVERVIEW)) {
+            return;
+        }
+
+        $func = FormUtil::getPassedValue('func', 'main', 'GET');
+        $viewuser  = FormUtil::getPassedValue('uid', '', 'GET');
+        $currentuser  = UserUtil::getVar('uid');
+
+        $links = array();
+
+        if (UserUtil::isLoggedIn()) {
+            $sublinks = null;
+            if ($viewuser == $currentuser || empty($viewuser)) {
+                $sublinks = array();
+                if ($func != 'view') {
+                    $sublinks[] = array('url'   => ModUtil::url('Profile', 'user', 'view'),
+                            'text'  => $this->__('View personal info'),
+                            'class' => 'z-icon-es-info'
+                        );
+                }
+                if ($func != 'modify') {
+                    $sublinks[] = array('url'   => ModUtil::url('Profile', 'user', 'modify'),
+                            'text'  => $this->__('Edit personal info'),
+                            'class' => 'z-icon-es-edit'
+                        );
+                }
+                if (ModUtil::available('Avatar')) {
+                    $sublinks[] = array('url'   => ModUtil::url('Avatar', 'user', 'main'),
+                            'text'  => $this->__('Change avatar'),
+                            'class' => 'z-icon-es-profile'
+                        );
+                }
+                $sublinks[] = array('url'   => ModUtil::url('Users', 'user', 'changePassword'),
+                        'text'  => $this->__('Change password'),
+                        'class' => 'z-icon-es-locked'
+                    );
+                $sublinks[] = array('url'   => ModUtil::url('Users', 'user', 'changeEmail'),
+                        'text'  => $this->__('Change email address'),
+                        'class' => 'z-icon-es-mail'
+                    );
+            }
+            if (isset($sublinks)) {
+                $links[] = array(
+                    'url'   => ModUtil::url('Users', 'user', 'main'),
+                    'text' => $this->__('User account panel'),
+                    'class' => 'z-icon-es-user',
+                    'links' => $sublinks
+                );
+            } else {
+                $links[] = array(
+                    'url'   => ModUtil::url('Users', 'user', 'main'),
+                    'text' => $this->__('User account panel'),
+                    'class' => 'z-icon-es-user'
+                );
+            }
+        }
+
+        // View members links
+        if (in_array($func, array('viewmembers', 'recentmembers', 'onlinemembers'))) {
+            if ($func != 'viewmembers') {
+                $links[] = array(
+                    'url'   => ModUtil::url('Profile', 'user', 'viewmembers'),
+                    'text'  => $this->__('Registered users list'),
+                    'class' => 'z-icon-es-group'
+                );
+            }
+            if ($func != 'recentmembers') {
+                $links[] = array(
+                    'url'   => ModUtil::url('Profile', 'user', 'recentmembers'),
+                    'text'  => $this->__f('Last %s registered users', ModUtil::getVar('Profile', 'recentmembersitemsperpage')),
+                    'class' => 'z-icon-es-group'
+                );
+            }
+            if ($func != 'onlinemembers') {
+                $links[] = array(
+                    'url'   => ModUtil::url('Profile', 'user', 'onlinemembers'),
+                    'text'  => $this->__('Users currently on-line'),
+                    'class' => 'z-icon-es-group'
+                );
+            }
+        }
+
+        // EZComments module integration
+        if (ModUtil::available('EZComments') && $viewuser == $currentuser) {
+            $links[] = array(
+                'url'   => ModUtil::url('EZComments', 'user', 'main', array('uid' => $viewuser? $viewuser : $currentuser)),
+                'text'  => $this->__('Comments'),
+                'class' => 'z-icon-es-view'
+            );
+        }
+
+        // Message module integration
+        $msgmodule = System::getVar('messagemodule');
+        if ($msgmodule && ModUtil::available($msgmodule)) {
+            if ($viewuser == $currentuser || empty($viewuser)) {
+                $links[] = array(
+                    'url'   => ModUtil::url($msgmodule, 'user', 'main'),
+                    'text'  => $this->__('Private messages'),
+                    'class' => 'z-icon-es-mail'
+                );
+            } else {
+                $links[] = array(
+                    'url'   => ModUtil::url($msgmodule, 'user', 'newpm', array('uid' => $viewuser)),
+                    'text'  => $this->__('Send private message'),
+                    'class' => 'z-icon-es-mail'
+                );
+            }
+        }
+
+        // ContactList module integration
+        if (ModUtil::available('ContactList')) {
+            $buddystatus = ModUtil::apiFunc('ContactList', 'user', 'isBuddy', array('uid1' => $currentuser, 'uid2' => $viewuser));
+            $links[] = array(
+                'url'   => ModUtil::url('ContactList', 'user', 'display', array('uid' => $viewuser)),
+                'text'  => $this->__f('Show %s\'s contacts', UserUtil::getVar('uname', $viewuser))
+            );
+            if ($buddystatus) {
+                $links[] = array(
+                    'url'   => ModUtil::url('ContactList', 'user', 'edit', array('id' => $buddystatus)),
+                    'text'  => $this->__('Edit contact')
+                );
+            } else {
+                $links[] = array(
+                    'url'   => ModUtil::url('ContactList', 'user', 'create', array('uid' => $viewuser)),
+                    'text'  => $this->__('Add as contact')
+                );
+            }
+        }
+
+        return $links;
+    }
 }

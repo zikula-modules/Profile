@@ -2,6 +2,6 @@
 
 <h2>{$templatetitle}</h2>
 
-{profileuserlinks}
+{modulelinks modname='Profile' type='user'}
 
 {insert name='getstatusmsg'}
