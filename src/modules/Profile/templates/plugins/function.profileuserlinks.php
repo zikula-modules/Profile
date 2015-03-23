@@ -26,6 +26,7 @@
  * string class     CSS class.
  * string default   Default content if there are no links to show (default: <hr />).
  * 
+ * @deprecated            Use {modulelinks}
  * @param array  $params  All attributes passed to this function from the template.
  * @param object &$smarty Reference to the Zikula_View/Smarty object.
  * 
