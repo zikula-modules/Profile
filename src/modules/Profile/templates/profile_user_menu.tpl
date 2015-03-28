@@ -1,7 +1,1 @@
-{pagesetvar name='title' value=$templatetitle}
-
-<h2>{$templatetitle}</h2>
-
-{modulelinks modname='Profile' type='user'}
-
-{insert name='getstatusmsg'}
+{moduleheader modname='Profile' type='user' title=$templatetitle setpagetitle=true insertstatusmsg=true}
