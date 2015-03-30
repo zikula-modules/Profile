@@ -2,6 +2,10 @@
 CHANGELOG
 =========
 
+2.0.0
+=====
+    - Core 1.4.0 Compatibility
+
 1.6.0
 =====
     - Requires at least Zikula core version 1.3.0.
