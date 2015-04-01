@@ -1,11 +1,11 @@
 <div class="{$class|default:'form-group'}{if $error} has-error{/if}">
     {if $required}
-    <p id="advice-required-prop_{$attributename}" class="alert alert-warning" style="display:none">
+    <p id="advice-required-prop_{$attributename}" class="alert alert-warning" style="display: none;">
         {gt text='Sorry! A required personal info item is missing. Please correct and try again.'}
     </p>
     {/if}
-    <label for="prop_{$attributename}" class="col-lg-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
-    <div class="col-lg-9">
+    <label for="prop_{$attributename}" class="col-sm-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
+    <div class="col-sm-9">
         <textarea class="form-control{if $required} required{/if}" id="prop_{$attributename}" name="{$field_name}">{$value}</textarea><br />
         {if $note}
         <em class="help-block">{$note}</em>

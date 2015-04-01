@@ -1,8 +1,8 @@
 {modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
 
 <div class="{$class|default:'form-group'}">
-    <label for="prop_{$attributename}" class="col-lg-3 control-label{if ($required)} required{/if}">{gt text=$proplabeltext}</label>
-    <div class="col-lg-9">
+    <label for="prop_{$attributename}" class="col-sm-3 control-label{if ($required)} required{/if}">{gt text=$proplabeltext}</label>
+    <div class="col-sm-9">
         {gt text='Select' assign='gt'}
         {gt text='&quot;%1$s: %2$s&quot; is required. Please select an option.' tag1=$item.prop_fieldset tag2=$item.prop_label assign='title'}
         {if (($attributename == 'country') || (strpos($attributename, '_country') !== false))}

@@ -1,12 +1,12 @@
 <div class="{$class|default:'form-group'}">
     {if $required}
-    <p id="advice-required-prop_{$attributename}" class="alert alert-warning" style="display:none">
+    <p id="advice-required-prop_{$attributename}" class="alert alert-warning" style="display: none;">
         {gt text='Sorry! A required personal info item is missing. Please correct and try again.'}
     </p>
     {/if}
 
-    <label for="prop_{$attributename}" class="col-lg-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
-    <div class="col-lg-9">
+    <label for="prop_{$attributename}" class="col-sm-3 control-label{if $required} required{/if}">{gt text=$proplabeltext}</label>
+    <div class="col-sm-9">
         {html_radios name=$field_name values=$listoptions output=$listoutput checked=$value labels=false assign='listoptions'}
         {foreach from=$listoptions item='item'}
         <div class="radio">
