@@ -16,19 +16,19 @@
         <fieldset>
             <legend>{gt text='Item'}</legend>
             <div class="form-group">
-                <div class="col-lg-offset-3 col-lg-9">
+                <div class="col-sm-offset-3 col-sm-9">
                     <div class="alert alert-warning">{gt text="Notice: No special characters or spaces are allowed in the personal info item's label or attribute name."}</div>
                 </div>
-                <label class="col-lg-3 control-label" for="profile_label">{gt text='Label'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_label">{gt text='Label'}</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="profile_label" name="label" type="text" size="20" maxlength="255" value="{$item.prop_label|default:''|safetext}" />
                     {route name='zikulaprofilemodule_admin_help' fqurl=true assign='helpurl'}
                     <div class="alert alert-info">{gt text='Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.' tag1=$helpurl|safetext}</div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_attributename">{gt text='Attribute name'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_attributename">{gt text='Attribute name'}</label>
+                <div class="col-sm-9">
                     {if !empty($item)}
                         <span id="profile_attributename">{$item.prop_attribute_name|default:''}</span>
                     {else}
@@ -38,8 +38,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_required">{gt text="Make this a 'Required' item"}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_required">{gt text="Make this a 'Required' item"}</label>
+                <div class="col-sm-9">
                     <select class="form-control" id="profile_required" name="required">
                     <option value="">{gt text='Select'}</option>
                     {html_options options=$requiredoptions selected=$item.prop_required|default:0}
@@ -47,8 +47,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_viewby">{gt text='Visibility'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_viewby">{gt text='Visibility'}</label>
+                <div class="col-sm-9">
                     <select class="form-control" id="profile_viewby" name="viewby">
                     <option value="">{gt text='Select'}</option>
                     {html_options options=$viewbyoptions selected=$item.prop_viewby|default:0}
@@ -57,8 +57,8 @@
             </div>
             <input type="hidden" name="dtype" value="{$item.prop_dtype|default:''|safetext}" />
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_displaytype">{gt text='Type of control to display'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_displaytype">{gt text='Type of control to display'}</label>
+                <div class="col-sm-9">
                     <select class="form-control" id="profile_displaytype" name="displaytype">
                     <option value="">{gt text='Select'}</option>
                     {html_options options=$displaytypes selected=$item.prop_displaytype|default:0}
@@ -66,14 +66,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_pattern">{gt text='Pattern'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_pattern">{gt text='Pattern'}</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="profile_pattern" name="pattern" type="text" size="20" maxlength="80" value="{$item.prop_pattern|default:''|safetext}" />
                 </div>
             </div>
             <div class="form-group" id="profile_content_wrapper">
-                <label class="col-lg-3 control-label" for="profile_listoptions">{gt text='Content'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_listoptions">{gt text='Content'}</label>
+                <div class="col-sm-9">
                     <textarea class="form-control" id="profile_listoptions" cols="50" rows="5" name="listoptions">{$item.prop_listoptions|default:''|safetext}</textarea>
                     <p class="alert alert-info" id="profile_help_type2">{gt text="Notice: Precede output options by '@@'. Example: '@@No@@Yes', '@@Disabled@@Enabled'. The order is important. If you want to have a different label in the edit form, you can use the following format: 'EditLabel@@DisplayNo@@DisplayYes'. All the values are translatable."}</p>
                     <p class="alert alert-info" id="profile_help_type3">{gt text="Notice: Use the following format for each option: '@@label@id'. Example: '@@radio option 1@id1@@radio option 2@id2@@radio option 3@id3'. The options are translatable."}</p>
@@ -87,19 +87,19 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_note">{gt text='Notice to display with personal info item'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_note">{gt text='Notice to display with personal info item'}</label>
+                <div class="col-sm-9">
                     <textarea class="form-control" id="profile_note" cols="50" rows="2" name="note">{$item.prop_note|default:''|safetext}</textarea>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_fieldset">{gt text='Fieldset'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_fieldset">{gt text='Fieldset'}</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="profile_fieldset" name="fieldset" type="text" size="20" maxlength="80" value="{$item.prop_fieldset|default:''|safetext}" placeholder="{gt text='User Information'}" />
                 </div>
             </div>
         </fieldset>
-        <div class="col-lg-offset-3 col-lg-9">
+        <div class="col-sm-offset-3 col-sm-9">
             <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
             <a class="btn btn-danger" href="{route name='zikulaprofilemodule_admin_view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
         </div>

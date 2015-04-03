@@ -31,19 +31,19 @@
 <div class="panel panel-default" id="profile_wrapper">
     <div class="panel-body profile-information">
         <div class="row user_name">
-            <div class="col-md-4 text-right">
+            <div class="col-sm-3 text-right">
                 <strong>{gt text='User Name:'}</strong>
             </div>
-            <div class="col-md-8">
+            <div class="col-sm-9">
                 <span>{$uname|safetext}</span>
             </div>
         </div>
         {if (($modvars.$module.viewregdate|default:1) && ($userinfo.user_regdate != '1970-01-01 00:00:00'))}
             <div class="row registration_date">
-                <div class="col-md-4 text-right">
+                <div class="col-sm-3 text-right">
                     <strong>{gt text='Registration Date:'}</strong>
                 </div>
-                <div class="col-md-8">
+                <div class="col-sm-9">
                     <span>{$userinfo.user_regdate|dateformat:'datebrief'}</span>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                 {/if}
             {else}
                 {modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
-                <img class="img-thumbnail" src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" />
+                <img class="img-thumbnail" src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="{gt text='Avatar'}" />
             {/if}
         {elseif ($modvars.ZikulaUsersModule.allowgravatars)}
             {gravatar email_address=$userinfo.email}

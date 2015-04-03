@@ -7,16 +7,16 @@
         <input type="hidden" id="csrftoken" name="csrftoken" value="{insert name="csrftoken"}" />
         <div class="well">
             <div class="form-group">
-                <div class="col-lg-3 control-label">
+                <div class="col-sm-3 control-label">
                     <label for="profile_letter" class="profile_letter">{gt text='Search'}</label>
                 </div>
-                <div class="col-lg-9">
-                    <span class="col-lg-4"><input class="form-control" id="profile_letter" type="text" name="letter" value="" maxlength="50" /></span>
-                    <span class="col-lg-8"><input class="btn btn-success" type="submit" value="{gt text='Submit'}" /></span>
+                <div class="col-sm-9">
+                    <span class="col-sm-3"><input class="form-control" id="profile_letter" type="text" name="letter" value="" maxlength="50" /></span>
+                    <span class="col-sm-9"><input class="btn btn-success" type="submit" value="{gt text='Submit'}" /></span>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-offset-3 col-lg-9">
+                <div class="col-sm-offset-3 col-sm-9">
                     <div class="radio">
                         <label for="profile_nickname">
                             <input id="profile_nickname" type="radio" name="searchby" value="uname" checked="checked" />

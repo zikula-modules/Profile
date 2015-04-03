@@ -8,34 +8,34 @@
         <fieldset>
             <legend>{gt text='Registered users list settings'}</legend>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_viewregdate">{gt text="Display the user's registration date"}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_viewregdate">{gt text="Display the user's registration date"}</label>
+                <div class="col-sm-9">
                     <div class="checkbox">
                         <input id="profile_viewregdate" name="viewregdate" type="checkbox" value="1"{if $modvars.$module.viewregdate|default:0 eq 1} checked="checked"{/if} />
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_memberslistitemsperpage">{gt text="Users per page in 'Registered users list'"}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_memberslistitemsperpage">{gt text="Users per page in 'Registered users list'"}</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="profile_memberslistitemsperpage" type="text" name="memberslistitemsperpage" value="{$modvars.$module.memberslistitemsperpage|safetext}" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_onlinemembersitemsperpage">{gt text="Users per page in 'Users currently on-line' page"}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_onlinemembersitemsperpage">{gt text="Users per page in 'Users currently on-line' page"}</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="profile_onlinemembersitemsperpage" type="text" name="onlinemembersitemsperpage" value="{$modvars.$module.onlinemembersitemsperpage|safetext}" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_recentmembersitemsperpage">{gt text="Users per page in 'Recent registrations' page"}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_recentmembersitemsperpage">{gt text="Users per page in 'Recent registrations' page"}</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="profile_recentmembersitemsperpage" type="text" name="recentmembersitemsperpage" value="{$modvars.$module.recentmembersitemsperpage|safetext}" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_filterunverified">{gt text="Filter unverified users from 'Registered users list'"}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_filterunverified">{gt text="Filter unverified users from 'Registered users list'"}</label>
+                <div class="col-sm-9">
                     <div id="profile_filterunverified">
                         <label class="checkbox-inline"><input id="filterunverified1" type="radio" name="filterunverified" value="1"{if $modvars.$module.filterunverified eq 1} checked="checked"{/if} /> {gt text='Yes'}</label>
                         <label class="checkbox-inline"><input id="filterunverified0" type="radio" name="filterunverified" value="0"{if $modvars.$module.filterunverified eq 0} checked="checked"{/if} /> {gt text='No'}</label>
@@ -47,8 +47,8 @@
             <legend>{gt text='User registration form settings'}</legend>
             <p class="alert alert-info">{gt text="The personal info items that you activate below will be displayed in the user registration form if the 'Users' module is configured to display personal info items during user registration, and if the 'Profile' module is specified in the 'General settings manager' as the module to provide the site's user profile management functionality. Personal info items that are configured as 'Required' will always be displayed in the user registration form."}</p>
             <div class="form-group">
-                <label class="col-lg-3 control-label" for="profile_dudregshow">{gt text='Personal info items to include in user registration form'}</label>
-                <div class="col-lg-9">
+                <label class="col-sm-3 control-label" for="profile_dudregshow">{gt text='Personal info items to include in user registration form'}</label>
+                <div class="col-sm-9">
 					{foreach from=$fieldsets key="key" item='fieldset'}
                     <fieldset class="{$key}">
                         <legend>{$fieldset}</legend>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </fieldset>
-        <div class="col-lg-offset-3 col-lg-9">
+        <div class="col-sm-offset-3 col-sm-9">
             <button class="btn btn-success" type="submit" name="Save">{gt text="Save"}</button>
             <a class="btn btn-danger" href="{route name='zikulaprofilemodule_admin_view'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
         </div>

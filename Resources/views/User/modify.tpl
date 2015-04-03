@@ -27,7 +27,7 @@
         {/if}
     {/foreach}
     <div class="form-group">
-        <div class="col-lg-offset-3 col-lg-9">
+        <div class="col-sm-offset-3 col-sm-9">
             <input class="btn btn-success" type="submit" value="{gt text='Submit'}" />
             <a class="btn btn-danger" href="{route name='zikulaprofilemodule_user_view'}" title="{gt text='Cancel'}">{gt text='Cancel'}</a>
             <input class="btn btn-default" type="reset" value="{gt text='Reset'}" />
