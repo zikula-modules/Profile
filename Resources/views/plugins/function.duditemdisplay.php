@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-use Zikula\Module\UsersModule\Constant as UsersConstant;
+use Zikula\UsersModule\Constant as UsersConstant;
 use Zikula\ProfileModule\Constant as ProfileConstant;
 
 /**

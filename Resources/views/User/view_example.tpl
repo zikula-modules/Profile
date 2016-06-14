@@ -15,7 +15,7 @@
                 {gravatar email_address=$userinfo.email}
             {/if}
         {else}
-            {modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
+            {modgetvar module='Zikula\UsersModule\Constant::MODNAME'|constant name='Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
             <img class="img-thumbnail" src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="" />
         {/if}
     {elseif ($modvars.ZikulaUsersModule.allowgravatars)}

@@ -14,7 +14,7 @@
 
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\Constant as ProfileConstant;
-use Zikula\Module\UsersModule\Constant as UsersConstant;
+use Zikula\UsersModule\Constant as UsersConstant;
 
 /**
  * Smarty function to display an editable dynamic user data field.

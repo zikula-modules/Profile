@@ -1,4 +1,4 @@
-{modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
+{modgetvar module='Zikula\UsersModule\Constant::MODNAME'|constant name='Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
 
 <div class="{$class|default:'form-group'}">
     <label for="prop_{$attributename}" class="col-sm-3 control-label{if ($required)} required{/if}">{gt text=$proplabeltext}</label>

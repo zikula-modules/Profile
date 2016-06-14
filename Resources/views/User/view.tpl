@@ -4,7 +4,7 @@
     {array_field array=$userinfo.__ATTRIBUTES__ field='user_information_first_name' returnValue=true assign='user_information_first_name'}
     {array_field array=$userinfo.__ATTRIBUTES__ field='user_information_middle_name' returnValue=true assign='user_information_middle_name'}
     {array_field array=$userinfo.__ATTRIBUTES__ field='user_information_last_name' returnValue=true assign='user_information_last_name'}
-    
+
     {setvar var='full_name' keys='user_information_first_name, user_information_middle_name, user_information_last_name`' values="`$user_information_first_name`, `$user_information_middle_name`, `$user_information_last_name`"}
 
     {if (!empty($full_name))}
@@ -54,7 +54,7 @@
                     {gravatar email_address=$userinfo.email}
                 {/if}
             {else}
-                {modgetvar module='Zikula\Module\UsersModule\Constant::MODNAME'|constant name='Zikula\Module\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
+                {modgetvar module='Zikula\UsersModule\Constant::MODNAME'|constant name='Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'|constant assign='avatarpath'}
                 <img class="img-thumbnail" src="{$avatarpath}/{$dudarray.avatar|safetext}" alt="{gt text='Avatar'}" />
             {/if}
         {elseif ($modvars.ZikulaUsersModule.allowgravatars)}

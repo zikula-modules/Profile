@@ -19,7 +19,7 @@
 namespace Zikula\ProfileModule\Api;
 
 use SecurityUtil;
-use Zikula\Module\UsersModule\Constant as UsersConstant;
+use Zikula\UsersModule\Constant as UsersConstant;
 use ModUtil;
 use System;
 use DateTime;
