@@ -93,6 +93,8 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                 EventUtil::unregisterPersistentModuleHandlers('Profile'); // use old name on purpose here
 
             case '2.0.0':
+                // nothing
+            case '2.0.1':
         }
 //        $modVars = $this->getVars();
 //        $defaultModVars = $this->getDefaultModVars();
@@ -246,7 +248,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
             'displaytype' => 0,
             'listoptions' => '',
             'note' => '',
-            'pattern' => null    
+            'pattern' => null
         ));
         $record['prop_attribute_name'] = 'icq';
         $prop = new PropertyEntity();
@@ -264,7 +266,7 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
             'displaytype' => 0,
             'listoptions' => '',
             'note' => '',
-            'pattern' => null    
+            'pattern' => null
         ));
         $record['prop_attribute_name'] = 'aim';
         $prop = new PropertyEntity();
