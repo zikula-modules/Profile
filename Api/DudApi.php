@@ -102,7 +102,7 @@ class DudApi extends \Zikula_AbstractApi
         // Determine the new weight
         $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
-        
+
         // insert the new field
         $obj = array();
         $obj['prop_label'] = $args['label'];
@@ -160,7 +160,7 @@ class DudApi extends \Zikula_AbstractApi
         }
         // delete the property data aka attributes
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')
+        $qb->delete('Zikula\\UsersModule\\Entity\\UserAttributeEntity', 'a')
             ->where('a.name = :name')
             ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();

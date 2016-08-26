@@ -78,7 +78,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         // begin the construction of the query
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select(array('u', 'a'))
-            ->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')
+            ->from('Zikula\\UsersModule\\Entity\\UserEntity', 'u')
             ->leftJoin('u.attributes', 'a')
             ->andWhere('u.uid > 1');
 
@@ -141,7 +141,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
         }
         $orderBy = false;
-        if (property_exists('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $sortBy)) {
+        if (property_exists('Zikula\\UsersModule\\Entity\\UserEntity', $sortBy)) {
             $qb->orderBy('u.' . $sortBy, $sortOrder);
             $orderBy = true;
         }
@@ -288,7 +288,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     public function getregisteredonline()
     {
         $dql = 'SELECT COUNT(s.uid)
-            FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s
+            FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s
             WHERE s.lastused > :activetime
             AND s.uid >= 2';
         $query = $this->entityManager->createQuery($dql);
@@ -309,7 +309,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     public function getlatestuser()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('u')->from('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u')->where('u.uid <> 1');
+        $qb->select('u')->from('Zikula\\UsersModule\\Entity\\UserEntity', 'u')->where('u.uid <> 1');
         if (ModUtil::getVar($this->name, 'filterunverified')) {
             $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
         }
@@ -341,7 +341,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             return false;
         }
         $dql = 'SELECT s.uid
-                FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s
+                FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s
                 WHERE s.lastused > :activetime
                 AND s.uid = :uid';
         $query = $this->entityManager->createQuery($dql);
@@ -366,7 +366,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     public function whosonline()
     {
         $dql = 'SELECT u, a
-            FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\Module\\UsersModule\\Entity\\UserEntity u
+            FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\UsersModule\\Entity\\UserEntity u
             LEFT JOIN u.attributes a
             WHERE s.lastused > :activetime
             AND (s.uid >= 2
@@ -394,7 +394,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     public function getallonline()
     {
         $dql = 'SELECT u
-            FROM Zikula\\Module\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\Module\\UsersModule\\Entity\\UserEntity u
+            FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\UsersModule\\Entity\\UserEntity u
             WHERE s.lastused > :activetime
             AND (s.uid >= 2
             AND s.uid = u.uid)

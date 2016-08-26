@@ -232,11 +232,11 @@ class AdminApi extends \Zikula_AbstractApi
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name.'::Item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
-            throw new AccessDeniedException(); 
+            throw new AccessDeniedException();
         }
         // delete the property data aka attributes
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->delete('Zikula\\Module\\UsersModule\\Entity\\UserAttributeEntity', 'a')
+        $qb->delete('Zikula\\UsersModule\\Entity\\UserAttributeEntity', 'a')
             ->where('a.name = :name')
             ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
