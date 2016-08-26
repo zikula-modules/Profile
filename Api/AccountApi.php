@@ -54,13 +54,13 @@ class AccountApi extends \Zikula_AbstractApi
                 'url' => $this->get('router')->generate('zikulaprofilemodule_user_view', array('uid' => $uid)),
                 'module' => $this->name,
                 'title' => $this->__('Profile'),
-                'icon' => 'admin.png');
+                'icon' => 'user');
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
                 $items[] = array(
                     'url' => $this->get('router')->generate('zikulaprofilemodule_user_viewmembers'),
                     'module' => $this->name,
                     'title' => $this->__('Registered Users'),
-                    'icon' => 'members.png');
+                    'icon' => 'users');
             }
         }
         // Return the items
