@@ -2,6 +2,12 @@
 CHANGELOG
 =========
 
+2.1.0
+=====
+    - Adapted to Zikula 1.4.3
+    - Migrated to Twig
+    - Migrated to Symfony Forms
+
 2.0.0
 =====
     - Core 1.4.0 Compatibility

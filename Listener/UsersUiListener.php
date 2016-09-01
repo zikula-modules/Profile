@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2011 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Listener;
@@ -34,24 +30,28 @@ class UsersUiListener implements EventSubscriberInterface
      * The area name that this handler processes.
      */
     const EVENT_KEY = 'module.profile.users_ui_handler';
+
     /**
      * The language domain for ZLanguage i18n.
      *
      * @var string|null
      */
     protected $domain = null;
+
     /**
      * Access to a Zikula_View instance for the Profile module.
      *
      * @var Zikula_View
      */
     protected $view;
+
     /**
      * Access to the request information.
      *
      * @var \Zikula_Request_Http
      */
     protected $request;
+
     /**
      * The validation object instance used when validating information entered during an edit phase.
      *
@@ -75,21 +75,21 @@ class UsersUiListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            'module.users.ui.display_view' => array('uiView'),
-            'module.users.ui.form_edit.new_user' => array('uiEdit'),
-            'module.users.ui.form_edit.modify_user' => array('uiEdit'),
-            'module.users.ui.form_edit.new_registration' => array('uiEdit'),
-            'module.users.ui.form_edit.modify_registration' => array('uiEdit'),
-            'module.users.ui.validate_edit.new_user' => array('validateEdit'),
-            'module.users.ui.validate_edit.modify_user' => array('validateEdit'),
-            'module.users.ui.validate_edit.new_registration' => array('validateEdit'),
-            'module.users.ui.validate_edit.modify_registration' => array('validateEdit'),
-            'module.users.ui.process_edit.new_user' => array('processEdit'),
-            'module.users.ui.process_edit.modify_user' => array('processEdit'),
-            'module.users.ui.process_edit.new_registration' => array('processEdit'),
-            'module.users.ui.process_edit.modify_registration' => array('processEdit'),
-        );
+        return [
+            'module.users.ui.display_view' => ['uiView'],
+            'module.users.ui.form_edit.new_user' => ['uiEdit'],
+            'module.users.ui.form_edit.modify_user' => ['uiEdit'],
+            'module.users.ui.form_edit.new_registration' => ['uiEdit'],
+            'module.users.ui.form_edit.modify_registration' => ['uiEdit'],
+            'module.users.ui.validate_edit.new_user' => ['validateEdit'],
+            'module.users.ui.validate_edit.modify_user' => ['validateEdit'],
+            'module.users.ui.validate_edit.new_registration' => ['validateEdit'],
+            'module.users.ui.validate_edit.modify_registration' => ['validateEdit'],
+            'module.users.ui.process_edit.new_user' => ['processEdit'],
+            'module.users.ui.process_edit.modify_user' => ['processEdit'],
+            'module.users.ui.process_edit.new_registration' => ['processEdit'],
+            'module.users.ui.process_edit.modify_registration' => ['processEdit']
+        ];
     }
 
     /**
@@ -131,10 +131,10 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiEdit(GenericEvent $event)
     {
-        $items = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'getallactive', array('get' => 'editable'));
+        $items = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'getallactive', ['get' => 'editable']);
         // The return value of the function is checked here
         if ($items) {
-            $fieldsets = array();
+            $fieldsets = [];
             foreach ($items as $propattr => $propdata) {
                 $items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : __('User Information', $this->domain);
                 $fieldsets[DataUtil::formatPermalink($items[$propattr]['prop_fieldset'])] = $items[$propattr]['prop_fieldset'];
@@ -149,7 +149,7 @@ class UsersUiListener implements EventSubscriberInterface
             if ($this->request->isMethod('POST') && $this->request->request->has('dynadata')) {
                 $dynadata = $this->request->request->get('dynadata');
             } else {
-                $dynadata = array();
+                $dynadata = [];
             }
             // merge this temporary dynadata and the errors into the items array
             foreach ($items as $prop_label => $item) {
@@ -162,7 +162,7 @@ class UsersUiListener implements EventSubscriberInterface
             if ($this->validation) {
                 $errorFields = $this->validation->getErrors();
             } else {
-                $errorFields = array();
+                $errorFields = [];
             }
             $this->getView()
                 ->setCaching(false)
@@ -192,11 +192,11 @@ class UsersUiListener implements EventSubscriberInterface
     {
 
         if ($this->request->isMethod('POST')) {
-            $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
+            $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
             $this->validation = new ValidationResponse('dynadata', $dynadata);
-            $requiredFailures = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'checkrequired', array(
+            $requiredFailures = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'checkrequired', [
                 'dynadata' => $dynadata
-            ));
+            ]);
             
             $errorCount = 0;
     
@@ -204,7 +204,7 @@ class UsersUiListener implements EventSubscriberInterface
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {
                     $this->validation->addError($fieldName, __f(
                         'The \'%1$s\' field is required.',
-                        array($requiredFailures['translatedFields'][$key]),
+                        [$requiredFailures['translatedFields'][$key]],
                         $this->domain)
                     );
 
@@ -218,9 +218,9 @@ class UsersUiListener implements EventSubscriberInterface
                     ->getFlashBag()
                     ->add('error', _fn(
                         'There was a problem with one of the personal information fields.',
-                        'There were problems with %1$d personal information fields.',
+                        'There were problems with %d personal information fields.',
                         $errorCount,
-                        array($errorCount),
+                        [$errorCount],
                         $this->domain)
                     );
             }
@@ -247,7 +247,7 @@ class UsersUiListener implements EventSubscriberInterface
         if ($this->request->isMethod('POST')) {
             if ($this->validation && !$this->validation->hasErrors()) {
                 $user = $event->getSubject();
-                $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : array();
+                $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
                 foreach ($dynadata as $dudName => $dudItem) {
                     UserUtil::setVar($dudName, $dudItem, $user['uid']);
                 }

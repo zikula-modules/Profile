@@ -49,7 +49,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="profile_dudregshow">{gt text='Personal info items to include in user registration form'}</label>
                 <div class="col-sm-9">
-					{foreach from=$fieldsets key="key" item='fieldset'}
+                    {foreach key='key' item='fieldset' from=$fieldsets}
                     <fieldset class="{$key}">
                         <legend>{$fieldset}</legend>
                         {foreach from=$dudfields key='key' item='item'}
@@ -70,7 +70,7 @@
                             {/if}
                         {/foreach}
                     </fieldset>
-					{/foreach}
+                    {/foreach}
                 </div>
             </div>
         </fieldset>

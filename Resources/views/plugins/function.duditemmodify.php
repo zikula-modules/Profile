@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/GPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 use Zikula\Core\Event\GenericEvent;
@@ -47,7 +43,7 @@ use Zikula\UsersModule\Constant as UsersConstant;
  *
  * @return string|boolean The results of the module function; empty string if the Profile module is not available; false if error.
  */
-function smarty_function_duditemmodify(array $params = array(), Zikula_View $view)
+function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
 {
 
     $sm = \ServiceUtil::getManager();
@@ -63,9 +59,9 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
     if (!isset($item)) {
         if (isset($proplabel)) {
-            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', array('proplabel' => $proplabel));
+            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', ['proplabel' => $proplabel]);
         } else if (isset($propattribute)) {
-            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', array('propattribute' => $propattribute));
+            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', ['propattribute' => $propattribute]);
         } else {
             return false;
         }
@@ -85,7 +81,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
     // skip the field if not configured to be on the registration form 
     if (($onregistrationform) && (!$item['prop_required'])) {
-        $dudregshow = ModUtil::getVar(ProfileConstant::MODNAME, 'dudregshow', array());
+        $dudregshow = ModUtil::getVar(ProfileConstant::MODNAME, 'dudregshow', []);
 
         if (!in_array($item['prop_attribute_name'], $dudregshow)) {
             return;
@@ -113,10 +109,11 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
 
     // try to get the DUD output if it's Third Party
     if ($item['prop_dtype'] != 1) {
-        $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit',
-            array('item' => $item,
-                'uservalue' => $uservalue,
-                'class' => $class));
+        $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit', [
+            'item' => $item,
+            'uservalue' => $uservalue,
+            'class' => $class
+        ]);
         if ($output) {
             return $output;
         }
@@ -181,7 +178,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         }
         $view->assign('value', DataUtil::formatForDisplay($uservalue));
         $avatarPath = ModUtil::getVar(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
-        $filelist = FileUtil::getFiles($avatarPath, false, true, array('gif', 'jpg', 'png'), 'f');
+        $filelist = FileUtil::getFiles($avatarPath, false, true, ['gif', 'jpg', 'png'], 'f');
         asort($filelist);
 
         $listoutput = $listoptions = $filelist;
@@ -216,7 +213,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         case 2: // CHECKBOX
             $type = 'checkbox';
 
-            $options = array('No', 'Yes');
+            $options = ['No', 'Yes'];
 
             if (!empty($item['prop_listoptions'])) {
                 $options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
@@ -235,7 +232,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
         case 3: // RADIO
             $type = 'radio';
 
-            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
 
             $view->assign('listoptions', array_keys($options));
             $view->assign('listoutput', array_values($options));
@@ -252,12 +249,12 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             $selectmultiple = $options[0] ? ' multiple="multiple"' : '';
             $view->assign('selectmultiple', $selectmultiple);
 
-            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
 
             $event_subject = $user;
-            $event_args = array(
+            $event_args = [
                 'item' => $item
-            );
+            ];
             $event_data = $options;
 
             $event = new GenericEvent($event_subject, $event_args, $event_data);
@@ -275,28 +272,27 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             $type = 'date';
 
             // gets the format to use
-            $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
+            $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
 
             switch (trim(strtolower($format))) {
                 case 'us':
-                    $formats = array(
+                    $formats = [
                         'dt' => 'F j, Y',
                         'js' => 'MM d, yy',
-                    );
+                    ];
                     break;
                 case 'db':
-                    $formats = array(
+                    $formats = [
                         'dt' => 'Y-m-d',
                         'js' => 'yy-mm-dd',
-                    );
+                    ];
                     break;
                 default:
                 case 'eur':
-                    $formats = array(
+                    $formats = [
                         'dt' => 'j F Y',
                         'js' => 'd MM yy',
-                    );
-
+                    ];
                     break;
             }
 
@@ -317,7 +313,7 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
             $type = 'multicheckbox';
             $view->assign('value', (array)unserialize($uservalue));
 
-            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', array('item' => $item));
+            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
 
             $view->assign('fields', $options);
             break;
@@ -328,5 +324,4 @@ function smarty_function_duditemmodify(array $params = array(), Zikula_View $vie
     }
 
     return $view->fetch('file:'.$kernel->getRootDir().'/../'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/'.$type.'.tpl');
-
 }

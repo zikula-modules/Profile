@@ -1,4 +1,4 @@
-// Copyright 2011 Zikula Foundation.
+// Copyright Zikula Foundation, licensed MIT.
 
 function showavatar()
 {

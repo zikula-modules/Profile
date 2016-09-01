@@ -1,45 +1,41 @@
-// Copyright 2011 Zikula Foundation.
+// Copyright Zikula Foundation, licensed MIT.
 
 function profileinit()
 {
-    Sortable.create('profilelist',
-                    { 
-                      only: 'z-sortable',
-                      constraint: false,
-                      onUpdate: profileweightchanged
-                    });
+    Sortable.create('profilelist', { 
+        only: 'z-sortable',
+        constraint: false,
+        onUpdate: profileweightchanged
+    });
 
     $$('a.profile_down').each(function(arrow){arrow.hide();});
     $$('a.profile_up').each(function(arrow){arrow.hide();});
     $('profilehint').show();
 
-    $A(document.getElementsByClassName('z-sortable', 'profilelist')).each(
-        function(node) 
-        { 
-            node.setStyle({'cursor': 'move'}); 
-            var thisprofileid = node.id.split('_')[1];
-            Element.addClassName('profile_' + thisprofileid, 'sortable')
+    $A(document.getElementsByClassName('z-sortable', 'profilelist')).each(function (node) { 
+        node.setStyle({'cursor': 'move'}); 
+        var thisprofileid = node.id.split('_')[1];
+        Element.addClassName('profile_' + thisprofileid, 'sortable')
 
-            $('profilestatus_'+thisprofileid).setAttribute('href', '#');
-            $('profilestatus_'+thisprofileid).setAttribute('onclick', 'return false;');
+        $('profilestatus_'+thisprofileid).setAttribute('href', '#');
+        $('profilestatus_'+thisprofileid).setAttribute('onclick', 'return false;');
 
-            // add an event to the status link
-            var link = $('profilestatus_'+thisprofileid);
-            Event.observe(link, 'click',
-                function() {
-                    var prop_id    = this.id.split('_')[1];
-                    var thisstatus = this.getAttribute('class').split('_')[1];
-                    profilestatuschanged(prop_id, thisstatus)
-                }
-            )
-
-            // parse the status and change the inactive li items ids
-            var thisstatus = link.getAttribute('class').split('_')[1];
-            if (thisstatus == '0') {
-            	$('profile_'+thisprofileid).setAttribute('id', 'profile'+thisprofileid);
+        // add an event to the status link
+        var link = $('profilestatus_'+thisprofileid);
+        Event.observe(link, 'click',
+            function() {
+                var prop_id    = this.id.split('_')[1];
+                var thisstatus = this.getAttribute('class').split('_')[1];
+                profilestatuschanged(prop_id, thisstatus)
             }
+        )
+
+        // parse the status and change the inactive li items ids
+        var thisstatus = link.getAttribute('class').split('_')[1];
+        if (thisstatus == '0') {
+            $('profile_'+thisprofileid).setAttribute('id', 'profile'+thisprofileid);
         }
-    )
+    });
 }
 
 /**
@@ -48,7 +44,6 @@ function profileinit()
  *
  * @params none;
  * @return void;
- * @author Frank Schummertz
  */
 function profileweightchanged()
 {
@@ -70,7 +65,6 @@ function profileweightchanged()
  *
  * @params none;
  * @return void;
- * @author Frank Schummertz
  */
 function profileweightchanged_response(req)
 {
@@ -88,7 +82,6 @@ function profileweightchanged_response(req)
  * @params prop_id property ID;
  * @params oldstatus current value to switch;
  * @return void;
- * @author Mateo Tibaquira
  */
 function profilestatuschanged(prop_id, oldstatus)
 {
@@ -110,7 +103,6 @@ function profilestatuschanged(prop_id, oldstatus)
  *
  * @params none;
  * @return void;
- * @author Mateo Tibaquira
  */
 function profilestatuschanged_response(req)
 {

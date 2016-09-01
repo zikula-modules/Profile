@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2011 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule;
@@ -26,26 +22,25 @@ class ProfileModuleVersion extends \Zikula_AbstractVersion
      */
     public function getMetaData()
     {
-        return array(
+        return [
             'displayname' => $this->__('Profile'),
-            'oldnames' => array('Profile'),
+            'oldnames' => ['Profile'],
             'description' => $this->__('Provides a personal account control panel for each registered user, an interface to administer the personal information items displayed within it, and a registered users list functionality. Works in close unison with the \'Users\' module.'),
             'url' => $this->__('profile'),
-            'version' => '2.0.1',
+            'version' => '2.1.0',
             'core_min' => '1.4.0',
             'core_max' => '1.4.99',
-            'capabilities' => array(
-                'profile' => array('version' => '1.0')
-            ),
-            'securityschema' => array(
+            'capabilities' => [
+                'profile' => ['version' => '1.0']
+            ],
+            'securityschema' => [
                 $this->name.'::' => '::',
                 $this->name.'::view' => '::',
                 $this->name.'::item' => 'DynamicUserData PropertyName::DynamicUserData PropertyID',
                 $this->name.':Members:' => '::',
                 $this->name.':Members:recent' => '::',
                 $this->name.':Members:online' => '::'
-            )
-        );
+            ]
+        ];
     }
-
 }

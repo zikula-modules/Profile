@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Zikula Application Framework
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Controller;
@@ -55,10 +51,10 @@ class FormController extends \Zikula_AbstractController
         // can't use this function directly
         if (ModUtil::getName() == $this->name) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
-            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', [], RouterInterface::ABSOLUTE_URL));
         }
         // The API function is called.
-        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('get' => 'editable'));
+        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['get' => 'editable']);
         // The return value of the function is checked here
         if ($items == false) {
             return '';
@@ -66,7 +62,7 @@ class FormController extends \Zikula_AbstractController
         // check if there's a user to edit
         // or uses uid=1 to pull the default values from the annonymous user
         $userid = isset($args['userid']) ? $args['userid'] : 1;
-        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : $request->request->get('dynadata', array());
+        $dynadata = isset($args['dynadata']) ? $args['dynadata'] : $request->request->get('dynadata', []);
         // merge this temporary dynadata and the errors into the items array
         foreach ($items as $prop_label => $item) {
             foreach ($dynadata as $propname => $propdata) {
@@ -93,7 +89,7 @@ class FormController extends \Zikula_AbstractController
         // can't use this function directly
         if (ModUtil::getName() == $this->name) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
-            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', [], RouterInterface::ABSOLUTE_URL));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive');
@@ -134,7 +130,7 @@ class FormController extends \Zikula_AbstractController
         // can't use this function directly
         if (ModUtil::getName() == $this->name) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
-            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', array(), RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', [], RouterInterface::ABSOLUTE_URL));
         }
         // The API function is called.
         $items = ModUtil::apiFunc($this->name, 'user', 'getallactive');
@@ -142,12 +138,11 @@ class FormController extends \Zikula_AbstractController
         if ($items == false) {
             return '';
         }
-        $userinfo = isset($args['userinfo']) ? $args['userinfo'] : array();
+        $userinfo = isset($args['userinfo']) ? $args['userinfo'] : [];
         // Create output object
         $this->view->assign('duditems', $items)
             ->assign('userinfo', $userinfo);
         // Return the dynamic data rows
         return new Response($this->view->fetch('Form/display.tpl'));
     }
-
 }

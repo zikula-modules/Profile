@@ -1,19 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/GPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
- */
-
-/**
- * API functions related to dynamic user data field management.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Api;
@@ -25,6 +17,9 @@ use System;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * Dynamic user data field management api.
+ */
 class DudApi extends \Zikula_AbstractApi
 {
     /**
@@ -52,7 +47,6 @@ class DudApi extends \Zikula_AbstractApi
      */
     public function register($args)
     {
-
         if (!isset($args['modname'])
             || empty($args['modname'])
             || !isset($args['label'])
@@ -79,7 +73,11 @@ class DudApi extends \Zikula_AbstractApi
             return false;
         }
         // parses the DUD type
-        $dtypes = array(-1 => 'noneditable', 0 => 'mandatory', 2 => 'normal');
+        $dtypes = [
+            -1 => 'noneditable',
+            0 => 'mandatory',
+            2 => 'normal'
+        ];
         if (!in_array($args['dtype'], $dtypes)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
             return false;
@@ -89,12 +87,12 @@ class DudApi extends \Zikula_AbstractApi
         $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
         $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
         // Check if the label or attribute name already exists
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('proplabel' => $args['label']));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['proplabel' => $args['label']]);
         if ($item) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
             return false;
         }
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', array('propattribute' => $args['attribute_name']));
+        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
             return false;
@@ -104,7 +102,7 @@ class DudApi extends \Zikula_AbstractApi
         $weight = $weightlimits['max'] + 1;
 
         // insert the new field
-        $obj = array();
+        $obj = [];
         $obj['prop_label'] = $args['label'];
         $obj['prop_attribute_name'] = $args['attribute_name'];
         $obj['prop_dtype'] = array_search($args['dtype'], $dtypes);
@@ -115,6 +113,7 @@ class DudApi extends \Zikula_AbstractApi
         $prop->merge($obj);
         $this->entityManager->persist($prop);
         $this->entityManager->flush();
+
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
 
@@ -146,9 +145,9 @@ class DudApi extends \Zikula_AbstractApi
         if (isset($args['propid'])) {
             $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->find((int)$args['propid']);
         } elseif (isset($args['proplabel'])) {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(array('prop_label' => $args['proplabel']));
+            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(['prop_label' => $args['proplabel']]);
         } else {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(array('prop_attribute_name' => $args['propattribute']));
+            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(['prop_attribute_name' => $args['propattribute']]);
         }
         // Check for no rows found, and if so return
         if (!$item) {
@@ -169,6 +168,7 @@ class DudApi extends \Zikula_AbstractApi
             ->where('p.prop_id = :id')
             ->setParameter('id', $item['prop_id']);
         $qb->getQuery()->execute();
+
         // Let the calling process know that we have finished successfully
         return true;
     }
@@ -199,14 +199,17 @@ class DudApi extends \Zikula_AbstractApi
         }
         // get both option arrays
         $oldoptions = $this->getoptions($args);
-        $params = array('field' => isset($args['newfield']) ? $args['newfield'] : null, 'item' => isset($args['newitem']) ? $args['newitem'] : null);
+        $params = [
+            'field' => isset($args['newfield']) ? $args['newfield'] : null,
+            'item' => isset($args['newitem']) ? $args['newitem'] : null
+        ];
         $newoptions = $this->getoptions($params);
         unset($params);
         unset($args);
         // get the old value(s)
         $value = $uservalue;
         if (is_array($uservalue)) {
-            $value = array();
+            $value = [];
             foreach ($uservalue as $v) {
                 // paranoic check
                 if (empty($v)) {
@@ -227,7 +230,7 @@ class DudApi extends \Zikula_AbstractApi
         $newoptions = array_flip($newoptions);
         $newvalue = '';
         if ($value) {
-            $newvalue = array();
+            $newvalue = [];
             foreach ($value as $v) {
                 // paranoic check
                 if (empty($v)) {
@@ -239,6 +242,7 @@ class DudApi extends \Zikula_AbstractApi
         } elseif (isset($newoptions[$value])) {
             $newvalue = !empty($newoptions[$value]) ? $newoptions[$value] : $value;
         }
+
         // return the updated item
         return $newvalue;
     }
@@ -258,18 +262,18 @@ class DudApi extends \Zikula_AbstractApi
     public function getoptions($args)
     {
         if ((!isset($args['field']) || empty($args['field'])) && (!isset($args['item']) || empty($args['item']))) {
-            return array();
+            return [];
         }
         if (isset($args['field'])) {
             $args['field'] = @unserialize($args['field']);
-            $args['item'] = array();
+            $args['item'] = [];
             foreach ($args['field'] as $k => $v) {
                 $args['item']["prop_{$k}"] = $v;
             }
         }
         $item = $args['item'];
         unset($args);
-        $options = array();
+        $options = [];
         switch ($item['prop_displaytype']) {
             case 3:
                 // RADIO
@@ -311,7 +315,7 @@ class DudApi extends \Zikula_AbstractApi
                 }
                 break;
         }
+
         return $options;
     }
-
 }

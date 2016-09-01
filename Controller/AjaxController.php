@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/GPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Controller;
@@ -61,10 +57,10 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $startnum = $request->get('startnum', null);
         if ($startnum < 0) {
 
-            return new BadDataResponse(array(), $this->__f('Error! Invalid \'%s\' passed.', 'startnum'));
+            return new BadDataResponse([], $this->__f('Error! Invalid \'%s\' passed.', 'startnum'));
         }
         // update the items with the new weights
-        $props = array();
+        $props = [];
         $weight = $startnum + 1;
         parse_str($profilelist);
         foreach ($profilelist as $prop_id) {
@@ -78,7 +74,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         // update the db
         $this->entityManager->flush();
 
-        return new AjaxResponse(array('result' => true));
+        return new AjaxResponse(['result' => true]);
     }
 
     /**
@@ -106,17 +102,17 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $oldstatus = (bool)$request->get('oldstatus', null);
         if (!$prop_id) {
 
-            return new NotFoundResponse(array('result' => false));
+            return new NotFoundResponse(['result' => false]);
         }
         // update the item status
         $func = $oldstatus ? 'deactivate' : 'activate';
-        $res = ModUtil::apiFunc($this->name, 'admin', $func, array('dudid' => $prop_id));
+        $res = ModUtil::apiFunc($this->name, 'admin', $func, ['dudid' => $prop_id]);
         if (!$res) {
 
             return new FatalResponse($this->__('Error! Could not save your changes.'));
         }
 
-        return new AjaxResponse(array('result' => true, 'dudid' => $prop_id, 'newstatus' => !$oldstatus));
+        return new AjaxResponse(['result' => true, 'dudid' => $prop_id, 'newstatus' => !$oldstatus]);
     }
 
     /**
@@ -146,15 +142,14 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $args = $request->get('args', null);
         if (empty($uid) || !is_numeric($uid) || empty($name)) {
 
-            return new NotFoundResponse(array('result' => false));
+            return new NotFoundResponse(['result' => false]);
         }
         if (empty($args) || !is_array($args)) {
-            $args = array();
+            $args = [];
         }
         // update the item status
-        $section = ModUtil::apiFunc($this->name, 'section', $name, array_merge($args, array('uid' => $uid)));
+        $section = ModUtil::apiFunc($this->name, 'section', $name, array_merge($args, ['uid' => $uid]));
         if (!$section) {
-
             return new FatalResponse($this->__('Error! Could not load the section.'));
         }
         // build the output
@@ -163,12 +158,11 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $template = "sections/profile_section_{$name}.tpl";
         if (!$this->view->template_exists($template)) {
 
-            return new NotFoundResponse(array('result' => false));
+            return new NotFoundResponse(['result' => false]);
         }
         // assign and render the output
         $this->view->assign('section', $section);
 
-        return new AjaxResponse(array('result' => $this->view->fetch($template, $uid), 'name' => $name, 'uid' => $uid));
+        return new AjaxResponse(['result' => $this->view->fetch($template, $uid), 'name' => $name, 'uid' => $uid]);
     }
-
 }

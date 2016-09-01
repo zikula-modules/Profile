@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/GPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Api;
@@ -20,7 +16,7 @@ use System;
 use UserUtil;
 
 /**
- * The Account API provides links for modules on the "user account page"; this class provides them for the Profile module.
+ * User account links api.
  */
 class AccountApi extends \Zikula_AbstractApi
 {
@@ -33,11 +29,11 @@ class AccountApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return   array   array of items, or false on failure
+     * @return array array of items, or false on failure
      */
-    public function getall(array $args = array())
+    public function getall(array $args = [])
     {
-        $items = array();
+        $items = [];
         // do not show the account links if Profile is not the Profile manager
         $profilemodule = System::getVar('profilemodule', '');
         if ($profilemodule != $this->name) {
@@ -50,21 +46,23 @@ class AccountApi extends \Zikula_AbstractApi
         // Create an array of links to return
         if (!empty($uname)) {
             $uid = UserUtil::getIdFromName($uname);
-            $items[] = array(
-                'url' => $this->get('router')->generate('zikulaprofilemodule_user_view', array('uid' => $uid)),
+            $items[] = [
+                'url' => $this->get('router')->generate('zikulaprofilemodule_user_view', ['uid' => $uid]),
                 'module' => $this->name,
                 'title' => $this->__('Profile'),
-                'icon' => 'user');
+                'icon' => 'user'
+            ];
             if (SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
-                $items[] = array(
+                $items[] = [
                     'url' => $this->get('router')->generate('zikulaprofilemodule_user_viewmembers'),
                     'module' => $this->name,
                     'title' => $this->__('Registered Users'),
-                    'icon' => 'users');
+                    'icon' => 'users'
+                ];
             }
         }
+
         // Return the items
         return $items;
     }
-
 }

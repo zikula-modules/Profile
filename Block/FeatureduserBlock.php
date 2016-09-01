@@ -1,15 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/GPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Block;
@@ -42,7 +38,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
      */
     public function info()
     {
-        return array(
+        return [
             'module' => $this->name,
             'text_type' => $this->__('Featured user'),
             'text_type_long' => $this->__('Show featured user'),
@@ -50,7 +46,8 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             'form_content' => false,
             'form_refresh' => false,
             'show_preview' => true,
-            'admin_tableless' => true);
+            'admin_tableless' => true
+        ];
     }
 
     /**
@@ -70,6 +67,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         if (!SecurityUtil::checkPermission($this->name.':FeaturedUserblock:', "{$blockinfo['bid']}::", ACCESS_READ)) {
             return false;
         }
+
         // Get variables from content block
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // If there's no user to show, nothing to do
@@ -78,7 +76,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         }
         // Defaults
         if (!isset($vars['fieldstoshow']) || !is_array($vars['fieldstoshow']) || empty($vars['fieldstoshow'])) {
-            $vars['fieldstoshow'] = array();
+            $vars['fieldstoshow'] = [];
         }
         if (!isset($vars['showregdate']) || empty($vars['showregdate'])) {
             $vars['showregdate'] = '';
@@ -93,8 +91,8 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             $isadmin = true;
         }
         // get all active profile fields
-        $dudarray = array();
-        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('index' => 'prop_label'));
+        $dudarray = [];
+        $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['index' => 'prop_label']);
         foreach ($activeduds as $dudlabel => $activedud) {
             // check if the attribute is set to be shown in the block
             if (!in_array($activedud['prop_attribute_name'], $vars['fieldstoshow'])) {
@@ -120,10 +118,11 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         unset($activeduds);
         // build the output
         $this->view->setCacheId('featured' . $vars['username']);
-        $this->view->assign('userinfo', $userinfo);
-        $this->view->assign('showregdate', $vars['showregdate']);
-        $this->view->assign('dudarray', $dudarray);
+        $this->view->assign('userinfo', $userinfo)
+                   ->assign('showregdate', $vars['showregdate'])
+                   ->assign('dudarray', $dudarray);
         $blockinfo['content'] = $this->view->fetch('Block/featureduser.tpl');
+
         return BlockUtil::themeBlock($blockinfo);
     }
 
@@ -143,24 +142,25 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
             $vars['username'] = '';
         }
         if (!isset($vars['fieldstoshow']) || !is_array($vars['fieldstoshow']) || empty($vars['fieldstoshow'])) {
-            $vars['fieldstoshow'] = array();
+            $vars['fieldstoshow'] = [];
         }
         if (!isset($vars['showregdate']) || empty($vars['showregdate'])) {
             $vars['showregdate'] = '';
         }
         // get all active profile fields
         $activeduds = ModUtil::apiFunc($this->name, 'user', 'getallactive');
-        $dudarray = array();
+        $dudarray = [];
         foreach ($activeduds as $attr => $activedud) {
             $dudarray[$attr] = $this->__($activedud['prop_label']);
         }
         // Create output object
         $this->view->setCaching(false);
         // assign the approriate values
-        $this->view->assign('username', $vars['username']);
-        $this->view->assign('showregdate', $vars['showregdate']);
-        $this->view->assign('dudarray', $dudarray);
-        $this->view->assign('fieldstoshow', array_flip($vars['fieldstoshow']));
+        $this->view->assign('username', $vars['username'])
+                   ->assign('showregdate', $vars['showregdate'])
+                   ->assign('dudarray', $dudarray)
+                   ->assign('fieldstoshow', array_flip($vars['fieldstoshow']));
+
         // Return the output that has been generated by this function
         return $this->view->fetch('Block/featureduser_modify.tpl');
     }
@@ -187,7 +187,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         $vars['fieldstoshow'] = $this->request->request->get('fieldstoshow', null);
         $vars['showregdate'] = (bool)$this->request->request->get('showregdate', null);
         if (!isset($vars['fieldstoshow']) || !is_array($vars['fieldstoshow']) || empty($vars['fieldstoshow'])) {
-            $vars['fieldstoshow'] = array();
+            $vars['fieldstoshow'] = [];
         }
         // validate the passed duds
         if (!empty($vars['fieldstoshow'])) {
@@ -203,7 +203,7 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
         // clear the block cache
         $this->view->clear_cache('Block/featureduser.tpl');
+
         return $blockinfo;
     }
-
 }

@@ -1,6 +1,6 @@
 {
     "name": "zikula/profile-module",
-    "description": "Extends Zikula's user management.",
+    "description": "User profiles and member list",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
     "authors": [

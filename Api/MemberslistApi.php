@@ -1,19 +1,11 @@
 <?php
-/**
- * Copyright Zikula Foundation 2009 - Profile module for Zikula
+/*
+ * This file is part of the Zikula package.
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * Copyright Zikula Foundation - http://zikula.org/
  *
- * @license GNU/GPLv3 (or at your option, any later version).
- * @package Profile
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
- */
-
-/**
- * API functions related to member list management.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\ProfileModule\Api;
@@ -25,6 +17,9 @@ use System;
 use DateTime;
 use Doctrine\ORM\NoResultException;
 
+/**
+ * Member list management api.
+ */
 class MemberslistApi extends \Zikula_AbstractApi
 {
     /**
@@ -52,12 +47,12 @@ class MemberslistApi extends \Zikula_AbstractApi
     protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
         if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string)(int)$startNum || $startNum < -1) {
-            throw new \InvalidArgumentException($this->__f('Invalid %1$s.', array('startNum')));
+            throw new \InvalidArgumentException($this->__f('Invalid %s.', ['startNum']));
         } elseif ($startNum <= 0) {
             $startNum = -1;
         }
         if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string)(int)$numItems || $numItems != -1 && $numItems < 1) {
-            throw new \InvalidArgumentException($this->__f('Invalid %1$s.', array('numItems')));
+            throw new \InvalidArgumentException($this->__f('Invalid %s.', ['numItems']));
         }
         if (!isset($sortBy) || empty($sortBy)) {
             $sortBy = 'uname';
@@ -73,11 +68,11 @@ class MemberslistApi extends \Zikula_AbstractApi
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
-            return array();
+            return [];
         }
         // begin the construction of the query
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select(array('u', 'a'))
+        $qb->select(['u', 'a'])
             ->from('Zikula\\UsersModule\\Entity\\UserEntity', 'u')
             ->leftJoin('u.attributes', 'a')
             ->andWhere('u.uid > 1');
@@ -87,7 +82,7 @@ class MemberslistApi extends \Zikula_AbstractApi
                 $qb->andWhere($qb->expr()->like('u.uname', ':letter'))->setParameter('letter', $letter . '%');
             } else {
                 if (!empty($letter)) {
-                    $otherList = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$');
+                    $otherList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$'];
                     $or = $qb->expr()->orX();
                     foreach ($otherList as $other) {
                         $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%'))); // allowed 'literal' because var from internal array
@@ -126,7 +121,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             } else {
                 $activePropertiesByName = ModUtil::apiFunc($this->name, 'user', 'getallactive');
                 if (is_numeric($searchBy)) {
-                    $activeProperties = ModUtil::apiFunc($this->name, 'user', 'getallactive', array('index' => 'prop_id'));
+                    $activeProperties = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['index' => 'prop_id']);
                     $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $activeProperties[$searchBy]['prop_attribute_name'])
                         ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%' . $letter . '%');
@@ -161,23 +156,25 @@ class MemberslistApi extends \Zikula_AbstractApi
         } catch (\Exception $e) {
             throw new \RuntimeException($this->__('Query failed.'), 0, $e);
         }
+
         if ($countOnly) {
             return count($users);
-        } else {
-            $usersArray = array();
-            foreach ($users as $k => $user) {
-                if ($returnUids) {
-                    $usersArray[$k] = $user['uid'];
-                } else {
-                    $usersArray[$user['uid']] = $user;
-                    // reformat attributes array
-                    foreach($user['attributes'] as $name => $attr) {
-                        $usersArray[$user['uid']]['attributes'][$name] = $attr['value'];
-                    }
+        }
+
+        $usersArray = [];
+        foreach ($users as $k => $user) {
+            if ($returnUids) {
+                $usersArray[$k] = $user['uid'];
+            } else {
+                $usersArray[$user['uid']] = $user;
+                // reformat attributes array
+                foreach($user['attributes'] as $name => $attr) {
+                    $usersArray[$user['uid']]['attributes'][$name] = $attr['value'];
                 }
             }
-            return $usersArray;
         }
+
+        return $usersArray;
     }
 
     /**
@@ -230,6 +227,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         } else {
             $args['returnUids'] = (bool)$args['returnUids'];
         }
+
         return $this->getOrCountAll(
             false,
             $args['searchby'],
@@ -271,6 +269,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         }
         $sortBy = 'uname';
         $sortOrder = 'ASC';
+
         return $this->getOrCountAll(
             true,
             $args['searchby'],
@@ -297,6 +296,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
         $numusers = $query->getSingleScalarResult();
+
         // Return the number of items
         return $numusers;
     }
@@ -317,10 +317,11 @@ class MemberslistApi extends \Zikula_AbstractApi
         $user = $qb->getQuery()->getSingleResult();
         if ($user) {
             return $user->getUid();
-        } else {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load data.'));
-            return false;
         }
+
+        // TODO $this->request is invalid!
+        $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load data.'));
+        return false;
     }
 
     /**
@@ -355,6 +356,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         } catch (NoResultException $e) {
             return false;
         }
+
         return true;
     }
 
@@ -383,6 +385,7 @@ class MemberslistApi extends \Zikula_AbstractApi
                 $onlineusers[$k]['attributes'][$name] = $attr['value'];
             }
         }
+
         return $onlineusers;
     }
 
@@ -407,7 +410,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $query->setParameter('activetime', $activetime);
         $onlineusers = $query->getArrayResult();
         $numguests = 0;
-        $unames = array();
+        $unames = [];
         foreach ($onlineusers as $key => $user) {
             if ($user['uid'] != 1) {
                 $unames[$user['uname']] = $user;
@@ -418,11 +421,13 @@ class MemberslistApi extends \Zikula_AbstractApi
         ksort($unames);
         $unames = array_values($unames);
         $numusers = count($unames);
-        $items = array(
+        $items = [
             'unames' => $unames,
             'numusers' => $numusers,
             'numguests' => $numguests,
-            'total' => $numguests + $numusers);
+            'total' => $numguests + $numusers
+        ];
+
         return $items;
     }
 
@@ -437,7 +442,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         if (!ModUtil::available($msgmodule)) {
             $msgmodule = '';
         }
+
         return $msgmodule;
     }
-
 }
