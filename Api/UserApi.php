@@ -72,6 +72,7 @@ class UserApi extends \Zikula_AbstractApi
                 unset($items[$k]);
             }
         }
+
         // Return the items
         return $items;
     }
@@ -120,6 +121,7 @@ class UserApi extends \Zikula_AbstractApi
         foreach ((array)$validationinfo as $infolabel => $infofield) {
             $item['prop_' . $infolabel] = $infofield;
         }
+
         // Return the item array
         return $item;
     }
@@ -339,6 +341,7 @@ class UserApi extends \Zikula_AbstractApi
                 UserUtil::setVar($attrname, $fieldvalue, $args['uid']);
             }
         }
+
         // Return the result (true = success, false = failure
         // At this point, the result is true.
         return true;
@@ -420,6 +423,7 @@ class UserApi extends \Zikula_AbstractApi
         if (!empty($error)) {
             $error['translatedFieldsStr'] = join(', ', $error['translatedFields']);
         }
+
         // Return the result
         return $error;
     }
@@ -443,6 +447,7 @@ class UserApi extends \Zikula_AbstractApi
         if ($empty && is_numeric($value) && $value == 0) {
             $empty = false;
         }
+
         return $empty;
     }
 
@@ -524,6 +529,7 @@ class UserApi extends \Zikula_AbstractApi
         if (!empty($params['searchby'])) {
             $uids = ModUtil::apiFunc($this->name, 'memberslist', 'getall', $params);
         }
+
         return $uids;
     }
 
@@ -563,6 +569,7 @@ class UserApi extends \Zikula_AbstractApi
         if (isset($args['vars'][4])) {
             System::queryStringSetVar('page', $args['vars'][4]);
         }
+
         return true;
     }
 
@@ -608,80 +615,8 @@ class UserApi extends \Zikula_AbstractApi
         if (isset($args['args']['page'])) {
             $vars .= "/{$args['args']['page']}";
         }
+
         // construct the custom url part
         return $args['modname'] . '/' . $args['func'] . '/' . $vars;
-    }
-
-    /**
-     * get module links
-     *
-     * @return array array of admin links
-     */
-    public function getLinks()
-    {
-
-        $message_module = System::getVar('messagemodule');
-
-        $links = [];
-
-        if (UserUtil::isLoggedIn() && SecurityUtil::checkPermission('ZikulaUsersModule::', '::', ACCESS_READ)) {
-            $links[0] = [
-                'icon' => 'wrench',
-                'text' => $this->__('Account Settings'),
-                'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_index')
-            ];
-        }
-
-        if (UserUtil::isLoggedIn() && ModUtil::available($this->name) && SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
-            $links[1] = [
-                'icon' => 'user',
-                'links' => [
-                    [
-                        'text' => $this->__('Edit Profile'),
-                        'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_modify')
-                    ],
-                    [
-                        'text' => $this->__('Change Email Address'),
-                        'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_changeemail')
-                    ],
-                    [
-                        'text' => $this->__('Change Password'),
-                        'url' => $this->getContainer()->get('router')->generate('zikulausersmodule_user_changepassword')
-                    ]
-                ],
-                'text' => $this->__('Profile'),
-                'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_view') 
-            ];
-        }
-
-        if (UserUtil::isLoggedIn() && ModUtil::available($message_module) && SecurityUtil::checkPermission($message_module.'::', '::', ACCESS_READ)) {
-            $links[2] = [
-                'icon' => 'envelope',
-                'text' => $this->__('Messages'),
-                'url' => ModUtil::url($message_module, 'user', 'main') 
-            ];
-        }
-
-        if (ModUtil::available($this->name) && SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
-            $links[3] = [
-                'text' => $this->__('Registered Users'),
-                'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_viewmembers'),
-                'icon' => 'list'
-            ];
-            if (SecurityUtil::checkPermission($this->name.':Members:recent', '::', ACCESS_READ)) {
-                $links[3]['links'][] = [
-                    'text' => $this->__f('Last %s Registered Users', ModUtil::getVar($this->name, 'recentmembersitemsperpage')),
-                    'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_recentmembers')      
-                );
-            ]
-            if (SecurityUtil::checkPermission($this->name.':Members:online', '::', ACCESS_READ)) {
-                $links[3]['links'][] = [
-                    'text' => $this->__('Users Online'),
-                    'url' => $this->getContainer()->get('router')->generate('zikulaprofilemodule_user_onlinemembers')       
-                ];
-            }
-        }
-
-        return $links;
     }
 }

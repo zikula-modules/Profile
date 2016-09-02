@@ -22,6 +22,13 @@ use Zikula\ProfileModule\Entity\PropertyEntity;
 class ProfileModuleInstaller extends AbstractExtensionInstaller
 {
     /**
+     * @var array
+     */
+    private $entities = [
+        'Zikula\ProfileModule\Entity\PropertyEntity'
+    ];
+
+    /**
      * Provides an array containing default values for module variables (settings).
      *
      * @return array An array indexed by variable name containing the default values for those variables
@@ -45,9 +52,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     public function install()
     {
         try {
-            $this->schemaTool->create([
-                'Zikula\ProfileModule\Entity\PropertyEntity'
-            ]);
+            $this->schemaTool->create($this->entities);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
 
@@ -125,9 +130,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     public function uninstall()
     {
         try {
-            $this->schemaTool->drop([
-                'Zikula\ProfileModule\Entity\PropertyEntity'
-            ]);
+            $this->schemaTool->drop($this->entities);
         } catch (\PDOException $e) {
             $this->addFlash('error', $e->getMessage());
 

@@ -5,11 +5,22 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="zikulaprofilemodule.event_listener.class">Zikula\ProfileModule\Listener\UsersUiListener</parameter>
+        <parameter key="zikula_profile_module.container.link_container.class">Zikula\ProfileModule\Container\LinkContainer</parameter>
+        <parameter key="zikula_profile_module.event_listener.class">Zikula\ProfileModule\Listener\UsersUiListener</parameter>
     </parameters>
 
     <services>
-        <service id="zikulaprofilemodule.event_listener" class="%zikulaprofilemodule.event_listener.class%">
+        <service id="zikula_profile_module.container.link_container" class="%zikula_profile_module.container.link_container.class%">
+            <argument type="service" id="translator.default" />
+            <argument type="service" id="jms_i18n_routing.router" />
+            <argument type="service" id="zikula_permissions_module.api.permission" />
+            <argument type="service" id="zikula_extensions_module.api.variable" />
+            <argument type="service" id="zikula_users_module.current_user" />
+            <argument type="service" id="zikula_users_module.container.link_container" />
+            <tag name="zikula.link_container" />
+        </service>
+
+        <service id="zikula_profile_module.event_listener" class="%zikula_profile_module.event_listener.class%">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="request_stack" />
         </service>
