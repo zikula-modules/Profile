@@ -1,0 +1,29 @@
+{
+    "vendor": {
+        "title": "Zikula",
+        "url": "http://zikula.org",
+        "logo": ""
+    },
+    "extension": {
+        "name": "Profile",
+        "url": "http://zikula.org",
+        "icon": ""
+    },
+    "version": {
+        "semver": "2.1.0",
+        "compatibility": ">=1.4.3 <2.0",
+        "composerpath": "composer.json",
+        "description": "Zikula Profile module.",
+        "keywords": [
+        ]
+    },
+    "urls": {
+        "version": "",
+        "docs": "",
+        "demo": "",
+        "download": "",
+        "issues": ""
+    },
+    "dependencies": [
+    ]
+}

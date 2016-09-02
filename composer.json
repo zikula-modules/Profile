@@ -1,5 +1,6 @@
 {
     "name": "zikula/profile-module",
+    "version": "2.1.0",
     "description": "User profiles and member list",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
@@ -13,11 +14,28 @@
         "psr-4": { "Zikula\\ProfileModule\\": "" }
     },
     "require": {
-        "php": ">=5.3.3"
+        "php": ">5.4.0"
     },
     "extra": {
         "zikula": {
-            "class": "Zikula\\ProfileModule\\ZikulaProfileModule"
+            "class": "Zikula\\ProfileModule\\ZikulaProfileModule",
+            "core-compatibility": ">=1.4.1",
+            "displayname": "Profile",
+            "url": "search",
+            "capabilities": {
+                "admin": {"route": "zikulaprofilemodule_config_config"},
+                "user": {"route": "zikulasprofilemodule_user_view"},
+                "profile": {"version": "1.0"}
+            },
+            "securityschema": {
+                "ZikulaSearchModule::": "Module name::",
+                "ZikulaSearchModule::": "::",
+                "ZikulaSearchModule::view": "::",
+                "ZikulaSearchModule::item": "DynamicUserData PropertyName::DynamicUserData PropertyID",
+                "ZikulaSearchModule:Members": "::",
+                "ZikulaSearchModule:Members:recent": "::",
+                "ZikulaSearchModule:Members:online": "::"
+            }
         }
     }
 }

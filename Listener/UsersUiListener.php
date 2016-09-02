@@ -13,7 +13,6 @@ namespace Zikula\ProfileModule\Listener;
 use DataUtil;
 use ModUtil;
 use UserUtil;
-use Zikula\ProfileModule\Constant as ProfileConstant;
 use Zikula\Core\Hook\ValidationResponse;
 use Zikula_View;
 use ZLanguage;
@@ -62,13 +61,13 @@ class UsersUiListener implements EventSubscriberInterface
     public function __construct(RequestStack $requestStack)
     {
         $this->request = $requestStack->getCurrentRequest();
-        $this->domain = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
+        $this->domain = ZLanguage::getModuleDomain('ZikulaProfileModule');
     }
 
     public function getView()
     {
         if (!$this->view) {
-            $this->view = Zikula_View::getInstance(ProfileConstant::MODNAME);
+            $this->view = Zikula_View::getInstance('ZikulaProfileModule');
         }
         return $this->view;
     }
@@ -101,7 +100,7 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiView(GenericEvent $event)
     {
-        $items = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'getallactive');
+        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
         // The return value of the function is checked here
         if ($items) {
             $user = $event->getSubject();
@@ -131,7 +130,7 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiEdit(GenericEvent $event)
     {
-        $items = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'getallactive', ['get' => 'editable']);
+        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable']);
         // The return value of the function is checked here
         if ($items) {
             $fieldsets = [];
@@ -194,7 +193,7 @@ class UsersUiListener implements EventSubscriberInterface
         if ($this->request->isMethod('POST')) {
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
             $this->validation = new ValidationResponse('dynadata', $dynadata);
-            $requiredFailures = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'checkrequired', [
+            $requiredFailures = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', [
                 'dynadata' => $dynadata
             ]);
             

@@ -10,12 +10,12 @@
 
 namespace Zikula\ProfileModule\Api;
 
-use SecurityUtil;
-use Zikula\UsersModule\Constant as UsersConstant;
-use ModUtil;
-use System;
 use DateTime;
 use Doctrine\ORM\NoResultException;
+use ModUtil;
+use SecurityUtil;
+use System;
+use Zikula\UsersModule\Constant as UsersConstant;
 
 /**
  * Member list management api.

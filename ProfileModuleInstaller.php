@@ -13,12 +13,13 @@ namespace Zikula\ProfileModule;
 use DoctrineHelper;
 use EventUtil;
 use System;
+use Zikula\Core\AbstractExtensionInstaller;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 
 /**
  * Profile module installer.
  */
-class ProfileModuleInstaller extends \Zikula_AbstractInstaller
+class ProfileModuleInstaller extends AbstractExtensionInstaller
 {
     /**
      * Provides an array containing default values for module variables (settings).
@@ -44,13 +45,17 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
     public function install()
     {
         try {
-            DoctrineHelper::createSchema($this->entityManager, ['Zikula\ProfileModule\Entity\PropertyEntity']);
+            $this->schemaTool->create([
+                'Zikula\ProfileModule\Entity\PropertyEntity'
+            ]);
         } catch (\Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
 
             return false;
         }
+
         $this->setVars($this->getDefaultModVars());
+
         // create the default data for the module
         $this->defaultdata();
 
@@ -69,11 +74,12 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
     {
         // Only support upgrade from version 1.6 and up. Notify users if they have a version below that one.
         if (version_compare($oldVersion, '1.6', '<')) {
-            // Inform user about error, and how he can upgrade to $modversion
-            $upgradeToVersion = $this->version->getVersion();
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to version %s.', $upgradeToVersion));
+            // Inform user about error, and how he can upgrade to this version
+            $this->addFlash('error', $this->__('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to this version.'));
+
             return false;
         }
+
         $connection = $this->entityManager->getConnection();
         switch ($oldVersion) {
             case '1.6.0':
@@ -82,13 +88,12 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
                 // attributes migrated by Users mod
 
                 // check core for profile setting and update name
-                $profilemodule = System::getVar('profilemodule', '');
-                if ($profilemodule == 'Profile') {
-                    System::setVar('profilemodule', $this->name);
+                $profileModule = System::getVar('profilemodule', '');
+                if ($profileModule == 'Profile') {
+                    System::setVar('profilemodule', 'ZikulaProfileModule');
                 }
-                // remove handlers & register new handlers
+                // remove persistent handlers which are replaced by event subscribers
                 EventUtil::unregisterPersistentModuleHandlers('Profile'); // use old name on purpose here
-
             case '2.0.0':
                 // nothing
             case '2.1.0':
@@ -113,19 +118,22 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
     }
 
     /**
-     * Delete the dynamic user data module.
+     * Delete the profile module.
      *
-     * @return boolean True on success or false on failure.
+     * @return boolean True on success or false on failure
      */
     public function uninstall()
     {
         try {
-            DoctrineHelper::dropSchema($this->entityManager, ['Zikula\ProfileModule\Entity\PropertyEntity']);
+            $this->schemaTool->drop([
+                'Zikula\ProfileModule\Entity\PropertyEntity'
+            ]);
         } catch (\PDOException $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
 
             return false;
         }
+
         // Delete any module variables
         $this->delVars();
 
@@ -140,13 +148,6 @@ class ProfileModuleInstaller extends \Zikula_AbstractInstaller
      */
     protected function defaultdata()
     {
-
-        // Make assumption that if were upgrading from 76x to 1.x
-        // that user properties already exist and abort inserts.
-        if (isset($_SESSION['_PNUpgrader']['_PNUpgradeFrom76x'])) {
-            return;
-        }
-
         // _UREALNAME
         $record = [];
         $record['prop_label'] = no__('_UREALNAME');

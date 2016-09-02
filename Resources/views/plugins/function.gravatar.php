@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use Zikula\ProfileModule\Constant as ProfileConstant;
-
 /**
  * Get either a Gravatar URL or complete image tag for a specified email address.
  *
@@ -35,7 +33,7 @@ use Zikula\ProfileModule\Constant as ProfileConstant;
  */
 function smarty_function_gravatar(array $params = [], Zikula_View $view)
 {
-    $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
+    $dom = ZLanguage::getModuleDomain('ZikulaProfileModule');
 
     $params['d'] = (isset($params['d'])) ? (string)$params['d'] : 'mm';
     $params['email_address'] = (isset($params['email_address'])) ? (string)$params['email_address'] : 'user@example.com';

@@ -1,4 +1,4 @@
-<?php
+f<?php
 /*
  * This file is part of the Zikula package.
  *
@@ -9,8 +9,24 @@
  */
 
 use Zikula\Core\Event\GenericEvent;
-use Zikula\ProfileModule\Constant as ProfileConstant;
 use Zikula\UsersModule\Constant as UsersConstant;
+
+/**
+ * Returns absolute path to a certain DUD template.
+ *
+ * @param string $templateName Template file name without extension
+ *
+ * @return string Absolute path to template
+ */
+function getTemplatePath($templateName)
+{
+    $sm = \ServiceUtil::getManager();
+    $kernel = $sm->get('kernel');
+
+    $path = 'file:' . $kernel->getRootDir() . '/../' . ModUtil::getModuleRelativePath('ZikulaProfileModule') . '/Resources/views/Dudedit/' . $templateName . '.tpl';
+
+    return $path;
+}
 
 /**
  * Smarty function to display an editable dynamic user data field.
@@ -45,23 +61,21 @@ use Zikula\UsersModule\Constant as UsersConstant;
  */
 function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
 {
-
     $sm = \ServiceUtil::getManager();
-    $kernel = $sm->get('kernel');
     $request = $sm->get('request');
 
     extract($params);
     unset($params);
 
-    if (!ModUtil::available(ProfileConstant::MODNAME)) {
+    if (!ModUtil::available('ZikulaProfileModule')) {
         return '';
     }
 
     if (!isset($item)) {
         if (isset($proplabel)) {
-            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', ['proplabel' => $proplabel]);
+            $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $proplabel]);
         } else if (isset($propattribute)) {
-            $item = ModUtil::apiFunc(ProfileConstant::MODNAME, 'user', 'get', ['propattribute' => $propattribute]);
+            $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $propattribute]);
         } else {
             return false;
         }
@@ -81,14 +95,14 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
 
     // skip the field if not configured to be on the registration form 
     if (($onregistrationform) && (!$item['prop_required'])) {
-        $dudregshow = ModUtil::getVar(ProfileConstant::MODNAME, 'dudregshow', []);
+        $dudregshow = ModUtil::getVar('ZikulaProfileModule', 'dudregshow', []);
 
         if (!in_array($item['prop_attribute_name'], $dudregshow)) {
             return;
         }
     }
 
-    $dom = ZLanguage::getModuleDomain(ProfileConstant::MODNAME);
+    $dom = ZLanguage::getModuleDomain('ZikulaProfileModule');
 
     if (!isset($uid)) {
         $uid = UserUtil::getVar('uid');
@@ -148,7 +162,7 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
         $view->assign('listoptions', array_keys($tzinfo));
         $view->assign('listoutput', array_values($tzinfo));
 
-        return $view->fetch('file:'.$kernel->getRootDir().'/../'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/select.tpl');
+        return $view->fetch(getTemplatePath('select'));
     }
 
     if ($item['prop_attribute_name'] == 'avatar') {
@@ -159,14 +173,14 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
             if (UserUtil::getVar('uid') != $uid) {
                 return '';
             }
-            $view->assign('linktext', __('Go to the Avatar manager', $dom));
-            $view->assign('linkurl', ModUtil::url('Avatar', 'user', 'main'));
+            $view->assign('linktext', __('Go to the Avatar manager', $dom))
+                 ->assign('linkurl', ModUtil::url('Avatar', 'user', 'main'));
 
-            $output = $view->fetch('file:'.$kernel->getRootDir().'/../'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/link.tpl');
-            
+            $output = $view->fetch(getTemplatePath('link'));
+
             // add a hidden input if this is required
             if ($item['prop_required']) {
-                $output .= $view->fetch('file:'.$kernel->getRootDir().'/../'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/hidden.tpl');
+                $output .= $view->fetch(getTemplatePath('hidden'));
             }
 
             return $output;
@@ -193,12 +207,12 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
 //            $selectedvalue = $uservalue;
 //        }
 
-        $view->assign('value', $selectedvalue);
-        $view->assign('selectmultiple', '');
-        $view->assign('listoptions', $listoptions);
-        $view->assign('listoutput', $listoutput);
+        $view->assign('value', $selectedvalue)
+             ->assign('selectmultiple', '')
+             ->assign('listoptions', $listoptions)
+             ->assign('listoutput', $listoutput);
 
-        return $view->fetch('file:'.$kernel->getRootDir().'/../'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/select.tpl');
+        return $view->fetch(getTemplatePath('select'));
     }
 
     switch ($item['prop_displaytype']) {
@@ -232,7 +246,7 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
         case 3: // RADIO
             $type = 'radio';
 
-            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
+            $options = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
             $view->assign('listoptions', array_keys($options));
             $view->assign('listoutput', array_values($options));
@@ -249,7 +263,7 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
             $selectmultiple = $options[0] ? ' multiple="multiple"' : '';
             $view->assign('selectmultiple', $selectmultiple);
 
-            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
+            $options = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
             $event_subject = $user;
             $event_args = [
@@ -272,7 +286,7 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
             $type = 'date';
 
             // gets the format to use
-            $format = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
+            $format = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
             switch (trim(strtolower($format))) {
                 case 'us':
@@ -313,7 +327,7 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
             $type = 'multicheckbox';
             $view->assign('value', (array)unserialize($uservalue));
 
-            $options = ModUtil::apiFunc(ProfileConstant::MODNAME, 'dud', 'getoptions', ['item' => $item]);
+            $options = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
             $view->assign('fields', $options);
             break;
@@ -323,5 +337,5 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
             break;
     }
 
-    return $view->fetch('file:'.$kernel->getRootDir().'/../'.ModUtil::getModuleRelativePath(ProfileConstant::MODNAME).'/Resources/views/Dudedit/'.$type.'.tpl');
+    return $view->fetch(getTemplatePath($type));
 }

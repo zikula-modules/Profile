@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use Zikula\ProfileModule\Constant as ProfileConstant;
-
 /**
  * Smarty function to display a section of the user profile.
  *
@@ -44,7 +42,7 @@ function smarty_function_profilesection($params, Zikula_View $view)
     $params['name'] = strtolower($params['name']);
 
     // extract the items to list
-    $section = ModUtil::apiFunc(ProfileConstant::MODNAME, 'section', $params['name'], $params);
+    $section = ModUtil::apiFunc('ZikulaProfileModule', 'section', $params['name'], $params);
 
     if ($section === false) {
         return '';
