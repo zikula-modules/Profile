@@ -10,9 +10,10 @@
 
 namespace Zikula\ProfileModule\Block;
 
-use SecurityUtil;
-use ModUtil;
 use BlockUtil;
+use ModUtil;
+use SecurityUtil;
+use ServiceUtil;
 use UserUtil;
 
 /**
@@ -59,8 +60,10 @@ class FeatureduserBlock extends \Zikula_Controller_AbstractBlock
      */
     public function display($blockinfo)
     {
+        $sm = ServiceUtil::getManager();
+
         // Check if the Profile module is available.
-        if (!ModUtil::available($this->name)) {
+        if (null === $sm->get('zikula_extensions_module.api.extension')->getModuleInstanceOrNull('ZikulaProfileModule')) {
             return false;
         }
         // Security check

@@ -8,8 +8,16 @@ f<?php
  * file that was distributed with this source code.
  */
 
+use DataUtil;
+use DateUtil;
+use FileUtil;
+use ModUtil;
+use ServiceUtil;
+use System;
+use UserUtil;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\UsersModule\Constant as UsersConstant;
+use ZLanguage;
 
 /**
  * Returns absolute path to a certain DUD template.
@@ -20,7 +28,7 @@ use Zikula\UsersModule\Constant as UsersConstant;
  */
 function getTemplatePath($templateName)
 {
-    $sm = \ServiceUtil::getManager();
+    $sm = ServiceUtil::getManager();
     $kernel = $sm->get('kernel');
 
     $path = 'file:' . $kernel->getRootDir() . '/../' . ModUtil::getModuleRelativePath('ZikulaProfileModule') . '/Resources/views/Dudedit/' . $templateName . '.tpl';
@@ -61,13 +69,13 @@ function getTemplatePath($templateName)
  */
 function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
 {
-    $sm = \ServiceUtil::getManager();
+    $sm = ServiceUtil::getManager();
     $request = $sm->get('request');
 
     extract($params);
     unset($params);
 
-    if (!ModUtil::available('ZikulaProfileModule')) {
+    if (null === $sm->get('zikula_extensions_module.api.extension')->getModuleInstanceOrNull('ZikulaProfileModule')) {
         return '';
     }
 
@@ -133,21 +141,21 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
         }
     }
 
-	$field_object = ((isset($field_name)) ? ((!$field_name) ? null : $field_name) : 'dynadata');
+    $field_object = ((isset($field_name)) ? ((!$field_name) ? null : $field_name) : 'dynadata');
     $field_name = ((isset($field_name)) ? ((!$field_name) ? $item['prop_attribute_name'] : $field_name . '[' . $item['prop_attribute_name'] . ']') : 'dynadata[' . $item['prop_attribute_name'] . ']');
 
     // assign the default values for the control
-    $view->assign('class', $class);
-    $view->assign('field_name', $field_name);
-    $view->assign('field_object', $field_object);
-    $view->assign('value', DataUtil::formatForDisplay($uservalue));
+    $view->assign('class', $class)
+         ->assign('field_name', $field_name)
+         ->assign('field_object', $field_object)
+         ->assign('value', DataUtil::formatForDisplay($uservalue))
 
-    $view->assign('item', $item);
-    $view->assign('attributename', $item['prop_attribute_name']);
-    $view->assign('proplabeltext', $item['prop_label']);
-    $view->assign('note', $item['prop_note']);
-    $view->assign('required', (bool)$item['prop_required']);
-    $view->assign('error', ((isset($error)) ? $error : ''));
+         ->assign('item', $item)
+         ->assign('attributename', $item['prop_attribute_name'])
+         ->assign('proplabeltext', $item['prop_label'])
+         ->assign('note', $item['prop_note'])
+         ->assign('required', (bool)$item['prop_required'])
+         ->assign('error', ((isset($error)) ? $error : ''));
 
     // Excluding Timezone of the generics
     if ($item['prop_attribute_name'] == 'tzoffset') {
@@ -157,10 +165,10 @@ function smarty_function_duditemmodify(array $params = [], Zikula_View $view)
 
         $tzinfo = DateUtil::getTimezones();
 
-        $view->assign('value', isset($tzinfo["$uservalue"]) ? "$uservalue" : null);
-        $view->assign('selectmultiple', '');
-        $view->assign('listoptions', array_keys($tzinfo));
-        $view->assign('listoutput', array_values($tzinfo));
+        $view->assign('value', isset($tzinfo["$uservalue"]) ? "$uservalue" : null)
+             ->assign('selectmultiple', '')
+             ->assign('listoptions', array_keys($tzinfo))
+             ->assign('listoutput', array_values($tzinfo));
 
         return $view->fetch(getTemplatePath('select'));
     }

@@ -8,7 +8,14 @@
  * file that was distributed with this source code.
  */
 
+use DataUtil;
+use DateUtil;
+use ModUtil;
+use ServiceUtil;
+use System;
+use UserUtil;
 use Zikula\UsersModule\Constant as UsersConstant;
+use ZLanguage;
 
 /**
  * Smarty function to display an editable dynamic user data field.
@@ -42,7 +49,9 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     extract($params);
     unset($params);
 
-    if (!ModUtil::available('ZikulaProfileModule')) {
+    $sm = ServiceUtil::getManager();
+
+    if (null === $sm->get('zikula_extensions_module.api.extension')->getModuleInstanceOrNull('ZikulaProfileModule')) {
         return '';
     }
 

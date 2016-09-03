@@ -438,11 +438,11 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     public function getmessagingmodule()
     {
-        $msgmodule = System::getVar('messagemodule', '');
-        if (!ModUtil::available($msgmodule)) {
-            $msgmodule = '';
+        $messageModule = System::getVar('messagemodule', '');
+        if ($messageModule != '' && !ModUtil::available($messageModule)) {
+            $messageModule = '';
         }
 
-        return $msgmodule;
+        return $messageModule;
     }
 }

@@ -10,9 +10,10 @@
 
 namespace Zikula\ProfileModule\Block;
 
-use SecurityUtil;
-use ModUtil;
 use BlockUtil;
+use ModUtil;
+use SecurityUtil;
+use ServiceUtil;
 
 /**
  * "Last X Registered Users" block.
@@ -57,8 +58,10 @@ class LastxusersBlock extends \Zikula_Controller_AbstractBlock
      */
     public function display($blockinfo)
     {
-        // Check if the Profile module is available
-        if (!ModUtil::available($this->name)) {
+        $sm = ServiceUtil::getManager();
+
+        // Check if the Profile module is available.
+        if (null === $sm->get('zikula_extensions_module.api.extension')->getModuleInstanceOrNull('ZikulaProfileModule')) {
             return false;
         }
         // Security check

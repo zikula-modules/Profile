@@ -10,11 +10,11 @@
 
 namespace Zikula\ProfileModule\Api;
 
-use SecurityUtil;
-use UserUtil;
-use ModUtil;
 use DateUtil;
+use ModUtil;
+use SecurityUtil;
 use System;
+use UserUtil;
 use Zikula\Core\Event\GenericEvent;
 
 /**
