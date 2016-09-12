@@ -268,6 +268,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         // Return the number of items
         $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Zikula\ProfileModule\Entity\PropertyEntity p');
+
         return $query->getSingleScalarResult();
     }
 

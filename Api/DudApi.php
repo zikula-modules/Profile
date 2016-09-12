@@ -68,8 +68,9 @@ class DudApi extends \Zikula_AbstractApi
         if (!SecurityUtil::checkPermission($this->name.'::item', "{$args['label']}::", ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
+        $flashBag = $this->request->getSession()->getFlashBag();
         if (!ModUtil::getIdFromName($args['modname'])) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
+            $flashBag->add('error', $this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
             return false;
         }
         // parses the DUD type
@@ -79,7 +80,7 @@ class DudApi extends \Zikula_AbstractApi
             2 => 'normal'
         ];
         if (!in_array($args['dtype'], $dtypes)) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
+            $flashBag->add('error', $this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
             return false;
         }
         // Clean the label
@@ -89,12 +90,12 @@ class DudApi extends \Zikula_AbstractApi
         // Check if the label or attribute name already exists
         $item = ModUtil::apiFunc($this->name, 'user', 'get', ['proplabel' => $args['label']]);
         if ($item) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+            $flashBag->add('error', $this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
             return false;
         }
         $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
+            $flashBag->add('error', $this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
             return false;
         }
         // Determine the new weight
@@ -141,13 +142,14 @@ class DudApi extends \Zikula_AbstractApi
             throw new \InvalidArgumentException();
         }
         // Get item with where clause
+        $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
         /** @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->find((int)$args['propid']);
+            $item = $propertyRepository->find((int)$args['propid']);
         } elseif (isset($args['proplabel'])) {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(['prop_label' => $args['proplabel']]);
+            $item = $propertyRepository->findOneBy(['prop_label' => $args['proplabel']]);
         } else {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(['prop_attribute_name' => $args['propattribute']]);
+            $item = $propertyRepository->findOneBy(['prop_attribute_name' => $args['propattribute']]);
         }
         // Check for no rows found, and if so return
         if (!$item) {

@@ -1,0 +1,58 @@
+{% form_theme form with [
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+] %}
+{{ adminHeader() }}
+<div class="container-fluid">
+    <div class="row">
+        <h3>
+            <span class="fa fa-wrench"></span>
+            {{ __('Settings') }}
+            {{ pageSetVar('title', __('Profile settings')) }}
+        </h3>
+
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        <fieldset>
+            <legend>{{ __('Registered users list settings') }}</legend>
+            {{ form_row(form.viewregdate) }}
+            {{ form_row(form.memberslistitemsperpage) }}
+            {{ form_row(form.onlinemembersitemsperpage) }}
+            {{ form_row(form.recentmembersitemsperpage) }}
+            {{ form_row(form.filterunverified) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ __('User registration form settings') }}</legend>
+            {{ form_row(form.viewregdate) }}
+            <p class="alert alert-info">{{ __("The personal info items that you activate below will be displayed in the user registration form if the 'Users' module is configured to display personal info items during user registration, and if the 'Profile' module is specified in the 'General settings manager' as the module to provide the site's user profile management functionality. Personal info items that are configured as 'Required' will always be displayed in the user registration form.") }}</p>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="profile_dudregshow">{{ __('Personal info items to include in user registration form') }}</label>
+                <div class="col-sm-9">
+                    {% for fieldSet in dudFieldSets %}
+                    <fieldset class="{{ fieldSet|e('html_attr') }}">
+                        <legend>{{ fieldSet }}</legend>
+                        {% for key, item from dudFields if item.prop_fieldset == fieldSet %}
+                            {% set attributeName = item.prop_attribute_name|e('html_attr') %}
+                            <div class="checkbox">
+                                <input id="profile_dudregshow_{{ attributeName }}" type="checkbox" name="dudregshow[]" value="{{ attributeName }}"{% if item.prop_required %} checked="checked" disabled="disabled"{% elseif item.prop_attribute_name in dudFieldsActive %} checked="checked"{/if} />
+                                <label for="profile_dudregshow_{{ attributeName }}">{{ item.prop_label }}</label>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                    {% endfor %}
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                {{ form_widget(form.save) }}
+                {{ form_widget(form.cancel) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{{ adminFooter() }}

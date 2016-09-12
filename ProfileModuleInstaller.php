@@ -36,11 +36,11 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     protected function getDefaultModVars()
     {
         return [
+            'viewregdate' => 0,
             'memberslistitemsperpage' => 20,
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
-            'filterunverified' => 1,
-            'viewregdate' => 0
+            'filterunverified' => 1
         ];
     }
 

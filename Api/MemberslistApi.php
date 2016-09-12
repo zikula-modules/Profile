@@ -286,7 +286,8 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     public function getregisteredonline()
     {
-        $dql = 'SELECT COUNT(s.uid)
+        $dql = '
+            SELECT COUNT(s.uid)
             FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s
             WHERE s.lastused > :activetime
             AND s.uid >= 2';
@@ -341,10 +342,12 @@ class MemberslistApi extends \Zikula_AbstractApi
         if (!isset($args['userid']) || empty($args['userid']) || !is_numeric($args['userid'])) {
             return false;
         }
-        $dql = 'SELECT s.uid
-                FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s
-                WHERE s.lastused > :activetime
-                AND s.uid = :uid';
+        $dql = '
+            SELECT s.uid
+            FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s
+            WHERE s.lastused > :activetime
+            AND s.uid = :uid
+        ';
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // @todo maybe need to check TZ here
@@ -367,7 +370,8 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     public function whosonline()
     {
-        $dql = 'SELECT u, a
+        $dql = '
+            SELECT u, a
             FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\UsersModule\\Entity\\UserEntity u
             LEFT JOIN u.attributes a
             WHERE s.lastused > :activetime
@@ -396,13 +400,16 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     public function getallonline()
     {
-        $dql = 'SELECT u
+        $dql = '
+            SELECT u
             FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\UsersModule\\Entity\\UserEntity u
             WHERE s.lastused > :activetime
-            AND (s.uid >= 2
-            AND s.uid = u.uid)
-            OR s.uid = 0
-            GROUP BY s.ipaddr, s.uid';
+            AND (
+                (s.uid >= 2 AND s.uid = u.uid)
+                OR s.uid = 0
+            )
+            GROUP BY s.ipaddr, s.uid
+        ';
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // @todo maybe need to check TZ here

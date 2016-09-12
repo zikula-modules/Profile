@@ -10,23 +10,20 @@
 
 namespace Zikula\ProfileModule\Controller;
 
-use DataUtil;
 use ModUtil;
 use SecurityUtil;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use System;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use System;
 
 /**
- * @Route("/admin")
- *
  * Class AdminController
- * @package Zikula\ProfileModule\Controller
+ * @Route("/admin")
  */
 class AdminController extends \Zikula_AbstractController
 {
@@ -71,7 +68,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function helpAction()
     {
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
 
@@ -93,11 +90,11 @@ class AdminController extends \Zikula_AbstractController
      */
     public function viewAction($numitems = -1, $startnum = 1)
     {
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $items = ModUtil::apiFunc($this->name, 'user', 'getall', ['startnum' => $startnum, 'numitems' => $numitems]);
-        $count = ModUtil::apiFunc($this->name, 'user', 'countitems');
+        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getall', ['startnum' => $startnum, 'numitems' => $numitems]);
+        $count = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'countitems');
         $csrftoken = SecurityUtil::generateCsrfToken();
         $x = 1;
         $duditems = [];
@@ -158,7 +155,7 @@ class AdminController extends \Zikula_AbstractController
             }
             // Options for the item.
             $options = [];
-            if (SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
+            if (SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
                 $options[] = [
                     'url' => $this->get('router')->generate('zikulaprofilemodule_admin_edit', ['dudid' => $item['prop_id']]),
                     'class' => '',
@@ -181,7 +178,7 @@ class AdminController extends \Zikula_AbstractController
                         'title' => $this->__('Down')
                     ];
                 }
-                if (SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
+                if (SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_DELETE) && $item['prop_dtype'] > 0) {
                     $options[] = [
                         'url' => $this->get('router')->generate('zikulaprofilemodule_admin_delete', ['dudid' => $item['prop_id']]),
                         'class' => '', 'title' => $this->__('Delete'),
@@ -233,7 +230,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $this->checkCsrfToken();
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
     
@@ -259,11 +256,11 @@ class AdminController extends \Zikula_AbstractController
             return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_admin_view', [], RouterInterface::ABSOLUTE_URL));
         }
         //@todo The check needs to occur for both the label and fieldset.
-        //if (ModUtil::apiFunc($this->name, 'user', 'get', ['proplabel' => $label, 'propfieldset' => $fieldset])) {
+        //if (ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $label, 'propfieldset' => $fieldset])) {
         //    $request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already a label with this name.'));
         //    return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_admin_view', [], RouterInterface::ABSOLUTE_URL));
         //}
-        if (isset($attrname) && ModUtil::apiFunc($this->name, 'user', 'get', ['propattribute' => $attrname])) {
+        if (isset($attrname) && ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $attrname])) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! There is already an attribute name with this naming.'));
             return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_admin_view', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -283,10 +280,10 @@ class AdminController extends \Zikula_AbstractController
             'pattern' => $pattern
         ];
         if (empty($dudid)) {
-            $dudid = ModUtil::apiFunc($this->name, 'admin', 'create', $parameters);
+            $dudid = ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'create', $parameters);
             $successMessage = $this->__('Done! Created new personal info item.');
         } else {
-            $dudid = ModUtil::apiFunc($this->name, 'admin', 'update', $parameters);
+            $dudid = ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'update', $parameters);
             $successMessage = $this->__('Done! Saved your changes.');
         }
         if ($dudid != false) {
@@ -313,44 +310,44 @@ class AdminController extends \Zikula_AbstractController
     public function editAction(Request $request, $dudid = 0)
     {
         if (!empty($dudid)) {
-            $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propid' => $dudid]);
+            $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
             if ($item == false) {
                 $request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
                 return new Response();
             }
             // Security check
-            if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$dudid}", ACCESS_EDIT)) {
+            if (!SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$dudid}", ACCESS_EDIT)) {
                 throw new AccessDeniedException();
             }
             // backward check to remove any 1.4- forbidden char in listoptions 10 = New Line /n and 13 = Carriage Return /r
             $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
-            $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
+            $item['prop_fieldset'] = (isset($item['prop_fieldset']) && !empty($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
             $item['prop_listoptions'] = str_replace(' ', '', $item['prop_listoptions']);
             $this->view->assign('item', $item);
         } else {
-            if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADD)) {
+            if (!SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_ADD)) {
                 throw new AccessDeniedException();
             }
         }
         // create arrays for select boxes
         $this->view->assign('displaytypes', [
-            0 => DataUtil::formatForDisplay($this->__('Text box')),
-            1 => DataUtil::formatForDisplay($this->__('Text area')),
-            2 => DataUtil::formatForDisplay($this->__('Checkbox')),
-            3 => DataUtil::formatForDisplay($this->__('Radio button')),
-            4 => DataUtil::formatForDisplay($this->__('Dropdown list')),
-            5 => DataUtil::formatForDisplay($this->__('Date')),
-            7 => DataUtil::formatForDisplay($this->__('Multiple checkbox set')))
+            0 => $this->__('Text box'),
+            1 => $this->__('Text area'),
+            2 => $this->__('Checkbox'),
+            3 => $this->__('Radio button'),
+            4 => $this->__('Dropdown list'),
+            5 => $this->__('Date'),
+            7 => $this->__('Multiple checkbox set'))
         ];
         $this->view->assign('requiredoptions', [
-            0 => DataUtil::formatForDisplay($this->__('No')),
-            1 => DataUtil::formatForDisplay($this->__('Yes')))
+            0 => $this->__('No'),
+            1 => $this->__('Yes'))
         ];
         $this->view->assign('viewbyoptions', [
-            0 => DataUtil::formatForDisplay($this->__('Everyone')),
-            1 => DataUtil::formatForDisplay($this->__('Registered users only')),
-            2 => DataUtil::formatForDisplay($this->__('Admins and account owner only')),
-            3 => DataUtil::formatForDisplay($this->__('Admins only')))
+            0 => $this->__('Everyone'),
+            1 => $this->__('Registered users only'),
+            2 => $this->__('Admins and account owner only'),
+            3 => $this->__('Admins only'))
         ];
         // Add a hidden variable for the item id.
         $this->view->assign('dudid', $dudid);
@@ -381,13 +378,13 @@ class AdminController extends \Zikula_AbstractController
         $confirmation = (bool)$request->get('confirmation', null);
 
         // The user API function is called.
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propid' => $dudid]);
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
             return new Response();
         }
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
             throw new AccessDeniedException();
         }
         // Check for confirmation.
@@ -403,7 +400,7 @@ class AdminController extends \Zikula_AbstractController
         // Check CsrfToken
         $this->checkCsrfToken();
         // The API function is called.
-        if (ModUtil::apiFunc($this->name, 'admin', 'delete', ['dudid' => $dudid])) {
+        if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'delete', ['dudid' => $dudid])) {
             // Success
             $request->getSession()->getFlashBag()->add('status', $this->__('Done! The field has been successfully deleted.'));
         }
@@ -426,13 +423,13 @@ class AdminController extends \Zikula_AbstractController
      */
     public function increaseWeightAction(Request $request, $dudid)
     {
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propid' => $dudid]);
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
             return new Response();
         }
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
@@ -458,17 +455,19 @@ class AdminController extends \Zikula_AbstractController
      */
     public function decreaseWeightAction(Request $request, $dudid)
     {
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propid' => $dudid]);
+        $flashBag = $request->getSession()->getFlashBag();
+
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! No such personal info item found.'));
+            $flashBag->add('error', $this->__('Error! No such personal info item found.'));
             return new Response();
         }
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
         if ($item['prop_weight'] <= 1) {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot decrease the weight of this account property.'));
+            $flashBag->add('error', $this->__('Error! You cannot decrease the weight of this account property.'));
             return new Response();
         }
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
@@ -494,7 +493,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $this->checkCsrfToken($request->query->get('csrftoken'));
         // The API function is called.
-        if (ModUtil::apiFunc($this->name, 'admin', 'activate', ['dudid' => $dudid])) {
+        if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'activate', ['dudid' => $dudid])) {
             // Success
             $request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your changes.'));
         }
@@ -517,91 +516,10 @@ class AdminController extends \Zikula_AbstractController
     {
         $this->checkCsrfToken($request->query->get('csrftoken'));
         // The API function is called.
-        if (ModUtil::apiFunc($this->name, 'admin', 'deactivate', ['dudid' => $dudid])) {
+        if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'deactivate', ['dudid' => $dudid])) {
             // Success
             $request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your changes.'));
         }
-
-        return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_admin_view', [], RouterInterface::ABSOLUTE_URL));
-    }
-
-    /**
-     * @Route("/config")
-     * @Method("GET")
-     *
-     * Modify the configuration parameters of the module.
-     *
-     * @return Response
-     *
-     * @throws AccessDeniedException on failed permission check
-     */
-    public function modifyconfigAction()
-    {
-        // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['get' => 'editable', 'index' => 'prop_id']);
-
-        $fieldsets = [];
-        		
-        foreach ($items as $k => $item) {
-            $item['prop_fieldset'] = ((isset($item['prop_fieldset'])) && (!empty($item['prop_fieldset']))) ? $item['prop_fieldset'] : $this->__('User Information');
-            $items[$k] = (array)$item;
-            $fieldsets[DataUtil::formatPermalink($item['prop_fieldset'])] = $item['prop_fieldset'];
-        }
-		
-        $this->view->assign('dudfields', $items)
-                ->assign('fieldsets', $fieldsets);
-
-        return new Response($this->view->fetch('Admin/modifyconfig.tpl'));
-    }
-
-    /**
-     * @Route("/config")
-     * @Method("POST")
-     *
-     * Updates the module configuration.
-     *
-     * @param Request $request
-     *
-     * Parameters passed in via POST:
-     * ------------------------------
-     * boolean viewregdate               If true the user's registration date is displayed; false to supress the registration date.
-     * numeric memberslistitemsperpage   The number of members to show per page on the member list.
-     * numeric onlinemembersitemsperpage The number of members to show per page on the members online list.
-     * numeric recentmembersitemsperpage The number of members to show per page on the recent registered members list.
-     * booleam filterunverified          If true, users who have not completed the registration process are not listed; if false, they are listed.
-     * array   dudregshow                An array of dud item ids indicating which items to include in the registration form; an empty array to include none.
-     *
-     * @return RedirectResponse
-     *
-     * @throws AccessDeniedException on failed permission check
-     *
-     * @see    Profile_admin_modifyconfig()
-     */
-    public function updateconfigAction(Request $request)
-    {
-        $this->checkCsrfToken();
-        // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-        // Update module variables.
-        $viewregdate = (bool)$request->request->get('viewregdate', 0);
-        $this->setVar('viewregdate', $viewregdate);
-        $memberslistitemsperpage = (int)$request->request->get('memberslistitemsperpage', 20);
-        $this->setVar('memberslistitemsperpage', $memberslistitemsperpage);
-        $onlinemembersitemsperpage = (int)$request->request->get('onlinemembersitemsperpage', 20);
-        $this->setVar('onlinemembersitemsperpage', $onlinemembersitemsperpage);
-        $recentmembersitemsperpage = (int)$request->request->get('recentmembersitemsperpage', 10);
-        $this->setVar('recentmembersitemsperpage', $recentmembersitemsperpage);
-        $filterunverified = (bool)$request->request->get('filterunverified', false);
-        $this->setVar('filterunverified', $filterunverified);
-        $dudregshow = $request->request->get('dudregshow', []);
-        $this->setVar('dudregshow', $dudregshow);
-        // the module configuration has been updated successfuly
-        $request->getSession()->getFlashBag()->add('status', $this->__('Done! Saved your settings changes.'));
 
         return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_admin_view', [], RouterInterface::ABSOLUTE_URL));
     }

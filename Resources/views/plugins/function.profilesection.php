@@ -49,10 +49,10 @@ function smarty_function_profilesection($params, Zikula_View $view)
     }
 
     // build the output
-    $view->setCaching(0);
+    $view->setCaching(Zikula_View::CACHE_DISABLED);
 
-    // check the tmeplate existance
-    $template = "sections/profile_section_{$params['name']}.tpl";
+    // check the template existance
+    $template = 'sections/profile_section_' . $params['name'] . '.tpl';
 
     if (!$view->template_exists($template)) {
         return '';

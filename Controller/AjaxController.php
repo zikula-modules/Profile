@@ -10,27 +10,21 @@
 
 namespace Zikula\ProfileModule\Controller;
 
-use SecurityUtil;
 use ModUtil;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Response\Ajax\FatalResponse;
-use Zikula\Core\Response\Ajax\ForbiddenResponse;
 use Zikula\Core\Response\Ajax\BadDataResponse;
 use Zikula\Core\Response\Ajax\AjaxResponse;
 use Zikula\Core\Response\Ajax\NotFoundResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
-use Symfony\Component\Routing\RouterInterface;
+use Zikula\Core\Controller\AbstractController;
 
 /**
- * @Route("/ajax")
- * 
- * AJAX query and response functions.
- * 
  * Class AjaxController
- * @package Zikula\ProfileModule\Controller
+ * @Route("/ajax")
  */
-class AjaxController extends \Zikula_Controller_AbstractAjax
+class AjaxController extends AbstractController
 {
     /**
      * @Route("/changeweight", options={"expose"=true})
@@ -44,21 +38,21 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * array   profilelist An array of dud item ids for which the weight should be changed.
      * numeric startnum    The desired weight of the first item in the list minus 1 (e.g., if the weight of the first item should be 3 then startnum contains 2)
      *
-     * @return AjaxResponse|ForbiddenResponse|BadDataResponse
+     * @return AjaxResponse|BadDataResponse
+     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      */
     public function changeprofileweightAction(Request $request)
     {
-        $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-
-            return new ForbiddenResponse($this->__('Sorry! You do not have authorisation for this module.'));
+        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
         }
+
         $profilelist = $request->get('profilelist', null);
         $startnum = $request->get('startnum', null);
         if ($startnum < 0) {
-
-            return new BadDataResponse([], $this->__f('Error! Invalid \'%s\' passed.', 'startnum'));
+            return new BadDataResponse([], $this->__f('Error! Invalid \'%s\' passed.', ['%s' => 'startnum']));
         }
+
         // update the items with the new weights
         $props = [];
         $weight = $startnum + 1;
@@ -89,15 +83,15 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * numeric dudid     Id of the property to update.
      * boolean oldstatus True to activate or false to deactivate the item.
      *
-     * @return AjaxResponse|NotFoundResponse|ForbiddenResponse|BadDataResponse
+     * @return AjaxResponse|NotFoundResponse|BadDataResponse
+     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      */
     public function changeprofilestatusAction(Request $request)
     {
-        $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-
-            return new ForbiddenResponse($this->__('Sorry! You do not have authorisation for this module.'));
+        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
         }
+
         $prop_id = $request->get('dudid', null);
         $oldstatus = (bool)$request->get('oldstatus', null);
         if (!$prop_id) {
@@ -106,9 +100,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // update the item status
         $func = $oldstatus ? 'deactivate' : 'activate';
-        $res = ModUtil::apiFunc($this->name, 'admin', $func, ['dudid' => $prop_id]);
+        $res = ModUtil::apiFunc('ZikulaProfileModule', 'admin', $func, ['dudid' => $prop_id]);
         if (!$res) {
-
             return new FatalResponse($this->__('Error! Could not save your changes.'));
         }
 
@@ -128,41 +121,47 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * string  name Name of the section to retrieve.
      * array   args Optional arguments to the API.
      *
-     * @return AjaxResponse|NotFoundResponse|ForbiddenResponse|BadDataResponse
+     * @return AjaxResponse|NotFoundResponse|BadDataResponse
+     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      */
     public function profilesectionAction(Request $request)
     {
-        $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
-
-            return new ForbiddenResponse($this->__('Sorry! You do not have authorisation for this module.'));
+        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_READ)) {
+            throw new AccessDeniedException();
         }
+
         $uid = $request->get('uid', null);
         $name = $request->get('name', null);
         $args = $request->get('args', null);
         if (empty($uid) || !is_numeric($uid) || empty($name)) {
-
             return new NotFoundResponse(['result' => false]);
         }
         if (empty($args) || !is_array($args)) {
             $args = [];
         }
+
         // update the item status
-        $section = ModUtil::apiFunc($this->name, 'section', $name, array_merge($args, ['uid' => $uid]));
+        $section = ModUtil::apiFunc('ZikulaProfileModule', 'section', $name, array_merge($args, ['uid' => $uid]));
         if (!$section) {
             return new FatalResponse($this->__('Error! Could not load the section.'));
         }
-        // build the output
-        $this->view->setCaching(false);
-        // check the template existence
-        $template = "sections/profile_section_{$name}.tpl";
-        if (!$this->view->template_exists($template)) {
 
+        // build the output
+        $view = \Zikula_View::getInstance('ZikulaProfileModule', \Zikula_View::CACHE_DISABLED);
+
+        // check the template existence
+        $template = 'sections/profile_section_' . $name . '.tpl';
+        if (!$view->template_exists($template)) {
             return new NotFoundResponse(['result' => false]);
         }
-        // assign and render the output
-        $this->view->assign('section', $section);
 
-        return new AjaxResponse(['result' => $this->view->fetch($template, $uid), 'name' => $name, 'uid' => $uid]);
+        // assign and render the output
+        $view->assign('section', $section);
+
+        return new AjaxResponse([
+            'result' => $view->fetch($template, $uid),
+            'name' => $name,
+            'uid' => $uid
+        ]);
     }
 }
