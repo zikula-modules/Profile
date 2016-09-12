@@ -11,28 +11,20 @@
 namespace Zikula\ProfileModule\Controller;
 
 use ModUtil;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
-use System;
+use Zikula\Core\Controller\AbstractController;
 
 /**
  * Class FormController
  * UI operations related to the display of dynamically defined user attributes.
  */
-class FormController extends \Zikula_AbstractController
+class FormController extends AbstractController
 {
-    public function postInitialize()
-    {
-        // disable view caching for all admin functions
-        $this->view->setCaching(false);
-    }
-
     /**
      * Display the dynadata section of a form for editing user accounts or registering for a new account.
+     *
+     * @Template
      *
      * @param Request $request
      *
@@ -49,9 +41,9 @@ class FormController extends \Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'ZikulaProfileModule') {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
+            $this->addFlash('error', $this->__('Error! You cannot access form functions directly.'));
 
-            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', [], RouterInterface::ABSOLUTE_URL));
+            return $this->redirectToRoute('zikulaprofilemodule_user_viewmembers');
         }
 
         // The API function is called.
@@ -74,12 +66,10 @@ class FormController extends \Zikula_AbstractController
             }
         }
 
-        $this->view
-            ->assign('duditems', $items)
-            ->assign('userid', $userid);
-
-        // Return the dynamic data section
-        return new Response($this->view->fetch('Form/edit.tpl'));
+        return [
+            'dudItems' => $items,
+            'userId' => $userid
+        ];
     }
 
     /**
@@ -93,9 +83,9 @@ class FormController extends \Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'ZikulaProfileModule') {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
+            $this->addFlash('error', $this->__('Error! You cannot access form functions directly.'));
 
-            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', [], RouterInterface::ABSOLUTE_URL));
+            return $this->redirectToRoute('zikulaprofilemodule_user_viewmembers');
         }
 
         // The API function is called.
@@ -112,20 +102,22 @@ class FormController extends \Zikula_AbstractController
         if (isset($items['tzoffset'])) {
             unset($items['tzoffset']);
         }
+
         // reset the 'required' flags
         foreach (array_keys($items) as $k) {
             $items[$k]['prop_required'] = false;
         }
 
-        $this->view
-            ->assign('duditems', $items)
-            ->assign('userid', 1);
-        // Return the dynamic data section
-        return new Response($this->view->fetch('Form/edit.tpl'));
+        return $this->render('@ZikulaProfileModule/Form/edit.html.twig', [
+            'dudItems' => $items,
+            'userId' => 1
+        ]);
     }
 
     /**
      * Fills a z-datatable body with the passed dynadata.
+     *
+     * @Template
      *
      * @param Request $request
      *
@@ -139,9 +131,9 @@ class FormController extends \Zikula_AbstractController
     {
         // can't use this function directly
         if (ModUtil::getName() == 'ZikulaProfileModule') {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! You cannot access form functions directly.'));
+            $this->addFlash('error', $this->__('Error! You cannot access form functions directly.'));
 
-            return new RedirectResponse($this->get('router')->generate('zikulaprofilemodule_user_viewmembers', [], RouterInterface::ABSOLUTE_URL));
+            return $this->redirectToRoute('zikulaprofilemodule_user_viewmembers');
         }
 
         // The API function is called.
@@ -151,14 +143,11 @@ class FormController extends \Zikula_AbstractController
             return '';
         }
 
-        $userinfo = isset($args['userinfo']) ? $args['userinfo'] : [];
+        $userInfo = isset($args['userinfo']) ? $args['userinfo'] : [];
 
-        // Create output object
-        $this->view
-            ->assign('duditems', $items)
-            ->assign('userinfo', $userinfo);
-
-        // Return the dynamic data rows
-        return new Response($this->view->fetch('Form/display.tpl'));
+        return [
+            'dudItems' => $items,
+            'userInfo' => $userInfo
+        ];
     }
 }

@@ -1,0 +1,19 @@
+<div class="{{ class|e('html_attr')|default('form-group') }}">
+    <label for="prop_{{ attributename|e('html_attr') }}" class="col-sm-3 control-label{% if required %} required{% endif %}">{{ proplabeltext }}</label>
+    <div class="col-sm-9">
+        <div id="prop_{{ attributename|e('html_attr') }}">
+            {% for key, item in fields %}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="{{ field_name|e('html_attr') }}[]" value="{{ key|e('html_attr') }}"{% if key in value %} checked="checked"{% endif %} /> {{ item }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if note != '' %}
+        <p class="help-block">{{ note }}</p>
+        {% endif %}
+        <p id="prop_{{ attributename|e('html_attr') }}_error" class="alert alert-danger{% if not error %} hidden{% endif %}">{% if error %}{{ error }}{% endif %}</p>
+    </div>
+</div>

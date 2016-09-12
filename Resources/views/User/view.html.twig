@@ -1,0 +1,66 @@
+{{ pageAddAsset('stylesheet', zasset('@ZikulaProfileModule:css/ribbon.css')) }}
+
+{% set name = '' %}
+{% if userInfo.__ATTRIBUTES__ is defined %}
+    {% set user_information_first_name = userInfo.__ATTRIBUTES__['user_information_first_name'] %}
+    {% set user_information_middle_name = userInfo.__ATTRIBUTES__['user_information_middle_name'] %}
+    {% set user_information_last_name = userInfo.__ATTRIBUTES__['user_information_last_name'] %}
+
+    {% set name = user_information_first_name ~ ' ' ~ user_information_middle_name ~ ' ' ~ user_information_last_name %}
+    {% if name is empty %}
+        {% set name = userInfo.__ATTRIBUTES__['realname'] %}
+    {% endif %}
+{% endif %}
+{% if name is not defined or name is empty %}
+    {% set name = uname %}
+{% endif %}
+
+{% set templateTitle = name|capitalize %}
+{{ include('@ZikulaProfileModule/User/menu.html.twig') }}
+
+<div class="ribbon-wrapper-green">
+    <div class="ribbon-green">
+        {{ __('Profile') }}
+    </div>
+</div>
+<div class="panel panel-default" id="profile_wrapper">
+    <div class="panel-body profile-information">
+        <div class="row user_name">
+            <div class="col-sm-3 text-right">
+                <strong>{{ __('User name:') }}</strong>
+            </div>
+            <div class="col-sm-9">
+                <span>{{ uname }}</span>
+            </div>
+        </div>
+        {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and userInfo.user_regdate != '1970-01-01 00:00:00' %}
+            <div class="row registration_date">
+                <div class="col-sm-3 text-right">
+                    <strong>{{ __('Registration date:') }}</strong>
+                </div>
+                <div class="col-sm-9">
+                    <span>{{ userInfo.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
+                </div>
+            </div>
+        {% endif %}
+        {% set allowGravatars = getModVar('ZikulaUsersModule', 'allowgravatars') %}
+        {% if dudArray.avatar|default and dudarray.avatar not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH')) %}
+            <img class="img-thumbnail" src="{{ avatarPath|e('html_attr') }}/{{ dudArray.avatar|e('html_attr') }}" alt="{{ name|e('html_attr') }}" />
+        {% elseif allowGravatars %}
+            {{ gravatar(emailAddress = userInfo.email) }}
+        {% endif %}
+    </div>
+</div>
+{% for fieldSet in fieldSets %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>{{ fieldSet }}</h3>
+        </div>
+        <div class="panel-body">
+            {% for item in fields if item.prop_fieldset == fieldSet and item.prop_attribute_name != 'avatar' %}
+                {{ dudItemDisplay(item=item, userInfo=userInfo) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}

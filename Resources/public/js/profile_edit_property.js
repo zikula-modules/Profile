@@ -14,7 +14,7 @@ function profile_modifyconfig_init()
     // initialized the backup of the required selector
     backup_required[0] = $F('profile_required');
     if ($('profile_displaytype').value == '2' || $('profile_displaytype').value == '7') {
-        $('profile_required').value = "0";
+        $('profile_required').value = '0';
         $('profile_required').disable();
         backup_required[1] = true;
     }
@@ -35,7 +35,7 @@ function profile_displaytype_onchange()
     if ($('profile_displaytype').value == '2' || $('profile_displaytype').value == '7') {
         backup_required[0] = $F('profile_required');
         backup_required[1] = true;
-        $('profile_required').value = "0";
+        $('profile_required').value = '0';
         $('profile_required').disable();
     }
 
@@ -66,25 +66,26 @@ function profile_displaytype_onchange()
     $('profile_help_type5').hide();
     $('profile_help_type7').hide();
     $('profile_warn_ids').hide();
+
     // needs to show the list_content textarea
     if (state > 0) {
         $('profile_content_wrapper').show();
         // check which type help should be shown
-        if (state&1) {
+        if (state & 1) {
             // checkbox
             $('profile_help_type2').show();
-        } else if (state&2) {
+        } else if (state & 2) {
             // radio
             $('profile_help_type3').show();
             $('profile_warn_ids').show();
-        } else if (state&4) {
+        } else if (state & 4) {
             // dropdown
             $('profile_help_type4').show();
             $('profile_warn_ids').show();
-        } else if (state&8) {
+        } else if (state & 8) {
             // date
             $('profile_help_type5').show();
-        } else if (state&32) {
+        } else if (state & 32) {
             // multibox
             $('profile_help_type7').show();
         }

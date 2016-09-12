@@ -32,7 +32,7 @@ use ZLanguage;
  * Parameters passed in the $params array:
  * ---------------------------------------
  * string  item          The Profile DUD item.
- * string  userinfo      The userinfo information [if not set uid must be specified].
+ * string  userInfo      The userinfo information [if not set uid must be specified].
  * string  uid           User ID to display the field value for (-1 = do not load).
  * string  proplabel     Property label to display (optional overrides the preformated dud item $item).
  * string  propattribute Property attribute to display.
@@ -85,18 +85,16 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
         $uid = UserUtil::getVar('uid');
     }
 
-    if (!isset($userinfo)) {
-        $userinfo = UserUtil::getVars($uid);
+    if (!isset($userInfo)) {
+        $userInfo = UserUtil::getVars($uid);
     }
 
     // get the value of this field from the userinfo array
-    if (isset($userinfo['__ATTRIBUTES__'][$item['prop_attribute_name']])) {
-        $uservalue = $userinfo['__ATTRIBUTES__'][$item['prop_attribute_name']];
-
-    } elseif (isset($userinfo[$item['prop_attribute_name']])) {
+    if (isset($userInfo['__ATTRIBUTES__'][$item['prop_attribute_name']])) {
+        $uservalue = $userInfo['__ATTRIBUTES__'][$item['prop_attribute_name']];
+    } elseif (isset($userInfo[$item['prop_attribute_name']])) {
         // user's temp view for non-approved users needs this
-        $uservalue = $userinfo[$item['prop_attribute_name']];
-
+        $uservalue = $userInfo[$item['prop_attribute_name']];
     } else {
         // can be a non-marked checkbox in the user temp data
         $uservalue = '';
@@ -106,7 +104,7 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     if ($item['prop_dtype'] != 1) {
         $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit', [
             'item' => $item,
-            'userinfo' => $userinfo,
+            'userinfo' => $$userInfo,
             'uservalue' => $uservalue,
             'default' => $default
         ]);
@@ -116,9 +114,9 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     }
 
     // build the output
-    $view->setCaching(0);
-    $view->assign('userinfo', $userinfo);
-    $view->assign('uservalue', $uservalue);
+    $view->setCaching(Zikula_View::CACHE_DISABLED);
+    $view->assign('userinfo', $userinfo)
+         ->assign('uservalue', $uservalue);
 
     // detects the template to use
     $template = $tplset . '_' . $item['prop_id'] . '.tpl';

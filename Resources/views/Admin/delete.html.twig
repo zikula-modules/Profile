@@ -1,0 +1,22 @@
+{{ adminHeader() }}
+<div class="z-admin-content-pagetitle">
+    <span class="fa fa-trash-o"></span>
+    <h3>{{ __('Delete personal info item') }}</h3>
+</div>
+<p class="alert alert-danger">{{ __('Do you really want to delete this personal info item?') }}</p>
+<form class="form" action="{{ path('zikulaprofilemodule_admin_delete') }}" method="post" enctype="application/x-www-form-urlencoded">
+    <div>
+        <input type="hidden" name="confirmation" value="1" />
+        <input type="hidden" name="dudid" value="{{ dudid }}" />
+        <fieldset>
+            <legend>{{ __('Confirmation prompt') }}</legend>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-danger"><span class="fa fa-trash-o"></span>{{ __('Delete') }}</button>
+                    <a class="btn btn-default" href="{{ path('zikulaprofilemodule_admin_view') }}" title="{{ __('Cancel')|e('html_attr') }}"><span class="fa fa-times"></span>{{ __('Cancel') }}</a>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+{{ adminFooter() }}

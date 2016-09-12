@@ -1,0 +1,8 @@
+<div class="form">
+    <fieldset>
+        <legend>{{ __('Personal information') }}</legend>
+        {% for item in dudItems %}
+            {{ dudItemDisplay(item=item, userInfo=userInfo) }}
+        {% endfor %}
+    </fieldset>
+</div>

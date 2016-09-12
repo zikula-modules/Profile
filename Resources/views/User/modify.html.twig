@@ -1,0 +1,21 @@
+{% set templateTitle = __('Edit profile') %}
+{{ include('@ZikulaProfileModule/User/menu.html.twig') }}
+
+<form id="modifyprofileform" class="form-horizontal" action="{{ path('zikulaprofilemodule_user_update', { uid: uid }) }}" method="post" enctype="application/x-www-form-urlencoded">
+    <p class="alert alert-info">{{ __('Items marked with an asterisk (*) are required entries.') }}</p>
+    {% for fieldSet in fieldSets %}
+        <fieldset class="{{ fieldSet|e('html_attr') }}">
+            <legend>{{ fieldSet }}</legend>
+            {% for itemLabel, item in dudItems if item.prop_fieldset == fieldSet %}
+                {{ dudItemModify(item=item, uid=uid) }}
+            {% endfor %}
+        </fieldset>
+    {% endfor %}
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
+            <input class="btn btn-success" type="submit" value="{{ __('Submit') }}" />
+            <a class="btn btn-danger" href="{{ path('zikulaprofilemodule_user_view') }}" title="{{ __('Cancel') }}">{{ __('Cancel') }}</a>
+            <input class="btn btn-default" type="reset" value="{{ __('Reset') }}" />
+        </div>
+    </div>
+</form>

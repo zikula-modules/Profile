@@ -43,7 +43,6 @@ function smarty_function_profilesection($params, Zikula_View $view)
 
     // extract the items to list
     $section = ModUtil::apiFunc('ZikulaProfileModule', 'section', $params['name'], $params);
-
     if ($section === false) {
         return '';
     }

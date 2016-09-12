@@ -1,0 +1,59 @@
+{% set templateTitle = __('Users online') %}
+{{ include('@ZikulaProfileModule/User/menu.html.twig') }}
+
+<div class="panel panel-default">
+    <table class="table table-striped">
+        <colgroup>
+            <col id="cUserName" />
+            {% if dudArray.realname|default %}
+                <col id="cRealName" />
+            {% endif %}
+            {% if messageModule|default %}
+                <col id="cMessages" />
+            {% endif %}
+            {% if dudArray.url|default %}
+                <col id="cSite" />
+            {% endif %}
+        </colgroup>
+        <thead>
+            <tr>
+                <th id="hUserName" scope="col">{{ __('User name') }}</th>
+                {% if dudArray.realname|default %}
+                    <th id="hRealName" scope="col">{{ __('Real name') }}</th>
+                {% endif %}
+                {% if messageModule|default %}
+                    <th id="hMessages" scope="col">{{ __('Messages') }}</th>
+                {% endif %}
+                {% if dudArray.url|default %}
+                    <th id="hSite" scope="col">{{ __('Site') }}</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td headers="hUserName"><strong>{{ user.uname|profilelinkbyuname }}</strong></td>
+                {% if dudArray.realname|default %}
+                    <td headers="hRealName">{{ user.attributes.realname|default('&nbsp;') }}</td>
+                {% endif %}
+                {% if messageModule|default %}
+                    <td headers="hMessages"><a href="{{ path(messageModule|lower ~ '_user_newpm', { uid: user.uid }) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
+                {% endif %}
+                {% if dudArray.url|default %}
+                    <td headers="hSite">
+                        {% if user.attributes.url|default and user.attributes.url != 'http://' %}
+                        <a href="{{ user.attributes.url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ user.attributes.url|e('html_attr') }}"></i></a>
+                        {% else %}
+                        &nbsp;
+                        {% endif %}
+                    </td>
+                {% endif %}
+            </tr>
+            {% else %}
+                <tr class="warning">
+                    <td colspan="4">{{ __('No registered users are currently online.') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

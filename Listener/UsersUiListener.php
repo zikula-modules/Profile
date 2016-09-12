@@ -69,6 +69,7 @@ class UsersUiListener implements EventSubscriberInterface
         if (!$this->view) {
             $this->view = Zikula_View::getInstance('ZikulaProfileModule');
         }
+
         return $this->view;
     }
 
@@ -189,16 +190,15 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function validateEdit(GenericEvent $event)
     {
-
         if ($this->request->isMethod('POST')) {
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
             $this->validation = new ValidationResponse('dynadata', $dynadata);
             $requiredFailures = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', [
                 'dynadata' => $dynadata
             ]);
-            
+
             $errorCount = 0;
-    
+
             if (($requiredFailures) && ($requiredFailures['result'])) {
                 foreach ($requiredFailures['fields'] as $key => $fieldName) {
                     $this->validation->addError($fieldName, __f(
@@ -253,5 +253,4 @@ class UsersUiListener implements EventSubscriberInterface
             }
         }
     }
-
 }
