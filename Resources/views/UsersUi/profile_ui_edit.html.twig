@@ -4,7 +4,7 @@
     <fieldset class="{{ fieldSet|e('html_attr') }}">
         <legend>{{ fieldSet }}</legend>
         {% for itemLabel, item in dudItems if item.prop_fieldset == fieldSet %}
-            {{ dudItemModify(item=item, uid=userid, error=duderrors[itemlabel]|default('')) }}
+            {{ dudItemModify(item=item, uid=userid, error=dudErrors[itemlabel]|default('')) }}
         {% endfor %}
     </fieldset>
 {% endfor %}

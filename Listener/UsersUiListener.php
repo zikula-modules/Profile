@@ -12,10 +12,10 @@ namespace Zikula\ProfileModule\Listener;
 
 use DataUtil;
 use ModUtil;
+use Twig_Environment;
 use UserUtil;
+use Zikula\Common\Translator\Translator;
 use Zikula\Core\Hook\ValidationResponse;
-use Zikula_View;
-use ZLanguage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Core\Event\GenericEvent;
@@ -31,18 +31,14 @@ class UsersUiListener implements EventSubscriberInterface
     const EVENT_KEY = 'module.profile.users_ui_handler';
 
     /**
-     * The language domain for ZLanguage i18n.
-     *
-     * @var string|null
+     * @var Translator
      */
-    protected $domain = null;
+    private $translator;
 
     /**
-     * Access to a Zikula_View instance for the Profile module.
-     *
-     * @var Zikula_View
+     * @var Twig_Environment
      */
-    protected $view;
+    protected $twig;
 
     /**
      * Access to the request information.
@@ -58,19 +54,18 @@ class UsersUiListener implements EventSubscriberInterface
      */
     protected $validation;
 
-    public function __construct(RequestStack $requestStack)
+    /**
+     * Constructor.
+     *
+     * @param Translator       $translator   Translator service instance
+     * @param RequestStack     $requestStack RequestStack service instance
+     * @param Twig_Environment $twig         Twig_Environment service instance
+     */
+    public function __construct(Translator $translator, RequestStack $requestStack, Twig_Environment $twig)
     {
+        $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
-        $this->domain = ZLanguage::getModuleDomain('ZikulaProfileModule');
-    }
-
-    public function getView()
-    {
-        if (!$this->view) {
-            $this->view = Zikula_View::getInstance('ZikulaProfileModule');
-        }
-
-        return $this->view;
+        $this->twig = $twig;
     }
 
     public static function getSubscribedEvents()
@@ -102,17 +97,16 @@ class UsersUiListener implements EventSubscriberInterface
     public function uiView(GenericEvent $event)
     {
         $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
-        // The return value of the function is checked here
-        if ($items) {
-            $user = $event->getSubject();
-            // Create output object
-            $this->getView()
-                ->setCaching(false)
-                ->assign('duditems', $items)
-                ->assign('userinfo', $user);
-            // Return the dynamic data rows
-            $event->data[self::EVENT_KEY] = $this->getView()->fetch('profile_profile_ui_view.tpl');
+        if (!$items) {
+            return;
         }
+
+        $user = $event->getSubject();
+
+        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/UsersUi/profile_ui_view.html.twig', [
+            'dudItems' => $items,
+            'userInfo' => $user
+        ]);
     }
 
     /**
@@ -132,47 +126,48 @@ class UsersUiListener implements EventSubscriberInterface
     public function uiEdit(GenericEvent $event)
     {
         $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable']);
-        // The return value of the function is checked here
-        if ($items) {
-            $fieldsets = [];
-            foreach ($items as $propattr => $propdata) {
-                $items[$propattr]['prop_fieldset'] = ((isset($items[$propattr]['prop_fieldset'])) && (!empty($items[$propattr]['prop_fieldset']))) ? $items[$propattr]['prop_fieldset'] : __('User Information', $this->domain);
-                $fieldsets[DataUtil::formatPermalink($items[$propattr]['prop_fieldset'])] = $items[$propattr]['prop_fieldset'];
-            }
-            // check if there's a user to edit
-            // or uses uid=1 to pull the default values from the anonymous user
-            $userid = $event->hasArgument('id') ? $event->getArgument('id') : null;
-            if (!isset($userid)) {
-                $userid = 1;
-            }
-            // Get the dynamic data that might have been posted
-            if ($this->request->isMethod('POST') && $this->request->request->has('dynadata')) {
-                $dynadata = $this->request->request->get('dynadata');
-            } else {
-                $dynadata = [];
-            }
-            // merge this temporary dynadata and the errors into the items array
-            foreach ($items as $prop_label => $item) {
-                foreach ($dynadata as $propname => $propdata) {
-                    if ($item['prop_attribute_name'] == $propname) {
-                        $items[$prop_label]['temp_propdata'] = $propdata;
-                    }
+        if (!$items) {
+            return;
+        }
+
+        $fieldSets = [];
+        foreach ($items as $propattr => $propdata) {
+            $fieldSet = (isset($propdata['prop_fieldset']) && !empty($propdata['prop_fieldset'])) ? $propdata['prop_fieldset'] : $this->translator->__('User Information');
+            $items[$propattr]['prop_fieldset'] = $fieldSet;
+            $fieldSets[$fieldSet] = $fieldSet;
+        }
+
+        // check if there's a user to edit
+        // or uses uid=1 to pull the default values from the anonymous user
+        $userid = $event->hasArgument('id') ? $event->getArgument('id') : null;
+        if (!isset($userid)) {
+            $userid = 1;
+        }
+
+        // Get the dynamic data that might have been posted
+        if ($this->request->isMethod('POST') && $this->request->request->has('dynadata')) {
+            $dynadata = $this->request->request->get('dynadata');
+        } else {
+            $dynadata = [];
+        }
+
+        // merge this temporary dynadata and the errors into the items array
+        foreach ($items as $prop_label => $item) {
+            foreach ($dynadata as $propname => $propdata) {
+                if ($item['prop_attribute_name'] == $propname) {
+                    $items[$prop_label]['temp_propdata'] = $propdata;
                 }
             }
-            if ($this->validation) {
-                $errorFields = $this->validation->getErrors();
-            } else {
-                $errorFields = [];
-            }
-            $this->getView()
-                ->setCaching(false)
-                ->assign('duderrors', $errorFields)
-                ->assign('duditems', $items)
-                ->assign('fieldsets', $fieldsets)
-                ->assign('userid', $userid);
-            $content = $this->getView()->fetch('profile_profile_ui_edit.tpl');
-            $event->data[self::EVENT_KEY] = $content;
         }
+
+        $errorFields = $this->validation ? $this->validation->getErrors() : [];
+
+        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/UsersUi/profile_ui_edit.html.twig', [
+            'dudItems' => $items,
+            'dudErrors' => $errorFields,
+            'fieldSets' => $fieldSets,
+            'userid' => $userid
+        ]);
     }
 
     /**
@@ -190,43 +185,40 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function validateEdit(GenericEvent $event)
     {
-        if ($this->request->isMethod('POST')) {
-            $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
-            $this->validation = new ValidationResponse('dynadata', $dynadata);
-            $requiredFailures = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', [
-                'dynadata' => $dynadata
-            ]);
-
-            $errorCount = 0;
-
-            if (($requiredFailures) && ($requiredFailures['result'])) {
-                foreach ($requiredFailures['fields'] as $key => $fieldName) {
-                    $this->validation->addError($fieldName, __f(
-                        'The \'%1$s\' field is required.',
-                        [$requiredFailures['translatedFields'][$key]],
-                        $this->domain)
-                    );
-
-                    $errorCount++;
-                }
-            }
-
-            if ($errorCount > 0) {
-                $this->request
-                    ->getSession()
-                    ->getFlashBag()
-                    ->add('error', _fn(
-                        'There was a problem with one of the personal information fields.',
-                        'There were problems with %d personal information fields.',
-                        $errorCount,
-                        [$errorCount],
-                        $this->domain)
-                    );
-            }
-
-            $event->data->set(self::EVENT_KEY, $this->validation);
+        if (!$this->request->isMethod('POST')) {
+            return;
         }
 
+        $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
+        $this->validation = new ValidationResponse('dynadata', $dynadata);
+        $requiredFailures = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', [
+            'dynadata' => $dynadata
+        ]);
+
+        $errorCount = 0;
+
+        if ($requiredFailures && $requiredFailures['result']) {
+            foreach ($requiredFailures['fields'] as $key => $fieldName) {
+                $this->validation->addError($fieldName,
+                    $this->translator->__f('The \'%s\' field is required.', ['%s' => $requiredFailures['translatedFields'][$key]])
+                );
+
+                $errorCount++;
+            }
+        }
+
+        if ($errorCount > 0) {
+            $this->request->getSession()->getFlashBag()->add('error',
+                $this->translator->_fn(
+                    'There was a problem with one of the personal information fields.',
+                    'There were problems with %d personal information fields.',
+                    $errorCount,
+                    ['%d' => $errorCount]
+                )
+            );
+        }
+
+        $event->data->set(self::EVENT_KEY, $this->validation);
     }
 
     /**
@@ -243,13 +235,15 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function processEdit(GenericEvent $event)
     {
-        if ($this->request->isMethod('POST')) {
-            if ($this->validation && !$this->validation->hasErrors()) {
-                $user = $event->getSubject();
-                $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
-                foreach ($dynadata as $dudName => $dudItem) {
-                    UserUtil::setVar($dudName, $dudItem, $user['uid']);
-                }
+        if (!$this->request->isMethod('POST')) {
+            return;
+        }
+
+        if ($this->validation && !$this->validation->hasErrors()) {
+            $user = $event->getSubject();
+            $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
+            foreach ($dynadata as $dudName => $dudItem) {
+                UserUtil::setVar($dudName, $dudItem, $user['uid']);
             }
         }
     }

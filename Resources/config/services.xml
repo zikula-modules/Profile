@@ -23,8 +23,9 @@
 
         <service id="zikula_profile_module.event_listener" class="%zikula_profile_module.event_listener.class%">
             <tag name="kernel.event_subscriber" />
+            <argument type="service" id="translator.default" />
             <argument type="service" id="request_stack" />
+            <argument type="service" id="twig" />
         </service>
     </services>
 </container>
-

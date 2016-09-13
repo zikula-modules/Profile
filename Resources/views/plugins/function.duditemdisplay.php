@@ -73,7 +73,7 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
 
     // check for a template set
     if (!isset($tplset)) {
-        $tplset = 'profile_duddisplay';
+        $tplset = 'duddisplay';
     }
 
     // a default value if the user data is empty
@@ -91,13 +91,13 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
 
     // get the value of this field from the userinfo array
     if (isset($userInfo['__ATTRIBUTES__'][$item['prop_attribute_name']])) {
-        $uservalue = $userInfo['__ATTRIBUTES__'][$item['prop_attribute_name']];
+        $userValue = $userInfo['__ATTRIBUTES__'][$item['prop_attribute_name']];
     } elseif (isset($userInfo[$item['prop_attribute_name']])) {
         // user's temp view for non-approved users needs this
-        $uservalue = $userInfo[$item['prop_attribute_name']];
+        $userValue = $userInfo[$item['prop_attribute_name']];
     } else {
         // can be a non-marked checkbox in the user temp data
-        $uservalue = '';
+        $userValue = '';
     }
 
     // try to get the DUD output if it's Third Party
@@ -105,7 +105,7 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
         $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit', [
             'item' => $item,
             'userinfo' => $$userInfo,
-            'uservalue' => $uservalue,
+            'uservalue' => $userValue,
             'default' => $default
         ]);
         if ($output) {
@@ -116,13 +116,14 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     // build the output
     $view->setCaching(Zikula_View::CACHE_DISABLED);
     $view->assign('userinfo', $userinfo)
-         ->assign('uservalue', $uservalue);
+         ->assign('uservalue', $userValue);
 
     // detects the template to use
-    $template = $tplset . '_' . $item['prop_id'] . '.tpl';
-    if (!$view->template_exists($template)) {
-        $template = $tplset . '_generic.tpl';
-    }
+    // TODO refactor to Twig
+    /*$template = $tplset . '_' . $item['prop_id'] . '.html.twig';
+    if (!$view->template_exists($template)) {*/
+        $template = $tplset . '_generic.html.twig';
+    /*}*/
 
     $output = '';
 
@@ -130,19 +131,19 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
     // avatar
     if ($item['prop_attribute_name'] == 'avatar') {
         $baseurl = System::getBaseUrl();
-        $avatarpath = ModUtil::getVar(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
-        if (empty($uservalue)) {
-            $uservalue = 'blank.png';
+        $avatarPath = ModUtil::getVar(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
+        if (empty($userValue)) {
+            $userValue = 'blank.png';
         }
 
-        $output = "<img alt=\"\" src=\"{$baseurl}{$avatarpath}/{$uservalue}\" />";
+        $output = '<img alt="" src="' . $baseurl . $avatarPath . '/' . $userValue . '" />';
     } elseif ($item['prop_attribute_name'] == 'tzoffset') {
         // timezone
-        if (empty($uservalue)) {
-            $uservalue = UserUtil::getVar('tzoffset') ? UserUtil::getVar('tzoffset') : System::getVar('timezone_offset');
+        if (empty($userValue)) {
+            $userValue = UserUtil::getVar('tzoffset') ? UserUtil::getVar('tzoffset') : System::getVar('timezone_offset');
         }
 
-        $output = DateUtil::getTimezoneText($uservalue);
+        $output = DateUtil::getTimezoneText($userValue);
         if (!$output) {
             return '';
         }
@@ -161,10 +162,10 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
                 $item['prop_label'] = __($label, $dom);
             }
 
-            $uservalue = (isset($uservalue)) ? (bool)$uservalue : 0;
-            $output = __($options[$uservalue], $dom);
+            $userValue = (isset($userValue)) ? (bool)$userValue : 0;
+            $output = __($options[$userValue], $dom);
         } else {
-            $output = $uservalue;
+            $output = $userValue;
         }
 
     } elseif ($item['prop_displaytype'] == 3) {
@@ -172,18 +173,18 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
         $options = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
         // process the user value and get the translated label
-        $output = isset($options[$uservalue]) ? $options[$uservalue] : $default;
+        $output = isset($options[$userValue]) ? $options[$userValue] : $default;
     } elseif ($item['prop_displaytype'] == 4) {
         // select
         $options = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
         $output = [];
-        foreach ((array)$uservalue as $id) {
+        foreach ((array)$userValue as $id) {
             if (isset($options[$id])) {
                 $output[] = $options[$id];
             }
         }
-    } elseif (!empty($uservalue) && $item['prop_displaytype'] == 5) {
+    } elseif (!empty($userValue) && $item['prop_displaytype'] == 5) {
         // date
         $format = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
         switch (trim(strtolower($format))) {
@@ -198,40 +199,40 @@ function smarty_function_duditemdisplay($params, Zikula_View $view)
                 $dateformat = 'j F Y';
                 break;
         }
-        $date = new DateTime($uservalue);
+        $date = new DateTime($userValue);
         $output = $date->format($dateformat);
     } elseif ($item['prop_displaytype'] == 7) {
         // multicheckbox
         $options = ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'getoptions', ['item' => $item]);
 
         // process the user values and get the translated label
-        $uservalue = @unserialize($uservalue);
+        $userValue = @unserialize($userValue);
 
         $output = [];
-        foreach ((array)$uservalue as $id) {
+        foreach ((array)$userValue as $id) {
             if (isset($options[$id])) {
                 $output[] = $options[$id];
             }
         }
     } elseif ($item['prop_attribute_name'] == 'url') {
         // url
-        if (!empty($uservalue) && $uservalue != 'http://') {
+        if (!empty($userValue) && $userValue != 'http://') {
             //! string to describe the user's site
-            $output = '<a href="' . DataUtil::formatForDisplay($uservalue) . '" title="' . __f("%s's site", $userinfo['uname'], $dom) . '" rel="nofollow">' . DataUtil::formatForDisplay($uservalue) . '</a>';
+            $output = '<a href="' . DataUtil::formatForDisplay($userValue) . '" title="' . __f("%s's site", $userinfo['uname'], $dom) . '" rel="nofollow">' . DataUtil::formatForDisplay($userValue) . '</a>';
         }
-    } elseif (empty($uservalue)) {
+    } elseif (empty($userValue)) {
         // process the generics
         $output = $default;
-    } elseif (DataUtil::is_serialized($uservalue) || is_array($uservalue)) {
+    } elseif (DataUtil::is_serialized($userValue) || is_array($userValue)) {
         // serialized data
-        $uservalue = !is_array($uservalue) ? unserialize($uservalue) : $uservalue;
+        $userValue = !is_array($userValue) ? unserialize($userValue) : $userValue;
         $output = [];
-        foreach ((array)$uservalue as $option) {
+        foreach ((array)$userValue as $option) {
             $output[] = __($option, $dom);
         }
     } else {
         // a string
-        $output .= __($uservalue, $dom);
+        $output .= __($userValue, $dom);
     }
 
     $view->assign('item', $item);
