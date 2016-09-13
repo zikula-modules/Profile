@@ -14,9 +14,10 @@ use DataUtil;
 use ModUtil;
 use Twig_Environment;
 use UserUtil;
+use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Common\Translator\Translator;
-use Zikula\Core\Hook\ValidationResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Core\Event\GenericEvent;
 
@@ -43,7 +44,7 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * Access to the request information.
      *
-     * @var \Zikula_Request_Http
+     * @var Request
      */
     protected $request;
 

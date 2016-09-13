@@ -1,27 +1,27 @@
 <div class="{{ class|e('html_attr')|default('form-group') }}{% if error %} has-error{% endif %}">
     {% if required %}
-        <p id="advice-required-prop_{{ attributename|e('html_attr') }}" class="alert alert-warning" style="display: none">
+        <p id="advice-required-prop_{{ attributeName|e('html_attr') }}" class="alert alert-warning" style="display: none">
             {{ __('Sorry! A required personal info item is missing. Please correct and try again.') }}
         </p>
     {% endif %}
-    <label for="prop_{{ attributename|e('html_attr') }}" class="col-sm-3 control-label{% if required %} required{% endif %}">{{ proplabeltext }}</label>
+    <label for="prop_{{ attributeName|e('html_attr') }}" class="col-sm-3 control-label{% if required %} required{% endif %}">{{ propLabelText }}</label>
     <div class="col-sm-9">
         {# TODO
         {jquery_datepicker
         defaultdate=$valueDateTime
-        displayelement="display_`$attributename`"
+        displayelement="display_`$attributeName`"
         displayformat_datetime=$formats.dt
         displayformat_javascript=$formats.js
-        object=$field_object
+        object=$fieldObject
         displayelement_class='form-control'
         readonly=false
-        valuestorageelement=$attributename
+        valuestorageelement=$attributeName
         changeMonth='true'
         changeYear='true'}
         #}
         {% if note != '' %}
             <p class="help-block">{{ note }}</p>
         {% endif %}
-        <p id="prop_{{ attributename|e('html_attr') }}_error" class="alert alert-danger{% if not error %} hidden{% endif %}">{% if error %}{{ error }}{% endif %}</p>
+        <p id="prop_{{ attributeName|e('html_attr') }}_error" class="alert alert-danger{% if not error %} hidden{% endif %}">{% if error %}{{ error }}{% endif %}</p>
     </div>
 </div>

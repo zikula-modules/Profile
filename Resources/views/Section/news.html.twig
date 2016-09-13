@@ -1,0 +1,15 @@
+{% if section %}
+    <h4>{{ __f('Latest articles of %s', { '%s': userInfo.uname }) }}</h4>
+    <ul>
+        {% for item in section %}
+            <li>
+                <a href="{{ zikulaprofilemodule_modUrlLegacy(modname='News', type='user', func='display', args = { title: item.urltitle, sid: item.sid }) }}">{{ item.title }}</a><br />
+                <span class="z-sub">{{ __f('On %s', { '%s': item.time })|localizeddate('long', 'none') }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="profile-emptysection">
+        {{ __('No recent articles found.') }}
+    </p>
+{% endif %}

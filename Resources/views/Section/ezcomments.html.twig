@@ -1,0 +1,15 @@
+{% if section %}
+    <h4>{{ __f('Latest comments of %s', { '%s': userInfo.uname }) }}</h4>
+    <ul>
+    {% for item in section %}
+        <li>
+            <a href="{{ item.url|e('html_attr') }}">{{ item.subject|default(item.comment|truncate(50)) }}</a><br />
+            <span class="z-sub">{{ __f('On %s', { '%s': item.date })|localizeddate('long', 'none') }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p class="profile-emptysection">
+        {{ __('No recent comments found.') }}
+    </p>
+{% endif %}

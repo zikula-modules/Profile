@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="zikula_profile_module.container.link_container.class">Zikula\ProfileModule\Container\LinkContainer</parameter>
+        <parameter key="twig.extension.zikula_profile_module.class">Zikula\ProfileModule\Twig\TwigExtension</parameter>
         <parameter key="zikula_profile_module.event_listener.class">Zikula\ProfileModule\Listener\UsersUiListener</parameter>
     </parameters>
 
@@ -19,6 +20,15 @@
             <argument type="service" id="zikula_users_module.current_user" />
             <argument type="service" id="zikula_users_module.container.link_container" />
             <tag name="zikula.link_container" />
+        </service>
+
+        <service id="twig.extension.zikula_profile_module" class="%twig.extension.zikula_profile_module.class%" public="false">
+            <argument type="service" id="translator.default" />
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="twig" />
+            <argument type="service" id="zikula_extensions_module.api.variable" />
+            <tag name="twig.extension" />
         </service>
 
         <service id="zikula_profile_module.event_listener" class="%zikula_profile_module.event_listener.class%">

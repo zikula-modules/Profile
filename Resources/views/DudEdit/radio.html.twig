@@ -1,0 +1,20 @@
+<div class="{{ class|e('html_attr')|default('form-group') }}">
+    {% if required %}
+        <p id="advice-required-prop_{{ attributeName|e('html_attr') }}" class="alert alert-warning" style="display: none">
+            {{ __('Sorry! A required personal info item is missing. Please correct and try again.') }}
+        </p>
+    {% endif %}
+
+    <label for="prop_{{ attributeName|e('html_attr') }}" class="col-sm-3 control-label{% if required %} required{% endif %}">{{ propLabelText }}</label>
+    <div class="col-sm-9">
+        {% for key, label in listOptions %}
+            <div class="radio">
+                <input type="radio" name="{{ fieldName|e('html_attr') }}" value="{{ key|e('html_attr') }}"{% if key == selectedValue %} checked="checked"{% endif %} /> {{ label }}
+            </div>
+        {% endfor %}
+        {% if note != '' %}
+            <p class="help-block">{{ note }}</p>
+        {% endif %}
+        <p id="prop_{{ attributeName|e('html_attr') }}_error" class="alert alert-danger{% if not error %} hidden{% endif %}">{% if error %}{{ error }}{% endif %}</p>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="{{ class|e('html_attr')|default('form-group') }}">
+    <label for="prop_{{ attributeName|e('html_attr') }}" class="col-sm-3 control-label{% if required %} required{% endif %}">{{ propLabelText }}</label>
+    <div class="col-sm-9">
+        {% set selectLabel = __('Select') %}
+        {% set title = __f('&quot;%1$s: %2$s&quot; is required. Please select an option.', { '%1$s': item.prop_fieldset, '%2$s': item.prop_label }) %}
+        {% if attributeName == 'country' or '_country' in attributeName %}
+            {# TODO
+            {selector_countries allText=$gt allValue='' class='form-control' id="prop_`$attributeName`" name=fieldName selectedValue=$selectedValue required=true title=$title}
+            #}
+        {% else %}
+            <select id="prop_{{ attributeName|e('html_attr') }}" name="{{ fieldName|e('html_attr') }}{% if selectMultiple %}[]{% endif %}"{% if selectMultiple %} placeholder="{{ __('Select')|e('html_attr') }}" {% endif %}{{ selectMultiple }} class="form-control" required="required" title="{{ __f('&quot;%1$s: %2$s&quot; is required. Please select an option.', { '%1$s': item.prop_fieldset, '%2$s': item.prop_label }) }}" x-moz-errormessage="{{ __f('&quot;%1$s: %2$s&quot; is required. Please select an option.', { '%1$s': item.prop_fieldset, '%2$s': item.prop_label })|e('html_attr') }}" oninvalid="this.setCustomValidity('{{ __('Please select an item in the list.')|e('html_attr') }}');" onchange="this.setCustomValidity('');" onblur="this.checkValidity();">
+                {% if not selectMultiple %}<option label="{{ __('Select')|e('html_attr') }}" value="">{{ __('Select') }}</option>{% endif %}
+                {% for key, label in listOptions %}
+                    <option value="{{ key|e('html_attr') }}"{% if key in selectedValue %} selected="selected"{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+
+        {% if attributeName == 'avatar' %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\UsersModule\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+            <p id="youravatarcontainer">
+                <span id="youravatarpath" style="display: none">{{ avatarPath }}</span>
+                <img class="img-thumbnail" id="youravatardisplay" src="{{ avatarPath|e('html_attr') }}/{{ selectedValue|e('html_attr') }}" alt="{{ propLabelText }}" />
+            </p>
+        {% endif %}
+        {% if note != '' %}
+            <p class="help-block">{{ note }}</p>
+        {% endif %}
+    </div>
+</div>
+{% if attributeName == 'avatar' %}
+    {{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/showavatar.js')) }}
+    {% set avatarScript %}
+        <script type="text/javascript">
+        // <![CDATA[
+            Event.observe($('prop_avatar'), 'change', showavatar);
+        // ]]>
+        </script>
+    {% endset %}
+    {{ pageAddAsset('footer', avatarScript) }}
+{% endif %}

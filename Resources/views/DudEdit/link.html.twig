@@ -1,0 +1,7 @@
+<div class="{{ class|e('html_attr')|default('form-group') }}">
+    <label for="prop_{{ attributeName|e('html_attr') }}">{{ propLabelText }}</label>
+    <span id="prop_{{ attributeName|e('html_attr') }}"><a href="{{ linkUrl|e('html_attr')|default('#') }}">{{ linkText|default('-') }}</a></span>
+    {% if note != '' %}
+        <p class="help-block">{{ note }}</p>
+    {% endif %}
+</div>
