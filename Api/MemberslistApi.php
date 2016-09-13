@@ -67,7 +67,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             $letter = null;
         }
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.':Members:', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
             return [];
         }
         // begin the construction of the query
@@ -119,9 +119,9 @@ class MemberslistApi extends \Zikula_AbstractApi
                     }
                 }
             } else {
-                $activePropertiesByName = ModUtil::apiFunc($this->name, 'user', 'getallactive');
+                $activePropertiesByName = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
                 if (is_numeric($searchBy)) {
-                    $activeProperties = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['index' => 'prop_id']);
+                    $activeProperties = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['index' => 'prop_id']);
                     $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $activeProperties[$searchBy]['prop_attribute_name'])
                         ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%' . $letter . '%');
@@ -132,7 +132,8 @@ class MemberslistApi extends \Zikula_AbstractApi
                 }
             }
         }
-        if (ModUtil::getVar($this->name, 'filterunverified')) {
+
+        if (ModUtil::getVar('ZikulaProfileModule', 'filterunverified')) {
             $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
         }
         $orderBy = false;
@@ -292,14 +293,14 @@ class MemberslistApi extends \Zikula_AbstractApi
             WHERE s.lastused > :activetime
             AND s.uid >= 2';
         $query = $this->entityManager->createQuery($dql);
-        $activetime = new DateTime();
+        $activeTime = new DateTime();
         // @todo maybe need to check TZ here
-        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
-        $query->setParameter('activetime', $activetime);
-        $numusers = $query->getSingleScalarResult();
+        $activeTime->modify('-' . System::getVar('secinactivemins') . ' minutes');
+        $query->setParameter('activetime', $activeTime);
 
-        // Return the number of items
-        return $numusers;
+        $amountOfUsers = $query->getSingleScalarResult();
+
+        return $amountOfUsers;
     }
 
     /**
@@ -310,8 +311,10 @@ class MemberslistApi extends \Zikula_AbstractApi
     public function getlatestuser()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('u')->from('Zikula\\UsersModule\\Entity\\UserEntity', 'u')->where('u.uid <> 1');
-        if (ModUtil::getVar($this->name, 'filterunverified')) {
+        $qb->select('u')
+            ->from('Zikula\\UsersModule\\Entity\\UserEntity', 'u')
+            ->where('u.uid != 1');
+        if (ModUtil::getVar('ZikulaProfileModule', 'filterunverified')) {
             $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
         }
         $qb->orderBy('u.uid', 'DESC')->setMaxResults(1);
@@ -375,22 +378,24 @@ class MemberslistApi extends \Zikula_AbstractApi
             FROM Zikula\\UsersModule\\Entity\\UserSessionEntity s, Zikula\\UsersModule\\Entity\\UserEntity u
             LEFT JOIN u.attributes a
             WHERE s.lastused > :activetime
-            AND (s.uid >= 2
-            AND s.uid = u.uid)';
+            AND s.uid >= 2
+            AND s.uid = u.uid
+        ';
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // @todo maybe need to check TZ here
         $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
-        $onlineusers = $query->getArrayResult();
-        foreach ($onlineusers as $k => $user) {
+        $onlineUsers = $query->getArrayResult();
+
+        foreach ($onlineUsers as $k => $user) {
             // reformat attributes array
             foreach($user['attributes'] as $name => $attr) {
-                $onlineusers[$k]['attributes'][$name] = $attr['value'];
+                $onlineUsers[$k]['attributes'][$name] = $attr['value'];
             }
         }
 
-        return $onlineusers;
+        return $onlineUsers;
     }
 
     /**
@@ -415,27 +420,27 @@ class MemberslistApi extends \Zikula_AbstractApi
         // @todo maybe need to check TZ here
         $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
-        $onlineusers = $query->getArrayResult();
-        $numguests = 0;
+        $onlineUsers = $query->getArrayResult();
+
+        $amountOfGuests = 0;
         $unames = [];
-        foreach ($onlineusers as $key => $user) {
+        foreach ($onlineUsers as $key => $user) {
             if ($user['uid'] != 1) {
                 $unames[$user['uname']] = $user;
             } else {
-                $numguests++;
+                $amountOfGuests++;
             }
         }
         ksort($unames);
         $unames = array_values($unames);
-        $numusers = count($unames);
-        $items = [
-            'unames' => $unames,
-            'numusers' => $numusers,
-            'numguests' => $numguests,
-            'total' => $numguests + $numusers
-        ];
+        $amountOfUsers = count($unames);
 
-        return $items;
+        return [
+            'unames' => $unames,
+            'numusers' => $amountOfUsers,
+            'numguests' => $amountOfGuests,
+            'total' => $amountOfGuests + $amountOfUsers
+        ];
     }
 
     /**

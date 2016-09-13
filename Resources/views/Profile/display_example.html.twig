@@ -6,7 +6,7 @@
 {% endif %}
 
 {% set templateTitle = __f('Latest submissions of %s', { '%s': name|capitalize }) %}
-{{ include('@ZikulaProfileModule/User/menu.html.twig') }}
+{{ include('@ZikulaProfileModule/menu.html.twig') }}
 
 <div id="profile_wrapper">
     {% set allowGravatars = getModVar('ZikulaUsersModule', 'allowgravatars') %}

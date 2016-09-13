@@ -43,7 +43,7 @@ class FormController extends AbstractController
         if (ModUtil::getName() == 'ZikulaProfileModule') {
             $this->addFlash('error', $this->__('Error! You cannot access form functions directly.'));
 
-            return $this->redirectToRoute('zikulaprofilemodule_user_viewmembers');
+            return $this->redirectToRoute('zikulaprofilemodule_members_view');
         }
 
         // The API function is called.
@@ -85,7 +85,7 @@ class FormController extends AbstractController
         if (ModUtil::getName() == 'ZikulaProfileModule') {
             $this->addFlash('error', $this->__('Error! You cannot access form functions directly.'));
 
-            return $this->redirectToRoute('zikulaprofilemodule_user_viewmembers');
+            return $this->redirectToRoute('zikulaprofilemodule_members_view');
         }
 
         // The API function is called.
@@ -133,7 +133,7 @@ class FormController extends AbstractController
         if (ModUtil::getName() == 'ZikulaProfileModule') {
             $this->addFlash('error', $this->__('Error! You cannot access form functions directly.'));
 
-            return $this->redirectToRoute('zikulaprofilemodule_user_viewmembers');
+            return $this->redirectToRoute('zikulaprofilemodule_members_view');
         }
 
         // The API function is called.

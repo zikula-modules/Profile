@@ -17,7 +17,10 @@ use Zikula\Core\Doctrine\EntityAccess;
  * Property entity class
  *
  * @ORM\Entity
- * @ORM\Table(name="user_property",indexes={@ORM\index(name="prop_label", columns={"label"}),@ORM\index(name="prop_attr", columns={"attributename"})})
+ * @ORM\Table(name="user_property", indexes = {
+ *     @ORM\index(name="prop_label", columns = {"label"}),
+ *     @ORM\index(name="prop_attr", columns = {"attributename"})
+ * })
  */
 class PropertyEntity extends EntityAccess
 {
@@ -29,31 +32,37 @@ class PropertyEntity extends EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $prop_id;
+
     /**
      * Label
      * @ORM\Column(type="string",name="label")
      */
     private $prop_label = '';
+
     /**
      * Dtype
      * @ORM\Column(type="integer",name="dtype")
      */
     private $prop_dtype = 0;
+
     /**
      * Modname
      * @ORM\Column(type="string",length=64,name="modname")
      */
     private $prop_modname = '';
+
     /**
      * Weight
      * @ORM\Column(type="integer",name="weight")
      */
     private $prop_weight = 0;
+
     /**
      * Validation
      * @ORM\Column(type="text",nullable=true,name="validation")
      */
     private $prop_validation = null;
+
     /**
      * Attribute name
      * @ORM\Column(type="string",length=80,name="attributename")
@@ -164,14 +173,19 @@ class PropertyEntity extends EntityAccess
         return $this->prop_weight;
     }
 
+    /**
+     * Increment weight.
+     */
     public function incrementWeight()
     {
         $this->prop_weight++;
     }
 
+    /**
+     * Decrement weight.
+     */
     public function decrementWeight()
     {
         $this->prop_weight--;
     }
-
 }

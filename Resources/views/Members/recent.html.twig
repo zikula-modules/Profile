@@ -1,5 +1,5 @@
 {% set templateTitle = __f('Last %s registered users', { '%s': recentmembersitemsperpage }) %}
-{{ include('@ZikulaProfileModule/User/menu.html.twig') }}
+{{ include('@ZikulaProfileModule/menu.html.twig') }}
 
 <div class="panel panel-default">
     <table class="table table-striped">
@@ -42,7 +42,7 @@
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profilelinkbyuname }}</strong>&nbsp;&nbsp;
                     {% if user.onlinestatus == 1 %}
-                        <a href="{{ path('zikulaprofilemodule_user_onlinemembers') }}" title="{{ __('View users online') }}"><span class="label label-success">{{ __('online') }}</span></a>
+                        <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="label label-success">{{ __('online') }}</span></a>
                     {% else %}
                         <span class="label label-danger">{{ __('offline') }}</span>
                     {% endif %}

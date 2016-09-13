@@ -24,7 +24,7 @@
             "url": "search",
             "capabilities": {
                 "admin": {"route": "zikulaprofilemodule_config_config"},
-                "user": {"route": "zikulasprofilemodule_user_view"},
+                "user": {"route": "zikulaprofilemodule_profile_display"},
                 "profile": {"version": "1.0"}
             },
             "securityschema": {

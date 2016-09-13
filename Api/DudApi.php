@@ -65,9 +65,10 @@ class DudApi extends \Zikula_AbstractApi
             throw new \InvalidArgumentException();
         }
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::item', "{$args['label']}::", ACCESS_ADD)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$args['label']}::", ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
+        // TODO $this->request is invalid!
         $flashBag = $this->request->getSession()->getFlashBag();
         if (!ModUtil::getIdFromName($args['modname'])) {
             $flashBag->add('error', $this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
@@ -88,18 +89,18 @@ class DudApi extends \Zikula_AbstractApi
         $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
         $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
         // Check if the label or attribute name already exists
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['proplabel' => $args['label']]);
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
         if ($item) {
             $flashBag->add('error', $this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
             return false;
         }
-        $item = ModUtil::apiFunc($this->name, 'user', 'get', ['propattribute' => $args['attribute_name']]);
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
             $flashBag->add('error', $this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
             return false;
         }
         // Determine the new weight
-        $weightlimits = ModUtil::apiFunc($this->name, 'user', 'getweightlimits');
+        $weightlimits = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;
 
         // insert the new field
@@ -141,6 +142,7 @@ class DudApi extends \Zikula_AbstractApi
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
             throw new \InvalidArgumentException();
         }
+
         // Get item with where clause
         $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
         /** @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
@@ -151,20 +153,24 @@ class DudApi extends \Zikula_AbstractApi
         } else {
             $item = $propertyRepository->findOneBy(['prop_attribute_name' => $args['propattribute']]);
         }
+
         // Check for no rows found, and if so return
         if (!$item) {
             return false;
         }
+
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
             return false;
         }
+
         // delete the property data aka attributes
         $qb = $this->entityManager->createQueryBuilder();
         $qb->delete('Zikula\\UsersModule\\Entity\\UserAttributeEntity', 'a')
             ->where('a.name = :name')
             ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
+
         // delete the property
         $qb->delete('ZikulaProfileModule:PropertyEntity', 'p')
             ->where('p.prop_id = :id')

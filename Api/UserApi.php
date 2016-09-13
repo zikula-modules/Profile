@@ -44,10 +44,12 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($args['numitems'])) {
             $args['numitems'] = -1;
         }
+
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_READ)) {
             return [];
         }
+
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')
             ->from('ZikulaProfileModule:PropertyEntity', 'p')
@@ -59,9 +61,10 @@ class UserApi extends \Zikula_AbstractApi
             $qb->setMaxResults($args['numitems']);
         }
         $items = $qb->getQuery()->getArrayResult();
+
         // Put items into result array.
         foreach (array_keys($items) as $k) {
-            if (SecurityUtil::checkPermission($this->name.'::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
+            if (SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                 $validationinfo = @unserialize($items[$k]['prop_validation']);
                 unset($items[$k]['prop_validation']);
                 // Expand the item array
@@ -98,25 +101,32 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($args['propid']) && !isset($args['proplabel']) && !isset($args['propattribute'])) {
             throw new \InvalidArgumentException();
         }
+
+        $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
+
         /** @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->find((int)$args['propid']);
+            $item = $propertyRepository->find((int)$args['propid']);
         } elseif (isset($args['proplabel'])) {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(['prop_label' => $args['proplabel']]);
+            $item = $propertyRepository->findOneBy(['prop_label' => $args['proplabel']]);
         } else {
-            $item = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity')->findOneBy(['prop_attribute_name' => $args['propattribute']]);
+            $item = $propertyRepository->findOneBy(['prop_attribute_name' => $args['propattribute']]);
         }
+
         // Check for no rows found, and if so return
         if (!$item) {
             return false;
         }
+
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
             return false;
         }
+
         // Extract the validation info array
         $validationinfo = unserialize($item->getProp_validation());
         $item = $item->toArray();
+
         // Expand the item array
         foreach ((array)$validationinfo as $infolabel => $infofield) {
             $item['prop_' . $infolabel] = $infofield;
@@ -162,10 +172,12 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($args['uid']) || !is_numeric($args['uid'])) {
             $args['uid'] = 0;
         }
+
         // Security check
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_READ)) {
             return [];
         }
+
         static $items;
         if (!isset($items)) {
             $qb = $this->entityManager->createQueryBuilder();
@@ -177,7 +189,7 @@ class UserApi extends \Zikula_AbstractApi
             $items = $qb->getQuery()->getArrayResult();
             foreach (array_keys($items) as $k) {
                 // check permissions
-                if (SecurityUtil::checkPermission($this->name.'::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
+                if (SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                     // Extract the validation info array
                     $validationinfo = @unserialize($items[$k]['prop_validation']);
                     unset($items[$k]['prop_validation']);
@@ -189,17 +201,20 @@ class UserApi extends \Zikula_AbstractApi
                 }
             }
         }
+
         // process the startnum and numitems
         if ($args['numitems']) {
             $items = array_splice($items, $args['startnum'] + 1, $args['numitems']);
         } else {
             $items = array_splice($items, $args['startnum'] + 1);
         }
+
         // Put items into result array and filter if needed
         $currentuser = (int)UserUtil::getVar('uid');
         $ismember = $currentuser >= 2;
         $isowner = $currentuser == (int)$args['uid'];
-        $isadmin = SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN);
+        $isadmin = SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN);
+
         $result = [];
         foreach ($items as $item) {
             switch ($args['get']) {
@@ -312,7 +327,7 @@ class UserApi extends \Zikula_AbstractApi
             throw new \InvalidArgumentException();
         }
         $fields = $args['dynadata'];
-        $duds = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['get' => 'editable', 'uid' => $args['uid']]);
+        $duds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable', 'uid' => $args['uid']]);
         foreach ($duds as $attrname => $dud) {
             // exclude avatar update when Avatar module is present
             if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
@@ -388,8 +403,10 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($args['dynadata'])) {
             throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['checkrequired']));
         }
+
         // The API function is called.
-        $items = ModUtil::apiFunc($this->name, 'user', 'getallactive', ['get' => 'editable']);
+        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable']);
+
         // Initializing Error check
         $error = false;
         foreach ($items as $item) {
@@ -511,15 +528,17 @@ class UserApi extends \Zikula_AbstractApi
             throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['checkrequired']));
         }
         $dynadata = $args['dynadata'];
+
         // Validate if there's any dynamic data
         if (empty($dynadata) || !is_array($dynadata)) {
             return $uids;
         }
+
         $params = ['returnUids' => true];
         if (count($dynadata) == 1 && in_array('all', array_keys($dynadata))) {
             $params['searchby'] = $dynadata;
         } else {
-            $duditems = ModUtil::apiFunc($this->name, 'user', 'getall');
+            $duditems = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getall');
             $params['searchby'] = [];
             foreach ($duditems as $item) {
                 if (isset($dynadata[$item['prop_attribute_name']]) && !empty($dynadata[$item['prop_attribute_name']])) {
@@ -528,7 +547,7 @@ class UserApi extends \Zikula_AbstractApi
             }
         }
         if (!empty($params['searchby'])) {
-            $uids = ModUtil::apiFunc($this->name, 'memberslist', 'getall', $params);
+            $uids = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', $params);
         }
 
         return $uids;
