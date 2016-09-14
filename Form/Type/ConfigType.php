@@ -25,6 +25,8 @@ class ConfigType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $translator = $options['translator'];
+
         $builder
             ->add('viewregdate', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
                 'label' => $translator->__('Display the user\'s registration date'),

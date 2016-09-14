@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
@@ -354,16 +355,16 @@ class AdminController extends AbstractController
         if (!empty($dudid)) {
             $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
             if ($item == false) {
-                $this->addFlash('error', $this->__('Error! No such personal info item found.'));
-
-                return new Response();
+                throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
             }
+
             // Security check
-            if (!$this->hasPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$dudid}", ACCESS_EDIT)) {
+            if (!$this->hasPermission('ZikulaProfileModule::item', $item['prop_label'] . '::' . $dudid, ACCESS_EDIT)) {
                 throw new AccessDeniedException();
             }
+
             // backward check to remove any 1.4- forbidden char in listoptions 10 = New Line /n and 13 = Carriage Return /r
-            $item['prop_listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $item['prop_listoptions']));
+            $item['prop_listoptions'] = str_replace(chr(10), '', str_replace(chr(13), '', $item['prop_listoptions']));
             $item['prop_fieldset'] = (isset($item['prop_fieldset']) && !empty($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
             $item['prop_listoptions'] = str_replace(' ', '', $item['prop_listoptions']);
 
@@ -398,26 +399,23 @@ class AdminController extends AbstractController
     {
         // Get parameters from whatever input we need.
         $dudid = (int)$request->get('dudid', null);
-        $confirmation = (bool)$request->get('confirmation', null);
 
         // The user API function is called.
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            $this->addFlash('error', $this->__('Error! No such personal info item found.'));
+            throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
 
             return new Response();
         }
 
         // Security check
-        if (!$this->hasPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$dudid}", ACCESS_DELETE)) {
+        if (!$this->hasPermission('ZikulaProfileModule::item', $item['prop_label'] . '::' . $dudid, ACCESS_DELETE)) {
             throw new AccessDeniedException();
         }
 
-        // Check for confirmation.
-        if (!empty($confirmation)) {
-            // If we get here it means that the user has confirmed the action
+        $form = $this->createForm('Zikula\ProfileModule\Form\DeleteDudType', $item);
 
-            // The API function is called.
+        if ($form->handleRequest($request)->isValid()) {
             if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'delete', ['dudid' => $dudid])) {
                 // Success
                 $this->addFlash('status', $this->__('Done! The field has been successfully deleted.'));
@@ -426,11 +424,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('zikulaprofilemodule_admin_view');
         }
 
-        // No confirmation yet - display a suitable form to obtain confirmation
-        // of this action from the user
-
         return [
-            'dudid' => $dudid
+            'deleteForm' => $form->createView()
         ];
     }
 
@@ -452,14 +447,14 @@ class AdminController extends AbstractController
     {
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            $this->addFlash('error', $this->__('Error! No such personal info item found.'));
-
-            return new Response();
+            throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
         }
+
         // Security check
         if (!$this->hasPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
+
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
         $prop->incrementWeight();
@@ -486,19 +481,20 @@ class AdminController extends AbstractController
     {
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            $this->addFlash('error', $this->__('Error! No such personal info item found.'));
-
-            return new Response();
+            throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
         }
+
         // Security check
         if (!$this->hasPermission('ZikulaProfileModule::item', "{$item['prop_label']}::{$item['prop_id']}", ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
+
         if ($item['prop_weight'] <= 1) {
             $this->addFlash('error', $this->__('Error! You cannot decrease the weight of this account property.'));
 
             return new Response();
         }
+
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
         $prop->decrementWeight();
