@@ -28,13 +28,18 @@
                 "profile": {"version": "1.0"}
             },
             "securityschema": {
-                "ZikulaSearchModule::": "Module name::",
-                "ZikulaSearchModule::": "::",
-                "ZikulaSearchModule::view": "::",
-                "ZikulaSearchModule::item": "DynamicUserData PropertyName::DynamicUserData PropertyID",
-                "ZikulaSearchModule:Members": "::",
-                "ZikulaSearchModule:Members:recent": "::",
-                "ZikulaSearchModule:Members:online": "::"
+                "ZikulaProfileModule::": "Module name::",
+                "ZikulaProfileModule::": "::",
+                "ZikulaProfileModule::view": "::",
+                "ZikulaProfileModule::item": "DynamicUserData PropertyName::DynamicUserData PropertyID",
+                "ZikulaProfileModule:Members": "::",
+                "ZikulaProfileModule:Members:recent": "::",
+                "ZikulaProfileModule:Members:online": "::",
+                "ZikulaProfileModule:FeaturedUserblock:": "Block ID::",
+                "ZikulaProfileModule:LastSeenblock:": "Block title::",
+                "ZikulaProfileModule:LastXUsersblock:": "Block title::",
+                "ZikulaProfileModule:MembersOnlineblock:": "Block title::",
+                "Userblock:": "Block title::"
             }
         }
     }
