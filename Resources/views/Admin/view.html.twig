@@ -1,4 +1,4 @@
-{{ pageAddAsset('js', zasset('@ZikulaProfileModule:js/profile.js')) }}
+{{ pageAddAsset('js', zasset('@ZikulaProfileModule:js/Zikula.Profile.Admin.View.js')) }}
 {{ adminHeader() }}
 <h3>
     <span class="fa fa-list"></span>
@@ -8,7 +8,7 @@
 <form class="z-adminform" action="" method="post" enctype="application/x-www-form-urlencoded">
     <div>
         <input type="hidden" id="startnum" name="startnum" value="{{ startNum }}" />
-        <p id="profilehint" class="alert alert-info" style="display:none">{{ __('Notice: Use drag and drop to arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place.') }}</p>
+        <p id="profilehint" class="alert alert-info hidden">{{ __('Notice: Use drag and drop to arrange the personal info items into your desired order. The new order will be saved automatically when you drop the item into place.') }}</p>
         <ol id="profilelist" class="z-itemlist">
             <li class="z-itemheader z-itemsortheader z-clearfix">
                 <span class="z-itemcell z-w20">{{ __('Fieldset') }}</span>
@@ -51,12 +51,16 @@
 {% set initScript %}
     <script type="text/javascript">
     // <![CDATA[
-        var msgProfileStatusDeactivate = '{{ __('Deactivate') }}';
-        var msgProfileStatusActivate = '{{ __('Activate') }}';
-        var msgProfileStatusInactive = '{{ __('Inactive') }}';
-        var msgProfileStatusActive = '{{ __('Active') }}';
-        var msgProfileStatusClickTo = '{{ __('click to') }}';
-        Event.observe(window, 'load', profileinit, false);
+        (function($) {
+            $(document).ready(function() {
+                var msgProfileStatusDeactivate = '{{ __('Deactivate') }}';
+                var msgProfileStatusActivate = '{{ __('Activate') }}';
+                var msgProfileStatusInactive = '{{ __('Inactive') }}';
+                var msgProfileStatusActive = '{{ __('Active') }}';
+                var msgProfileStatusClickTo = '{{ __('click to') }}';
+                profileInitAdminView();
+            });
+        })(jQuery)
     // ]]>
     </script>
 {% endset %}

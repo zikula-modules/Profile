@@ -19,8 +19,8 @@
         {% if attributeName == 'avatar' %}
             {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\UsersModule\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
             <p id="youravatarcontainer">
-                <span id="youravatarpath" style="display: none">{{ avatarPath }}</span>
-                <img class="img-thumbnail" id="youravatardisplay" src="{{ avatarPath|e('html_attr') }}/{{ selectedValue|e('html_attr') }}" alt="{{ propLabelText }}" />
+                <span id="avatarPath" class="hidden">{{ avatarPath }}</span>
+                <img class="img-thumbnail" id="avatarPreview" src="{{ avatarPath|e('html_attr') }}/{{ selectedValue|e('html_attr') }}" alt="{{ propLabelText }}" />
             </p>
         {% endif %}
         {% if note != '' %}
@@ -29,13 +29,5 @@
     </div>
 </div>
 {% if attributeName == 'avatar' %}
-    {{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/showavatar.js')) }}
-    {% set avatarScript %}
-        <script type="text/javascript">
-        // <![CDATA[
-            Event.observe($('prop_avatar'), 'change', showavatar);
-        // ]]>
-        </script>
-    {% endset %}
-    {{ pageAddAsset('footer', avatarScript) }}
+    {{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/Zikula.Profile.Avatar.js')) }}
 {% endif %}
