@@ -152,16 +152,18 @@ class TwigExtension extends \Twig_Extension
         }
 
         $template = 'Section/' . $nameLowered . '.html.twig';
-        // TODO refactor to Twig
-        /*
-        // check if the template exists
-        if (!$view->template_exists($template)) {
-            return '';
-        }*/
 
-        return $this->twig->render('@ZikulaProfileModule/' . $template, [
-            'section' => $section
-        ]);
+        $output = '';
+
+        try {
+            $output = $this->twig->render('@ZikulaProfileModule/' . $template, [
+                'section' => $section
+            ]);
+        } catch (Exception $e) {
+            // template does not exist
+        }
+
+        return $output;
     }
 
     /**
