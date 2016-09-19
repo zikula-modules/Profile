@@ -1,0 +1,18 @@
+<div class="text-center">
+    <h5>{{ userinfo.uname|profilelinkbyuname() }}</h5>
+    <p>
+        {% if userinfo.__ATTRIBUTES__.avatar|default and userinfo.__ATTRIBUTES__.avatar not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\UsersModule\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+            {{ userInfo.uname|profilelinkbyuname('', avatarPath ~ '/' ~ userInfo.__ATTRIBUTES__.avatar) }}
+            {{ userinfo.uname|profilelinkbyuname('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
+        {% elseif allowGravatars %}
+            {{ zikulaprofilemodule_gravatar(email=userInfo.email) }}
+        {% endif %}
+    </p>
+    {% for dudLabel, dudValue in dudArray %}
+        <p><strong>{{ dudLabel }}</strong><br />{{ dudValue }}</p>
+    {% endfor %}
+    {% if showRegDate %}
+        <span>{{ __f('Registered on %s', { '%s': userInfo.user_regdate })|localizeddate('short', 'none') }}</span>
+    {% endif %}
+</div>

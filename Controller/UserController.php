@@ -12,6 +12,7 @@ namespace Zikula\ProfileModule\Controller;
 
 use DataUtil;
 use ModUtil;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -142,5 +143,88 @@ class UserController extends AbstractController
         @trigger_error('The zikulaprofilemodule_user_membersonline route is deprecated. please use zikulaprofilemodule_members_online instead.', E_USER_DEPRECATED);
 
         return $this->redirectToRoute('zikulaprofilemodule_members_online');
+    }
+
+    /**
+     * @Route("/usersblock")
+     * @Template
+     *
+     * Display the configuration options for the users block.
+     *
+     * @return Response symfony response object
+     *
+     * @throws NotFoundHttpException Thrown if the users block isn't found
+     */
+    public function usersBlockAction()
+    {
+        $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
+        $profileModuleId = ModUtil::getIdFromName('ZikulaProfileModule');
+        $found = false;
+        foreach ($blocks as $block) {
+            if ($block['mid'] == $profileModuleId && $block['bkey'] == 'user') {
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            throw new NotFoundHttpException();
+        }
+
+        $userId = $this->get('zikula_users_module.current_user')->get('uid');
+
+        return UserUtil::getVars($userId);
+    }
+
+    /**
+     * @Route("/updateusersblock")
+     * @Method("POST")
+     *
+     * Update the custom users block.
+     *
+     * @param Request $request
+     *
+     * Parameters passed via POST:
+     * ---------------------------
+     * boolean ublockon Whether the block is displayed or not.
+     * mixed   ublock   ?.
+     *
+     * @return RedirectResponse
+     *
+     * @return AccessDeniedException Thrown if the user isn't logged in or if there are no post parameters
+     * @throws NotFoundHttpException Thrown if the users block isn't found
+     */
+    public function updateUsersBlockAction(Request $request)
+    {
+        $currentUserApi = $this->get('zikula_users_module.current_user');
+
+        if (!$currentUserApi->isLoggedIn()) {
+            throw new AccessDeniedException();
+        }
+
+        $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
+        $profileModuleId = ModUtil::getIdFromName('ZikulaProfileModule');
+
+        $found = false;
+        foreach ($blocks as $block) {
+            if ($block['mid'] == $profileModuleId && $block['bkey'] == 'user') {
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            throw new NotFoundHttpException();
+        }
+
+        $ublockon = (bool)$request->request->get('ublockon', false);
+        $ublock = (string)$request->request->get('ublock', '');
+
+        $userId = $currentUserApi->get('uid');
+
+        UserUtil::setVar('ublockon', $ublockon);
+        UserUtil::setVar('ublock', $ublock);
+
+        $this->addFlash('status', $this->__('Done! Saved custom block.'));
+
+        return $this->redirectToRoute('zikulausersmodule_user_index');
     }
 }

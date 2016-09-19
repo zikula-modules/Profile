@@ -1,0 +1,30 @@
+{% if usersOnline %}
+<ul style="padding-left: 2em;">
+    {% foreach user in usersOnline %}
+    <li>
+        {{ user.uname|profilelinkbyuname('', '', maxLength) }}
+        {% if messageModule %}
+            {% set messagesLink = path(messageModule ~ '_user_inbox') %}
+            {% if user.uid == currentUserId %}
+                (<a href="{{ messagesLink|e('html_attr) }}" title="{{ __('unread')|e('html_attr') }}">{{ messages.unread }}</a> | <a href="{{ messagesLink|e('html_attr) }}" title="{{ __('total')|e('html_attr') }}">{{ messages.totalin }}</a>)
+            {% else %}
+                <a href="{{ path(messageModule ~ '_user_newpm', { uid: user.uid }) }}" title="{{ __f('Send private message to %s', { '%s': user.uname })|e('html_attr') }}"><i class="fa fa-envelope-o"></i></a>
+            {% endif %}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p class="text-info">
+    {% if amountOfOnlineGuests == 0 %}
+        {% set amountOfMembers = _fn('%s registered user', '%s registered users', amountOfOnlineMembers, { '%s': amountOfOnlineMembers }) %}
+        {{ __f('%s on-line.', { '%s': amountOfMembers }) }}
+    {% elseif amountOfOnlineMembers == 0 %}
+        {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
+        {{ __f('%s on-line.', { '%s': amountOfGuests }) }}
+    {% else %}
+        {% set amountOfMembers = _fn('%s registered user', '%s registered users', amountOfOnlineMembers, { '%s': amountOfOnlineMembers }) %}
+        {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
+        {{ __f('%1$s and %2$s on-line.', { '%1$s': amountOfMembers, '%2$s': amountOfGuests }) }}
+    {% endif %}
+</p>

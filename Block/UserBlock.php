@@ -10,69 +10,33 @@
 
 namespace Zikula\ProfileModule\Block;
 
-use SecurityUtil;
-use UserUtil;
-use BlockUtil;
+use Zikula\BlocksModule\AbstractBlockHandler;
 
 /**
  * A user-customizable block.
  */
-class UserBlock extends \Zikula_Controller_AbstractBlock
+class UserBlock extends AbstractBlockHandler
 {
     /**
-     * Initialise block.
-     *
-     * @return void
+     * @inheritdoc
      */
-    public function init()
+    public function display(array $properties)
     {
-        SecurityUtil::registerPermissionSchema('Userblock::', 'Block title::');
-    }
-
-    /**
-     * Get information on block.
-     *
-     * @return array The block information
-     */
-    public function info()
-    {
-        return array(
-            'module'         => $this->name,
-            'text_type'      => $this->__('User'),
-            'text_type_long' => $this->__("User's custom box"),
-            'allow_multiple' => false,
-            'form_content'   => false,
-            'form_refresh'   => false,
-            'show_preview'   => true,
-        );
-    }
-
-    /**
-     * Display block.
-     *
-     * @param mixed[] $blockInfo {
-     *      @type string $title   the title of the block
-     *      @type int    $bid     the id of the block
-     *      @type string $content the seralized block content array
-     *                            }
-     *
-     * @return string|void The rendered block if the user is logged in and the user block is enabled, void otherwise
-     */
-    public function display($blockInfo)
-    {
-        if (!SecurityUtil::checkPermission('Userblock::', $blockInfo['title']."::", ACCESS_READ)) {
-            return;
+        $title = !empty($properties['title']) ? $properties['title'] : '';
+        if ($title == '') {
+            $title = $this->__f('Custom block content for %s', ['%s' => $currentUserApi->get('name')]);
         }
 
-        if (UserUtil::isLoggedIn() && UserUtil::getVar('ublockon') == 1) {
-            if (!isset($blockInfo['title']) || empty($blockInfo['title'])) {
-                $blockInfo['title'] = $this->__f('Custom block content for %s', UserUtil::getVar('name'));
-            }
-            $blockInfo['content'] = nl2br(UserUtil::getVar('ublock'));
-
-            return BlockUtil::themeBlock($blockInfo);
+        if (!$this->hasPermission('Userblock::', $title . '::', ACCESS_READ)) {
+            return '';
         }
 
-        return;
+        $currentUserApi = $this->get('zikula_users_module.current_user');
+
+        if (!$currentUserApi->isLoggedIn() || $currentUserApi->get('ublockon') != 1) {
+            return '';
+        }
+
+        return nl2br($currentUserApi->get('ublock'));
     }
 }

@@ -40,7 +40,7 @@
         <tbody>
             {% for user in users %}
             <tr>
-                <td headers="hUserName"><strong>{{ user.uname|profilelinkbyuname }}</strong>&nbsp;&nbsp;
+                <td headers="hUserName"><strong>{{ user.uname|profilelinkbyuname() }}</strong>&nbsp;&nbsp;
                     {% if user.onlinestatus == 1 %}
                         <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="label label-success">{{ __('online') }}</span></a>
                     {% else %}

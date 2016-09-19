@@ -263,6 +263,26 @@ class LinkContainer implements LinkContainerInterface
             ];
         }
 
+        // check if the users block exists
+        $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
+        $profileModuleId = ModUtil::getIdFromName($this->currentUserApi->get($this->getBundleName()));
+        $found = false;
+        if (is_array($blocks)) {
+            foreach ($blocks as $block) {
+                if ($block['mid'] == $profileModuleId && $block['bkey'] == 'user') {
+                    $found = true;
+                    break;
+                }
+            }
+        }
+        if ($found) {
+            $links[] = [
+                'url'   => $this->router->generate('zikulaprofilemodule_user_usersblock'),
+                'title' => $this->translator->__('Personal custom block'),
+                'icon'  => 'home'
+            ];
+        }
+
         return $links;
     }
 
