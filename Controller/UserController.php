@@ -12,7 +12,6 @@ namespace Zikula\ProfileModule\Controller;
 
 use DataUtil;
 use ModUtil;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -170,61 +169,33 @@ class UserController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $userId = $this->get('zikula_users_module.current_user')->get('uid');
-
-        return UserUtil::getVars($userId);
-    }
-
-    /**
-     * @Route("/updateusersblock")
-     * @Method("POST")
-     *
-     * Update the custom users block.
-     *
-     * @param Request $request
-     *
-     * Parameters passed via POST:
-     * ---------------------------
-     * boolean ublockon Whether the block is displayed or not.
-     * mixed   ublock   ?.
-     *
-     * @return RedirectResponse
-     *
-     * @return AccessDeniedException Thrown if the user isn't logged in or if there are no post parameters
-     * @throws NotFoundHttpException Thrown if the users block isn't found
-     */
-    public function updateUsersBlockAction(Request $request)
-    {
         $currentUserApi = $this->get('zikula_users_module.current_user');
-
         if (!$currentUserApi->isLoggedIn()) {
             throw new AccessDeniedException();
         }
 
-        $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
-        $profileModuleId = ModUtil::getIdFromName('ZikulaProfileModule');
+        $formVars = [
+            'ublockon' => (bool)$currentUserApi->get('ublockon'),
+            'ublock' => $currentUserApi->get('ublock')
+        ];
 
-        $found = false;
-        foreach ($blocks as $block) {
-            if ($block['mid'] == $profileModuleId && $block['bkey'] == 'user') {
-                $found = true;
-                break;
-            }
+        $form = $this->createForm('Zikula\ProfileModule\Form\UsersBlockType', $formVars);
+
+        if ($form->handleRequest($request)->isValid()) {
+            $formData = $form->getData();
+            $ublockon = isset($formData['ublockon']) ? (bool)$formData['ublockon'] : false;
+            $ublock = isset($formData['ublock']) ? $formData['ublock'] : '';
+
+            UserUtil::setVar('ublockon', $ublockon);
+            UserUtil::setVar('ublock', $ublock);
+
+            $this->addFlash('status', $this->__('Done! Saved custom block.'));
+
+            return $this->redirectToRoute('zikulausersmodule_account_menu');
         }
-        if (!$found) {
-            throw new NotFoundHttpException();
-        }
 
-        $ublockon = (bool)$request->request->get('ublockon', false);
-        $ublock = (string)$request->request->get('ublock', '');
-
-        $userId = $currentUserApi->get('uid');
-
-        UserUtil::setVar('ublockon', $ublockon);
-        UserUtil::setVar('ublock', $ublock);
-
-        $this->addFlash('status', $this->__('Done! Saved custom block.'));
-
-        return $this->redirectToRoute('zikulausersmodule_user_index');
+        return [
+            'form' => $form->createView()
+        ];
     }
 }

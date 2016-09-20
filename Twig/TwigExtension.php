@@ -247,13 +247,6 @@ class TwigExtension extends \Twig_Extension
             'userValue' => $userValue
         ];
 
-        // detects the template to use
-        // TODO refactor to Twig
-        /*$template = $tplset . '_' . $item['prop_id'] . '.html.twig';
-        if (!$view->template_exists($template)) {*/
-            $template = $tplset . '_generic.html.twig';
-        /*}*/
-
         $output = '';
 
         // checks the different attributes and types
@@ -370,7 +363,16 @@ class TwigExtension extends \Twig_Extension
         $templateParameters['item'] = $item;
         $templateParameters['output'] = is_array($output) ? $output : [$output];
 
-        return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
+        try {
+            $template = $tplset . '_' . $item['prop_id'] . '.html.twig';
+
+            return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
+        } catch (Exception $e) {
+            // custom template does not exist
+            $template = $tplset . '_generic.html.twig';
+
+            return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
+        }
     }
 
     /**

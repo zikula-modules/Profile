@@ -19,7 +19,7 @@
     "extra": {
         "zikula": {
             "class": "Zikula\\ProfileModule\\ZikulaProfileModule",
-            "core-compatibility": ">=1.4.1",
+            "core-compatibility": ">=1.4.3",
             "displayname": "Profile",
             "url": "search",
             "capabilities": {
