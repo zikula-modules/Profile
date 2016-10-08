@@ -573,7 +573,14 @@ class TwigExtension extends \Twig_Extension
                 $options = explode('@@', $item['prop_listoptions'], 2);
                 $templateParameters['selectMultiple'] = $options[0] ? ' multiple="multiple"' : '';
 
-                $options = $this->getDudFieldOptions($item);
+                $options = [];
+                if ($item['prop_attribute_name'] == 'country' || substr($item['prop_attribute_name'], -8) == '_country') {
+                    $countries = ZLanguage::countryMap();
+                    asort($countries);
+                    $options = $countries;
+                } else {
+                    $options = $this->getDudFieldOptions($item);
+                }
 
                 $event_subject = $user;
                 $event_args = [
