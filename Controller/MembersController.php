@@ -125,12 +125,9 @@ class MembersController extends AbstractController
         unset($activeDuds);
 
         return [
-            // values for header
-            'memberslistreg' => ModUtil::apiFunc('Users', 'user', 'countitems') - 1,
-            // discount anonymous
-            'memberslistonline' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
-            'memberslistnewest' => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
-            'loggedin' => UserUtil::isLoggedIn(),
+            'amountOfRegisteredMembers' => ModUtil::apiFunc('Users', 'user', 'countitems') - 1,
+            'amountOfOnlineMembers' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
+            'newestMemberName' => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
             // check if we should show the extra admin column
             'adminedit' => $edit,
             'admindelete' => $delete,
@@ -178,9 +175,6 @@ class MembersController extends AbstractController
         );
 
         $templateParameters = $modVars;
-
-        // Is current user online
-        $templateParameters['loggedin'] = UserUtil::isLoggedIn();
 
         // get some permissions to filter item actions
         $edit = false;
@@ -243,7 +237,6 @@ class MembersController extends AbstractController
         unset($activeDuds);
 
         return [
-            'loggedin' => UserUtil::isLoggedIn(),
             'users' => $users,
             // check which messaging module is available and add the necessary info
             'messageModule' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule'),
