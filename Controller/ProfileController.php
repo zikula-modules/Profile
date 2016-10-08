@@ -171,22 +171,22 @@ class ProfileController extends AbstractController
         
         // check if we get called form the update function in case of an error
         $uname = $request->query->get('uname', UserUtil::getVar('uname'));
-        $dynadata = $request->query->get('dynadata', []);
-        $fieldsets = [];
+        $dynaData = $request->query->get('dynadata', []);
+        $fieldSets = [];
         
-        foreach ($items as $propattr => $propdata) {
-            $items[$propattr]['prop_fieldset'] = (isset($propdata['prop_fieldset']) && (!empty($propdata['prop_fieldset'])) ? $propdata['prop_fieldset'] : $this->__('User Information');
-            $fieldsets[$propdata['prop_fieldset']] = $propdata['prop_fieldset'];
+        foreach ($items as $propAttr => $propData) {
+            $items[$propAttr]['prop_fieldset'] = (isset($propData['prop_fieldset']) && (!empty($propData['prop_fieldset'])) ? $propData['prop_fieldset'] : $this->__('User Information');
+            $fieldSets[$propData['prop_fieldset']] = $propData['prop_fieldset'];
         }
-        
-        // merge this temporary dynadata and the errors into the items array
-        foreach ($dynadata as $propattr => $propdata) {
-            $items[$propattr]['temp_propdata'] = $propdata;
+
+        // merge temporary dynaData into the items array
+        foreach ($dynaData as $propAttr => $propData) {
+            $items[$propAttr]['temp_propdata'] = $propData;
         }
         
         return [
             'dudItems' => $items,
-            'fieldSets' => $fieldsets,
+            'fieldSets' => $fieldSets,
             'uid' => $uid,
             'uname' => $uname
         ];
@@ -210,10 +210,10 @@ class ProfileController extends AbstractController
     {
         $uid = $request->query->get('uid', UserUtil::getVar('uid'));
         $user = UserUtil::getVars($uid);
-        $dynadata = $request->request->get('dynadata', null);
+        $dynaData = $request->request->get('dynadata', null);
         $event_args = [
             'uid' => $uid,
-            'dynadata' => $dynadata
+            'dynadata' => $dynaData
         ];
         $event = new GenericEvent($user, $event_args);
         $event = $this->getDispatcher()->dispatch('module.profile.update', $event);
@@ -222,27 +222,30 @@ class ProfileController extends AbstractController
         $uname = $request->request->get('uname', null);
 
         /**
-         * Set $dynadata again, in case it has been modified by
+         * Set $dynaData again, in case it has been modified by
          * a persistent module handler.
          */
-        $dynadata = $request->request->get('dynadata', null);
+        $dynaData = $request->request->get('dynadata', null);
 
         // Check for required fields - The API function is called.
-        $checkrequired = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', ['dynadata' => $dynadata]);
+        $checkrequired = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', ['dynadata' => $dynaData]);
         if ($checkrequired['result'] == true) {
             $this->addFlash('error', $this->__f('Error! A required profile item [%s] is missing.', ['%s' => $checkrequired['translatedFieldsStr']]));
             // we do not send the passwords here!
             $params = [
                 'uname' => $uname,
-                'dynadata' => $dynadata
+                'dynadata' => $dynaData
             ];
 
             return $this->redirectToRoute('zikulaprofilemodule_user_modify');
         }
 
         // Save updated data
-        $save = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'savedata', ['uid' => $uid, 'dynadata' => $dynadata]);
-        if ($save == true) {
+        $save = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'savedata', [
+            'uid' => $uid,
+            'dynadata' => $dynaData
+        ]);
+        if (true === $save) {
             $this->addFlash('status', $this->__('Done! The profile has been successfully updated.'));
         }
 
