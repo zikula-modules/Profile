@@ -323,8 +323,8 @@ class MemberslistApi extends \Zikula_AbstractApi
             return $user->getUid();
         }
 
-        // TODO $this->request is invalid!
-        $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not load data.'));
+        throw new \Exception($this->__('Error! Could not load data.'));
+
         return false;
     }
 

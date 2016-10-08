@@ -248,13 +248,13 @@ class AdminController extends AbstractController
         // Get parameters from whatever input we need.
         $dudid = (int)$request->request->get('dudid', 0);
         $label = $request->request->get('label', null);
-        $attrname = $request->request->get('attributename', null);
+        $attributeName = $request->request->get('attributename', null);
         $required = $request->request->get('required', null);
-        $viewby = $request->request->get('viewby', null);
-        $displaytype = $request->request->get('displaytype', null);
-        $listoptions = $request->request->get('listoptions', null);
+        $viewBy = $request->request->get('viewby', null);
+        $displayType = $request->request->get('displaytype', null);
+        $listOptions = $request->request->get('listoptions', null);
         $note = $request->request->get('note', null);
-        $fieldset = $request->request->get('fieldset', null);
+        $fieldSet = $request->request->get('fieldset', null);
         $pattern = $request->request->get('pattern', null);
     
         // Validates and check if empty or already existing...
@@ -263,44 +263,50 @@ class AdminController extends AbstractController
 
             return $this->redirectToRoute('zikulaprofilemodule_admin_view');
         }
-        if (empty($dudid) && empty($attrname)) {
+
+        if (empty($dudid) && empty($attributeName)) {
             $this->addFlash('error', $this->__('Error! The item must have an attribute name. An example of an acceptable name is: \'mydudfield\'.'));
 
             return $this->redirectToRoute('zikulaprofilemodule_admin_view');
         }
-        //@todo The check needs to occur for both the label and fieldset.
-        //if (ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $label, 'propfieldset' => $fieldset])) {
-        //    $this->addFlash('error', $this->__('Error! There is already a label with this name.'));
-        //    return $this->redirectToRoute('zikulaprofilemodule_admin_view');
-        //}
-        if (isset($attrname) && ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $attrname])) {
-            $this->addFlash('error', $this->__('Error! There is already an attribute name with this naming.'));
+
+        // Check if this item exists already
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $label, 'propfieldset' => $fieldSet]);
+        if ($item && (!$dudid || $dudid != $item['prop_id'])) {
+            $this->addFlash('error', $this->__('Error! There is already a label with this name.'));
 
             return $this->redirectToRoute('zikulaprofilemodule_admin_view');
         }
-        $filteredlabel = $label;
+
+        if (isset($attributeName) && ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $attributeName])) {
+            $this->addFlash('error', $this->__('Error! There is already an attribute with this name.'));
+
+            return $this->redirectToRoute('zikulaprofilemodule_admin_view');
+        }
 
         $parameters = [
             'dudid' => $dudid,
-            'label' => $filteredlabel,
-            'attribute_name' => $attrname,
+            'label' => $label,
+            'attribute_name' => $attributeName,
             'required' => $required,
-            'viewby' => $viewby,
+            'viewby' => $viewBy,
             'dtype' => 1,
-            'displaytype' => $displaytype,
-            'listoptions' => $listoptions,
+            'displaytype' => $displayType,
+            'listoptions' => $listOptions,
             'note' => $note,
-            'fieldset' => $fieldset,
+            'fieldset' => $fieldSet,
             'pattern' => $pattern
         ];
+
         if (empty($dudid)) {
             $dudid = ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'create', $parameters);
-            $successMessage = $this->__('Done! Created new personal info item.');
+            $successMessage = $this->__('Done! Created new item.');
         } else {
             $dudid = ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'update', $parameters);
             $successMessage = $this->__('Done! Saved your changes.');
         }
-        if ($dudid != false) {
+
+        if (false !== $dudid) {
             // Success
             $this->addFlash('status', $successMessage);
         }
@@ -355,7 +361,7 @@ class AdminController extends AbstractController
         if (!empty($dudid)) {
             $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
             if ($item == false) {
-                throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
+                throw new NotFoundHttpException($this->__('Error! No such item found.'));
             }
 
             // Security check
@@ -403,7 +409,7 @@ class AdminController extends AbstractController
         // The user API function is called.
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
+            throw new NotFoundHttpException($this->__('Error! No such item found.'));
 
             return new Response();
         }
@@ -447,7 +453,7 @@ class AdminController extends AbstractController
     {
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
+            throw new NotFoundHttpException($this->__('Error! No such item found.'));
         }
 
         // Security check
@@ -481,7 +487,7 @@ class AdminController extends AbstractController
     {
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
-            throw new NotFoundHttpException($this->__('Error! No such personal info item found.'));
+            throw new NotFoundHttpException($this->__('Error! No such item found.'));
         }
 
         // Security check

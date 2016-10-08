@@ -12,7 +12,8 @@ By default, the plugin will add the UID of the user's current profile to the par
 ::
     {profilesection name='EZComments' uid=$uid numitems=5}
 
-The plugin will call to a section API function: ``Profile_sectionapi_ezcomments``, that can be stored in ``/config/functions/Profile/pnsectionapi/ezcomments.php`` but this time, it's a default function included in ``/modules/Profile/pnsectionapi.php``. That function is the responsible to retrieve the data to show in the section template.
+The plugin will call to a section API function: ``Profile_sectionapi_ezcomments``, that is implemented in ``/modules/Profile/Api/SectionApi.php``.
+That function is the responsible to retrieve the data to show in the section template.
 
 This data, will be assigned to the ``$section`` variable in the ``profile_section_ezcomments.tpl`` template. There the data is listed and customized accordingly. That template can be stored in the ``/config/templates/Profile/sections`` folder.
 

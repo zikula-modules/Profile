@@ -68,12 +68,11 @@ class DudApi extends \Zikula_AbstractApi
         if (!SecurityUtil::checkPermission('ZikulaProfileModule::item', "{$args['label']}::", ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
-        // TODO $this->request is invalid!
-        $flashBag = $this->request->getSession()->getFlashBag();
+
         if (!ModUtil::getIdFromName($args['modname'])) {
-            $flashBag->add('error', $this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
-            return false;
+            throw new \Exception($this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
         }
+
         // parses the DUD type
         $dtypes = [
             -1 => 'noneditable',
@@ -81,24 +80,26 @@ class DudApi extends \Zikula_AbstractApi
             2 => 'normal'
         ];
         if (!in_array($args['dtype'], $dtypes)) {
-            $flashBag->add('error', $this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
-            return false;
+            throw new \Exception($this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
         }
+
         // Clean the label
         $permsep = System::getVar('shorturlsseparator', '-');
         $args['label'] = str_replace($permsep, '', DataUtil::formatPermalink($args['label']));
         $args['label'] = str_replace('-', '', DataUtil::formatPermalink($args['label']));
-        // Check if the label or attribute name already exists
+
+        // Check if the label already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
         if ($item) {
-            $flashBag->add('error', $this->__('Error! There is already an personal info item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
-            return false;
+            throw new \Exception($this->__('Error! There is already an item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
         }
+
+        // Check if the attribute name already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
-            $flashBag->add('error', $this->__('Error! There is already an personal info item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
-            return false;
+            throw new \Exception($this->__('Error! There is already an item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
         }
+
         // Determine the new weight
         $weightlimits = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getweightlimits');
         $weight = $weightlimits['max'] + 1;

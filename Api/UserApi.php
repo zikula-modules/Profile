@@ -328,9 +328,9 @@ class UserApi extends \Zikula_AbstractApi
         }
         $fields = $args['dynadata'];
         $duds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable', 'uid' => $args['uid']]);
-        foreach ($duds as $attrname => $dud) {
+        foreach ($duds as $attributeName => $dud) {
             // exclude avatar update when Avatar module is present
-            if ($attrname == 'avatar' && ModUtil::available('Avatar')) {
+            if ($attributeName == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
             }
             
@@ -339,22 +339,22 @@ class UserApi extends \Zikula_AbstractApi
              */
             $array_keys = array_keys($fields);
             
-            if (in_array($attrname, $array_keys)) {
-                $fieldvalue = '';
+            if (in_array($attributeName, $array_keys)) {
+                $fieldValue = '';
                 
-                if (isset($fields[$attrname])) {
+                if (isset($fields[$attributeName])) {
                     // Process the Date DUD separately
-                    if ($dud['prop_displaytype'] == 5 && !empty($fields[$attrname])) {
-                        $fieldvalue = $this->parseDate($fields[$attrname]);
-                        $fieldvalue = DateUtil::transformInternalDate($fieldvalue);
-                    } elseif (is_array($fields[$attrname])) {
-                        $fieldvalue = serialize(array_values($fields[$attrname]));
+                    if ($dud['prop_displaytype'] == 5 && !empty($fields[$attributeName])) {
+                        $fieldValue = $this->parseDate($fields[$attributeName]);
+                        $fieldValue = DateUtil::transformInternalDate($fieldValue);
+                    } elseif (is_array($fields[$attributeName])) {
+                        $fieldValue = serialize(array_values($fields[$attributeName]));
                     } else {
-                        $fieldvalue = $fields[$attrname];
+                        $fieldValue = $fields[$attributeName];
                     }
                 }
 
-                UserUtil::setVar($attrname, $fieldvalue, $args['uid']);
+                UserUtil::setVar($attributeName, $fieldValue, $args['uid']);
             }
         }
 
@@ -494,15 +494,16 @@ class UserApi extends \Zikula_AbstractApi
         if (empty($dynadata)) {
             return [];
         }
+
         // Validate if it's an existing user
         if (!isset($args['uid'])) {
             return ['__ATTRIBUTES__' => $dynadata];
         }
+
         // Needs to merge the existing attributes to not delete any of them
         //        $user = DBUtil::selectObjectByID('users', $args['uid'], 'uid');
         $user = UserUtil::getVars($args['uid']);
-        // @todo use 'api' instead? does this work?
-        if ($user === false || !isset($user['__ATTRIBUTES__'])) {
+        if (false === $user || !isset($user['__ATTRIBUTES__'])) {
             return ['__ATTRIBUTES__' => $dynadata];
         }
 

@@ -49,26 +49,21 @@ class AdminApi extends \Zikula_AbstractApi
             throw new AccessDeniedException();
         }
 
-        // TODO $this->request is invalid!
-        $flashBag = $this->request->getSession()->getFlashBag();
+        // Check if the label already exists
+        $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
+        if ($item) {
+            throw new \Exception($this->__('Error! There is already an item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+        }
 
-        // Check if the label or attribute name already exists
-        //@todo The check needs to occur for both the label and fieldset.
-        //$item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
-        //if ($item) {
-        //    $flashBag->add('error', $this->__f("Error! There is already an item with the label '%s'.", ['%s' => $args['label']));
-
-        //    return false;
-        //}
+        // Check if the attribute name already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
-            $flashBag->add('error', $this->__f('Error! There is already an item with the attribute name \'%s\'.', ['%s' => $args['attribute_name']]));
-
-            return false;
+            throw new \Exception($this->__('Error! There is already an item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
         }
+
         // Determine the new weight
-        $weightlimits = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getweightlimits');
-        $weight = $weightlimits['max'] + 1;
+        $weightLimits = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getweightlimits');
+        $weight = $weightLimits['max'] + 1;
         // a checkbox can't be required
         if ($args['displaytype'] == 2 && $args['required']) {
             $args['required'] = 0;
@@ -123,16 +118,12 @@ class AdminApi extends \Zikula_AbstractApi
             throw new \InvalidArgumentException();
         }
 
-        // TODO $this->request is invalid!
-        $flashBag = $this->request->getSession()->getFlashBag();
-
         // The user API function is called.
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $args['dudid']]);
         if ($item == false) {
-            $flashBag->add('error', $this->__('Error! No such personal info item found.'));
-
-            return false;
+            throw new \Exception($this->__('Error! No such item found.'));
         }
+
         // Security check
         if (!SecurityUtil::checkPermission('ZikulaProfileModule::Item', "{$item['prop_label']}::{$args['dudid']}", ACCESS_EDIT)) {
             throw new AccessDeniedException();
@@ -140,18 +131,18 @@ class AdminApi extends \Zikula_AbstractApi
         if (!SecurityUtil::checkPermission('ZikulaProfileModule::Item', "{$args['label']}::{$args['dudid']}", ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
+
         $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
 
         // If there's a new label, check if it already exists
         //@todo The check needs to occur for both the label and fieldset.
-        //if ($args['label'] <> $item['prop_label']) {
-        //    $vitem = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
-        //if ($vitem) {
-        //    $flashBag->add('error', $this->__("Error! There is already an item with the label '%s'.", ['%s' => $args['label']]));
+        if ($args['label'] != $item['prop_label']) {
+            $vitem = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
+            if ($vitem) {
+                throw new \Exception($this->__('Error! There is already an item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+            }
+        }
 
-        //    return false;
-        //}
-        //}
         if (isset($args['prop_weight'])) {
             if ($args['prop_weight'] == 0) {
                 unset($args['prop_weight']);
@@ -192,11 +183,13 @@ class AdminApi extends \Zikula_AbstractApi
         if ($item['prop_dtype'] == 1) {
             $obj['prop_label'] = $args['label'];
         }
+
         // before update it search for option ID change
         // to update the respective user's data
         if ($obj['prop_validation'] != $item['prop_validation']) {
             ModUtil::apiFunc('ZikulaProfileModule', 'dud', 'updatedata', ['item' => $item['prop_validation'], 'newitem' => $obj['prop_validation']]);
         }
+
         $property = $propertyRepository->find($args['dudid']);
         $property->merge($obj);
         $this->entityManager->flush();
@@ -227,20 +220,14 @@ class AdminApi extends \Zikula_AbstractApi
         $dudid = $args['dudid'];
         unset($args);
 
-        // TODO $this->request is invalid!
-        $flashBag = $this->request->getSession()->getFlashBag();
-
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
-        if ($item == false) {
-            $flashBag->add('error', $this->__('Error! No such personal info item found.'));
-
-            return false;
+        if (false === $item) {
+            throw new \Exception($this->__('Error! No such item found.'));
         }
+
         // normal type validation
         if ((int)$item['prop_dtype'] != 1) {
-            $flashBag->add('error', $this->__('Error! You cannot delete this personal info item.'));
-
-            return false;
+            throw new \Exception($this->__('Error! You cannot delete this item.'));
         }
 
         // Security check
@@ -286,10 +273,11 @@ class AdminApi extends \Zikula_AbstractApi
         if (!isset($args['dudid']) || !is_numeric($args['dudid'])) {
             throw new \InvalidArgumentException();
         }
-        $weightlimits = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getweightlimits');
+
+        $weightLimits = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getweightlimits');
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
         $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $args['dudid']);
-        $prop->setProp_weight($weightlimits['max'] + 1);
+        $prop->setProp_weight($weightLimits['max'] + 1);
         $this->entityManager->flush();
 
         return true;
@@ -317,20 +305,14 @@ class AdminApi extends \Zikula_AbstractApi
             throw new \InvalidArgumentException();
         }
 
-        // TODO $this->request is invalid!
-        $flashBag = $this->request->getSession()->getFlashBag();
-
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $args['dudid']]);
-        if ($item == false) {
-            $flashBag->add('error', $this->__('Error! No such personal info item found.'));
-
-            return false;
+        if (false === $item) {
+            throw new \Exception($this->__('Error! No such item found.'));
         }
+
         // type validation
         if ($item['prop_dtype'] < 1) {
-            $flashBag->add('error', $this->__('Error! You cannot deactivate this personal info item.'));
-
-            return false;
+            throw new \Exception($this->__('Error! You cannot deactivate this item.'));
         }
 
         /**

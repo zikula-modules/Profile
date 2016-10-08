@@ -440,7 +440,6 @@ class TwigExtension extends \Twig_Extension
         if (isset($item['temp_propdata'])) {
             $userValue = $item['temp_propdata'];
         } elseif ($userId >= 0) {
-            // @todo - This is a bit of a hack for admin editing. Need to know if it is a reg.
             $isRegistration = UserUtil::isRegistration($userId);
             $userValue = UserUtil::getVar($item['prop_attribute_name'], $userId, false, $isRegistration); // ($alias, $userId);
         }
