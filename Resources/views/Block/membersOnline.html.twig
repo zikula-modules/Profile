@@ -1,12 +1,12 @@
 {% if usersOnline %}
 <ul style="padding-left: 2em;">
-    {% foreach user in usersOnline %}
+    {% for user in usersOnline %}
     <li>
-        {{ user.uname|profilelinkbyuname('', '', maxLength) }}
+        {{ user.uname|profileLinkByUserName('', '', maxLength) }}
         {% if messageModule %}
             {% set messagesLink = path(messageModule ~ '_user_inbox') %}
             {% if user.uid == currentUserId %}
-                (<a href="{{ messagesLink|e('html_attr) }}" title="{{ __('unread')|e('html_attr') }}">{{ messages.unread }}</a> | <a href="{{ messagesLink|e('html_attr) }}" title="{{ __('total')|e('html_attr') }}">{{ messages.totalin }}</a>)
+                (<a href="{{ messagesLink|e('html_attr') }}" title="{{ __('unread')|e('html_attr') }}">{{ messages.unread|default }}</a> | <a href="{{ messagesLink|e('html_attr') }}" title="{{ __('total')|e('html_attr') }}">{{ messages.totalin|default }}</a>)
             {% else %}
                 <a href="{{ path(messageModule ~ '_user_newpm', { uid: user.uid }) }}" title="{{ __f('Send private message to %s', { '%s': user.uname })|e('html_attr') }}"><i class="fa fa-envelope-o"></i></a>
             {% endif %}

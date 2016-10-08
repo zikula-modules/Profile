@@ -139,7 +139,7 @@ class LinkContainer implements LinkContainerInterface
                 'url' => $this->router->generate('zikulaprofilemodule_admin_view'),
                 'text' => $this->translator->__('Users administration'),
                 'icon' => 'user',
-                'links' => $this->usersLinkContainer->getAdmin()
+                'links' => $this->usersLinkContainer->getLinks(LinkContainerInterface::TYPE_ADMIN)
             ];
         }
         if ($this->permissionApi->hasPermission($this->getBundleName() . '::', '::', ACCESS_EDIT)) {
@@ -167,7 +167,7 @@ class LinkContainer implements LinkContainerInterface
         if ($this->currentUserApi->isLoggedIn()) {
             if ($this->permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_READ)) {
                 $links[] = [
-                    'url' => $this->router->generate('zikulausersmodule_user_index'),
+                    'url' => $this->router->generate('zikulausersmodule_account_menu'),
                     'icon' => 'wrench',
                     'text' => $this->translator->__('Account settings')
                 ];
@@ -195,7 +195,7 @@ class LinkContainer implements LinkContainerInterface
                 ];
             }
 
-            $messageModule = $this->variableApi::get(VariableApi::CONFIG, 'messagemodule', '');
+            $messageModule = $this->variableApi->get(VariableApi::CONFIG, 'messagemodule', '');
             if ($messageModule != '' && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule . '::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url' => ModUtil::url($messageModule, 'user', 'main'),
@@ -210,9 +210,9 @@ class LinkContainer implements LinkContainerInterface
             if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:recent', '::', ACCESS_READ)) {
                 $membersLinks[] = [
                     'url' => $this->router->generate('zikulaprofilemodule_members_recent'),
-                    'text' => $this->translator->__f('Last %s registered users', $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10))
-                );
-            ]
+                    'text' => $this->translator->__f('Last %s registered users', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)])
+                ];
+            }
             if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:online', '::', ACCESS_READ)) {
                 $membersLinks[] = [
                     'url' => $this->router->generate('zikulaprofilemodule_members_online'),
@@ -240,7 +240,7 @@ class LinkContainer implements LinkContainerInterface
         $links = [];
 
         // do not show any account links if Profile is not the Profile manager
-        $profileModule = $this->variableApi::get(VariableApi::CONFIG, 'profilemodule', '');
+        $profileModule = $this->variableApi->get(VariableApi::CONFIG, 'profilemodule', '');
         if ($profileModule != $this->getBundleName()) {
             return $links;
         }
@@ -251,25 +251,25 @@ class LinkContainer implements LinkContainerInterface
 
         $links[] = [
             'url' => $this->router->generate('zikulaprofilemodule_profile_display', ['uid' => $this->currentUserApi->get('uid')]),
-            'title' => $this->translator->__('Profile'),
+            'text' => $this->translator->__('Profile'),
             'icon' => 'user'
         ];
 
         if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:', '::', ACCESS_READ)) {
             $links[] = [
                 'url' => $this->router->generate('zikulaprofilemodule_members_view'),
-                'title' => $this->translator->__('Registered users'),
+                'text' => $this->translator->__('Registered users'),
                 'icon' => 'users'
             ];
         }
 
         // check if the users block exists
         $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
-        $profileModuleId = ModUtil::getIdFromName($this->currentUserApi->get($this->getBundleName()));
+        $profileModuleId = ModUtil::getIdFromName($this->getBundleName());
         $found = false;
         if (is_array($blocks)) {
             foreach ($blocks as $block) {
-                if ($block['mid'] == $profileModuleId && $block['bkey'] == 'user') {
+                if ($block['module']['id'] == $profileModuleId && $block['bkey'] == 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock') {
                     $found = true;
                     break;
                 }
@@ -278,7 +278,7 @@ class LinkContainer implements LinkContainerInterface
         if ($found) {
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_user_usersblock'),
-                'title' => $this->translator->__('Personal custom block'),
+                'text' => $this->translator->__('Personal custom block'),
                 'icon'  => 'home'
             ];
         }

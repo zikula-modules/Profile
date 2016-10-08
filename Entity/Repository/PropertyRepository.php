@@ -48,7 +48,7 @@ class PropertyRepository extends EntityRepository
      */
     public function getAllActive()
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->_em->createQueryBuilder()
             ->select('p')
             ->from('ZikulaProfileModule:PropertyEntity', 'p')
             ->where('p.prop_weight > 0')
@@ -93,7 +93,7 @@ class PropertyRepository extends EntityRepository
      *
      * @return integer The maximum weight value
      */
-    public function getMinimumWeight()
+    public function getMaximumWeight()
     {
         $query = $this->_em->createQuery('
             SELECT MAX(p.prop_weight)

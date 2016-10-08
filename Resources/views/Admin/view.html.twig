@@ -1,4 +1,4 @@
-{{ pageAddAsset('js', zasset('@ZikulaProfileModule:js/Zikula.Profile.Admin.View.js')) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/Zikula.Profile.Admin.View.js')) }}
 {{ adminHeader() }}
 <h3>
     <span class="fa fa-list"></span>
@@ -20,7 +20,7 @@
                 <span class="z-itemcell z-w10">{{ __('Actions') }}</span>
             </li>
             {% for dudItem in dudItems %}
-            <li id="profile_{{ dudItem.prop_id|e('html_attr') }}" class="{{ cycle(['z-odd', 'z-even']) }} z-itemsort z-sortable z-clearfix">
+            <li id="profile_{{ dudItem.prop_id|e('html_attr') }}" class="{{ cycle(['z-odd', 'z-even'], loop.index0) }} z-itemsort z-sortable z-clearfix">
                 <span class="z-itemcell z-w20" id="profiledrag_{{ dudItem.prop_id|e('html_attr') }}">[{{ dudItem.prop_fieldset }}]</span>
                 <span class="z-itemcell z-w25">{{ dudItem.prop_label }}</span>
                 <span class="z-itemcell z-w25">{{ dudItem.prop_attribute_name }}</span>
@@ -28,7 +28,7 @@
                 <span class="z-itemcell z-w10">
                     {% if dudItem.status.url != '' %}
                         <a href="{{ dudItem.status.url|e('html_attr') }}" id="profilestatus_{{ dudItem.prop_id|e('html_attr') }}" class="profilestatus_{{ dudItem.statusval|e('html_attr') }}">
-                            <span class="{{ dudItem.status.labelClass|e('html_attr') }}" title="{{ __('click to'}|e('html_attr') }} {{ dudItem.status.title|e('html_attr') }}">{{ dudItem.status.current }}</span>
+                            <span class="{{ dudItem.status.labelClass|e('html_attr') }}" title="{{ __('click to')|e('html_attr') }} {{ dudItem.status.title|e('html_attr') }}">{{ dudItem.status.current }}</span>
                             <strong>{{ dudItem.status.title }}</strong>
                         </a>
                     {% else %}
@@ -37,7 +37,7 @@
                 </span>
                 <span class="z-itemcell z-w10">
                     {% for option in dudItem.options %}
-                        <a href="{{ option.url|e('html_attr') }}"{% if option.class %} class="{{ option.class|e('html_attr') }}"{% endif %}><i class="{{ options.iconClass|e('html_attr') }}" title="{{ option.title|e('html_attr') }}"></i></a>
+                        <a href="{{ option.url|e('html_attr') }}"{% if option.class %} class="{{ option.class|e('html_attr') }}"{% endif %}><i class="{{ option.iconClass|e('html_attr') }}" title="{{ option.title|e('html_attr') }}"></i></a>
                     {% endfor %}
                 </span>
             </li>

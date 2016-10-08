@@ -10,7 +10,7 @@
             {% endfor %}
         </select>
         {% if attributeName == 'avatar' %}
-            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\UsersModule\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\UsersModule\\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\UsersModule\\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
             <p id="youravatarcontainer">
                 <span id="avatarPath" class="hidden">{{ avatarPath }}</span>
                 <img class="img-thumbnail" id="avatarPreview" src="{{ avatarPath|e('html_attr') }}/{{ selectedValue|e('html_attr') }}" alt="{{ propLabelText }}" />

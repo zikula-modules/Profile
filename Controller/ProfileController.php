@@ -83,9 +83,10 @@ class ProfileController extends AbstractController
         $activeDuds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'viewable', 'uid' => $uid]);
         $fieldSets = [];
         $items = $activeDuds;
-        foreach ($items as $propattr => $propdata) {
-            $items[$propattr]['prop_fieldset'] = (isset($propdata['prop_fieldset']) && !empty($propdata['prop_fieldset'])) ? $propdata['prop_fieldset'] : $this->__('User Information');
-            $fieldSets[$propdata['prop_fieldset']] = $propdata['prop_fieldset'];
+        foreach ($items as $propAttr => $propData) {
+            $fieldSet = (isset($propData['prop_fieldset']) && !empty($propData['prop_fieldset'])) ? $propData['prop_fieldset'] : $this->__('User Information');
+            $items[$propAttr]['prop_fieldset'] = $fieldSet;
+            $fieldSets[$fieldSet] = $fieldSet;
         }
         $activeDuds = $items;
 
@@ -175,8 +176,9 @@ class ProfileController extends AbstractController
         $fieldSets = [];
         
         foreach ($items as $propAttr => $propData) {
-            $items[$propAttr]['prop_fieldset'] = (isset($propData['prop_fieldset']) && (!empty($propData['prop_fieldset'])) ? $propData['prop_fieldset'] : $this->__('User Information');
-            $fieldSets[$propData['prop_fieldset']] = $propData['prop_fieldset'];
+            $fieldSet = (isset($propData['prop_fieldset']) && !empty($propData['prop_fieldset'])) ? $propData['prop_fieldset'] : $this->__('User Information');
+            $items[$propAttr]['prop_fieldset'] = $fieldSet;
+            $fieldSets[$fieldSet] = $fieldSet;
         }
 
         // merge temporary dynaData into the items array

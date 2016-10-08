@@ -1,7 +1,7 @@
-{{ pageAddAsset('js', zasset('@ZikulaProfileModule:js/Zikula.Profile.Admin.Edit.js')) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/Zikula.Profile.Admin.Edit.js')) }}
 {{ adminHeader() }}
 <h3>
-    {% if item is not empty %}
+    {% if item|default %}
         <span class="fa fa-pencil"></span>
         {{ __('Edit field') }}
     {% else %}
@@ -24,13 +24,13 @@
                 <div class="col-sm-9">
                     <input class="form-control" id="profile_label" name="label" type="text" size="20" maxlength="255" value="{{ item.prop_label|default('')|e('html_attr') }}" />
                     {% set helpUrl = url('zikulaprofilemodule_admin_help') %}
-                    <p class="alert alert-info">{{ __f('Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.', { '%s': helpUrl }) }}</p>
+                    <p class="alert alert-info">{{ __f('Check the <strong><a href="%s">help page</a></strong> to get more information about labels and translatable stuff.', { '%s': helpUrl })|raw }}</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="profile_attributename">{{ __('Attribute name') }}</label>
                 <div class="col-sm-9">
-                    {% if item not empty %}
+                    {% if item|default %}
                         <span id="profile_attributename">{{ item.prop_attribute_name|default('') }}</span>
                     {% else %}
                         <input class="form-control" id="profile_attributename" name="attributename" type="text" size="20" maxlength="80" />

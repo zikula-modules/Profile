@@ -33,10 +33,10 @@ class UserBlock extends AbstractBlockHandler
 
         $currentUserApi = $this->get('zikula_users_module.current_user');
 
-        if (!$currentUserApi->isLoggedIn() || $currentUserApi->get('ublockon') != 1) {
+        if (!$currentUserApi->isLoggedIn() || \UserUtil::getVar('ublockon') != 1) {
             return '';
         }
 
-        return nl2br($currentUserApi->get('ublock'));
+        return nl2br(\UserUtil::getVar('ublock'));
     }
 }

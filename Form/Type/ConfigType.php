@@ -61,7 +61,18 @@ class ConfigType extends AbstractType
                 'required' => false,
                 'expanded' => false,
                 'multiple' => false
-            ])
+            ]);
+
+        foreach ($options['dudFields'] as $key => $item) {
+            $builder
+                ->add('dudregshow_' . $item['prop_attribute_name'], 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
+                    'label' => $item['prop_label'],
+                    'required' => $item['prop_required'],
+                    'disabled' => $item['prop_required']
+                ]);
+        }
+
+        $builder
             ->add('save', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Save'),
                 'icon' => 'fa-check',
@@ -101,7 +112,8 @@ class ConfigType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translator' => null
+            'translator' => null,
+            'dudFields' => []
         ]);
     }
 }

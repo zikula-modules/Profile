@@ -32,7 +32,7 @@
         <tbody>
             {% for user in users %}
             <tr>
-                <td headers="hUserName"><strong>{{ user.uname|profilelinkbyuname() }}</strong></td>
+                <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong></td>
                 {% if dudArray.realname|default %}
                     <td headers="hRealName">{{ user.attributes.realname|default('&nbsp;') }}</td>
                 {% endif %}

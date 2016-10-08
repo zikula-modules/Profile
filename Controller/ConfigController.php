@@ -42,19 +42,35 @@ class ConfigController extends AbstractController
 
         $dataValues = $this->getVars();
         $dataValues['viewregdate'] = (bool)$dataValues['viewregdate'];
+        $dudFields = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable', 'index' => 'prop_id']);
+
+        foreach ($dudFields as $key => $item) {
+            $dataValues['dudregshow_' . $item['prop_attribute_name']] = in_array($item['prop_attribute_name'], $dataValues['dudregshow']);
+        }
 
         $form = $this->createForm('Zikula\ProfileModule\Form\Type\ConfigType',
-            $dataValues, ['translator' => $this->get('translator.default')]
+            $dataValues, [
+                'translator' => $this->get('translator.default'),
+                'dudFields' => $dudFields
+            ]
         );
 
         if ($form->handleRequest($request)->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $formData = $form->getData();
                 $formData['viewregdate'] = ($formData['viewregdate'] == true ? 1 : 0);
-                $formData['dudregshow'] = $request->request->get('dudregshow', []);
+
+                $formData['dudregshow'] = [];
+                foreach ($dudFields as $key => $item) {
+                    if (!isset($formData['dudregshow_' . $item['prop_attribute_name']])) {
+                        continue;
+                    }
+                    $formData['dudregshow'][] = $item['prop_attribute_name'];
+                    unset($formData['dudregshow_' . $item['prop_attribute_name']]);
+                }
 
                 // save modvars
-                $this->setVars($vars);
+                $this->setVars($formData);
 
                 $this->addFlash('status', $this->__('Done! Module configuration updated.'));
             }
@@ -64,12 +80,11 @@ class ConfigController extends AbstractController
         }
 
         $fieldSets = [];
-        $dudFields = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable', 'index' => 'prop_id']);
 
         foreach ($dudFields as $k => $item) {
             $item['prop_fieldset'] = (isset($item['prop_fieldset']) && !empty($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
             $dudFields[$k] = (array)$item;
-            $fieldSets[] = $item['prop_fieldset'];
+            $fieldSets[$item['prop_fieldset']] = $item['prop_fieldset'];
         }
 
         return [

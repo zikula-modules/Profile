@@ -12,6 +12,7 @@ namespace Zikula\ProfileModule\Block\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -25,7 +26,7 @@ class FeaturedUserBlockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', 'Symfony\Component\Form\Extension\Core\Type\StringType', [
+            ->add('username', 'Symfony\Component\Form\Extension\Core\Type\TextType', [
                 'label' => __('User name'),
                 'empty_data' => '',
                 'constraints' => [
@@ -34,6 +35,9 @@ class FeaturedUserBlockType extends AbstractType
             ])
             ->add('fieldstoshow', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
                 'label' => __('Information to show'),
+                'label_attr' => [
+                    'class' => 'checkbox-inline'
+                ],
                 'expanded' => true,
                 'multiple' => true,
                 'choices_as_values' => true,

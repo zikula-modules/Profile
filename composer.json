@@ -21,7 +21,7 @@
             "class": "Zikula\\ProfileModule\\ZikulaProfileModule",
             "core-compatibility": ">=1.4.3",
             "displayname": "Profile",
-            "url": "search",
+            "url": "profile",
             "capabilities": {
                 "admin": {"route": "zikulaprofilemodule_config_config"},
                 "user": {"route": "zikulaprofilemodule_profile_display"},

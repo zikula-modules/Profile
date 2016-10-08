@@ -210,7 +210,7 @@ class AdminController extends AbstractController
                 'amountOfItems' => $count,
                 'itemsPerPage' => $numitems
             ]
-        ]
+        ];
     }
 
     /**
@@ -419,12 +419,19 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $form = $this->createForm('Zikula\ProfileModule\Form\DeleteDudType', $item);
+        $form = $this->createForm('Zikula\ProfileModule\Form\Type\DeleteDudType', $item, [
+            'translator' => $this->get('translator.default')
+        ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'delete', ['dudid' => $dudid])) {
-                // Success
-                $this->addFlash('status', $this->__('Done! The field has been successfully deleted.'));
+            if ($form->get('delete')->isClicked()) {
+                if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'delete', ['dudid' => $dudid])) {
+                    // Success
+                    $this->addFlash('status', $this->__('Done! The field has been successfully deleted.'));
+                }
+            }
+            if ($form->get('cancel')->isClicked()) {
+                $this->addFlash('status', $this->__('Operation cancelled.'));
             }
 
             return $this->redirectToRoute('zikulaprofilemodule_admin_view');
@@ -461,10 +468,12 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
-        $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
+        $prop = $entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
         $prop->incrementWeight();
-        $this->entityManager->flush();
+        $entityManager->flush();
 
         return $this->redirectToRoute('zikulaprofilemodule_admin_view');
     }
@@ -501,10 +510,12 @@ class AdminController extends AbstractController
             return new Response();
         }
 
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
         /** @var $prop \Zikula\ProfileModule\Entity\PropertyEntity */
-        $prop = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
+        $prop = $entityManager->find('ZikulaProfileModule:PropertyEntity', $dudid);
         $prop->decrementWeight();
-        $this->entityManager->flush();
+        $entityManager->flush();
 
         return $this->redirectToRoute('zikulaprofilemodule_admin_view');
     }
@@ -523,7 +534,7 @@ class AdminController extends AbstractController
      */
     public function activateAction(Request $request, $dudid)
     {
-        $this->get('zikula_core.common.csrf_token_handler')->validate($request->query->get('csrftoken');
+        $this->get('zikula_core.common.csrf_token_handler')->validate($request->query->get('csrftoken'));
 
         // The API function is called.
         if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'activate', ['dudid' => $dudid])) {
@@ -548,7 +559,7 @@ class AdminController extends AbstractController
      */
     public function deactivateAction(Request $request, $dudid)
     {
-        $this->get('zikula_core.common.csrf_token_handler')->validate($request->query->get('csrftoken');
+        $this->get('zikula_core.common.csrf_token_handler')->validate($request->query->get('csrftoken'));
 
         // The API function is called.
         if (ModUtil::apiFunc('ZikulaProfileModule', 'admin', 'deactivate', ['dudid' => $dudid])) {

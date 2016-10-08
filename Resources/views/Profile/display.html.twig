@@ -2,9 +2,9 @@
 
 {% set name = '' %}
 {% if userInfo.__ATTRIBUTES__ is defined %}
-    {% set user_information_first_name = userInfo.__ATTRIBUTES__['user_information_first_name'] %}
-    {% set user_information_middle_name = userInfo.__ATTRIBUTES__['user_information_middle_name'] %}
-    {% set user_information_last_name = userInfo.__ATTRIBUTES__['user_information_last_name'] %}
+    {% set user_information_first_name = userInfo.__ATTRIBUTES__['user_information_first_name']|default %}
+    {% set user_information_middle_name = userInfo.__ATTRIBUTES__['user_information_middle_name']|default %}
+    {% set user_information_last_name = userInfo.__ATTRIBUTES__['user_information_last_name']|default %}
 
     {% set name = user_information_first_name ~ ' ' ~ user_information_middle_name ~ ' ' ~ user_information_last_name %}
     {% if name is empty %}
@@ -45,7 +45,7 @@
         {% endif %}
         {% set allowGravatars = getModVar('ZikulaUsersModule', 'allowgravatars') %}
         {% if dudArray.avatar|default and dudArray.avatar not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
-            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\UsersModule\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\UsersModule\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\UsersModule\\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\UsersModule\\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
             <img class="img-thumbnail" src="{{ avatarPath|e('html_attr') }}/{{ dudArray.avatar|e('html_attr') }}" alt="{{ name|e('html_attr') }}" />
         {% elseif allowGravatars %}
             {{ zikulaprofilemodule_gravatar(email=userInfo.email) }}

@@ -61,4 +61,14 @@ class DeleteDudType extends AbstractType
     {
         return $this->getBlockPrefix();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translator' => null
+        ]);
+    }
 }

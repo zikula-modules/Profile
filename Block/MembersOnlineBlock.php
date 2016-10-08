@@ -44,12 +44,12 @@ class MembersOnlineBlock extends AbstractBlockHandler
         }
 
         // check which messaging module is available and add the necessary info
-        $messageModule = $currentUserApi->isLoggedIn() ? ModUtil::apiFunc($this->name, 'memberslist', 'getmessagingmodule') : '';
+        $messageModule = $currentUserApi->isLoggedIn() ? ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule') : '';
 
         return $this->renderView('@ZikulaProfileModule/Block/membersOnline.html.twig', [
-            'currentUserId', $uid,
+            'currentUserId' => $userId,
             'usersOnline' => $usersOnline,
-            'maxLength', $properties['lengthmax'],
+            'maxLength' => $properties['lengthmax'],
             'messageModule' => $messageModule,
             'messages' => $messageModule != '' ? ModUtil::apiFunc($messageModule, 'user', 'getmessagecount') : [],
             'amountOfOnlineMembers' => $users['numusers'],

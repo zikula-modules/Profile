@@ -53,6 +53,8 @@ class AjaxController extends AbstractController
             return new BadDataResponse([], $this->__f('Error! Invalid \'%s\' passed.', ['%s' => 'startnum']));
         }
 
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
         // update the items with the new weights
         $props = [];
         $weight = $startnum + 1;
@@ -61,12 +63,12 @@ class AjaxController extends AbstractController
             if (empty($prop_id)) {
                 continue;
             }
-            $props[$prop_id] = $this->entityManager->find('ZikulaProfileModule:PropertyEntity', $prop_id);
+            $props[$prop_id] = $entityManager->find('ZikulaProfileModule:PropertyEntity', $prop_id);
             $props[$prop_id]->setProp_weight($weight);
             $weight++;
         }
         // update the db
-        $this->entityManager->flush();
+        $entityManager->flush();
 
         return new AjaxResponse(['result' => true]);
     }

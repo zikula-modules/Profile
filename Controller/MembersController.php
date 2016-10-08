@@ -54,7 +54,7 @@ class MembersController extends AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function viewmembersAction(Request $request)
+    public function viewAction(Request $request)
     {
         // Security check
         if (!$this->hasPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
@@ -157,7 +157,7 @@ class MembersController extends AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function recentmembersAction()
+    public function recentAction()
     {
         // Security check
         if (!$this->hasPermission('ZikulaProfileModule:Members:recent', '::', ACCESS_READ)) {
@@ -221,7 +221,7 @@ class MembersController extends AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function onlinemembersAction()
+    public function onlineAction()
     {
         // Security check
         if (!$this->hasPermission('ZikulaProfileModule:Members:online', '::', ACCESS_READ)) {

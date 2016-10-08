@@ -67,7 +67,7 @@ class TwigExtension extends \Twig_Extension
      * @param Twig_Environment         $twig            Twig_Environment service instance
      * @param VariableApi              $variableApi     VariableApi service instance
      */
-    public function __construct(Translator $translator, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher Twig_Environment $twig, VariableApi $variableApi)
+    public function __construct(Translator $translator, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, Twig_Environment $twig, VariableApi $variableApi)
     {
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
@@ -84,10 +84,10 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('zikulaprofilemodule_gravatar', [$this, 'getGravatarImage']),
-            new \Twig_SimpleFunction('zikulaprofilemodule_displayProfileSection', [$this, 'displayProfileSection']),
-            new \Twig_SimpleFunction('dudItemDisplay', [$this, 'dudItemDisplay']),
-            new \Twig_SimpleFunction('dudItemModify', [$this, 'dudItemModify']),
+            new \Twig_SimpleFunction('zikulaprofilemodule_gravatar', [$this, 'getGravatarImage'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('zikulaprofilemodule_displayProfileSection', [$this, 'displayProfileSection'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('dudItemDisplay', [$this, 'dudItemDisplay'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('dudItemModify', [$this, 'dudItemModify'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('zikulaprofilemodule_modUrlLegacy', [$this, 'modUrlLegacy'])
         ];
     }
@@ -184,7 +184,7 @@ class TwigExtension extends \Twig_Extension
      *
      * @return string The rendered field; empty string if an error occured
      */
-    public function dudItemDisplay()
+    public function dudItemDisplay($item, $userInfo, $userId = 0, $propLabel = '', $propAttribute = '', $default = '', $showLabel = true)
     {
         if (!isset($item)) {
             if (isset($propLabel)) {
@@ -205,16 +205,11 @@ class TwigExtension extends \Twig_Extension
             $tplset = 'dudDisplay';
         }
 
-        // a default value if the user data is empty
-        if (!isset($default)) {
-            $default = '';
-        }
-
-        if (!isset($userId)) {
+        if (empty($userId)) {
             $userId = UserUtil::getVar('uid');
         }
 
-        if (!isset($userInfo)) {
+        if (empty($userInfo)) {
             $userInfo = UserUtil::getVars($userId);
         }
 
@@ -338,7 +333,7 @@ class TwigExtension extends \Twig_Extension
             // url
             if (!empty($userValue) && $userValue != 'http://') {
                 //! string to describe the user's site
-                $output = '<a href="' . DataUtil::formatForDisplay($userValue) . '" title="' . $this->translator->__f("%s's site", ['%s' => $userInfo['uname']) . '" rel="nofollow">' . DataUtil::formatForDisplay($userValue) . '</a>';
+                $output = '<a href="' . DataUtil::formatForDisplay($userValue) . '" title="' . $this->translator->__f("%s's site", ['%s' => $userInfo['uname']]) . '" rel="nofollow">' . DataUtil::formatForDisplay($userValue) . '</a>';
             }
         } elseif (empty($userValue)) {
             // process the generics
@@ -363,16 +358,18 @@ class TwigExtension extends \Twig_Extension
         $templateParameters['item'] = $item;
         $templateParameters['output'] = is_array($output) ? $output : [$output];
 
+        /*
+        TODO enable custom template sets again
         try {
             $template = $tplset . '_' . $item['prop_id'] . '.html.twig';
 
             return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
-        } catch (Exception $e) {
+        } catch (Exception $e) {*/
             // custom template does not exist
             $template = $tplset . '_generic.html.twig';
 
             return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
-        }
+        //}
     }
 
     /**
@@ -395,9 +392,9 @@ class TwigExtension extends \Twig_Extension
      *
      * @return string The rendered field; empty string if an error occured
      */
-    public function dudItemModify()
+    public function dudItemModify($item, $userId = 0, $class = '', $propLabel = '', $propAttribute = '', $error = '', $fieldName = 'dynadata[example]')
     {
-        if (!isset($item)) {
+        if (empty($item)) {
             if (isset($propLabel)) {
                 $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $propLabel]);
             } else if (isset($propAttribute)) {
@@ -406,7 +403,8 @@ class TwigExtension extends \Twig_Extension
                 return false;
             }
         }
-        if (!isset($item) || empty($item)) {
+
+        if (empty($item)) {
             return false;
         }
 
@@ -428,10 +426,10 @@ class TwigExtension extends \Twig_Extension
             }
         }
 
-        if (!isset($userId)) {
+        if (empty($userId)) {
             $userId = UserUtil::getVar('uid');
         }
-        if (!isset($class) || !is_string($class)) {
+        if (!is_string($class)) {
             $class = '';
         }
 
@@ -470,7 +468,7 @@ class TwigExtension extends \Twig_Extension
             'propLabelText' => $item['prop_label'],
             'note' => $item['prop_note'],
             'required' => (bool)$item['prop_required'],
-            'error' => (isset($error) ? $error : '')
+            'error' => $error
         ];
 
         // Excluding Timezone of the generics
@@ -677,7 +675,7 @@ class TwigExtension extends \Twig_Extension
      */
     private function renderDudEditTemplate($templateName, $parameters = [])
     {
-        return $this->twig->render('@ZikulaProfileModule/' . $templateName . '.html.twig', $parameters);
+        return $this->twig->render('@ZikulaProfileModule/DudEdit/' . $templateName . '.html.twig', $parameters);
     }
 
 

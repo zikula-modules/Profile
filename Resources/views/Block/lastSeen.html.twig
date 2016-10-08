@@ -1,7 +1,7 @@
 {% if users %}
 <ul class="list-group">
     {% for user in users %}
-        <li class="list-group-item">{{ user.uname|profilelinkbyuname() }} ({{ user.lastlogin|localizeddate('medium', 'none') }})</li>
+        <li class="list-group-item">{{ user.uname|profileLinkByUserName() }} ({{ user.lastlogin|localizeddate('medium', 'none') }})</li>
     {% endfor %}
 </ul>
 {% endif %}

@@ -33,14 +33,10 @@
                 <label class="col-sm-3 control-label" for="profile_dudregshow">{{ __('Personal info items to include in user registration form') }}</label>
                 <div class="col-sm-9">
                     {% for fieldSet in dudFieldSets %}
-                    <fieldset class="{{ fieldSet|e('html_attr') }}">
+                    <fieldset class="{{ fieldSet|e('html_attr')|lower }}">
                         <legend>{{ fieldSet }}</legend>
-                        {% for key, item from dudFields if item.prop_fieldset == fieldSet %}
-                            {% set attributeName = item.prop_attribute_name|e('html_attr') %}
-                            <div class="checkbox">
-                                <input id="profile_dudregshow_{{ attributeName }}" type="checkbox" name="dudregshow[]" value="{{ attributeName }}"{% if item.prop_required %} checked="checked" disabled="disabled"{% elseif item.prop_attribute_name in dudFieldsActive %} checked="checked"{/if} />
-                                <label for="profile_dudregshow_{{ attributeName }}">{{ item.prop_label }}</label>
-                            </div>
+                        {% for key, item in dudFields if item.prop_fieldset == fieldSet %}
+                            {{ form_row(attribute(form, 'dudregshow_' ~ item.prop_attribute_name)) }}
                         {% endfor %}
                     </fieldset>
                     {% endfor %}

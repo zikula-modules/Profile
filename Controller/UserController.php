@@ -154,13 +154,13 @@ class UserController extends AbstractController
      *
      * @throws NotFoundHttpException Thrown if the users block isn't found
      */
-    public function usersBlockAction()
+    public function usersBlockAction(Request $request)
     {
         $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
         $profileModuleId = ModUtil::getIdFromName('ZikulaProfileModule');
         $found = false;
         foreach ($blocks as $block) {
-            if ($block['mid'] == $profileModuleId && $block['bkey'] == 'user') {
+            if ($block['module']['id'] == $profileModuleId && $block['bkey'] == 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock') {
                 $found = true;
                 break;
             }
@@ -175,21 +175,28 @@ class UserController extends AbstractController
         }
 
         $formVars = [
-            'ublockon' => (bool)$currentUserApi->get('ublockon'),
-            'ublock' => $currentUserApi->get('ublock')
+            'ublockon' => (bool)UserUtil::getVar('ublockon'),
+            'ublock' => UserUtil::getVar('ublock')
         ];
 
-        $form = $this->createForm('Zikula\ProfileModule\Form\UsersBlockType', $formVars);
+        $form = $this->createForm('Zikula\ProfileModule\Form\Type\UsersBlockType', $formVars, [
+            'translator' => $this->get('translator.default')
+        ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $formData = $form->getData();
-            $ublockon = isset($formData['ublockon']) ? (bool)$formData['ublockon'] : false;
-            $ublock = isset($formData['ublock']) ? $formData['ublock'] : '';
+            if ($form->get('save')->isClicked()) {
+                $formData = $form->getData();
+                $ublockon = isset($formData['ublockon']) ? (bool)$formData['ublockon'] : false;
+                $ublock = isset($formData['ublock']) ? $formData['ublock'] : '';
 
-            UserUtil::setVar('ublockon', $ublockon);
-            UserUtil::setVar('ublock', $ublock);
+                UserUtil::setVar('ublockon', $ublockon);
+                UserUtil::setVar('ublock', $ublock);
 
-            $this->addFlash('status', $this->__('Done! Saved custom block.'));
+                $this->addFlash('status', $this->__('Done! Saved custom block.'));
+            }
+            if ($form->get('cancel')->isClicked()) {
+                $this->addFlash('status', $this->__('Operation cancelled.'));
+            }
 
             return $this->redirectToRoute('zikulausersmodule_account_menu');
         }
