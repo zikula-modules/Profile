@@ -46,12 +46,12 @@ class MemberslistApi extends \Zikula_AbstractApi
      */
     protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
-        if (!isset($startNum) || !is_numeric($startNum) || $startNum != (string)(int)$startNum || $startNum < -1) {
+        if (!isset($startNum) || !is_numeric($startNum) || $startNum < -1) {
             throw new \InvalidArgumentException($this->__f('Invalid %s.', ['startNum']));
         } elseif ($startNum <= 0) {
             $startNum = -1;
         }
-        if (!isset($numItems) || !is_numeric($numItems) || $numItems != (string)(int)$numItems || $numItems != -1 && $numItems < 1) {
+        if (!isset($numItems) || !is_numeric($numItems) || $numItems < 1) {
             throw new \InvalidArgumentException($this->__f('Invalid %s.', ['numItems']));
         }
         if (!isset($sortBy) || empty($sortBy)) {
@@ -66,10 +66,12 @@ class MemberslistApi extends \Zikula_AbstractApi
         if (!isset($letter)) {
             $letter = null;
         }
+
         // Security check
         if (!SecurityUtil::checkPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
             return [];
         }
+
         // begin the construction of the query
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select(['u', 'a'])

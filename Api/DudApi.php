@@ -47,20 +47,12 @@ class DudApi extends \Zikula_AbstractApi
      */
     public function register($args)
     {
-        if (!isset($args['modname'])
-            || empty($args['modname'])
-            || !isset($args['label'])
-            || empty($args['label'])
-            || !isset($args['attribute_name'])
-            || empty($args['attribute_name'])
-            || !isset($args['dtype'])
-            || empty($args['dtype'])
-            || !isset($args['displaytype'])
-            || !is_numeric($args['displaytype'])
-            || (int)$args['displaytype'] < 0
-            || !isset($args['validationinfo'])
-            || empty($args['validationinfo'])
-            || !is_array($args['validationinfo'])
+        if (!isset($args['modname']) || empty($args['modname'])
+            || !isset($args['label']) || empty($args['label'])
+            || !isset($args['attribute_name']) || empty($args['attribute_name'])
+            || !isset($args['dtype']) || empty($args['dtype'])
+            || !isset($args['displaytype']) || !is_numeric($args['displaytype']) || (int)$args['displaytype'] < 0
+            || !isset($args['validationinfo']) || empty($args['validationinfo']) || !is_array($args['validationinfo'])
         ) {
             throw new \InvalidArgumentException();
         }
@@ -112,6 +104,7 @@ class DudApi extends \Zikula_AbstractApi
         $obj['prop_modname'] = $args['modname'];
         $obj['prop_weight'] = $weight;
         $obj['prop_validation'] = serialize($args['validationinfo']);
+
         $prop = new PropertyEntity();
         $prop->merge($obj);
         $this->entityManager->persist($prop);
@@ -172,11 +165,8 @@ class DudApi extends \Zikula_AbstractApi
             ->setParameter('name', $item['prop_attribute_name']);
         $qb->getQuery()->execute();
 
-        // delete the property
-        $qb->delete('ZikulaProfileModule:PropertyEntity', 'p')
-            ->where('p.prop_id = :id')
-            ->setParameter('id', $item['prop_id']);
-        $qb->getQuery()->execute();
+        $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
+        $propertyRepository->deleteProperty($item['prop_id']);
 
         // Let the calling process know that we have finished successfully
         return true;

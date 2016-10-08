@@ -50,29 +50,21 @@ class UserApi extends \Zikula_AbstractApi
             return [];
         }
 
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')
-            ->from('ZikulaProfileModule:PropertyEntity', 'p')
-            ->orderBy('p.prop_weight');
-        if ($args['startnum'] > 0) {
-            $qb->setFirstResult($args['startnum'] - 1);
-        }
-        if ($args['numitems'] > 0) {
-            $qb->setMaxResults($args['numitems']);
-        }
-        $items = $qb->getQuery()->getArrayResult();
+        $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
+        $items = $propertyRepository->getAllByWeight($args['startnum'], $args['numitems']);
 
         // Put items into result array.
         foreach (array_keys($items) as $k) {
-            if (SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
-                $validationinfo = @unserialize($items[$k]['prop_validation']);
-                unset($items[$k]['prop_validation']);
-                // Expand the item array
-                foreach ((array)$validationinfo as $infolabel => $infofield) {
-                    $items[$k]["prop_{$infolabel}"] = $infofield;
-                }
-            } else {
+            if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                 unset($items[$k]);
+                continue;
+            }
+
+            $validationInfo = @unserialize($items[$k]['prop_validation']);
+            unset($items[$k]['prop_validation']);
+            // Expand the item array
+            foreach ((array)$validationInfo as $infoLabel => $infoField) {
+                $items[$k]["prop_{$infoLabel}"] = $infoField;
             }
         }
 
@@ -180,24 +172,20 @@ class UserApi extends \Zikula_AbstractApi
 
         static $items;
         if (!isset($items)) {
-            $qb = $this->entityManager->createQueryBuilder();
-            $qb->select('p')
-                ->from('ZikulaProfileModule:PropertyEntity', 'p')
-                ->where('p.prop_weight > 0')
-                ->andWhere('p.prop_dtype >= 0')
-                ->orderBy('p.prop_weight');
-            $items = $qb->getQuery()->getArrayResult();
+            $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
+            $items = $propertyRepository->getAllActive();
+
             foreach (array_keys($items) as $k) {
-                // check permissions
-                if (SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
-                    // Extract the validation info array
-                    $validationinfo = @unserialize($items[$k]['prop_validation']);
-                    unset($items[$k]['prop_validation']);
-                    foreach ((array)$validationinfo as $infolabel => $infofield) {
-                        $items[$k]["prop_{$infolabel}"] = $infofield;
-                    }
-                } else {
+                if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
                     unset($items[$k]);
+                    continue;
+                }
+
+                // Extract the validation info array
+                $validationinfo = @unserialize($items[$k]['prop_validation']);
+                unset($items[$k]['prop_validation']);
+                foreach ((array)$validationinfo as $infolabel => $infofield) {
+                    $items[$k]["prop_{$infolabel}"] = $infofield;
                 }
             }
         }
@@ -210,10 +198,10 @@ class UserApi extends \Zikula_AbstractApi
         }
 
         // Put items into result array and filter if needed
-        $currentuser = (int)UserUtil::getVar('uid');
-        $ismember = $currentuser >= 2;
-        $isowner = $currentuser == (int)$args['uid'];
-        $isadmin = SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN);
+        $currentUser = (int)UserUtil::getVar('uid');
+        $isMember = $currentUser >= 2;
+        $isOwner = $currentUser == (int)$args['uid'];
+        $isAdmin = SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN);
 
         $result = [];
         foreach ($items as $item) {
@@ -225,7 +213,7 @@ class UserApi extends \Zikula_AbstractApi
                     }
                 // Fall through to next case on purpose, handle editable and viewable the same at this point.
                 case 'viewable':
-                    $isallowed = true;
+                    $isAllowed = true;
                     // check the item visibility
                     switch ($item['prop_viewby']) {
                         // everyone, do nothing
@@ -233,19 +221,19 @@ class UserApi extends \Zikula_AbstractApi
                             break;
                         // members only or higher
                         case '1':
-                            $isallowed = $isowner || $ismember;
+                            $isAllowed = $isOwner || $isMember;
                             break;
                         // account owner or admin
                         case '2':
-                            $isallowed = $isowner || $isadmin;
+                            $isAllowed = $isOwner || $isAdmin;
                             break;
                         // admins only
                         case '3':
-                            $isallowed = $isadmin;
+                            $isAllowed = $isAdmin;
                             break;
                     }
                     // break if it's not viewable
-                    if (!$isallowed) {
+                    if (!$isAllowed) {
                         break;
                     }
                 case 'all':
@@ -281,10 +269,9 @@ class UserApi extends \Zikula_AbstractApi
      */
     public function countitems()
     {
-        // Return the number of items
-        $query = $this->entityManager->createQuery('SELECT COUNT(p.prop_id) FROM Zikula\ProfileModule\Entity\PropertyEntity p');
+        $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
 
-        return $query->getSingleScalarResult();
+        return $propertyRepository->getTotalAmount();
     }
 
     /**
@@ -294,15 +281,11 @@ class UserApi extends \Zikula_AbstractApi
      */
     public function getweightlimits()
     {
-        $query = $this->entityManager->createQuery('SELECT MAX(p.prop_weight) FROM Zikula\ProfileModule\Entity\PropertyEntity p');
-        $max = $query->getSingleScalarResult();
-        $query = $this->entityManager->createQuery('SELECT MIN(p.prop_weight) FROM Zikula\ProfileModule\Entity\PropertyEntity p');
-        $min = $query->getSingleScalarResult();
+        $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
 
-        // Return the number of items
         return [
-            'min' => $min,
-            'max' => $max
+            'min' => $propertyRepository->getMinimumWeight(),
+            'max' => $propertyRepository->getMaximumWeight()
         ];
     }
 

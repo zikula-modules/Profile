@@ -16,7 +16,7 @@ use Zikula\Core\Doctrine\EntityAccess;
 /**
  * Property entity class
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
  * @ORM\Table(name="user_property", indexes = {
  *     @ORM\index(name="prop_label", columns = {"label"}),
  *     @ORM\index(name="prop_attr", columns = {"attributename"})
