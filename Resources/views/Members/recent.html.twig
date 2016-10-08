@@ -15,7 +15,7 @@
             {% if dudArray.url|default %}
                 <col id="cSite" />
             {% endif %}
-            {% if adminedit %}
+            {% if adminEdit %}
                 <col id="cActions" />
             {% endif %}
         </colgroup>
@@ -32,7 +32,7 @@
                 {% if dudArray.url|default %}
                     <th id="hSite" scope="col">{{ __('Site') }}</th>
                 {% endif %}
-                {% if adminedit %}
+                {% if adminEdit %}
                     <th id="hActions" scope="col">{{ __('Actions') }}</th>
                 {% endif %}
             </tr>
@@ -63,10 +63,10 @@
                         {% endif %}
                     </td>
                 {% endif %}
-                {% if adminedit %}
+                {% if adminEdit %}
                     <td headers="hActions">
                         <a href="{{ path('zikulausersmodule_useradministration_modify', { user: user.uid }) }}"><i class="fa fa-pencil fa-lg"></i></a>
-                        {% if admindelete %}
+                        {% if adminDelete %}
                             <a href="{{ path('zikulausersmodule_useradministration_delete', { user: user.uid }) }}"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
                         {% endif %}
                     </td>

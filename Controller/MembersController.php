@@ -129,8 +129,8 @@ class MembersController extends AbstractController
             'amountOfOnlineMembers' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
             'newestMemberName' => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
             // check if we should show the extra admin column
-            'adminedit' => $edit,
-            'admindelete' => $delete,
+            'adminEdit' => $edit,
+            'adminDelete' => $delete,
             'dudArray' => $dudArray,
             'users' => $users,
             'letter' => $letter,
@@ -187,8 +187,8 @@ class MembersController extends AbstractController
         }
 
         // check if we should show the extra admin column
-        $templateParameters['adminedit'] = $edit;
-        $templateParameters['admindelete'] = $delete;
+        $templateParameters['adminEdit'] = $edit;
+        $templateParameters['adminDelete'] = $delete;
 
         foreach (array_keys($users) as $userid) {
             $isOnline = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'isonline', ['userid' => $userid]);
