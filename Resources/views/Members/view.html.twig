@@ -1,5 +1,6 @@
 {% set templateTitle = __('Registered users') %}
 {{ include('@ZikulaProfileModule/menu.html.twig') }}
+{{ polyfill() }}
 
 <form class="form-horizontal" action="{{ path('zikulaprofilemodule_members_view') }}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
