@@ -18,7 +18,7 @@ use Zikula\BlocksModule\AbstractBlockHandler;
 class UserBlock extends AbstractBlockHandler
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function display(array $properties)
     {
@@ -27,7 +27,7 @@ class UserBlock extends AbstractBlockHandler
             $title = $this->__f('Custom block content for %s', ['%s' => $currentUserApi->get('name')]);
         }
 
-        if (!$this->hasPermission('Userblock::', $title . '::', ACCESS_READ)) {
+        if (!$this->hasPermission('Userblock::', $title.'::', ACCESS_READ)) {
             return '';
         }
 

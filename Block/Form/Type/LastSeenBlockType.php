@@ -15,29 +15,28 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class LastSeenBlockType
+ * Class LastSeenBlockType.
  */
 class LastSeenBlockType extends AbstractType
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('amount', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label' => __('Number of recent visitors to display'),
-                'empty_data' => 5,
-                'scale' => 0,
+                'label'       => __('Number of recent visitors to display'),
+                'empty_data'  => 5,
+                'scale'       => 0,
                 'constraints' => [
                     new NotBlank(),
-                ]
-            ])
-        ;
+                ],
+            ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {

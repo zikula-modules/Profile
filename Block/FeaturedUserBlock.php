@@ -20,12 +20,12 @@ use Zikula\BlocksModule\AbstractBlockHandler;
 class FeaturedUserBlock extends AbstractBlockHandler
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if (!$this->hasPermission('ZikulaProfileModule:FeaturedUserblock:', $title . '::', ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaProfileModule:FeaturedUserblock:', $title.'::', ACCESS_READ)) {
             return '';
         }
 
@@ -81,7 +81,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
         return $this->renderView('@ZikulaProfileModule/Block/featuredUser.html.twig', [
             'userInfo', $userInfo,
             'showRegDate' => $properties['showregdate'],
-            'dudArray' => $dudArray
+            'dudArray'    => $dudArray,
         ]);
     }
 
@@ -100,12 +100,12 @@ class FeaturedUserBlock extends AbstractBlockHandler
         }
 
         return [
-            'dudArray' => $dudArray
+            'dudArray' => $dudArray,
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormClassName()
     {
@@ -113,7 +113,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormTemplate()
     {

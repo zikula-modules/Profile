@@ -13,9 +13,9 @@ namespace Zikula\ProfileModule\Api;
 use DataUtil;
 use ModUtil;
 use SecurityUtil;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use System;
 use Zikula\ProfileModule\Entity\PropertyEntity;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Dynamic user data field management api.
@@ -41,9 +41,11 @@ class DudApi extends \Zikula_AbstractApi
      *                          'pattern' => The pattern attribute specifies a regular expression that the <input> element's value is checked against.
      *
      * @param array $args All parameters passed to this function.
-     * @return boolean True on success or false on failure.
-     * @throws AccessDeniedException on failed permission check
+     *
+     * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool True on success or false on failure.
      */
     public function register($args)
     {
@@ -51,7 +53,7 @@ class DudApi extends \Zikula_AbstractApi
             || !isset($args['label']) || empty($args['label'])
             || !isset($args['attribute_name']) || empty($args['attribute_name'])
             || !isset($args['dtype']) || empty($args['dtype'])
-            || !isset($args['displaytype']) || !is_numeric($args['displaytype']) || (int)$args['displaytype'] < 0
+            || !isset($args['displaytype']) || !is_numeric($args['displaytype']) || (int) $args['displaytype'] < 0
             || !isset($args['validationinfo']) || empty($args['validationinfo']) || !is_array($args['validationinfo'])
         ) {
             throw new \InvalidArgumentException();
@@ -68,8 +70,8 @@ class DudApi extends \Zikula_AbstractApi
         // parses the DUD type
         $dtypes = [
             -1 => 'noneditable',
-            0 => 'mandatory',
-            2 => 'normal'
+            0  => 'mandatory',
+            2  => 'normal',
         ];
         if (!in_array($args['dtype'], $dtypes)) {
             throw new \Exception($this->__f('Error! Invalid \'%s\' passed.', 'dtype'));
@@ -112,7 +114,6 @@ class DudApi extends \Zikula_AbstractApi
 
         // Return the id of the newly created item to the calling process
         return $prop->getProp_id();
-
     }
 
     /**
@@ -126,9 +127,9 @@ class DudApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return boolean True on success or false on failure.
-     *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool True on success or false on failure.
      */
     public function unregister($args)
     {
@@ -139,9 +140,9 @@ class DudApi extends \Zikula_AbstractApi
 
         // Get item with where clause
         $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
-        /** @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
+        /* @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $propertyRepository->find((int)$args['propid']);
+            $item = $propertyRepository->find((int) $args['propid']);
         } elseif (isset($args['proplabel'])) {
             $item = $propertyRepository->findOneBy(['prop_label' => $args['proplabel']]);
         } else {
@@ -154,7 +155,7 @@ class DudApi extends \Zikula_AbstractApi
         }
 
         // Security check
-        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $item->getProp_label().'::'.$item->getProp_id(), ACCESS_READ)) {
             return false;
         }
 
@@ -173,7 +174,7 @@ class DudApi extends \Zikula_AbstractApi
     }
 
     /**
-     * Update users data
+     * Update users data.
      *
      * Parameters passed in the $args array:
      * -------------------------------------
@@ -200,7 +201,7 @@ class DudApi extends \Zikula_AbstractApi
         $oldoptions = $this->getoptions($args);
         $params = [
             'field' => isset($args['newfield']) ? $args['newfield'] : null,
-            'item' => isset($args['newitem']) ? $args['newitem'] : null
+            'item'  => isset($args['newitem']) ? $args['newitem'] : null,
         ];
         $newoptions = $this->getoptions($params);
         unset($params);

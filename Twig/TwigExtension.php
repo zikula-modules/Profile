@@ -88,7 +88,7 @@ class TwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('zikulaprofilemodule_displayProfileSection', [$this, 'displayProfileSection'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('dudItemDisplay', [$this, 'dudItemDisplay'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('dudItemModify', [$this, 'dudItemModify'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('zikulaprofilemodule_modUrlLegacy', [$this, 'modUrlLegacy'])
+            new \Twig_SimpleFunction('zikulaprofilemodule_modUrlLegacy', [$this, 'modUrlLegacy']),
         ];
     }
 
@@ -113,11 +113,11 @@ class TwigExtension extends \Twig_Extension
     public function getGravatarImage($email = 'user@example.com', $size = 80, $d = 'mm', $r = 'g', $f = false, $image = true)
     {
         $result = $this->request->isSecure() ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
-        $result .= md5(strtolower(trim($email))) . '.jpg';
-        $result .= '?s=' . $size . '&amp;d=' . $d . '&amp;r=' . $r . ($f ? '&amp;f=' . $f : '');
+        $result .= md5(strtolower(trim($email))).'.jpg';
+        $result .= '?s='.$size.'&amp;d='.$d.'&amp;r='.$r.($f ? '&amp;f='.$f : '');
 
         if ($image) {
-            $result = '<img src="' . $result . '" class="img-thumbnail" alt="' . $this->translator->__('Avatar') . '" />';
+            $result = '<img src="'.$result.'" class="img-thumbnail" alt="'.$this->translator->__('Avatar').'" />';
         }
 
         return $result;
@@ -129,8 +129,8 @@ class TwigExtension extends \Twig_Extension
      * Example
      *     {{ zikulaprofilemodule_displayProfileSection(name='News') }}
      *
-     * @param int     $userId Identifier of the user for which this profile section should be displayed
-     * @param string  $name   Section name to render
+     * @param int    $userId Identifier of the user for which this profile section should be displayed
+     * @param string $name   Section name to render
      *
      * @return string The rendered section; empty string if the section is not defined or an error occured
      */
@@ -144,20 +144,20 @@ class TwigExtension extends \Twig_Extension
 
         // extract the items to list
         $section = ModUtil::apiFunc('ZikulaProfileModule', 'section', $nameLowered, [
-            'uid' => $userId,
-            'name' => $nameLowered
+            'uid'  => $userId,
+            'name' => $nameLowered,
         ]);
         if (false === $section) {
             return '';
         }
 
-        $template = 'Section/' . $nameLowered . '.html.twig';
+        $template = 'Section/'.$nameLowered.'.html.twig';
 
         $output = '';
 
         try {
-            $output = $this->twig->render('@ZikulaProfileModule/' . $template, [
-                'section' => $section
+            $output = $this->twig->render('@ZikulaProfileModule/'.$template, [
+                'section' => $section,
             ]);
         } catch (Exception $e) {
             // template does not exist
@@ -174,13 +174,13 @@ class TwigExtension extends \Twig_Extension
      *     {{ dudItemDisplay(propAttribute='realname', userId=uid) }}
      *     {{ dudItemDisplay(item=item) }}
      *
-     * @param string  $item          The Profile DUD item
-     * @param string  $userInfo      The userinfo information [if not set userId must be specified]
-     * @param string  $userId        User ID to display the field value for (-1 = do not load)
-     * @param string  $propLabel     Property label to display (optional overrides the preformated dud item $item)
-     * @param string  $propAttribute Property attribute to display
-     * @param string  $default       Default content for an empty DUD
-     * @param boolean $showLabel     Whether to show the label or not, default = true
+     * @param string $item          The Profile DUD item
+     * @param string $userInfo      The userinfo information [if not set userId must be specified]
+     * @param string $userId        User ID to display the field value for (-1 = do not load)
+     * @param string $propLabel     Property label to display (optional overrides the preformated dud item $item)
+     * @param string $propAttribute Property attribute to display
+     * @param string $default       Default content for an empty DUD
+     * @param bool   $showLabel     Whether to show the label or not, default = true
      *
      * @return string The rendered field; empty string if an error occured
      */
@@ -196,7 +196,7 @@ class TwigExtension extends \Twig_Extension
             }
         }
 
-        if (!isset($item) || empty ($item)) {
+        if (!isset($item) || empty($item)) {
             return false;
         }
 
@@ -227,10 +227,10 @@ class TwigExtension extends \Twig_Extension
         // try to get the DUD output if it's Third Party
         if ($item['prop_dtype'] != 1) {
             $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit', [
-                'item' => $item,
-                'userinfo' => $$userInfo,
+                'item'      => $item,
+                'userinfo'  => $$userInfo,
                 'uservalue' => $userValue,
-                'default' => $default
+                'default'   => $default,
             ]);
             if ($output) {
                 return $output;
@@ -238,8 +238,8 @@ class TwigExtension extends \Twig_Extension
         }
 
         $templateParameters = [
-            'userInfo' => $userInfo,
-            'userValue' => $userValue
+            'userInfo'  => $userInfo,
+            'userValue' => $userValue,
         ];
 
         $output = '';
@@ -253,7 +253,7 @@ class TwigExtension extends \Twig_Extension
                 $userValue = 'blank.png';
             }
 
-            $output = '<img alt="" src="' . $baseurl . $avatarPath . '/' . $userValue . '" />';
+            $output = '<img alt="" src="'.$baseurl.$avatarPath.'/'.$userValue.'" />';
         } elseif ($item['prop_attribute_name'] == 'tzoffset') {
             // timezone
             if (empty($userValue)) {
@@ -271,14 +271,14 @@ class TwigExtension extends \Twig_Extension
             if (!empty($item['prop_listoptions'])) {
                 $options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
 
-                /**
+                /*
                 * Detect if the list options include the modification of the label.
                 */
                 if (substr($item['prop_listoptions'], 0, 2) != '@@') {
                     $item['prop_label'] = array_shift($options);
                 }
 
-                $userValue = isset($userValue) ? (bool)$userValue : 0;
+                $userValue = isset($userValue) ? (bool) $userValue : 0;
                 $output = $options[$userValue];
             } else {
                 $output = $userValue;
@@ -294,7 +294,7 @@ class TwigExtension extends \Twig_Extension
             $options = $this->getDudFieldOptions($item);
 
             $output = [];
-            foreach ((array)$userValue as $id) {
+            foreach ((array) $userValue as $id) {
                 if (isset($options[$id])) {
                     $output[] = $options[$id];
                 }
@@ -324,7 +324,7 @@ class TwigExtension extends \Twig_Extension
             $userValue = @unserialize($userValue);
 
             $output = [];
-            foreach ((array)$userValue as $id) {
+            foreach ((array) $userValue as $id) {
                 if (isset($options[$id])) {
                     $output[] = $options[$id];
                 }
@@ -333,7 +333,7 @@ class TwigExtension extends \Twig_Extension
             // url
             if (!empty($userValue) && $userValue != 'http://') {
                 //! string to describe the user's site
-                $output = '<a href="' . DataUtil::formatForDisplay($userValue) . '" title="' . $this->translator->__f("%s's site", ['%s' => $userInfo['uname']]) . '" rel="nofollow">' . DataUtil::formatForDisplay($userValue) . '</a>';
+                $output = '<a href="'.DataUtil::formatForDisplay($userValue).'" title="'.$this->translator->__f("%s's site", ['%s' => $userInfo['uname']]).'" rel="nofollow">'.DataUtil::formatForDisplay($userValue).'</a>';
             }
         } elseif (empty($userValue)) {
             // process the generics
@@ -366,9 +366,9 @@ class TwigExtension extends \Twig_Extension
             return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
         } catch (Exception $e) {*/
             // custom template does not exist
-            $template = $tplset . '_generic.html.twig';
+            $template = $tplset.'_generic.html.twig';
 
-            return $this->twig->render('@ZikulaProfileModule/UsersUi/' . $template, $templateParameters);
+        return $this->twig->render('@ZikulaProfileModule/UsersUi/'.$template, $templateParameters);
         //}
     }
 
@@ -381,14 +381,14 @@ class TwigExtension extends \Twig_Extension
      *     {{ dudItemModify(item=item) }}
      *     {{ dudItemModify(item=item, fieldName=false) }}
      *
-     * @param string      $item           The Profile DUD item
-     * @param string      $userId         User ID to display the field value for (-1 = do not load)
-     * @param string      $class          CSS class to assign to the table row/form row div (optional)
-     * @param string      $propLabel      Property label to display (optional overrides the preformated dud item $item)
-     * @param string      $propAttribute  Property attribute to display
-     * @param string      $error          Property error message
-     * @param bool|string $fieldName      Name of the array of elements that comprise the fields; defaults to "dynadata[example]";
-     *        set to FALSE for fields without an array
+     * @param string      $item          The Profile DUD item
+     * @param string      $userId        User ID to display the field value for (-1 = do not load)
+     * @param string      $class         CSS class to assign to the table row/form row div (optional)
+     * @param string      $propLabel     Property label to display (optional overrides the preformated dud item $item)
+     * @param string      $propAttribute Property attribute to display
+     * @param string      $error         Property error message
+     * @param bool|string $fieldName     Name of the array of elements that comprise the fields; defaults to "dynadata[example]";
+     *                                   set to FALSE for fields without an array
      *
      * @return string The rendered field; empty string if an error occured
      */
@@ -397,7 +397,7 @@ class TwigExtension extends \Twig_Extension
         if (empty($item)) {
             if (isset($propLabel)) {
                 $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $propLabel]);
-            } else if (isset($propAttribute)) {
+            } elseif (isset($propAttribute)) {
                 $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $propAttribute]);
             } else {
                 return false;
@@ -417,7 +417,7 @@ class TwigExtension extends \Twig_Extension
             $onRegistrationForm = true;
         }
 
-        // skip the field if not configured to be on the registration form 
+        // skip the field if not configured to be on the registration form
         if ($onRegistrationForm && !$item['prop_required']) {
             $dudregshow = $this->variableApi->get('ZikulaProfileModule', 'dudregshow', []);
 
@@ -445,9 +445,9 @@ class TwigExtension extends \Twig_Extension
         // try to get the DUD output if it's Third Party
         if ($item['prop_dtype'] != 1) {
             $output = ModUtil::apiFunc($item['prop_modname'], 'dud', 'edit', [
-                'item' => $item,
+                'item'      => $item,
                 'uservalue' => $userValue,
-                'class' => $class
+                'class'     => $class,
             ]);
             if ($output) {
                 return $output;
@@ -455,20 +455,20 @@ class TwigExtension extends \Twig_Extension
         }
 
         $fieldObject = isset($fieldName) ? (!$fieldName ? null : $fieldName) : 'dynadata';
-        $fieldName = (isset($fieldName) ? (!$fieldName ? $item['prop_attribute_name'] : $fieldName . '[' . $item['prop_attribute_name'] . ']') : 'dynadata[' . $item['prop_attribute_name'] . ']');
+        $fieldName = (isset($fieldName) ? (!$fieldName ? $item['prop_attribute_name'] : $fieldName.'['.$item['prop_attribute_name'].']') : 'dynadata['.$item['prop_attribute_name'].']');
 
         // assign the default values for the control
         $templateParameters = [
-            'class' => $class,
+            'class'     => $class,
             'fieldName' => $fieldName,
             'fieldObject', $fieldObject,
-            'value' => $userValue,
-            'item' => $item,
+            'value'         => $userValue,
+            'item'          => $item,
             'attributeName' => $item['prop_attribute_name'],
             'propLabelText' => $item['prop_label'],
-            'note' => $item['prop_note'],
-            'required' => (bool)$item['prop_required'],
-            'error' => $error
+            'note'          => $item['prop_note'],
+            'required'      => (bool) $item['prop_required'],
+            'error'         => $error,
         ];
 
         // Excluding Timezone of the generics
@@ -546,7 +546,7 @@ class TwigExtension extends \Twig_Extension
                 if (!empty($item['prop_listoptions'])) {
                     $options = array_values(array_filter(explode('@@', $item['prop_listoptions'])));
 
-                    /**
+                    /*
                     * Detect if the list options include the modification of the label.
                     */
                     if (substr($item['prop_listoptions'], 0, 2) != '@@') {
@@ -582,7 +582,7 @@ class TwigExtension extends \Twig_Extension
 
                 $event_subject = $user;
                 $event_args = [
-                    'item' => $item
+                    'item' => $item,
                 ];
                 $event_data = $options;
 
@@ -641,7 +641,7 @@ class TwigExtension extends \Twig_Extension
             case 7:
                 $type = 'multicheckbox';
 
-                $templateParameters['selectedValue'] = (array)unserialize($userValue);
+                $templateParameters['selectedValue'] = (array) unserialize($userValue);
                 $templateParameters['fields'] = $this->getDudFieldOptions($item);
                 break;
 
@@ -675,9 +675,8 @@ class TwigExtension extends \Twig_Extension
      */
     private function renderDudEditTemplate($templateName, $parameters = [])
     {
-        return $this->twig->render('@ZikulaProfileModule/DudEdit/' . $templateName . '.html.twig', $parameters);
+        return $this->twig->render('@ZikulaProfileModule/DudEdit/'.$templateName.'.html.twig', $parameters);
     }
-
 
     /**
      * Legacy bridging method for arbitrary module urls.

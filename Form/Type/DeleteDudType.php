@@ -30,20 +30,19 @@ class DeleteDudType extends AbstractType
         $builder
             ->add('delete', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Delete'),
-                'icon' => 'fa-trash-o',
-                'attr' => [
-                    'class' => 'btn btn-success'
-                ]
+                'icon'  => 'fa-trash-o',
+                'attr'  => [
+                    'class' => 'btn btn-success',
+                ],
             ])
             ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Cancel'),
-                'icon' => 'fa-times',
-                'attr' => [
-                    'class' => 'btn btn-default',
-                    'formnovalidate' => 'formnovalidate'
-                ]
-            ])
-        ;
+                'icon'  => 'fa-times',
+                'attr'  => [
+                    'class'          => 'btn btn-default',
+                    'formnovalidate' => 'formnovalidate',
+                ],
+            ]);
     }
 
     /**
@@ -68,7 +67,7 @@ class DeleteDudType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translator' => null
+            'translator' => null,
         ]);
     }
 }

@@ -19,12 +19,12 @@ use Zikula\BlocksModule\AbstractBlockHandler;
 class LastSeenBlock extends AbstractBlockHandler
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if (!$this->hasPermission('ZikulaProfileModule:LastSeenblock:', $title . '::', ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaProfileModule:LastSeenblock:', $title.'::', ACCESS_READ)) {
             return '';
         }
 
@@ -35,18 +35,18 @@ class LastSeenBlock extends AbstractBlockHandler
 
         // get last x logged in user id's
         $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', [
-            'sortby' => 'lastlogin',
-            'numitems' => $properties['amount'],
-            'sortorder' => 'DESC'
+            'sortby'    => 'lastlogin',
+            'numitems'  => $properties['amount'],
+            'sortorder' => 'DESC',
         ]);
 
         return $this->renderView('@ZikulaProfileModule/Block/lastSeen.html.twig', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormClassName()
     {
@@ -54,7 +54,7 @@ class LastSeenBlock extends AbstractBlockHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormTemplate()
     {

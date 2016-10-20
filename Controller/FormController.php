@@ -13,7 +13,6 @@ namespace Zikula\ProfileModule\Controller;
 use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Zikula\Core\Controller\AbstractController;
 
 /**
@@ -69,7 +68,7 @@ class FormController extends AbstractController
 
         return [
             'dudItems' => $items,
-            'userId' => $userid
+            'userId'   => $userid,
         ];
     }
 
@@ -111,7 +110,7 @@ class FormController extends AbstractController
 
         return $this->render('@ZikulaProfileModule/Form/edit.html.twig', [
             'dudItems' => $items,
-            'userId' => 1
+            'userId'   => 1,
         ]);
     }
 
@@ -148,7 +147,7 @@ class FormController extends AbstractController
 
         return [
             'dudItems' => $items,
-            'userInfo' => $userInfo
+            'userInfo' => $userInfo,
         ];
     }
 }

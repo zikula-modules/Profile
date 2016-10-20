@@ -23,14 +23,15 @@ use Zikula\Core\Controller\AbstractController;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
- * Class AdminController
+ * Class AdminController.
+ *
  * @Route("/admin")
  */
 class AdminController extends AbstractController
 {
     /**
-     * Route not needed here because this is a legacy-only method
-     * 
+     * Route not needed here because this is a legacy-only method.
+     *
      * The default entrypoint.
      *
      * @return RedirectResponse
@@ -45,9 +46,9 @@ class AdminController extends AbstractController
     /**
      * @Route("")
      * @Theme("admin")
-     * 
+     *
      * the default entrypoint.
-     * 
+     *
      * @return RedirectResponse
      */
     public function indexAction()
@@ -61,12 +62,12 @@ class AdminController extends AbstractController
      * @Route("/help")
      * @Theme("admin")
      * @Template
-     * 
+     *
      * The Profile help page.
      *
-     * @return Response
-     *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return Response
      */
     public function helpAction()
     {
@@ -82,15 +83,15 @@ class AdminController extends AbstractController
      * @Method("GET")
      * @Theme("admin")
      * @Template
-     * 
-     * View all items managed by this module.
-     * 
-     * @param integer $numitems
-     * @param integer $startnum
      *
-     * @return Response
+     * View all items managed by this module.
+     *
+     * @param int $numitems
+     * @param int $startnum
      *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return Response
      */
     public function viewAction($numitems = -1, $startnum = 1)
     {
@@ -110,28 +111,28 @@ class AdminController extends AbstractController
                 case $item['prop_dtype'] <= 0:
                     $statusval = 1;
                     $status = [
-                        'url' => '',
+                        'url'        => '',
                         'labelClass' => 'label label-success',
-                        'current' => $this->__('Active'),
-                        'title' => $this->__('Required')
+                        'current'    => $this->__('Active'),
+                        'title'      => $this->__('Required'),
                     ];
                     break;
                 case $item['prop_weight'] != 0:
                     $statusval = 1;
                     $status = [
-                        'url' => $this->get('router')->generate('zikulaprofilemodule_admin_deactivate', ['dudid' => $item['prop_id'], 'weight' => $item['prop_weight'], 'csrftoken' => $csrftoken]),
+                        'url'        => $this->get('router')->generate('zikulaprofilemodule_admin_deactivate', ['dudid' => $item['prop_id'], 'weight' => $item['prop_weight'], 'csrftoken' => $csrftoken]),
                         'labelClass' => 'label label-success',
-                        'current' => $this->__('Active'),
-                        'title' => $this->__('Deactivate')
+                        'current'    => $this->__('Active'),
+                        'title'      => $this->__('Deactivate'),
                     ];
                     break;
                 default:
                     $statusval = 0;
                     $status = [
-                        'url' => $this->get('router')->generate('zikulaprofilemodule_admin_activate', ['dudid' => $item['prop_id'], 'csrftoken' => $csrftoken]),
+                        'url'        => $this->get('router')->generate('zikulaprofilemodule_admin_activate', ['dudid' => $item['prop_id'], 'csrftoken' => $csrftoken]),
                         'labelClass' => 'label label-danger',
-                        'current' => $this->__('Inactive'),
-                        'title' => $this->__('Activate')
+                        'current'    => $this->__('Inactive'),
+                        'title'      => $this->__('Activate'),
                     ];
             }
             // analyzes the DUD type
@@ -146,50 +147,50 @@ class AdminController extends AbstractController
                     break;
                 case '0':
                     // Third party (mandatory)
-                    $data_type_text = $this->__('Third-party') . ($item['prop_required'] ? ', ' . $this->__('Required') : '');
+                    $data_type_text = $this->__('Third-party').($item['prop_required'] ? ', '.$this->__('Required') : '');
                     break;
                 default:
                 case '1':
                     // Normal property
-                    $data_type_text = $this->__('Normal') . ($item['prop_required'] ? ', ' . $this->__('Required') : '');
+                    $data_type_text = $this->__('Normal').($item['prop_required'] ? ', '.$this->__('Required') : '');
                     break;
                 case '2':
                     // Third party (normal field)
-                    $data_type_text = $this->__('Third-party') . ($item['prop_required'] ? ', ' . $this->__('Required') : '');
+                    $data_type_text = $this->__('Third-party').($item['prop_required'] ? ', '.$this->__('Required') : '');
                     break;
             }
 
             // Options for the item.
             $options = [];
-            $permissionInstance = $item['prop_label'] . '::' . $item['prop_id'];
+            $permissionInstance = $item['prop_label'].'::'.$item['prop_id'];
             if ($this->hasPermission('ZikulaProfileModule::item', $permissionInstance, ACCESS_EDIT)) {
                 $options[] = [
-                    'url' => $this->get('router')->generate('zikulaprofilemodule_admin_edit', ['dudid' => $item['prop_id']]),
-                    'class' => '',
+                    'url'       => $this->get('router')->generate('zikulaprofilemodule_admin_edit', ['dudid' => $item['prop_id']]),
+                    'class'     => '',
                     'iconClass' => 'fa fa-pencil fa-lg',
-                    'title' => $this->__('Edit')
+                    'title'     => $this->__('Edit'),
                 ];
                 if ($item['prop_weight'] > 1) {
                     $options[] = [
-                        'url' => $this->get('router')->generate('zikulaprofilemodule_admin_decreaseweight', ['dudid' => $item['prop_id']]),
-                        'class' => 'profile_up',
+                        'url'       => $this->get('router')->generate('zikulaprofilemodule_admin_decreaseweight', ['dudid' => $item['prop_id']]),
+                        'class'     => 'profile_up',
                         'iconClass' => 'fa fa-arrow-up fa-lg',
-                        'title' => $this->__('Up')
+                        'title'     => $this->__('Up'),
                     ];
                 }
                 if ($x < $count) {
                     $options[] = [
-                        'url' => $this->get('router')->generate('zikulaprofilemodule_admin_increaseweight', ['dudid' => $item['prop_id']]),
-                        'class' => 'profile_down',
+                        'url'       => $this->get('router')->generate('zikulaprofilemodule_admin_increaseweight', ['dudid' => $item['prop_id']]),
+                        'class'     => 'profile_down',
                         'iconClass' => 'fa fa-arrow-down fa-lg',
-                        'title' => $this->__('Down')
+                        'title'     => $this->__('Down'),
                     ];
                 }
                 if ($this->hasPermission('ZikulaProfileModule::item', $permissionInstance, ACCESS_DELETE) && $item['prop_dtype'] > 0) {
                     $options[] = [
-                        'url' => $this->get('router')->generate('zikulaprofilemodule_admin_delete', ['dudid' => $item['prop_id']]),
-                        'class' => '', 'title' => $this->__('Delete'),
-                        'iconClass' => 'fa fa-trash-o fa-lg text-danger'
+                        'url'       => $this->get('router')->generate('zikulaprofilemodule_admin_delete', ['dudid' => $item['prop_id']]),
+                        'class'     => '', 'title' => $this->__('Delete'),
+                        'iconClass' => 'fa fa-trash-o fa-lg text-danger',
                     ];
                 }
             }
@@ -206,10 +207,10 @@ class AdminController extends AbstractController
         return [
             'startNum' => $startnum,
             'dudItems' => $duditems,
-            'pager' => [
+            'pager'    => [
                 'amountOfItems' => $count,
-                'itemsPerPage' => $numitems
-            ]
+                'itemsPerPage'  => $numitems,
+            ],
         ];
     }
 
@@ -217,9 +218,9 @@ class AdminController extends AbstractController
      * @Route("/modify")
      * @Method("POST")
      * @Theme("admin")
-     * 
+     *
      * Create the dud - process the edit form.
-     * 
+     *
      * @param Request $request
      *
      * Parameters passed via POST:
@@ -234,9 +235,9 @@ class AdminController extends AbstractController
      * string  note          Note for the item.
      * string  fieldset      The fieldset to group the item.
      *
-     * @return RedirectResponse
-     *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return RedirectResponse
      */
     public function modifyAction(Request $request)
     {
@@ -244,9 +245,9 @@ class AdminController extends AbstractController
         if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
-    
+
         // Get parameters from whatever input we need.
-        $dudid = (int)$request->request->get('dudid', 0);
+        $dudid = (int) $request->request->get('dudid', 0);
         $label = $request->request->get('label', null);
         $attributeName = $request->request->get('attributename', null);
         $required = $request->request->get('required', null);
@@ -256,7 +257,7 @@ class AdminController extends AbstractController
         $note = $request->request->get('note', null);
         $fieldSet = $request->request->get('fieldset', null);
         $pattern = $request->request->get('pattern', null);
-    
+
         // Validates and check if empty or already existing...
         if (empty($label)) {
             $this->addFlash('error', $this->__('Error! The item must have a label. An example of a recommended label is: \'_MYDUDLABEL\'.'));
@@ -285,17 +286,17 @@ class AdminController extends AbstractController
         }
 
         $parameters = [
-            'dudid' => $dudid,
-            'label' => $label,
+            'dudid'          => $dudid,
+            'label'          => $label,
             'attribute_name' => $attributeName,
-            'required' => $required,
-            'viewby' => $viewBy,
-            'dtype' => 1,
-            'displaytype' => $displayType,
-            'listoptions' => $listOptions,
-            'note' => $note,
-            'fieldset' => $fieldSet,
-            'pattern' => $pattern
+            'required'       => $required,
+            'viewby'         => $viewBy,
+            'dtype'          => 1,
+            'displaytype'    => $displayType,
+            'listoptions'    => $listOptions,
+            'note'           => $note,
+            'fieldset'       => $fieldSet,
+            'pattern'        => $pattern,
         ];
 
         if (empty($dudid)) {
@@ -322,11 +323,11 @@ class AdminController extends AbstractController
      * Show form to create or modify a dynamic user data item.
      *
      * @param Request $request
-     * @param integer $dudid The id of the item to be modified.
-     *
-     * @return Response
+     * @param int     $dudid   The id of the item to be modified.
      *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return Response
      */
     public function editAction(Request $request, $dudid = 0)
     {
@@ -344,18 +345,18 @@ class AdminController extends AbstractController
                 3 => $this->__('Radio button'),
                 4 => $this->__('Dropdown list'),
                 5 => $this->__('Date'),
-                7 => $this->__('Multiple checkbox set')
+                7 => $this->__('Multiple checkbox set'),
             ],
             'requiredoptions' => [
                 0 => $this->__('No'),
-                1 => $this->__('Yes')
+                1 => $this->__('Yes'),
             ],
             'viewbyoptions' => [
                 0 => $this->__('Everyone'),
                 1 => $this->__('Registered users only'),
                 2 => $this->__('Admins and account owner only'),
-                3 => $this->__('Admins only')
-            ]
+                3 => $this->__('Admins only'),
+            ],
         ];
 
         if (!empty($dudid)) {
@@ -365,7 +366,7 @@ class AdminController extends AbstractController
             }
 
             // Security check
-            if (!$this->hasPermission('ZikulaProfileModule::item', $item['prop_label'] . '::' . $dudid, ACCESS_EDIT)) {
+            if (!$this->hasPermission('ZikulaProfileModule::item', $item['prop_label'].'::'.$dudid, ACCESS_EDIT)) {
                 throw new AccessDeniedException();
             }
 
@@ -397,14 +398,14 @@ class AdminController extends AbstractController
      * int  dudid        The id of the item to be deleted.
      * bool confirmation Confirmation that this item can be deleted.
      *
-     * @return RedirectResponse|Response
-     *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return RedirectResponse|Response
      */
     public function deleteAction(Request $request)
     {
         // Get parameters from whatever input we need.
-        $dudid = (int)$request->get('dudid', null);
+        $dudid = (int) $request->get('dudid', null);
 
         // The user API function is called.
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
@@ -415,12 +416,12 @@ class AdminController extends AbstractController
         }
 
         // Security check
-        if (!$this->hasPermission('ZikulaProfileModule::item', $item['prop_label'] . '::' . $dudid, ACCESS_DELETE)) {
+        if (!$this->hasPermission('ZikulaProfileModule::item', $item['prop_label'].'::'.$dudid, ACCESS_DELETE)) {
             throw new AccessDeniedException();
         }
 
         $form = $this->createForm('Zikula\ProfileModule\Form\Type\DeleteDudType', $item, [
-            'translator' => $this->get('translator.default')
+            'translator' => $this->get('translator.default'),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
@@ -438,7 +439,7 @@ class AdminController extends AbstractController
         }
 
         return [
-            'deleteForm' => $form->createView()
+            'deleteForm' => $form->createView(),
         ];
     }
 
@@ -450,11 +451,11 @@ class AdminController extends AbstractController
      * Increase weight of a dud item in the sorted list.
      *
      * @param Request $request
-     * @param integer $dudid The id of the item to be updated.
-     *
-     * @return RedirectResponse
+     * @param int     $dudid   The id of the item to be updated.
      *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return RedirectResponse
      */
     public function increaseWeightAction(Request $request, $dudid)
     {
@@ -486,11 +487,11 @@ class AdminController extends AbstractController
      * Decrease weight of a dud item in the sorted list.
      *
      * @param Request $request
-     * @param integer $dudid The id of the item to be updated.
-     *
-     * @return RedirectResponse|Response
+     * @param int     $dudid   The id of the item to be updated.
      *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return RedirectResponse|Response
      */
     public function decreaseWeightAction(Request $request, $dudid)
     {
@@ -528,7 +529,7 @@ class AdminController extends AbstractController
      * Process item activation request
      *
      * @param Request $request
-     * @param integer $dudid The id of the item to be updated.
+     * @param int     $dudid   The id of the item to be updated.
      *
      * @return RedirectResponse
      */
@@ -553,7 +554,7 @@ class AdminController extends AbstractController
      * Process item deactivation request
      *
      * @param Request $request
-     * @param integer $dudid The id of the item to be updated.
+     * @param int     $dudid   The id of the item to be updated.
      *
      * @return RedirectResponse
      */

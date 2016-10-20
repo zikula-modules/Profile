@@ -22,12 +22,13 @@ class LastXUsersBlock extends AbstractBlockHandler
      * Display block.
      *
      * @param array $properties
+     *
      * @return string the rendered block
      */
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if (!$this->hasPermission('ZikulaProfileModule:LastXUsersblock:', $title . '::', ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaProfileModule:LastXUsersblock:', $title.'::', ACCESS_READ)) {
             return '';
         }
 
@@ -38,18 +39,18 @@ class LastXUsersBlock extends AbstractBlockHandler
 
         // get last x registered user id's
         $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', [
-            'sortby' => 'user_regdate',
-            'numitems' => $properties['amount'],
-            'sortorder' => 'DESC'
+            'sortby'    => 'user_regdate',
+            'numitems'  => $properties['amount'],
+            'sortorder' => 'DESC',
         ]);
 
         return $this->renderView('@ZikulaProfileModule/Block/lastXUsers.html.twig', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormClassName()
     {
@@ -57,7 +58,7 @@ class LastXUsersBlock extends AbstractBlockHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormTemplate()
     {

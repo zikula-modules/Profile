@@ -13,7 +13,6 @@ namespace Zikula\ProfileModule\Api;
 use DateUtil;
 use ModUtil;
 use SecurityUtil;
-use System;
 use UserUtil;
 use Zikula\Core\Event\GenericEvent;
 
@@ -33,7 +32,7 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return array|boolean Array of items, or false on failure.
+     * @return array|bool Array of items, or false on failure.
      */
     public function getall($args)
     {
@@ -55,7 +54,7 @@ class UserApi extends \Zikula_AbstractApi
 
         // Put items into result array.
         foreach (array_keys($items) as $k) {
-            if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
+            if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'].'::'.$items[$k]['prop_id'], ACCESS_READ)) {
                 unset($items[$k]);
                 continue;
             }
@@ -63,7 +62,7 @@ class UserApi extends \Zikula_AbstractApi
             $validationInfo = @unserialize($items[$k]['prop_validation']);
             unset($items[$k]['prop_validation']);
             // Expand the item array
-            foreach ((array)$validationInfo as $infoLabel => $infoField) {
+            foreach ((array) $validationInfo as $infoLabel => $infoField) {
                 $items[$k]["prop_{$infoLabel}"] = $infoField;
             }
         }
@@ -83,9 +82,9 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return array|boolean Item array, or false on failure.
-     *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return array|bool Item array, or false on failure.
      */
     public function get($args)
     {
@@ -96,9 +95,9 @@ class UserApi extends \Zikula_AbstractApi
 
         $propertyRepository = $this->entityManager->getRepository('ZikulaProfileModule:PropertyEntity');
 
-        /** @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
+        /* @var $item \Zikula\ProfileModule\Entity\PropertyEntity */
         if (isset($args['propid'])) {
-            $item = $propertyRepository->find((int)$args['propid']);
+            $item = $propertyRepository->find((int) $args['propid']);
         } elseif (isset($args['proplabel'])) {
             $item = $propertyRepository->findOneBy(['prop_label' => $args['proplabel']]);
         } else {
@@ -111,7 +110,7 @@ class UserApi extends \Zikula_AbstractApi
         }
 
         // Security check
-        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $item->getProp_label() . '::' . $item->getProp_id(), ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $item->getProp_label().'::'.$item->getProp_id(), ACCESS_READ)) {
             return false;
         }
 
@@ -120,8 +119,8 @@ class UserApi extends \Zikula_AbstractApi
         $item = $item->toArray();
 
         // Expand the item array
-        foreach ((array)$validationinfo as $infolabel => $infofield) {
-            $item['prop_' . $infolabel] = $infofield;
+        foreach ((array) $validationinfo as $infolabel => $infofield) {
+            $item['prop_'.$infolabel] = $infofield;
         }
 
         // Return the item array
@@ -144,7 +143,7 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return array|boolean Array of items, or false on failure.
+     * @return array|bool Array of items, or false on failure.
      */
     public function getallactive($args)
     {
@@ -176,7 +175,7 @@ class UserApi extends \Zikula_AbstractApi
             $items = $propertyRepository->getAllActive();
 
             foreach (array_keys($items) as $k) {
-                if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'] . '::' . $items[$k]['prop_id'], ACCESS_READ)) {
+                if (!SecurityUtil::checkPermission('ZikulaProfileModule::', $items[$k]['prop_label'].'::'.$items[$k]['prop_id'], ACCESS_READ)) {
                     unset($items[$k]);
                     continue;
                 }
@@ -184,7 +183,7 @@ class UserApi extends \Zikula_AbstractApi
                 // Extract the validation info array
                 $validationinfo = @unserialize($items[$k]['prop_validation']);
                 unset($items[$k]['prop_validation']);
-                foreach ((array)$validationinfo as $infolabel => $infofield) {
+                foreach ((array) $validationinfo as $infolabel => $infofield) {
                     $items[$k]["prop_{$infolabel}"] = $infofield;
                 }
             }
@@ -198,9 +197,9 @@ class UserApi extends \Zikula_AbstractApi
         }
 
         // Put items into result array and filter if needed
-        $currentUser = (int)UserUtil::getVar('uid');
+        $currentUser = (int) UserUtil::getVar('uid');
         $isMember = $currentUser >= 2;
-        $isOwner = $currentUser == (int)$args['uid'];
+        $isOwner = $currentUser == (int) $args['uid'];
         $isAdmin = SecurityUtil::checkPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN);
 
         $result = [];
@@ -243,17 +242,17 @@ class UserApi extends \Zikula_AbstractApi
 
         $event_subject = UserUtil::getVars($args['uid']);
         $event_args = [
-            'get' => $args['get'],
-            'index' => $args['index'],
+            'get'      => $args['get'],
+            'index'    => $args['index'],
             'numitems' => $args['numitems'],
             'startnum' => $args['startnum'],
-            'uid' => $args['uid']
+            'uid'      => $args['uid'],
         ];
         $event_data = $result;
 
         $event = new GenericEvent($event_subject, $event_args, $event_data);
         $event = $this->getDispatcher()->dispatch('module.profile.get_all_active', $event);
-        
+
         if ($event->isPropagationStopped()) {
             $result = $event->getData();
         }
@@ -265,7 +264,7 @@ class UserApi extends \Zikula_AbstractApi
     /**
      * Utility function to count the number of items held by this module.
      *
-     * @return integer Number of items held by this module.
+     * @return int Number of items held by this module.
      */
     public function countitems()
     {
@@ -277,7 +276,7 @@ class UserApi extends \Zikula_AbstractApi
     /**
      * Utility function to get the weight limits.
      *
-     * @return array|boolean Array of weight limits (min and max), or false on failure.
+     * @return array|bool Array of weight limits (min and max), or false on failure.
      */
     public function getweightlimits()
     {
@@ -285,7 +284,7 @@ class UserApi extends \Zikula_AbstractApi
 
         return [
             'min' => $propertyRepository->getMinimumWeight(),
-            'max' => $propertyRepository->getMaximumWeight()
+            'max' => $propertyRepository->getMaximumWeight(),
         ];
     }
 
@@ -299,9 +298,9 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return boolean True on success; otherwise false.
-     *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool True on success; otherwise false.
      */
     public function savedata($args)
     {
@@ -316,15 +315,15 @@ class UserApi extends \Zikula_AbstractApi
             if ($attributeName == 'avatar' && ModUtil::available('Avatar')) {
                 continue;
             }
-            
-            /**
+
+            /*
              * Only set the user var, if the attribute name is within the array of fields (dynadata).
              */
             $array_keys = array_keys($fields);
-            
+
             if (in_array($attributeName, $array_keys)) {
                 $fieldValue = '';
-                
+
                 if (isset($fields[$attributeName])) {
                     // Process the Date DUD separately
                     if ($dud['prop_displaytype'] == 5 && !empty($fields[$attributeName])) {
@@ -350,7 +349,7 @@ class UserApi extends \Zikula_AbstractApi
      * Parses and reformats a date for user entry validation.
      *
      * @param string &$dateString The entered date string to be parsed; NOTE: passed by reference, the value will be changed to a date reformatted with
-     *                              the "%d.%m.%Y" date format string; required.
+     *                            the "%d.%m.%Y" date format string; required.
      *
      * @return string The parsed date string, as returned by {@link DateUtil::parseUIDate()}.
      */
@@ -378,7 +377,7 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return array|boolean False on success (no errors); otherwise an array in the form ['result' => true, 'fields' => array of field names].
+     * @return array|bool False on success (no errors); otherwise an array in the form ['result' => true, 'fields' => array of field names].
      */
     public function checkrequired($args)
     {
@@ -422,7 +421,7 @@ class UserApi extends \Zikula_AbstractApi
             }
         }
         if (!empty($error)) {
-            $error['translatedFieldsStr'] = join(', ', $error['translatedFields']);
+            $error['translatedFieldsStr'] = implode(', ', $error['translatedFields']);
         }
 
         // Return the result
@@ -434,7 +433,7 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param mixed $value The value to check for empty.
      *
-     * @return boolean True if the value is empty (according to the PHP function) and is not 0; otherwise false.
+     * @return bool True if the value is empty (according to the PHP function) and is not 0; otherwise false.
      */
     protected function profileIsEmptyValue($value)
     {
@@ -463,8 +462,8 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args All parameters passed to this function.
      *
      * @return array The dynadata array as an array element in the '__ATTRIBUTES__' index of a new array, merged with existing user
-     *                  attributes if the uid is supplied and is a valid user, unchanged (not merged) if the uid is not supplied or does
-     *                  not refer to an existing user, or an empty array if the dynadata is not supplied or is empty.
+     *               attributes if the uid is supplied and is a valid user, unchanged (not merged) if the uid is not supplied or does
+     *               not refer to an existing user, or an empty array if the dynadata is not supplied or is empty.
      */
     public function insertdyndata($args)
     {

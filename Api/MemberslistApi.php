@@ -25,24 +25,24 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Get or count users that match the given criteria.
      *
-     * @param boolean $countOnly True to only return a count, if false the matching uids are returned in an array.
-     * @param mixed $searchBy Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
-     *                              available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
-     *                              an array indexed by property id containing values for each property on which to select, or a string containing the name of
-     *                              a property on which to select.
-     * @param string $letter If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
-     *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
-     *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
-     * @param string $letter Letter to filter by.
-     * @param string $sortBy A comma-separated list of fields on which the list of members should be sorted.
-     * @param string $sortOrder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
-     * @param integer $startNum Start number for recordset; ignored if $countOnly is true.
-     * @param integer $numItems Number of items to return; ignored if $countOnly is true.
-     * @param boolean $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true.
-     *
-     * @return array|integer Matching user ids or a count of the matching integers.
+     * @param bool   $countOnly  True to only return a count, if false the matching uids are returned in an array.
+     * @param mixed  $searchBy   Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
+     *                           available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
+     *                           an array indexed by property id containing values for each property on which to select, or a string containing the name of
+     *                           a property on which to select.
+     * @param string $letter     If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
+     *                           selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
+     *                           is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     * @param string $letter     Letter to filter by.
+     * @param string $sortBy     A comma-separated list of fields on which the list of members should be sorted.
+     * @param string $sortOrder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
+     * @param int    $startNum   Start number for recordset; ignored if $countOnly is true.
+     * @param int    $numItems   Number of items to return; ignored if $countOnly is true.
+     * @param bool   $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true.
      *
      * @throws \InvalidArgumentException|\RuntimeException
+     *
+     * @return array|int Matching user ids or a count of the matching integers.
      */
     protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
@@ -83,13 +83,13 @@ class MemberslistApi extends \Zikula_AbstractApi
 
         if ($searchBy == 'uname') {
             if (!empty($letter) && preg_match('/[a-z]/i', $letter)) {
-                $qb->andWhere($qb->expr()->like('u.uname', ':letter'))->setParameter('letter', $letter . '%');
+                $qb->andWhere($qb->expr()->like('u.uname', ':letter'))->setParameter('letter', $letter.'%');
             } else {
                 if (!empty($letter)) {
                     $otherList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', '@', '$'];
                     $or = $qb->expr()->orX();
                     foreach ($otherList as $other) {
-                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other . '%'))); // allowed 'literal' because var from internal array
+                        $or->add($qb->expr()->like('u.uname', $qb->expr()->literal($other.'%'))); // allowed 'literal' because var from internal array
                     }
                     $qb->andWhere($or->getParts());
                 }
@@ -102,7 +102,7 @@ class MemberslistApi extends \Zikula_AbstractApi
                     $qb->andWhere($qb->expr()->like('a.value', ':value'))
                         ->setParameter('value', "%{$searchBy['all']}%");
                 } else {
-                    /**
+                    /*
                      * @todo
                      * This section is unused when the form uses radio buttons as it currently does
                      * If the form were converted to checkmarks or a multiselect then this section would be needed
@@ -114,7 +114,7 @@ class MemberslistApi extends \Zikula_AbstractApi
                     $i = 1;
                     foreach ($searchBy as $prop_id => $value) {
                         $and->add($qb->expr()->andX($qb->expr()->eq('p.prop_id', $prop_id), $qb->expr()->like('a.value', "?$i")));
-                        $qb->setParameter($i, '%' . $value . '%');
+                        $qb->setParameter($i, '%'.$value.'%');
                         $i++;
                     }
                     // check if there where conditionals
@@ -128,21 +128,21 @@ class MemberslistApi extends \Zikula_AbstractApi
                     $activeProperties = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['index' => 'prop_id']);
                     $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $activeProperties[$searchBy]['prop_attribute_name'])
-                        ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%' . $letter . '%');
+                        ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%'.$letter.'%');
                 } elseif (array_key_exists($searchBy, $activePropertiesByName)) {
                     $qb->andWhere('a.name = :searchby')
                         ->setParameter('searchby', $searchBy)
-                        ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%' . $letter . '%');
+                        ->andWhere($qb->expr()->like('a.value', ':letter'))->setParameter('letter', '%'.$letter.'%');
                 }
             }
         }
 
         if (ModUtil::getVar('ZikulaProfileModule', 'filterunverified')) {
-            $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
+            $qb->andWhere('u.activated = '.UsersConstant::ACTIVATED_ACTIVE);
         }
         $orderBy = false;
         if (property_exists('Zikula\\UsersModule\\Entity\\UserEntity', $sortBy)) {
-            $qb->orderBy('u.' . $sortBy, $sortOrder);
+            $qb->orderBy('u.'.$sortBy, $sortOrder);
             $orderBy = true;
         }
         if ($orderBy && $sortBy != 'uname') {
@@ -173,7 +173,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             } else {
                 $usersArray[$user['uid']] = $user;
                 // reformat attributes array
-                foreach($user['attributes'] as $name => $attr) {
+                foreach ($user['attributes'] as $name => $attr) {
                     $usersArray[$user['uid']]['attributes'][$name] = $attr['value'];
                 }
             }
@@ -230,7 +230,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         if (!isset($args['returnUids'])) {
             $args['returnUids'] = false;
         } else {
-            $args['returnUids'] = (bool)$args['returnUids'];
+            $args['returnUids'] = (bool) $args['returnUids'];
         }
 
         return $this->getOrCountAll(
@@ -287,7 +287,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Counts the number of users online.
      *
-     * @return integer Count of registered users online.
+     * @return int Count of registered users online.
      */
     public function getregisteredonline()
     {
@@ -299,7 +299,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery($dql);
         $activeTime = new DateTime();
         // @todo maybe need to check TZ here
-        $activeTime->modify('-' . System::getVar('secinactivemins') . ' minutes');
+        $activeTime->modify('-'.System::getVar('secinactivemins').' minutes');
         $query->setParameter('activetime', $activeTime);
 
         $amountOfUsers = $query->getSingleScalarResult();
@@ -310,7 +310,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Get the latest registered user.
      *
-     * @return integer Latest registered user id.
+     * @return int Latest registered user id.
      */
     public function getlatestuser()
     {
@@ -319,7 +319,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             ->from('Zikula\\UsersModule\\Entity\\UserEntity', 'u')
             ->where('u.uid != 1');
         if (ModUtil::getVar('ZikulaProfileModule', 'filterunverified')) {
-            $qb->andWhere('u.activated = ' . UsersConstant::ACTIVATED_ACTIVE);
+            $qb->andWhere('u.activated = '.UsersConstant::ACTIVATED_ACTIVE);
         }
         $qb->orderBy('u.uid', 'DESC')->setMaxResults(1);
         $user = $qb->getQuery()->getSingleResult();
@@ -358,7 +358,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // @todo maybe need to check TZ here
-        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
+        $activetime->modify('-'.System::getVar('secinactivemins').' minutes');
         $query->setParameter('activetime', $activetime);
         $query->setParameter('uid', $args['userid']);
         try {
@@ -388,13 +388,13 @@ class MemberslistApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // @todo maybe need to check TZ here
-        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
+        $activetime->modify('-'.System::getVar('secinactivemins').' minutes');
         $query->setParameter('activetime', $activetime);
         $onlineUsers = $query->getArrayResult();
 
         foreach ($onlineUsers as $k => $user) {
             // reformat attributes array
-            foreach($user['attributes'] as $name => $attr) {
+            foreach ($user['attributes'] as $name => $attr) {
                 $onlineUsers[$k]['attributes'][$name] = $attr['value'];
             }
         }
@@ -422,7 +422,7 @@ class MemberslistApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // @todo maybe need to check TZ here
-        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
+        $activetime->modify('-'.System::getVar('secinactivemins').' minutes');
         $query->setParameter('activetime', $activetime);
         $onlineUsers = $query->getArrayResult();
 
@@ -440,10 +440,10 @@ class MemberslistApi extends \Zikula_AbstractApi
         $amountOfUsers = count($unames);
 
         return [
-            'unames' => $unames,
-            'numusers' => $amountOfUsers,
+            'unames'    => $unames,
+            'numusers'  => $amountOfUsers,
             'numguests' => $amountOfGuests,
-            'total' => $amountOfGuests + $amountOfUsers
+            'total'     => $amountOfGuests + $amountOfUsers,
         ];
     }
 

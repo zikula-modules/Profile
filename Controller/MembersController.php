@@ -13,16 +13,14 @@ namespace Zikula\ProfileModule\Controller;
 use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserUtil;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Event\GenericEvent;
 
 /**
- * Class MembersController
+ * Class MembersController.
+ *
  * @Route("/members")
  */
 class MembersController extends AbstractController
@@ -50,9 +48,9 @@ class MembersController extends AbstractController
      *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
      *                      is a string containing the name of a property then the string on which to match the begining of the value for that property.
      *
-     * @return string The rendered template output.
-     *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return string The rendered template output.
      */
     public function viewAction(Request $request)
     {
@@ -93,13 +91,13 @@ class MembersController extends AbstractController
         $itemsPerPage = $this->getVar('memberslistitemsperpage', 20);
 
         $fetchargs = [
-            'letter' => $letter,
-            'sortby' => $sortby,
-            'sortorder' => $sortorder,
-            'searchby' => $searchby,
-            'startnum' => $startnum,
-            'numitems' => $itemsPerPage,
-            'returnUids' => false
+            'letter'     => $letter,
+            'sortby'     => $sortby,
+            'sortorder'  => $sortorder,
+            'searchby'   => $searchby,
+            'startnum'   => $startnum,
+            'numitems'   => $itemsPerPage,
+            'returnUids' => false,
         ];
 
         // get full list of user id's
@@ -126,22 +124,22 @@ class MembersController extends AbstractController
 
         return [
             'amountOfRegisteredMembers' => ModUtil::apiFunc('Users', 'user', 'countitems') - 1,
-            'amountOfOnlineMembers' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
-            'newestMemberName' => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
+            'amountOfOnlineMembers'     => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
+            'newestMemberName'          => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
             // check if we should show the extra admin column
-            'adminEdit' => $edit,
+            'adminEdit'   => $edit,
             'adminDelete' => $delete,
-            'dudArray' => $dudArray,
-            'users' => $users,
-            'letter' => $letter,
-            'sortby' => $sortby,
-            'sortorder' => $sortorder,
+            'dudArray'    => $dudArray,
+            'users'       => $users,
+            'letter'      => $letter,
+            'sortby'      => $sortby,
+            'sortorder'   => $sortorder,
             // check which messaging module is available and add the necessary info
             'messageModule' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule'),
-            'pager' => [
+            'pager'         => [
                 'amountOfItems' => $amountOfUsers,
-                'itemsPerPage' => $itemsPerPage
-            ]
+                'itemsPerPage'  => $itemsPerPage,
+            ],
         ];
     }
 
@@ -153,9 +151,9 @@ class MembersController extends AbstractController
      *
      * This function displays the last X users who registered at this site available from the module.
      *
-     * @return string The rendered template output.
-     *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return string The rendered template output.
      */
     public function recentAction()
     {
@@ -168,10 +166,10 @@ class MembersController extends AbstractController
 
         // get last x user id's
         $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', [
-            'sortby' => 'user_regdate',
-            'numitems' => $modVars['recentmembersitemsperpage'],
-            'sortorder' => 'DESC',
-            'returnUids' => false]
+            'sortby'     => 'user_regdate',
+            'numitems'   => $modVars['recentmembersitemsperpage'],
+            'sortorder'  => 'DESC',
+            'returnUids' => false, ]
         );
 
         $templateParameters = $modVars;
@@ -217,9 +215,9 @@ class MembersController extends AbstractController
      *
      * This function displays the currently online users.
      *
-     * @return string The rendered template output.
-     *
      * @throws AccessDeniedException on failed permission check
+     *
+     * @return string The rendered template output.
      */
     public function onlineAction()
     {
@@ -240,7 +238,7 @@ class MembersController extends AbstractController
             'users' => $users,
             // check which messaging module is available and add the necessary info
             'messageModule' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule'),
-            'dudArray' => $dudArray
+            'dudArray'      => $dudArray,
         ];
     }
 }

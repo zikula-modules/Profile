@@ -10,15 +10,14 @@
 
 namespace Zikula\ProfileModule\Listener;
 
-use DataUtil;
 use ModUtil;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig_Environment;
 use UserUtil;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Common\Translator\Translator;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Core\Event\GenericEvent;
 
 /**
@@ -72,19 +71,19 @@ class UsersUiListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'module.users.ui.display_view' => ['uiView'],
-            'module.users.ui.form_edit.new_user' => ['uiEdit'],
-            'module.users.ui.form_edit.modify_user' => ['uiEdit'],
-            'module.users.ui.form_edit.new_registration' => ['uiEdit'],
-            'module.users.ui.form_edit.modify_registration' => ['uiEdit'],
-            'module.users.ui.validate_edit.new_user' => ['validateEdit'],
-            'module.users.ui.validate_edit.modify_user' => ['validateEdit'],
-            'module.users.ui.validate_edit.new_registration' => ['validateEdit'],
+            'module.users.ui.display_view'                      => ['uiView'],
+            'module.users.ui.form_edit.new_user'                => ['uiEdit'],
+            'module.users.ui.form_edit.modify_user'             => ['uiEdit'],
+            'module.users.ui.form_edit.new_registration'        => ['uiEdit'],
+            'module.users.ui.form_edit.modify_registration'     => ['uiEdit'],
+            'module.users.ui.validate_edit.new_user'            => ['validateEdit'],
+            'module.users.ui.validate_edit.modify_user'         => ['validateEdit'],
+            'module.users.ui.validate_edit.new_registration'    => ['validateEdit'],
             'module.users.ui.validate_edit.modify_registration' => ['validateEdit'],
-            'module.users.ui.process_edit.new_user' => ['processEdit'],
-            'module.users.ui.process_edit.modify_user' => ['processEdit'],
-            'module.users.ui.process_edit.new_registration' => ['processEdit'],
-            'module.users.ui.process_edit.modify_registration' => ['processEdit']
+            'module.users.ui.process_edit.new_user'             => ['processEdit'],
+            'module.users.ui.process_edit.modify_user'          => ['processEdit'],
+            'module.users.ui.process_edit.new_registration'     => ['processEdit'],
+            'module.users.ui.process_edit.modify_registration'  => ['processEdit'],
         ];
     }
 
@@ -106,7 +105,7 @@ class UsersUiListener implements EventSubscriberInterface
 
         $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/UsersUi/profile_ui_view.html.twig', [
             'dudItems' => $items,
-            'userInfo' => $user
+            'userInfo' => $user,
         ]);
     }
 
@@ -164,10 +163,10 @@ class UsersUiListener implements EventSubscriberInterface
         $errorFields = $this->validation ? $this->validation->getErrors() : [];
 
         $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/UsersUi/profile_ui_edit.html.twig', [
-            'dudItems' => $items,
+            'dudItems'  => $items,
             'dudErrors' => $errorFields,
             'fieldSets' => $fieldSets,
-            'userid' => $userid
+            'userid'    => $userid,
         ]);
     }
 
@@ -193,7 +192,7 @@ class UsersUiListener implements EventSubscriberInterface
         $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
         $this->validation = new ValidationResponse('dynadata', $dynadata);
         $requiredFailures = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', [
-            'dynadata' => $dynadata
+            'dynadata' => $dynadata,
         ]);
 
         $errorCount = 0;

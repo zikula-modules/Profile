@@ -20,8 +20,8 @@ class PropertyRepository extends EntityRepository
     /**
      * Returns all properties sorted by weight as array.
      *
-     * @param integer $startOffset   The starting record number to retrieve
-     * @param integer $amountOfItems The amount of items to retrieve
+     * @param int $startOffset   The starting record number to retrieve
+     * @param int $amountOfItems The amount of items to retrieve
      *
      * @return array List of fetched properties
      */
@@ -61,7 +61,7 @@ class PropertyRepository extends EntityRepository
     /**
      * Returns the amount of all properties.
      *
-     * @return integer The amount of counted properties
+     * @return int The amount of counted properties
      */
     public function getTotalAmount()
     {
@@ -76,7 +76,7 @@ class PropertyRepository extends EntityRepository
     /**
      * Returns the minimum weight of all properties.
      *
-     * @return integer The minimum weight value
+     * @return int The minimum weight value
      */
     public function getMinimumWeight()
     {
@@ -91,7 +91,7 @@ class PropertyRepository extends EntityRepository
     /**
      * Returns the maximum weight of all properties.
      *
-     * @return integer The maximum weight value
+     * @return int The maximum weight value
      */
     public function getMaximumWeight()
     {
@@ -106,7 +106,7 @@ class PropertyRepository extends EntityRepository
     /**
      * Deletes a single property.
      *
-     * @param integer $id The property id
+     * @param int $id The property id
      *
      * @return bool True on success, false otherwise
      */
@@ -118,14 +118,14 @@ class PropertyRepository extends EntityRepository
             ->setParameter('id', $id);
         $result = $qb->getQuery()->execute();
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     /**
      * Activates a single property.
      *
-     * @param integer $id        The property id
-     * @param integer $newWeight The new weight value
+     * @param int $id        The property id
+     * @param int $newWeight The new weight value
      */
     public function activateProperty($id, $newWeight)
     {
@@ -137,8 +137,8 @@ class PropertyRepository extends EntityRepository
     /**
      * Deactivates a single property.
      *
-     * @param integer $id     The property id
-     * @param integer $weight The item's weight value
+     * @param int $id     The property id
+     * @param int $weight The item's weight value
      */
     public function deactivateProperty($id, $weight)
     {

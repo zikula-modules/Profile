@@ -29,65 +29,64 @@ class ConfigType extends AbstractType
 
         $builder
             ->add('viewregdate', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                'label' => $translator->__('Display the user\'s registration date'),
-                'required' => false
+                'label'    => $translator->__('Display the user\'s registration date'),
+                'required' => false,
             ])
             ->add('memberslistitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label' => $translator->__('Users per page in \'Registered users list\''),
+                'label'      => $translator->__('Users per page in \'Registered users list\''),
                 'empty_data' => 20,
-                'scale' => 0,
-                'max_length' => 3
+                'scale'      => 0,
+                'max_length' => 3,
             ])
             ->add('onlinemembersitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label' => $translator->__('Users per page in \'Users currently on-line\' page'),
+                'label'      => $translator->__('Users per page in \'Users currently on-line\' page'),
                 'empty_data' => 20,
-                'scale' => 0,
-                'max_length' => 3
+                'scale'      => 0,
+                'max_length' => 3,
             ])
             ->add('recentmembersitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label' => $translator->__('Users per page in \'Recent registrations\' page'),
+                'label'      => $translator->__('Users per page in \'Recent registrations\' page'),
                 'empty_data' => 20,
-                'scale' => 0,
-                'max_length' => 3
+                'scale'      => 0,
+                'max_length' => 3,
             ])
             ->add('filterunverified', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
-                'label' => $translator->__('Filter unverified users from \'Registered users list\''),
+                'label'      => $translator->__('Filter unverified users from \'Registered users list\''),
                 'empty_data' => '1',
-                'choices' => [
+                'choices'    => [
                     $translator->__('Yes') => '1',
-                    $translator->__('No') => '0'
+                    $translator->__('No')  => '0',
                 ],
                 'choices_as_values' => true,
-                'required' => false,
-                'expanded' => false,
-                'multiple' => false
+                'required'          => false,
+                'expanded'          => false,
+                'multiple'          => false,
             ]);
 
         foreach ($options['dudFields'] as $key => $item) {
             $builder
-                ->add('dudregshow_' . $item['prop_attribute_name'], 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                    'label' => $item['prop_label'],
+                ->add('dudregshow_'.$item['prop_attribute_name'], 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
+                    'label'    => $item['prop_label'],
                     'required' => $item['prop_required'],
-                    'disabled' => $item['prop_required']
+                    'disabled' => $item['prop_required'],
                 ]);
         }
 
         $builder
             ->add('save', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Save'),
-                'icon' => 'fa-check',
-                'attr' => [
-                    'class' => 'btn btn-success'
-                ]
+                'icon'  => 'fa-check',
+                'attr'  => [
+                    'class' => 'btn btn-success',
+                ],
             ])
             ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Cancel'),
-                'icon' => 'fa-times',
-                'attr' => [
-                    'class' => 'btn btn-default'
-                ]
-            ])
-        ;
+                'icon'  => 'fa-times',
+                'attr'  => [
+                    'class' => 'btn btn-default',
+                ],
+            ]);
     }
 
     /**
@@ -113,7 +112,7 @@ class ConfigType extends AbstractType
     {
         $resolver->setDefaults([
             'translator' => null,
-            'dudFields' => []
+            'dudFields'  => [],
         ]);
     }
 }
