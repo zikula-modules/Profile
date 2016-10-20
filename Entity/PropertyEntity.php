@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Zikula\Core\Doctrine\EntityAccess;
 
 /**
- * Property entity class
+ * Property entity class.
  *
  * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
  * @ORM\Table(name="user_property", indexes = {
@@ -25,7 +25,7 @@ use Zikula\Core\Doctrine\EntityAccess;
 class PropertyEntity extends EntityAccess
 {
     /**
-     * id
+     * id.
      *
      * @ORM\Id
      * @ORM\Column(type="integer",name="id")
@@ -34,37 +34,43 @@ class PropertyEntity extends EntityAccess
     private $prop_id;
 
     /**
-     * Label
+     * Label.
+     *
      * @ORM\Column(type="string",name="label")
      */
     private $prop_label = '';
 
     /**
-     * Dtype
+     * Dtype.
+     *
      * @ORM\Column(type="integer",name="dtype")
      */
     private $prop_dtype = 0;
 
     /**
-     * Modname
+     * Modname.
+     *
      * @ORM\Column(type="string",length=64,name="modname")
      */
     private $prop_modname = '';
 
     /**
-     * Weight
+     * Weight.
+     *
      * @ORM\Column(type="integer",name="weight")
      */
     private $prop_weight = 0;
 
     /**
-     * Validation
+     * Validation.
+     *
      * @ORM\Column(type="text",nullable=true,name="validation")
      */
     private $prop_validation = null;
 
     /**
-     * Attribute name
+     * Attribute name.
+     *
      * @ORM\Column(type="string",length=80,name="attributename")
      */
     private $prop_attribute_name = '';
@@ -86,7 +92,7 @@ class PropertyEntity extends EntityAccess
     }
 
     /**
-     * @param integer $dtype
+     * @param int $dtype
      */
     public function setProp_dtype($dtype = 0)
     {
@@ -94,7 +100,7 @@ class PropertyEntity extends EntityAccess
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getProp_dtype()
     {
@@ -102,7 +108,7 @@ class PropertyEntity extends EntityAccess
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getProp_id()
     {
@@ -158,7 +164,7 @@ class PropertyEntity extends EntityAccess
     }
 
     /**
-     * @param integer $weight
+     * @param int $weight
      */
     public function setProp_weight($weight = 0)
     {
@@ -166,7 +172,7 @@ class PropertyEntity extends EntityAccess
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getProp_weight()
     {

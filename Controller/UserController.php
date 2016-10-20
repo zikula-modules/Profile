@@ -10,7 +10,6 @@
 
 namespace Zikula\ProfileModule\Controller;
 
-use DataUtil;
 use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserUtil;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Event\GenericEvent;
 
 /**
  * Class UserController
@@ -29,7 +27,7 @@ use Zikula\Core\Event\GenericEvent;
 class UserController extends AbstractController
 {
     /**
-     * Route not needed here because this is a legacy-only method
+     * Route not needed here because this is a legacy-only method.
      *
      * The default entry point.
      *
@@ -62,7 +60,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/view")
-     * 
+     *
      * Display item.
      *
      * @return RedirectResponse
@@ -150,9 +148,9 @@ class UserController extends AbstractController
      *
      * Display the configuration options for the users block.
      *
-     * @return Response symfony response object
-     *
      * @throws NotFoundHttpException Thrown if the users block isn't found
+     *
+     * @return Response symfony response object
      */
     public function usersBlockAction(Request $request)
     {
@@ -175,18 +173,18 @@ class UserController extends AbstractController
         }
 
         $formVars = [
-            'ublockon' => (bool)UserUtil::getVar('ublockon'),
-            'ublock' => UserUtil::getVar('ublock')
+            'ublockon' => (bool) UserUtil::getVar('ublockon'),
+            'ublock'   => UserUtil::getVar('ublock'),
         ];
 
         $form = $this->createForm('Zikula\ProfileModule\Form\Type\UsersBlockType', $formVars, [
-            'translator' => $this->get('translator.default')
+            'translator' => $this->get('translator.default'),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $formData = $form->getData();
-                $ublockon = isset($formData['ublockon']) ? (bool)$formData['ublockon'] : false;
+                $ublockon = isset($formData['ublockon']) ? (bool) $formData['ublockon'] : false;
                 $ublock = isset($formData['ublock']) ? $formData['ublock'] : '';
 
                 UserUtil::setVar('ublockon', $ublockon);
@@ -202,7 +200,7 @@ class UserController extends AbstractController
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 }

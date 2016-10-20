@@ -14,21 +14,22 @@ use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\Response\Ajax\FatalResponse;
-use Zikula\Core\Response\Ajax\BadDataResponse;
-use Zikula\Core\Response\Ajax\AjaxResponse;
-use Zikula\Core\Response\Ajax\NotFoundResponse;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Response\Ajax\AjaxResponse;
+use Zikula\Core\Response\Ajax\BadDataResponse;
+use Zikula\Core\Response\Ajax\FatalResponse;
+use Zikula\Core\Response\Ajax\NotFoundResponse;
 
 /**
- * Class AjaxController
+ * Class AjaxController.
+ *
  * @Route("/ajax")
  */
 class AjaxController extends AbstractController
 {
     /**
      * @Route("/changeweight", options={"expose"=true})
-     * 
+     *
      * Change the weight of a profile item.
      *
      * @param Request $request
@@ -38,8 +39,9 @@ class AjaxController extends AbstractController
      * array   profilelist An array of dud item ids for which the weight should be changed.
      * numeric startnum    The desired weight of the first item in the list minus 1 (e.g., if the weight of the first item should be 3 then startnum contains 2)
      *
-     * @return AjaxResponse|BadDataResponse
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
+     *
+     * @return AjaxResponse|BadDataResponse
      */
     public function changeprofileweightAction(Request $request)
     {
@@ -85,8 +87,9 @@ class AjaxController extends AbstractController
      * numeric dudid     Id of the property to update.
      * boolean oldstatus True to activate or false to deactivate the item.
      *
-     * @return AjaxResponse|NotFoundResponse|BadDataResponse
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
+     *
+     * @return AjaxResponse|NotFoundResponse|BadDataResponse
      */
     public function changeprofilestatusAction(Request $request)
     {
@@ -95,9 +98,8 @@ class AjaxController extends AbstractController
         }
 
         $prop_id = $request->get('dudid', null);
-        $oldstatus = (bool)$request->get('oldstatus', null);
+        $oldstatus = (bool) $request->get('oldstatus', null);
         if (!$prop_id) {
-
             return new NotFoundResponse(['result' => false]);
         }
         // update the item status
@@ -123,8 +125,9 @@ class AjaxController extends AbstractController
      * string  name Name of the section to retrieve.
      * array   args Optional arguments to the API.
      *
-     * @return AjaxResponse|NotFoundResponse|BadDataResponse
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
+     *
+     * @return AjaxResponse|NotFoundResponse|BadDataResponse
      */
     public function profilesectionAction(Request $request)
     {
@@ -152,7 +155,7 @@ class AjaxController extends AbstractController
         $view = \Zikula_View::getInstance('ZikulaProfileModule', \Zikula_View::CACHE_DISABLED);
 
         // check the template existence
-        $template = 'sections/profile_section_' . $name . '.tpl';
+        $template = 'sections/profile_section_'.$name.'.tpl';
         if (!$view->template_exists($template)) {
             return new NotFoundResponse(['result' => false]);
         }
@@ -162,8 +165,8 @@ class AjaxController extends AbstractController
 
         return new AjaxResponse([
             'result' => $view->fetch($template, $uid),
-            'name' => $name,
-            'uid' => $uid
+            'name'   => $name,
+            'uid'    => $uid,
         ]);
     }
 }

@@ -16,39 +16,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class FeaturedUserBlockType
+ * Class FeaturedUserBlockType.
  */
 class FeaturedUserBlockType extends AbstractType
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('username', 'Symfony\Component\Form\Extension\Core\Type\TextType', [
-                'label' => __('User name'),
-                'empty_data' => '',
+                'label'       => __('User name'),
+                'empty_data'  => '',
                 'constraints' => [
                     new NotBlank(),
-                ]
+                ],
             ])
             ->add('fieldstoshow', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
-                'label' => __('Information to show'),
+                'label'      => __('Information to show'),
                 'label_attr' => [
-                    'class' => 'checkbox-inline'
+                    'class' => 'checkbox-inline',
                 ],
-                'expanded' => true,
-                'multiple' => true,
+                'expanded'          => true,
+                'multiple'          => true,
                 'choices_as_values' => true,
-                'choices' => $options['dudArray']
+                'choices'           => $options['dudArray'],
             ])
             ->add('showregdate', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                'label' => __('Show registration date'),
+                'label'      => __('Show registration date'),
                 'empty_data' => false,
-                'required' => false
-            ])
-        ;
+                'required'   => false,
+            ]);
     }
 
     /**
@@ -57,12 +56,12 @@ class FeaturedUserBlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'dudArray' => []
+            'dudArray' => [],
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {

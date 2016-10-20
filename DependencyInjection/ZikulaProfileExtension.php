@@ -28,7 +28,7 @@ class ZikulaProfileExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(realpath(__DIR__ . '/../Resources/config')));
+        $loader = new XmlFileLoader($container, new FileLocator(realpath(__DIR__.'/../Resources/config')));
 
         $loader->load('services.xml');
     }

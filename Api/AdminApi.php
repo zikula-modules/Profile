@@ -12,8 +12,8 @@ namespace Zikula\ProfileModule\Api;
 
 use ModUtil;
 use SecurityUtil;
-use Zikula\ProfileModule\Entity\PropertyEntity;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\ProfileModule\Entity\PropertyEntity;
 
 /**
  * Administration-related api.
@@ -31,10 +31,10 @@ class AdminApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return boolean|integer dud item ID on success, false on failure
-     *
-     * @throws AccessDeniedException on failed permission check
+     * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool|int dud item ID on success, false on failure
      */
     public function create($args)
     {
@@ -69,16 +69,16 @@ class AdminApi extends \Zikula_AbstractApi
             $args['required'] = 0;
         }
         // produce the validation array
-        $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
+        $args['listoptions'] = str_replace(chr(10), '', str_replace(chr(13), '', $args['listoptions']));
 
         $validationinfo = [
-            'required' => $args['required'],
-            'viewby' => $args['viewby'],
+            'required'    => $args['required'],
+            'viewby'      => $args['viewby'],
             'displaytype' => $args['displaytype'],
             'listoptions' => $args['listoptions'],
-            'note' => $args['note'],
-            'fieldset' => ((isset($args['fieldset']) && !empty($args['fieldset'])) ? $args['fieldset'] : $this->__('User Information')),
-            'pattern' => ((isset($args['pattern']) && !empty($args['pattern'])) ? $args['pattern'] : null)
+            'note'        => $args['note'],
+            'fieldset'    => ((isset($args['fieldset']) && !empty($args['fieldset'])) ? $args['fieldset'] : $this->__('User Information')),
+            'pattern'     => ((isset($args['pattern']) && !empty($args['pattern'])) ? $args['pattern'] : null),
         ];
 
         $obj = [];
@@ -107,10 +107,10 @@ class AdminApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return bool True on success, false on failure.
-     *
-     * @throws AccessDeniedException on failed permission check
+     * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool True on success, false on failure.
      */
     public function update($args)
     {
@@ -166,15 +166,15 @@ class AdminApi extends \Zikula_AbstractApi
                 $args['required'] = 0;
             }
             // Produce the validation array
-            $args['listoptions'] = str_replace(Chr(10), '', str_replace(Chr(13), '', $args['listoptions']));
+            $args['listoptions'] = str_replace(chr(10), '', str_replace(chr(13), '', $args['listoptions']));
             $validationinfo = [
-                'required' => $args['required'],
-                'viewby' => $args['viewby'],
+                'required'    => $args['required'],
+                'viewby'      => $args['viewby'],
                 'displaytype' => $args['displaytype'],
                 'listoptions' => $args['listoptions'],
-                'note' => $args['note'],
-                'fieldset' => ((isset($args['fieldset']) && !empty($args['fieldset'])) ? $args['fieldset'] : $this->__('User Information')),
-                'pattern' => ((isset($args['pattern']) && !empty($args['pattern'])) ? $args['pattern'] : null)
+                'note'        => $args['note'],
+                'fieldset'    => ((isset($args['fieldset']) && !empty($args['fieldset'])) ? $args['fieldset'] : $this->__('User Information')),
+                'pattern'     => ((isset($args['pattern']) && !empty($args['pattern'])) ? $args['pattern'] : null),
             ];
 
             $obj['prop_validation'] = serialize($validationinfo);
@@ -208,10 +208,10 @@ class AdminApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return bool true on success, false on failure
-     *
-     * @throws AccessDeniedException on failed permission check
+     * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool true on success, false on failure
      */
     public function delete($args)
     {
@@ -228,7 +228,7 @@ class AdminApi extends \Zikula_AbstractApi
         }
 
         // normal type validation
-        if ((int)$item['prop_dtype'] != 1) {
+        if ((int) $item['prop_dtype'] != 1) {
             throw new \Exception($this->__('Error! You cannot delete this item.'));
         }
 
@@ -259,9 +259,9 @@ class AdminApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return bool true on success, false on failure
-     *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool true on success, false on failure
      *
      * @todo remove weight; can be got from get API
      */
@@ -288,9 +288,9 @@ class AdminApi extends \Zikula_AbstractApi
      *
      * @param array $args All parameters passed to this function.
      *
-     * @return bool true on success, false on failure.
-     *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
+     *
+     * @return bool true on success, false on failure.
      *
      * @todo remove weight; can be got from get API.
      */
@@ -311,7 +311,7 @@ class AdminApi extends \Zikula_AbstractApi
             throw new \Exception($this->__('Error! You cannot deactivate this item.'));
         }
 
-        /**
+        /*
          * Return TRUE, if the item is already deactivated.
          */
         if ($item['prop_weight'] == 0) {

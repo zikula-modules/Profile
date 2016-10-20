@@ -20,7 +20,8 @@ use Zikula\Core\Controller\AbstractController;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
- * Class ConfigController
+ * Class ConfigController.
+ *
  * @Route("/config")
  */
 class ConfigController extends AbstractController
@@ -31,7 +32,9 @@ class ConfigController extends AbstractController
      * @Template
      *
      * @param Request $request
+     *
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function configAction(Request $request)
@@ -41,17 +44,17 @@ class ConfigController extends AbstractController
         }
 
         $dataValues = $this->getVars();
-        $dataValues['viewregdate'] = (bool)$dataValues['viewregdate'];
+        $dataValues['viewregdate'] = (bool) $dataValues['viewregdate'];
         $dudFields = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable', 'index' => 'prop_id']);
 
         foreach ($dudFields as $key => $item) {
-            $dataValues['dudregshow_' . $item['prop_attribute_name']] = in_array($item['prop_attribute_name'], $dataValues['dudregshow']);
+            $dataValues['dudregshow_'.$item['prop_attribute_name']] = in_array($item['prop_attribute_name'], $dataValues['dudregshow']);
         }
 
         $form = $this->createForm('Zikula\ProfileModule\Form\Type\ConfigType',
             $dataValues, [
                 'translator' => $this->get('translator.default'),
-                'dudFields' => $dudFields
+                'dudFields'  => $dudFields,
             ]
         );
 
@@ -62,11 +65,11 @@ class ConfigController extends AbstractController
 
                 $formData['dudregshow'] = [];
                 foreach ($dudFields as $key => $item) {
-                    if (!isset($formData['dudregshow_' . $item['prop_attribute_name']])) {
+                    if (!isset($formData['dudregshow_'.$item['prop_attribute_name']])) {
                         continue;
                     }
                     $formData['dudregshow'][] = $item['prop_attribute_name'];
-                    unset($formData['dudregshow_' . $item['prop_attribute_name']]);
+                    unset($formData['dudregshow_'.$item['prop_attribute_name']]);
                 }
 
                 // save modvars
@@ -83,15 +86,15 @@ class ConfigController extends AbstractController
 
         foreach ($dudFields as $k => $item) {
             $item['prop_fieldset'] = (isset($item['prop_fieldset']) && !empty($item['prop_fieldset'])) ? $item['prop_fieldset'] : $this->__('User Information');
-            $dudFields[$k] = (array)$item;
+            $dudFields[$k] = (array) $item;
             $fieldSets[$item['prop_fieldset']] = $item['prop_fieldset'];
         }
 
         return [
-            'form' => $form->createView(),
-            'dudFieldSets' => $fieldSets,
-            'dudFields' => $dudFields,
-            'dudFieldsActive' => (isset($dataValues['dudregshow']) ? $dataValues['dudregshow'] : [])
+            'form'            => $form->createView(),
+            'dudFieldSets'    => $fieldSets,
+            'dudFields'       => $dudFields,
+            'dudFieldsActive' => (isset($dataValues['dudregshow']) ? $dataValues['dudregshow'] : []),
         ];
     }
 }

@@ -10,7 +10,6 @@
 
 namespace Zikula\ProfileModule;
 
-use DoctrineHelper;
 use EventUtil;
 use System;
 use Zikula\Core\AbstractExtensionInstaller;
@@ -25,7 +24,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
      * @var array
      */
     private $entities = [
-        'Zikula\ProfileModule\Entity\PropertyEntity'
+        'Zikula\ProfileModule\Entity\PropertyEntity',
     ];
 
     /**
@@ -36,18 +35,18 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     protected function getDefaultModVars()
     {
         return [
-            'viewregdate' => 0,
-            'memberslistitemsperpage' => 20,
+            'viewregdate'               => 0,
+            'memberslistitemsperpage'   => 20,
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
-            'filterunverified' => 1
+            'filterunverified'          => 1,
         ];
     }
 
     /**
      * Initialise the dynamic user data  module.
      *
-     * @return boolean True on success or false on failure
+     * @return bool True on success or false on failure
      */
     public function install()
     {
@@ -73,7 +72,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
      *
      * @param string $oldVersion The version from which the upgrade is beginning (the currently installed version)
      *
-     * @return boolean True on success or false on failure
+     * @return bool True on success or false on failure
      */
     public function upgrade($oldVersion)
     {
@@ -125,7 +124,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     /**
      * Delete the profile module.
      *
-     * @return boolean True on success or false on failure
+     * @return bool True on success or false on failure
      */
     public function uninstall()
     {
@@ -157,12 +156,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 1;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'realname';
         $prop = new PropertyEntity();
@@ -175,12 +174,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 2;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'publicemail';
         $prop = new PropertyEntity();
@@ -193,12 +192,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 3;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'url';
         $prop = new PropertyEntity();
@@ -211,12 +210,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 4;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 2,
+            'required'    => 0,
+            'viewby'      => 2,
             'displaytype' => 4,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'tzoffset';
         $prop = new PropertyEntity();
@@ -229,12 +228,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 5;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 4,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'avatar';
         $prop = new PropertyEntity();
@@ -247,12 +246,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 6;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'icq';
         $prop = new PropertyEntity();
@@ -265,12 +264,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 7;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'aim';
         $prop = new PropertyEntity();
@@ -283,12 +282,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 8;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'yim';
         $prop = new PropertyEntity();
@@ -301,12 +300,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 9;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'msnm';
         $prop = new PropertyEntity();
@@ -319,12 +318,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 10;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'city';
         $prop = new PropertyEntity();
@@ -337,12 +336,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = '1';
         $record['prop_weight'] = '11';
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 0,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'occupation';
         $prop = new PropertyEntity();
@@ -355,12 +354,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 12;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 1,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'signature';
         $prop = new PropertyEntity();
@@ -373,12 +372,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 13;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 1,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'extrainfo';
         $prop = new PropertyEntity();
@@ -391,12 +390,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $record['prop_dtype'] = 1;
         $record['prop_weight'] = 14;
         $record['prop_validation'] = serialize([
-            'required' => 0,
-            'viewby' => 0,
+            'required'    => 0,
+            'viewby'      => 0,
             'displaytype' => 1,
             'listoptions' => '',
-            'note' => '',
-            'pattern' => null
+            'note'        => '',
+            'pattern'     => null,
         ]);
         $record['prop_attribute_name'] = 'interests';
         $prop = new PropertyEntity();

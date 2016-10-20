@@ -29,33 +29,32 @@ class UsersBlockType extends AbstractType
 
         $builder
             ->add('ublockon', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                'label' => $translator->__('Enable your personal custom block'),
-                'required' => false
+                'label'    => $translator->__('Enable your personal custom block'),
+                'required' => false,
             ])
             ->add('ublock', 'Symfony\Component\Form\Extension\Core\Type\TextareaType', [
-                'label' => $translator->__('Content of your custom block'),
+                'label'    => $translator->__('Content of your custom block'),
                 'required' => false,
-                'attr' => [
+                'attr'     => [
                     'cols' => 80,
-                    'rows' => 10
-                ]
+                    'rows' => 10,
+                ],
             ])
             ->add('save', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Save'),
-                'icon' => 'fa-check',
-                'attr' => [
-                    'class' => 'btn btn-success'
-                ]
+                'icon'  => 'fa-check',
+                'attr'  => [
+                    'class' => 'btn btn-success',
+                ],
             ])
             ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
                 'label' => $translator->__('Cancel'),
-                'icon' => 'fa-times',
-                'attr' => [
-                    'class' => 'btn btn-default',
-                    'formnovalidate' => 'formnovalidate'
-                ]
-            ])
-        ;
+                'icon'  => 'fa-times',
+                'attr'  => [
+                    'class'          => 'btn btn-default',
+                    'formnovalidate' => 'formnovalidate',
+                ],
+            ]);
     }
 
     /**
@@ -80,7 +79,7 @@ class UsersBlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translator' => null
+            'translator' => null,
         ]);
     }
 }

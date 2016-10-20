@@ -19,12 +19,12 @@ use Zikula\BlocksModule\AbstractBlockHandler;
 class MembersOnlineBlock extends AbstractBlockHandler
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if (!$this->hasPermission('ZikulaProfileModule:MembersOnlineblock:', $title . '::', ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaProfileModule:MembersOnlineblock:', $title.'::', ACCESS_READ)) {
             return '';
         }
 
@@ -47,18 +47,18 @@ class MembersOnlineBlock extends AbstractBlockHandler
         $messageModule = $currentUserApi->isLoggedIn() ? ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule') : '';
 
         return $this->renderView('@ZikulaProfileModule/Block/membersOnline.html.twig', [
-            'currentUserId' => $userId,
-            'usersOnline' => $usersOnline,
-            'maxLength' => $properties['lengthmax'],
-            'messageModule' => $messageModule,
-            'messages' => $messageModule != '' ? ModUtil::apiFunc($messageModule, 'user', 'getmessagecount') : [],
+            'currentUserId'         => $userId,
+            'usersOnline'           => $usersOnline,
+            'maxLength'             => $properties['lengthmax'],
+            'messageModule'         => $messageModule,
+            'messages'              => $messageModule != '' ? ModUtil::apiFunc($messageModule, 'user', 'getmessagecount') : [],
             'amountOfOnlineMembers' => $users['numusers'],
-            'amountOfOnlineGuests' => $users['numguests']
+            'amountOfOnlineGuests'  => $users['numguests'],
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormClassName()
     {
@@ -66,7 +66,7 @@ class MembersOnlineBlock extends AbstractBlockHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormTemplate()
     {
