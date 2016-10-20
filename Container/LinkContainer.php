@@ -13,7 +13,7 @@ namespace Zikula\ProfileModule\Container;
 
 use ModUtil;
 use Symfony\Component\Routing\RouterInterface;
-use Zikula\Common\Translator\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\ExtensionApi;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -24,7 +24,7 @@ use Zikula\UsersModule\Container\LinkContainer as UsersLinkContainer;
 class LinkContainer implements LinkContainerInterface
 {
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -61,16 +61,16 @@ class LinkContainer implements LinkContainerInterface
     /**
      * LinkContainer constructor.
      *
-     * @param Translator         $translator         Translator service instance
-     * @param RouterInterface    $router             RouterInterface service instance
-     * @param PermissionApi      $permissionApi      PermissionApi service instance
-     * @param ExtensionApi       $extensionApi       ExtensionApi service instance
-     * @param VariableApi        $variableApi        VariableApi service instance
-     * @param CurrentUserApi     $currentUserApi     CurrentUserApi service instance
-     * @param UsersLinkContainer $usersLinkContainer UsersLinkContainer service instance
+     * @param TranslatorInterface $translator         Translator service instance
+     * @param RouterInterface     $router             RouterInterface service instance
+     * @param PermissionApi       $permissionApi      PermissionApi service instance
+     * @param ExtensionApi        $extensionApi       ExtensionApi service instance
+     * @param VariableApi         $variableApi        VariableApi service instance
+     * @param CurrentUserApi      $currentUserApi     CurrentUserApi service instance
+     * @param UsersLinkContainer  $usersLinkContainer UsersLinkContainer service instance
      */
     public function __construct(
-        $translator,
+        TranslatorInterface $translator,
         RouterInterface $router,
         PermissionApi $permissionApi,
         ExtensionApi $extensionApi,
