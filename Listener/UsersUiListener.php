@@ -14,6 +14,7 @@ use ModUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Twig_Environment;
 use UserUtil;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
@@ -29,6 +30,11 @@ class UsersUiListener implements EventSubscriberInterface
      * The area name that this handler processes.
      */
     const EVENT_KEY = 'module.profile.users_ui_handler';
+
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
 
     /**
      * @var Translator
@@ -57,12 +63,14 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
+     * @param KernelInterface  $kernel       KernelInterface service instance
      * @param Translator       $translator   Translator service instance
      * @param RequestStack     $requestStack RequestStack service instance
      * @param Twig_Environment $twig         Twig_Environment service instance
      */
-    public function __construct(Translator $translator, RequestStack $requestStack, Twig_Environment $twig)
+    public function __construct(KernelInterface $kernel, Translator $translator, RequestStack $requestStack, Twig_Environment $twig)
     {
+        $this->kernel = $kernel;
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
         $this->twig = $twig;
@@ -96,6 +104,10 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiView(GenericEvent $event)
     {
+        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
+            return;
+        }
+
         $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
         if (!$items) {
             return;
@@ -125,6 +137,10 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiEdit(GenericEvent $event)
     {
+        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
+            return;
+        }
+
         $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable']);
         if (!$items) {
             return;
@@ -185,6 +201,10 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function validateEdit(GenericEvent $event)
     {
+        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
+            return;
+        }
+
         if (!$this->request->isMethod('POST')) {
             return;
         }
@@ -235,6 +255,10 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function processEdit(GenericEvent $event)
     {
+        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
+            return;
+        }
+
         if (!$this->request->isMethod('POST')) {
             return;
         }
