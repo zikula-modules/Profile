@@ -46,11 +46,11 @@ class MembersController extends AbstractController
      * string  sortorder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
      * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
      *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
-     *                      is a string containing the name of a property then the string on which to match the begining of the value for that property.
+     *                      is a string containing the name of a property then the string on which to match the begining of the value for that property
      *
      * @throws AccessDeniedException on failed permission check
      *
-     * @return string The rendered template output.
+     * @return string The rendered template output
      */
     public function viewAction(Request $request)
     {
@@ -153,7 +153,7 @@ class MembersController extends AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      *
-     * @return string The rendered template output.
+     * @return string The rendered template output
      */
     public function recentAction()
     {
@@ -217,7 +217,7 @@ class MembersController extends AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      *
-     * @return string The rendered template output.
+     * @return string The rendered template output
      */
     public function onlineAction()
     {

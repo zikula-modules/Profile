@@ -40,11 +40,11 @@ class ProfileController extends AbstractController
      * numeric uid   The user account id (uid) of the user for whom to display profile information; optional, ignored if uname is supplied, if not provided
      *                  and if uname is not supplied then defaults to the current user.
      * string  uname The user name of the user for whom to display profile information; optional, if not supplied, then uid is used to determine the user.
-     * string  page  The name of the Profile "page" (display template) to display; optional, if not provided then the standard display template is used.
+     * string  page  The name of the Profile "page" (display template) to display; optional, if not provided then the standard display template is used
      *
      * @throws AccessDeniedException on failed permission check
      *
-     * @return RedirectResponse|string The rendered template output.
+     * @return RedirectResponse|string The rendered template output
      */
     public function displayAction(Request $request)
     {
@@ -139,11 +139,11 @@ class ProfileController extends AbstractController
      * Parameters passed via GET:
      * --------------------------------------------------
      * string   uname The user name of the account for which profile information should be modified; defaults to the uname of the current user.
-     * dynadata array The modified profile information passed into this function in case of an error in the update function.
+     * dynadata array The modified profile information passed into this function in case of an error in the update function
      *
      * @throws AccessDeniedException on failed permission check
      *
-     * @return RedirectResponse|string The rendered template output.
+     * @return RedirectResponse|string The rendered template output
      */
     public function editAction(Request $request, $uid = null)
     {
@@ -204,7 +204,7 @@ class ProfileController extends AbstractController
      * Parameters passed via POST:
      * ---------------------------
      * string uname    The user name of the account for which profile information should be updated.
-     * array  dynadata An array containing the updated profile information for the user account.
+     * array  dynadata An array containing the updated profile information for the user account
      *
      * @return RedirectResponse
      */

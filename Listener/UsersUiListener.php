@@ -90,7 +90,7 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * Render and return profile information for display as part of a hook-like UI event issued from the Users module.
      *
-     * @param GenericEvent $event The event that triggered this function call, including the subject of the display request.
+     * @param GenericEvent $event The event that triggered this function call, including the subject of the display request
      *
      * @return void
      */
@@ -119,7 +119,7 @@ class UsersUiListener implements EventSubscriberInterface
      *                  store for the user; otherwise not provided.
      *
      * @param GenericEvent $event The event that triggered this function call, including the id of the user for which
-     *                            profile items should be entered.
+     *                            profile items should be entered
      *
      * @return void
      */
@@ -179,7 +179,7 @@ class UsersUiListener implements EventSubscriberInterface
      *
      * @param GenericEvent $event The event that triggered this function call, including the id of the user for which
      *                            profile data was entered, and a collection in which to store the validation object
-     *                            created by this function.
+     *                            created by this function
      *
      * @return void
      */
@@ -229,7 +229,7 @@ class UsersUiListener implements EventSubscriberInterface
      * array dynadata An array containing the profile items to store for the user.
      *
      * @param GenericEvent $event The event that triggered this function call, containing the id of the user for which
-     *                            profile information should be stored.
+     *                            profile information should be stored
      *
      * @return void
      */

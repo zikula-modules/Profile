@@ -30,9 +30,9 @@ class UserApi extends \Zikula_AbstractApi
      * int    numitems Number of records to retrieve; optional; default is to return all items.
      * string index    The field to use as the array index for the returned items; one of 'prop_id', 'prop_label', or 'prop_attribute_name'; optional; default = 'prop_label'.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array|bool Array of items, or false on failure.
+     * @return array|bool Array of items, or false on failure
      */
     public function getall($args)
     {
@@ -80,11 +80,11 @@ class UserApi extends \Zikula_AbstractApi
      * string  proplabel     Label of the property to get; optional if propid or propattribute provided; ignored if propid provided.
      * string  propattribute Attribute name of the property to get; optional if propid or proplabel provided; ignored if propid or proplabel provided.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
-     * @return array|bool Item array, or false on failure.
+     * @return array|bool Item array, or false on failure
      */
     public function get($args)
     {
@@ -141,9 +141,9 @@ class UserApi extends \Zikula_AbstractApi
      *                      optional; defaults to -1, which will not match any user id (i.e., all owner-only fields are not returned unless the current user
      *                      has ADMIN access).
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array|bool Array of items, or false on failure.
+     * @return array|bool Array of items, or false on failure
      */
     public function getallactive($args)
     {
@@ -264,7 +264,7 @@ class UserApi extends \Zikula_AbstractApi
     /**
      * Utility function to count the number of items held by this module.
      *
-     * @return int Number of items held by this module.
+     * @return int Number of items held by this module
      */
     public function countitems()
     {
@@ -276,7 +276,7 @@ class UserApi extends \Zikula_AbstractApi
     /**
      * Utility function to get the weight limits.
      *
-     * @return array|bool Array of weight limits (min and max), or false on failure.
+     * @return array|bool Array of weight limits (min and max), or false on failure
      */
     public function getweightlimits()
     {
@@ -296,11 +296,11 @@ class UserApi extends \Zikula_AbstractApi
      * integer uid      The user id of the user for which the data should be saved; required.
      * array   dynadata The data for the user to be saved, indexed by prop_attribute_name; required.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
-     * @return bool True on success; otherwise false.
+     * @return bool True on success; otherwise false
      */
     public function savedata($args)
     {
@@ -349,9 +349,9 @@ class UserApi extends \Zikula_AbstractApi
      * Parses and reformats a date for user entry validation.
      *
      * @param string &$dateString The entered date string to be parsed; NOTE: passed by reference, the value will be changed to a date reformatted with
-     *                            the "%d.%m.%Y" date format string; required.
+     *                            the "%d.%m.%Y" date format string; required
      *
-     * @return string The parsed date string, as returned by {@link DateUtil::parseUIDate()}.
+     * @return string The parsed date string, as returned by {@link DateUtil::parseUIDate()}
      */
     protected function parseDate(&$dateString)
     {
@@ -375,9 +375,9 @@ class UserApi extends \Zikula_AbstractApi
      * -------------------------------------
      * array dynadata The array of user data, index by prop_attribute_name, to check; required, but may be passed in a GET, POST, REQUEST, or SESSION variable.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array|bool False on success (no errors); otherwise an array in the form ['result' => true, 'fields' => array of field names].
+     * @return array|bool False on success (no errors); otherwise an array in the form ['result' => true, 'fields' => array of field names]
      */
     public function checkrequired($args)
     {
@@ -431,9 +431,9 @@ class UserApi extends \Zikula_AbstractApi
     /**
      * Checks if a value is empty, however if the $value is 0, it is not considered empty.
      *
-     * @param mixed $value The value to check for empty.
+     * @param mixed $value The value to check for empty
      *
-     * @return bool True if the value is empty (according to the PHP function) and is not 0; otherwise false.
+     * @return bool True if the value is empty (according to the PHP function) and is not 0; otherwise false
      */
     protected function profileIsEmptyValue($value)
     {
@@ -459,11 +459,11 @@ class UserApi extends \Zikula_AbstractApi
      * numeric uid      The user id of the user for which the data is to be inserted.
      * array   dynadata The user data to insert, indexed by prop_attribute_name; required, however can be passed by a GET, POST, REQUEST, COOKIE, or SESSION variable.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @return array The dynadata array as an array element in the '__ATTRIBUTES__' index of a new array, merged with existing user
      *               attributes if the uid is supplied and is a valid user, unchanged (not merged) if the uid is not supplied or does
-     *               not refer to an existing user, or an empty array if the dynadata is not supplied or is empty.
+     *               not refer to an existing user, or an empty array if the dynadata is not supplied or is empty
      */
     public function insertdyndata($args)
     {
@@ -500,9 +500,9 @@ class UserApi extends \Zikula_AbstractApi
      * -------------------------------------
      * array dynadata An array of data on which to search; required, but may be passed as a GET, POST, REQUEST, COOKIE, or SESSION variable.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array An array of uids for users who have matching attributes as specified by the dynadata array; an empty array if there are no matching users.
+     * @return array An array of uids for users who have matching attributes as specified by the dynadata array; an empty array if there are no matching users
      */
     public function searchdynadata($args)
     {

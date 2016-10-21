@@ -233,7 +233,7 @@ class AdminController extends AbstractController
      * numeric displaytype   Display type; 0 thru 7.
      * array   listoptions   If the display type is a list, then the options to display in the list.
      * string  note          Note for the item.
-     * string  fieldset      The fieldset to group the item.
+     * string  fieldset      The fieldset to group the item
      *
      * @throws AccessDeniedException on failed permission check
      *
@@ -323,7 +323,7 @@ class AdminController extends AbstractController
      * Show form to create or modify a dynamic user data item.
      *
      * @param Request $request
-     * @param int     $dudid   The id of the item to be modified.
+     * @param int     $dudid   The id of the item to be modified
      *
      * @throws AccessDeniedException on failed permission check
      *
@@ -396,7 +396,7 @@ class AdminController extends AbstractController
      * Parameters passed via GET or via POST:
      * ------------------------------------------------------------
      * int  dudid        The id of the item to be deleted.
-     * bool confirmation Confirmation that this item can be deleted.
+     * bool confirmation Confirmation that this item can be deleted
      *
      * @throws AccessDeniedException on failed permission check
      *
@@ -451,7 +451,7 @@ class AdminController extends AbstractController
      * Increase weight of a dud item in the sorted list.
      *
      * @param Request $request
-     * @param int     $dudid   The id of the item to be updated.
+     * @param int     $dudid   The id of the item to be updated
      *
      * @throws AccessDeniedException on failed permission check
      *
@@ -487,7 +487,7 @@ class AdminController extends AbstractController
      * Decrease weight of a dud item in the sorted list.
      *
      * @param Request $request
-     * @param int     $dudid   The id of the item to be updated.
+     * @param int     $dudid   The id of the item to be updated
      *
      * @throws AccessDeniedException on failed permission check
      *
@@ -529,7 +529,7 @@ class AdminController extends AbstractController
      * Process item activation request
      *
      * @param Request $request
-     * @param int     $dudid   The id of the item to be updated.
+     * @param int     $dudid   The id of the item to be updated
      *
      * @return RedirectResponse
      */
@@ -554,7 +554,7 @@ class AdminController extends AbstractController
      * Process item deactivation request
      *
      * @param Request $request
-     * @param int     $dudid   The id of the item to be updated.
+     * @param int     $dudid   The id of the item to be updated
      *
      * @return RedirectResponse
      */

@@ -25,9 +25,9 @@ class SectionApi extends \Zikula_AbstractApi
      * numeric uid      The user account id of the user for whom to return comments.
      * numeric numitems Number of comments to show.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array An array of articles.
+     * @return array An array of articles
      */
     public function news($args)
     {
@@ -67,9 +67,9 @@ class SectionApi extends \Zikula_AbstractApi
      * numeric uid      The user account id of the user for whom to return comments.
      * numeric numitems Number of comments to show.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array An array of comments.
+     * @return array An array of comments
      */
     public function ezcomments($args)
     {

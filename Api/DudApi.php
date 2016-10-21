@@ -40,12 +40,12 @@ class DudApi extends \Zikula_AbstractApi
      *                          'fieldset' => The fieldset to group the item.
      *                          'pattern' => The pattern attribute specifies a regular expression that the <input> element's value is checked against.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
-     * @return bool True on success or false on failure.
+     * @return bool True on success or false on failure
      */
     public function register($args)
     {
@@ -125,11 +125,11 @@ class DudApi extends \Zikula_AbstractApi
      * string   proplabel     Label of property to unregister; required if propid and propattribute are not specified, ignored if propid specified, must not be present if propattribute specified.
      * string   propattribute Attribute name(?) of property to unregister; required if propid and proplabel are not specified, ignored if propid or proplable specified.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
-     * @return bool True on success or false on failure.
+     * @return bool True on success or false on failure
      */
     public function unregister($args)
     {
@@ -184,9 +184,9 @@ class DudApi extends \Zikula_AbstractApi
      * array    newitem   Array with the new DUD information.
      * string   uservalue Current user value.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return string Updated user value if there were id changes in the listoptions.
+     * @return string Updated user value if there were id changes in the listoptions
      */
     public function updatedata($args)
     {
@@ -255,9 +255,9 @@ class DudApi extends \Zikula_AbstractApi
      * string field Serialized 'prop_validation' field of the DUD.
      * array  item  Array with the DUD information.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array Indexed id => label for the DUD field.
+     * @return array Indexed id => label for the DUD field
      */
     public function getoptions($args)
     {
