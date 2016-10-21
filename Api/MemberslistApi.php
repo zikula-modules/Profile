@@ -25,24 +25,24 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Get or count users that match the given criteria.
      *
-     * @param bool   $countOnly  True to only return a count, if false the matching uids are returned in an array.
+     * @param bool   $countOnly  True to only return a count, if false the matching uids are returned in an array
      * @param mixed  $searchBy   Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
      *                           available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
      *                           an array indexed by property id containing values for each property on which to select, or a string containing the name of
-     *                           a property on which to select.
+     *                           a property on which to select
      * @param string $letter     If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
      *                           selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
-     *                           is a string containing the name of a property then the string on which to match the begining of the value for that property.
-     * @param string $letter     Letter to filter by.
-     * @param string $sortBy     A comma-separated list of fields on which the list of members should be sorted.
-     * @param string $sortOrder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
-     * @param int    $startNum   Start number for recordset; ignored if $countOnly is true.
-     * @param int    $numItems   Number of items to return; ignored if $countOnly is true.
-     * @param bool   $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true.
+     *                           is a string containing the name of a property then the string on which to match the begining of the value for that property
+     * @param string $letter     Letter to filter by
+     * @param string $sortBy     A comma-separated list of fields on which the list of members should be sorted
+     * @param string $sortOrder  One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order
+     * @param int    $startNum   Start number for recordset; ignored if $countOnly is true
+     * @param int    $numItems   Number of items to return; ignored if $countOnly is true
+     * @param bool   $returnUids Return an array of uids if true, otherwise return an array of user records; ignored if $countOnly is true
      *
      * @throws \InvalidArgumentException|\RuntimeException
      *
-     * @return array|int Matching user ids or a count of the matching integers.
+     * @return array|int Matching user ids or a count of the matching integers
      */
     protected function getOrCountAll($countOnly, $searchBy, $letter, $sortBy, $sortOrder, $startNum = -1, $numItems = -1, $returnUids = false)
     {
@@ -202,9 +202,9 @@ class MemberslistApi extends \Zikula_AbstractApi
      * numeric numitems   Number of items to return.
      * boolean returnUids If true then a simple array containing only uids is returned, if false then an array containing full user records is returned.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array Matching user ids.
+     * @return array Matching user ids
      */
     public function getall($args)
     {
@@ -260,9 +260,9 @@ class MemberslistApi extends \Zikula_AbstractApi
      *                              selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
      *                              is a string containing the name of a property then the string on which to match the begining of the value for that property.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return array Count of matching users.
+     * @return array Count of matching users
      */
     public function countitems($args)
     {
@@ -287,7 +287,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Counts the number of users online.
      *
-     * @return int Count of registered users online.
+     * @return int Count of registered users online
      */
     public function getregisteredonline()
     {
@@ -310,7 +310,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Get the latest registered user.
      *
-     * @return int Latest registered user id.
+     * @return int Latest registered user id
      */
     public function getlatestuser()
     {
@@ -339,9 +339,9 @@ class MemberslistApi extends \Zikula_AbstractApi
      * -------------------------------------
      * numeric userid The uid of the user for whom a determination should be made; required.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
-     * @return bool True if the specified user is online; false otherwise.
+     * @return bool True if the specified user is online; false otherwise
      */
     public function isonline($args)
     {
@@ -373,7 +373,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Return registered users online.
      *
-     * @return array Registered users who are online.
+     * @return array Registered users who are online
      */
     public function whosonline()
     {
@@ -405,7 +405,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Returns all users online.
      *
-     * @return array All online visitors (including anonymous).
+     * @return array All online visitors (including anonymous)
      */
     public function getallonline()
     {
@@ -450,7 +450,7 @@ class MemberslistApi extends \Zikula_AbstractApi
     /**
      * Find out which messages module is installed.
      *
-     * @return string Name of the messaging module found, empty if none.
+     * @return string Name of the messaging module found, empty if none
      */
     public function getmessagingmodule()
     {

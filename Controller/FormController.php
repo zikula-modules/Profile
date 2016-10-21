@@ -33,9 +33,9 @@ class FormController extends AbstractController
      * integer userid   The user id of the user for which the form section is being rendered; optional; defaults to 1, which will result in the use of
      *                      default values from the anonymous user.
      * array   dynadata The dynamic user data with which to populate the form section; retrieved from a GET, POST,
-     *                      REQUEST, COOKIE, or SESSION variable.
+     *                      REQUEST, COOKIE, or SESSION variable
      *
-     * @return string The rendered template output.
+     * @return string The rendered template output
      */
     public function editAction(Request $request)
     {
@@ -77,7 +77,7 @@ class FormController extends AbstractController
      *
      * @param Request $request
      *
-     * @return string The rendered template output.
+     * @return string The rendered template output
      */
     public function searchAction(Request $request)
     {
@@ -123,9 +123,9 @@ class FormController extends AbstractController
      *
      * Parameters passed via the $args array:
      * --------------------------------------
-     * array userinfo The dynadata with which to populate the data table.
+     * array userinfo The dynadata with which to populate the data table
      *
-     * @return string The rendered template output.
+     * @return string The rendered template output
      */
     public function displayAction(Request $request)
     {

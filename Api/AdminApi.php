@@ -29,7 +29,7 @@ class AdminApi extends \Zikula_AbstractApi
      * string attribute_name The attribute name of the item to be created.
      * string dtype          The DUD type of the item to be created.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
@@ -105,12 +105,12 @@ class AdminApi extends \Zikula_AbstractApi
      * int    dudid The id of the item to be updated.
      * string label The name of the item to be updated.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
-     * @return bool True on success, false on failure.
+     * @return bool True on success, false on failure
      */
     public function update($args)
     {
@@ -206,7 +206,7 @@ class AdminApi extends \Zikula_AbstractApi
      * -------------------------------------
      * int dudid ID of the item to delete.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws AccessDeniedException     on failed permission check
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
@@ -257,7 +257,7 @@ class AdminApi extends \Zikula_AbstractApi
      * -------------------------------------
      * int dudid The id of the item to be activated.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
@@ -286,13 +286,13 @@ class AdminApi extends \Zikula_AbstractApi
      * -------------------------------------
      * int dudid The id of the item to be deactivated.
      *
-     * @param array $args All parameters passed to this function.
+     * @param array $args All parameters passed to this function
      *
      * @throws \InvalidArgumentException if arguments are empty or not set as expected
      *
-     * @return bool true on success, false on failure.
+     * @return bool true on success, false on failure
      *
-     * @todo remove weight; can be got from get API.
+     * @todo remove weight; can be got from get API
      */
     public function deactivate($args)
     {

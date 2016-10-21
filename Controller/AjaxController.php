@@ -85,7 +85,7 @@ class AjaxController extends AbstractController
      * Parameters passed in via POST, or via GET:
      * ------------------------------------------
      * numeric dudid     Id of the property to update.
-     * boolean oldstatus True to activate or false to deactivate the item.
+     * boolean oldstatus True to activate or false to deactivate the item
      *
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      *
@@ -123,7 +123,7 @@ class AjaxController extends AbstractController
      * ------------------------------------------
      * numeric uid  Id of the user to query.
      * string  name Name of the section to retrieve.
-     * array   args Optional arguments to the API.
+     * array   args Optional arguments to the API
      *
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      *
