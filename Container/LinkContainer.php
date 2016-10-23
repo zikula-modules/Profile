@@ -13,7 +13,7 @@ namespace Zikula\ProfileModule\Container;
 
 use ModUtil;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\ExtensionApi;
 use Zikula\ExtensionsModule\Api\VariableApi;
