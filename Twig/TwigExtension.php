@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use System;
 use Twig_Environment;
 use UserUtil;
-use Zikula\Common\Translator\Translator;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\UsersModule\Constant as UsersConstant;
@@ -32,7 +32,7 @@ use Zikula\UsersModule\Constant as UsersConstant;
 class TwigExtension extends \Twig_Extension
 {
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -61,13 +61,13 @@ class TwigExtension extends \Twig_Extension
     /**
      * TwigExtension constructor.
      *
-     * @param Translator               $translator      Translator service instance
+     * @param TranslatorInterface      $translator      TranslatorInterface service instance
      * @param RequestStack             $requestStack    RequestStack service instance
      * @param EventDispatcherInterface $eventDispatcher EventDispatcher service instance
      * @param Twig_Environment         $twig            Twig_Environment service instance
      * @param VariableApi              $variableApi     VariableApi service instance
      */
-    public function __construct(Translator $translator, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, Twig_Environment $twig, VariableApi $variableApi)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, Twig_Environment $twig, VariableApi $variableApi)
     {
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();

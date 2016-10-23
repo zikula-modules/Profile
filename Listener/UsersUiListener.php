@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Twig_Environment;
 use UserUtil;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
-use Zikula\Common\Translator\Translator;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 
 /**
@@ -37,7 +37,7 @@ class UsersUiListener implements EventSubscriberInterface
     private $kernel;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -63,12 +63,12 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param KernelInterface  $kernel       KernelInterface service instance
-     * @param Translator       $translator   Translator service instance
-     * @param RequestStack     $requestStack RequestStack service instance
-     * @param Twig_Environment $twig         Twig_Environment service instance
+     * @param KernelInterface     $kernel       KernelInterface service instance
+     * @param TranslatorInterface $translator   TranslatorInterface service instance
+     * @param RequestStack        $requestStack RequestStack service instance
+     * @param Twig_Environment    $twig         Twig_Environment service instance
      */
-    public function __construct(KernelInterface $kernel, Translator $translator, RequestStack $requestStack, Twig_Environment $twig)
+    public function __construct(KernelInterface $kernel, TranslatorInterface $translator, RequestStack $requestStack, Twig_Environment $twig)
     {
         $this->kernel = $kernel;
         $this->translator = $translator;
