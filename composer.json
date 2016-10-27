@@ -22,6 +22,7 @@
             "core-compatibility": ">=1.4.3",
             "displayname": "Profile",
             "url": "profile",
+            "oldnames": ["Profile"],
             "capabilities": {
                 "admin": {"route": "zikulaprofilemodule_config_config"},
                 "user": {"route": "zikulaprofilemodule_profile_display"},
