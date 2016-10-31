@@ -155,9 +155,9 @@ class UsersUiListener implements EventSubscriberInterface
 
         // check if there's a user to edit
         // or uses uid=1 to pull the default values from the anonymous user
-        $userid = $event->hasArgument('id') ? $event->getArgument('id') : null;
-        if (!isset($userid)) {
-            $userid = 1;
+        $userId = $event->hasArgument('id') ? $event->getArgument('id') : null;
+        if (!isset($userId)) {
+            $userId = 1;
         }
 
         // Get the dynamic data that might have been posted
@@ -182,7 +182,7 @@ class UsersUiListener implements EventSubscriberInterface
             'dudItems'  => $items,
             'dudErrors' => $errorFields,
             'fieldSets' => $fieldSets,
-            'userid'    => $userid,
+            'userId'    => $userId,
         ]);
     }
 
