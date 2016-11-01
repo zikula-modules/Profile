@@ -52,7 +52,7 @@ class MemberslistApi extends \Zikula_AbstractApi
             } elseif ($startNum <= 0) {
                 $startNum = -1;
             }
-            if (!isset($numItems) || !is_numeric($numItems) || $numItems < 1) {
+            if (!isset($numItems) || !is_numeric($numItems) || $numItems < -1) {
                 throw new \InvalidArgumentException($this->__f('Invalid %s.', ['numItems']));
             }
         }
