@@ -43,7 +43,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("")
+     * @Route("/")
      *
      * The default entry point.
      *

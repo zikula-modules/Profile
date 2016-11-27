@@ -6,7 +6,7 @@
     {% endif %}
     <label for="prop_{{ attributeName|e('html_attr') }}" class="col-sm-3 control-label{% if required %} required{% endif %}">{{ propLabelText }}</label>
     <div class="col-sm-9">
-        {{ 'lib/legacy/viewplugins/function.jquery_datepicker.php|php('include_once') }}
+        {{ 'lib/legacy/viewplugins/function.jquery_datepicker.php'|php('include_once') }}
         {% set pickerArgs = { defaultdate: valueDateTime, displayelement: 'display_' ~ attributeName, displayformat_datetime: formats.dt, displayformat_javascript: formats.js, object: fieldObject, displayelement_class: 'form-control', readonly: false, valuestorageelement: attributeName, changeMonth: 'true', changeYear: 'true' } %}
         {{ pickerArgs|php('smarty_function_jquery_datepicker') }}
         {% if note != '' %}

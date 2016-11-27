@@ -52,13 +52,13 @@ class AdminApi extends \Zikula_AbstractApi
         // Check if the label already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
         if ($item) {
-            throw new \Exception($this->__('Error! There is already an item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+            throw new \Exception($this->__f('Error! There is already an item with the label \'%s\'.', ['%s' => \DataUtil::formatForDisplay($args['label'])]));
         }
 
         // Check if the attribute name already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
-            throw new \Exception($this->__('Error! There is already an item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
+            throw new \Exception($this->__f('Error! There is already an item with the attribute name \'%s\'.', ['%s' => \DataUtil::formatForDisplay($args['attribute_name'])]));
         }
 
         // Determine the new weight
@@ -140,7 +140,7 @@ class AdminApi extends \Zikula_AbstractApi
         if ($args['label'] != $item['prop_label']) {
             $vitem = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
             if ($vitem) {
-                throw new \Exception($this->__('Error! There is already an item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+                throw new \Exception($this->__f('Error! There is already an item with the label \'%s\'.', ['%s' => \DataUtil::formatForDisplay($args['label'])]));
             }
         }
 

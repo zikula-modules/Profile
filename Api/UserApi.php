@@ -383,7 +383,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         // Argument check
         if (!isset($args['dynadata'])) {
-            throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['checkrequired']));
+            throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['%s' => 'checkrequired']));
         }
 
         // The API function is called.
@@ -399,24 +399,24 @@ class UserApi extends \Zikula_AbstractApi
                 } elseif (!isset($args['dynadata'][$item['prop_attribute_name']])) {
                     $error['result'] = true;
                     $error['fields'][] = $item['prop_attribute_name'];
-                    $error['translatedFields'][] = $this->__($item['prop_label']);
+                    $error['translatedFields'][] = $this->__(/** @Ignore */$item['prop_label']);
                 } elseif (is_array($args['dynadata'][$item['prop_attribute_name']])) {
                     while (list(, $value) = each($args['dynadata'][$item['prop_attribute_name']])) {
                         if ($this->profileIsEmptyValue($value)) {
                             $error['result'] = true;
                             $error['fields'][] = $item['prop_attribute_name'];
-                            $error['translatedFields'][] = $this->__($item['prop_label']);
+                            $error['translatedFields'][] = $this->__(/** @Ignore */$item['prop_label']);
                         }
                     }
                 } elseif ($item['prop_displaytype'] == 5 && $this->parseDate($args['dynadata'][$item['prop_attribute_name']]) == null) {
                     // not empty, check if date is correct
                     $error['result'] = true;
                     $error['fields'][] = $item['prop_attribute_name'];
-                    $error['translatedFields'][] = $this->__($item['prop_label']);
+                    $error['translatedFields'][] = $this->__(/** @Ignore */$item['prop_label']);
                 } elseif ($this->profileIsEmptyValue($args['dynadata'][$item['prop_attribute_name']])) {
                     $error['result'] = true;
                     $error['fields'][] = $item['prop_attribute_name'];
-                    $error['translatedFields'][] = $this->__($item['prop_label']);
+                    $error['translatedFields'][] = $this->__(/** @Ignore */$item['prop_label']);
                 }
             }
         }
@@ -468,7 +468,7 @@ class UserApi extends \Zikula_AbstractApi
     public function insertdyndata($args)
     {
         if (!isset($args['dynadata'])) {
-            throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['checkrequired']));
+            throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['%s' => 'checkrequired']));
         }
         $dynadata = $args['dynadata'];
         // Validate if there's no dynadata
@@ -508,7 +508,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         $uids = [];
         if (!isset($args['dynadata'])) {
-            throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['checkrequired']));
+            throw new \Exception($this->__f('Missing dynamic data array in call to %s', ['%s' => 'checkrequired']));
         }
         $dynadata = $args['dynadata'];
 

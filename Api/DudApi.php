@@ -64,7 +64,7 @@ class DudApi extends \Zikula_AbstractApi
         }
 
         if (!ModUtil::getIdFromName($args['modname'])) {
-            throw new \Exception($this->__f('Error! Could not find the specified module (%s).', DataUtil::formatForDisplay($args['modname'])));
+            throw new \Exception($this->__f('Error! Could not find the specified module (%s).', ['%s' => DataUtil::formatForDisplay($args['modname'])]));
         }
 
         // parses the DUD type
@@ -85,13 +85,13 @@ class DudApi extends \Zikula_AbstractApi
         // Check if the label already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['proplabel' => $args['label']]);
         if ($item) {
-            throw new \Exception($this->__('Error! There is already an item with the label \'%s\'.', DataUtil::formatForDisplay($args['label'])));
+            throw new \Exception($this->__f('Error! There is already an item with the label \'%s\'.', ['%s' => DataUtil::formatForDisplay($args['label'])]));
         }
 
         // Check if the attribute name already exists
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propattribute' => $args['attribute_name']]);
         if ($item) {
-            throw new \Exception($this->__('Error! There is already an item with the attribute name \'%s\'.', DataUtil::formatForDisplay($args['attribute_name'])));
+            throw new \Exception($this->__f('Error! There is already an item with the attribute name \'%s\'.', ['%s' => DataUtil::formatForDisplay($args['attribute_name'])]));
         }
 
         // Determine the new weight
@@ -284,7 +284,7 @@ class DudApi extends \Zikula_AbstractApi
                 foreach ($list as $id => $value) {
                     $value = explode('@', $value);
                     $id = isset($value[1]) ? $value[1] : $id;
-                    $options[$id] = !empty($value[0]) ? $this->__($value[0]) : '';
+                    $options[$id] = !empty($value[0]) ? $this->__(/** @Ignore */$value[0]) : '';
                 }
                 break;
             case 4:
@@ -295,7 +295,7 @@ class DudApi extends \Zikula_AbstractApi
                 foreach ($list as $id => $value) {
                     $value = explode('@', $value);
                     $id = isset($value[1]) ? $value[1] : $id;
-                    $options[$id] = !empty($value[0]) ? $this->__($value[0]) : '';
+                    $options[$id] = !empty($value[0]) ? $this->__(/** @Ignore */$value[0]) : '';
                 }
                 break;
             case 5:
@@ -311,7 +311,7 @@ class DudApi extends \Zikula_AbstractApi
                 $combos = array_filter($combos);
                 foreach ($combos as $combo) {
                     list($id, $value) = explode(',', $combo);
-                    $options[$id] = !empty($value) ? $this->__($value) : '';
+                    $options[$id] = !empty($value) ? $this->__(/** @Ignore */$value) : '';
                 }
                 break;
         }
