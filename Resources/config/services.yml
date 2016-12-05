@@ -1,0 +1,24 @@
+parameters:
+    zikula_profile_module.container.link_container.class: Zikula\ProfileModule\Container\LinkContainer
+    twig.extension.zikula_profile_module.class: Zikula\ProfileModule\Twig\TwigExtension
+    zikula_profile_module.event_listener.class: Zikula\ProfileModule\Listener\UsersUiListener
+
+services:
+    zikula_profile_module.container.link_container
+        class: %zikula_profile_module.container.link_container.class%
+        arguments: ["@translator.default", "@jms_i18n_routing.router", "@zikula_permissions_module.api.permission", "@zikula_extensions_module.api.extension", "@zikula_extensions_module.api.variable", "@zikula_users_module.current_user", "@zikula_users_module.container.link_container"]
+        tags:
+            - { name: zikula.link_container }
+
+    twig.extension.zikula_profile_module
+        class: %twig.extension.zikula_profile_module.class%
+        public: false
+        arguments: ["@translator.default", "@request_stack", "@event_dispatcher", "@twig", "@zikula_extensions_module.api.variable"]
+        tags:
+            - { name: twig.extension }
+
+    zikula_profile_module.event_listener
+        class: %zikula_profile_module.event_listener.class%
+        arguments: ["@kernel", "@translator.default", "@request_stack", "@twig"]
+        tags:
+            - { name: kernel.event_subscriber }
