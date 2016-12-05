@@ -459,9 +459,9 @@ class TwigExtension extends \Twig_Extension
 
         // assign the default values for the control
         $templateParameters = [
-            'class'     => $class,
-            'fieldName' => $fieldName,
-            'fieldObject', $fieldObject,
+            'class'         => $class,
+            'fieldName'     => $fieldName,
+            'fieldObject'   => $fieldObject,
             'value'         => $userValue,
             'item'          => $item,
             'attributeName' => $item['prop_attribute_name'],

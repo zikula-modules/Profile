@@ -267,7 +267,13 @@ class UsersUiListener implements EventSubscriberInterface
             $user = $event->getSubject();
             $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
             foreach ($dynadata as $dudName => $dudItem) {
-                UserUtil::setVar($dudName, $dudItem, $user['uid']);
+                if (is_array($dudItem)) {
+                    foreach ($dudItem as $dudSubName => $dudSubItem) {
+                        UserUtil::setVar($dudSubName, $dudSubItem, $user['uid']);
+                    }
+                } else {
+                    UserUtil::setVar($dudName, $dudItem, $user['uid']);
+                }
             }
         }
     }
