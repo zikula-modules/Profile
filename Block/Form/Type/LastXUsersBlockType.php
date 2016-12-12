@@ -38,7 +38,7 @@ class LastXUsersBlockType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'zikulaprofilemodule_lastxusersblock';
     }
