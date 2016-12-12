@@ -692,14 +692,4 @@ class TwigExtension extends \Twig_Extension
     {
         return ModUtil::url($moduleName, 'user', 'index');
     }
-
-    /**
-     * Returns internal name of this extension.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'zikulaprofilemodule_twigextension';
-    }
 }
