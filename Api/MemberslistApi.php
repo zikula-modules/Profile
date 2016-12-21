@@ -328,7 +328,6 @@ class MemberslistApi extends \Zikula_AbstractApi
         }
 
         throw new \Exception($this->__('Error! Could not load data.'));
-
         return false;
     }
 
