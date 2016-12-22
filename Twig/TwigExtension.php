@@ -573,7 +573,7 @@ class TwigExtension extends \Twig_Extension
 
                 $options = [];
                 if ($item['prop_attribute_name'] == 'country' || substr($item['prop_attribute_name'], -8) == '_country') {
-                    $countries = ZLanguage::countryMap();
+                    $countries = \ZLanguage::countryMap();
                     asort($countries);
                     $options = $countries;
                 } else {
