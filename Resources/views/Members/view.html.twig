@@ -93,7 +93,7 @@
                     {% endif %}
                 </td>
                 {% if dudArray.realname|default %}
-                    <td headers="hRealName">{{ user.attributes.realname|default('&nbsp;') }}</td>
+                    <td headers="hRealName">{{ user.attributes.realname|default('') }}</td>
                 {% endif %}
                 {% if messageModule|default %}
                     <td headers="hMessages"><a href="{{ path(messageModule|lower ~ '_user_newpm', { uid: user.uid }) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
