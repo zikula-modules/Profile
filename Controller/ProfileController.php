@@ -114,7 +114,7 @@ class ProfileController extends AbstractController
         if (!empty($page)) {
             try {
                 return $this->twig->render('@ZikulaProfileModule/Profile/display_'.$page.'.html.twig', $templateParameters);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // template does not exist
             }
 

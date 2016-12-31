@@ -83,7 +83,7 @@ class UserController extends AbstractController
     {
         @trigger_error('The zikulaprofilemodule_user_modify route is deprecated. please use zikulaprofilemodule_profile_edit instead.', E_USER_DEPRECATED);
 
-        return $this->redirectToRoute('zikulaprofilemodule_profile_edit');
+        return $this->redirectToRoute('zikulaprofilemodule_profile_edit', ['uid' => $uid]);
     }
 
     /**
