@@ -36,19 +36,19 @@ class ConfigType extends AbstractType
                 'label'      => $translator->__('Users per page in \'Registered users list\''),
                 'empty_data' => 20,
                 'scale'      => 0,
-                'max_length' => 3,
+                'attr'       => ['max_length' => 3],
             ])
             ->add('onlinemembersitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
                 'label'      => $translator->__('Users per page in \'Users currently on-line\' page'),
                 'empty_data' => 20,
                 'scale'      => 0,
-                'max_length' => 3,
+                'attr'       => ['max_length' => 3],
             ])
             ->add('recentmembersitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
                 'label'      => $translator->__('Users per page in \'Recent registrations\' page'),
                 'empty_data' => 20,
                 'scale'      => 0,
-                'max_length' => 3,
+                'attr'       => ['max_length' => 3],
             ])
             ->add('filterunverified', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
                 'label'      => $translator->__('Filter unverified users from \'Registered users list\''),
