@@ -68,8 +68,12 @@ class UsersUiListener implements EventSubscriberInterface
      * @param RequestStack        $requestStack RequestStack service instance
      * @param Twig_Environment    $twig         Twig_Environment service instance
      */
-    public function __construct(ZikulaHttpKernelInterface $kernel, TranslatorInterface $translator, RequestStack $requestStack, Twig_Environment $twig)
-    {
+    public function __construct(
+        ZikulaHttpKernelInterface $kernel,
+        TranslatorInterface $translator,
+        RequestStack $requestStack,
+        Twig_Environment $twig
+    ) {
         $this->kernel = $kernel;
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();

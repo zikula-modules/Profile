@@ -387,12 +387,12 @@ class TwigExtension extends \Twig_Extension
      * @param string      $propLabel     Property label to display (optional overrides the preformated dud item $item)
      * @param string      $propAttribute Property attribute to display
      * @param string      $error         Property error message
-     * @param bool|string $fieldName     Name of the array of elements that comprise the fields; defaults to "dynadata[example]";
+     * @param bool|string $fieldName     Name of the array of elements that comprise the fields; defaults to "dynadata";
      *                                   set to FALSE for fields without an array
      *
      * @return string The rendered field; empty string if an error occured
      */
-    public function dudItemModify($item, $userId = 0, $class = '', $propLabel = '', $propAttribute = '', $error = '', $fieldName = 'dynadata[example]')
+    public function dudItemModify($item, $userId = 0, $class = '', $propLabel = '', $propAttribute = '', $error = '', $fieldName = 'dynadata')
     {
         if (empty($item)) {
             if (isset($propLabel)) {
