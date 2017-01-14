@@ -29,11 +29,12 @@ use Zikula\Core\Event\GenericEvent;
 class ProfileController extends AbstractController
 {
     /**
-     * @Route("/display")
+     * @Route("/display/{uid}", requirements={"uid" = "\d+"})
      *
      * Display a profile.
      *
      * @param Request $request
+     * @param integer $uid
      *
      * Parameters passed via GET:
      * --------------------------------------------------
@@ -46,14 +47,13 @@ class ProfileController extends AbstractController
      *
      * @return RedirectResponse|string The rendered template output
      */
-    public function displayAction(Request $request)
+    public function displayAction(Request $request, $uid = null)
     {
         // Security check
         if (!$this->hasPermission('ZikulaProfileModule::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         // Get parameters from whatever input we need.
-        $uid = (int) $request->query->get('uid', null);
         $uname = $request->query->get('uname', null);
         $page = $request->query->get('page', null);
 
@@ -218,7 +218,7 @@ class ProfileController extends AbstractController
             'dynadata' => $dynaData,
         ];
         $event = new GenericEvent($user, $event_args);
-        $event = $this->getDispatcher()->dispatch('module.profile.update', $event);
+        $this->get('event_dispatcher')->dispatch('module.profile.update', $event);
 
         // Get parameters from whatever input we need.
         $uname = $request->request->get('uname', null);

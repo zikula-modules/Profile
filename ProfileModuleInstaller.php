@@ -163,7 +163,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             'note'        => '',
             'pattern'     => null,
         ]);
-        $record['prop_attribute_name'] = 'realname';
+        $record['prop_attribute_name'] = ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME;
         $prop = new PropertyEntity();
         $prop->merge($record);
         $this->entityManager->persist($prop);
