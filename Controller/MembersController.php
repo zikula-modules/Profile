@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserUtil;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\SettingsModule\SettingsConstant;
 
 /**
  * Class MembersController.
@@ -135,7 +136,7 @@ class MembersController extends AbstractController
             'sortby'      => $sortby,
             'sortorder'   => $sortorder,
             // check which messaging module is available and add the necessary info
-            'messageModule' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule'),
+            'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
             'pager'         => [
                 'amountOfItems' => $amountOfUsers,
                 'itemsPerPage'  => $itemsPerPage,
@@ -196,7 +197,7 @@ class MembersController extends AbstractController
         $templateParameters['users'] = $users;
 
         // check which messaging module is available and add the necessary info
-        $templateParameters['messageModule'] = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule');
+        $templateParameters['messageModule'] = $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '');
 
         // get all active profile fields
         $activeDuds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
@@ -237,7 +238,7 @@ class MembersController extends AbstractController
         return [
             'users' => $users,
             // check which messaging module is available and add the necessary info
-            'messageModule' => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule'),
+            'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
             'dudArray'      => $dudArray,
         ];
     }

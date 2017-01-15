@@ -3,13 +3,11 @@
     {% for user in usersOnline %}
     <li>
         {{ user.uname|profileLinkByUserName('', '', maxLength) }}
-        {% if messageModule %}
-            {% set messagesLink = path(messageModule ~ '_user_inbox') %}
-            {% if user.uid == currentUserId %}
-                (<a href="{{ messagesLink|e('html_attr') }}" title="{{ __('unread')|e('html_attr') }}">{{ messages.unread|default }}</a> | <a href="{{ messagesLink|e('html_attr') }}" title="{{ __('total')|e('html_attr') }}">{{ messages.totalin|default }}</a>)
-            {% else %}
-                <a href="{{ path(messageModule ~ '_user_newpm', { uid: user.uid }) }}" title="{{ __f('Send private message to %s', { '%s': user.uname })|e('html_attr') }}"><i class="fa fa-envelope-o"></i></a>
-            {% endif %}
+        {% if user.uid == currentUserId %}
+            {% set title = messageCount(user.uid, true) ~ __('unread') ~ "|" ~ messageCount(user.uid) ~ __('total') %}
+            ({{ messageInboxLink(user.uid, false, title) }})
+        {% else %}
+            <a href="{{ user.uid|messageSendLink(true) }}" title="{{ __f('Send private message to %s', { '%s': user.uname })|e('html_attr') }}"><i class="fa fa-envelope-o"></i></a>
         {% endif %}
     </li>
     {% endfor %}

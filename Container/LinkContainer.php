@@ -19,6 +19,7 @@ use Zikula\ExtensionsModule\Api\ExtensionApi;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
+use Zikula\UsersModule\Collector\MessageModuleCollector;
 use Zikula\UsersModule\Container\LinkContainer as UsersLinkContainer;
 
 class LinkContainer implements LinkContainerInterface
@@ -59,15 +60,21 @@ class LinkContainer implements LinkContainerInterface
     private $usersLinkContainer;
 
     /**
+     * @var MessageModuleCollector
+     */
+    private $messageModuleCollector;
+
+    /**
      * LinkContainer constructor.
      *
-     * @param TranslatorInterface $translator         Translator service instance
-     * @param RouterInterface     $router             RouterInterface service instance
-     * @param PermissionApi       $permissionApi      PermissionApi service instance
-     * @param ExtensionApi        $extensionApi       ExtensionApi service instance
-     * @param VariableApi         $variableApi        VariableApi service instance
-     * @param CurrentUserApi      $currentUserApi     CurrentUserApi service instance
-     * @param UsersLinkContainer  $usersLinkContainer UsersLinkContainer service instance
+     * @param TranslatorInterface $translator Translator service instance
+     * @param RouterInterface $router RouterInterface service instance
+     * @param PermissionApi $permissionApi PermissionApi service instance
+     * @param ExtensionApi $extensionApi ExtensionApi service instance
+     * @param VariableApi $variableApi VariableApi service instance
+     * @param CurrentUserApi $currentUserApi CurrentUserApi service instance
+     * @param UsersLinkContainer $usersLinkContainer UsersLinkContainer service instance
+     * @param MessageModuleCollector $messageModuleCollector
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -76,8 +83,9 @@ class LinkContainer implements LinkContainerInterface
         ExtensionApi $extensionApi,
         VariableApi $variableApi,
         CurrentUserApi $currentUserApi,
-        UsersLinkContainer $usersLinkContainer)
-    {
+        UsersLinkContainer $usersLinkContainer,
+        MessageModuleCollector $messageModuleCollector
+    ) {
         $this->translator = $translator;
         $this->router = $router;
         $this->permissionApi = $permissionApi;
@@ -85,6 +93,7 @@ class LinkContainer implements LinkContainerInterface
         $this->variableApi = $variableApi;
         $this->currentUserApi = $currentUserApi;
         $this->usersLinkContainer = $usersLinkContainer;
+        $this->messageModuleCollector = $messageModuleCollector;
     }
 
     /**
@@ -196,10 +205,10 @@ class LinkContainer implements LinkContainerInterface
                 ];
             }
 
-            $messageModule = $this->variableApi->get(VariableApi::CONFIG, 'messagemodule', '');
+            $messageModule = $this->variableApi->get(VariableApi::CONFIG, constant('Zikula\\SettingsModule\\SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE'), '');
             if ($messageModule != '' && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule.'::', '::', ACCESS_READ)) {
                 $links[] = [
-                    'url'  => ModUtil::url($messageModule, 'user', 'main'),
+                    'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
                     'text' => $this->translator->__('Messages'),
                     'icon' => 'envelope',
                 ];
