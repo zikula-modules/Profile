@@ -18,6 +18,7 @@ use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\ExtensionApi;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
+use Zikula\SettingsModule\SettingsConstant;
 use Zikula\UsersModule\Api\CurrentUserApi;
 use Zikula\UsersModule\Collector\MessageModuleCollector;
 use Zikula\UsersModule\Container\LinkContainer as UsersLinkContainer;
@@ -205,7 +206,7 @@ class LinkContainer implements LinkContainerInterface
                 ];
             }
 
-            $messageModule = $this->variableApi->get(VariableApi::CONFIG, constant('Zikula\\SettingsModule\\SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE'), '');
+            $messageModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '');
             if ($messageModule != '' && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule.'::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
@@ -250,7 +251,7 @@ class LinkContainer implements LinkContainerInterface
         $links = [];
 
         // do not show any account links if Profile is not the Profile manager
-        $profileModule = $this->variableApi->get(VariableApi::CONFIG, 'profilemodule', '');
+        $profileModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_PROFILE_MODULE, '');
         if ($profileModule != $this->getBundleName()) {
             return $links;
         }
