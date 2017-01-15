@@ -12,7 +12,6 @@ namespace Zikula\ProfileModule\Block;
 
 use ModUtil;
 use Zikula\BlocksModule\AbstractBlockHandler;
-use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\SettingsModule\SettingsConstant;
 
 /**
