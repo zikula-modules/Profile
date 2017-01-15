@@ -12,6 +12,7 @@ namespace Zikula\ProfileModule\Block;
 
 use ModUtil;
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\SettingsModule\SettingsConstant;
 
 /**
  * "Members Online" block.
@@ -43,15 +44,11 @@ class MembersOnlineBlock extends AbstractBlockHandler
             }
         }
 
-        // check which messaging module is available and add the necessary info
-        $messageModule = $currentUserApi->isLoggedIn() ? ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getmessagingmodule') : '';
-
         return $this->renderView('@ZikulaProfileModule/Block/membersOnline.html.twig', [
             'currentUserId'         => $userId,
             'usersOnline'           => $usersOnline,
             'maxLength'             => $properties['lengthmax'],
-            'messageModule'         => $messageModule,
-            'messages'              => $messageModule != '' ? ModUtil::apiFunc($messageModule, 'user', 'getmessagecount') : [],
+            'messageModule'         => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
             'amountOfOnlineMembers' => $users['numusers'],
             'amountOfOnlineGuests'  => $users['numguests'],
         ]);

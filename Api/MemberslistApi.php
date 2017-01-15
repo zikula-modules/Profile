@@ -445,19 +445,4 @@ class MemberslistApi extends \Zikula_AbstractApi
             'total'     => $amountOfGuests + $amountOfUsers,
         ];
     }
-
-    /**
-     * Find out which messages module is installed.
-     *
-     * @return string Name of the messaging module found, empty if none
-     */
-    public function getmessagingmodule()
-    {
-        $messageModule = System::getVar('messagemodule', '');
-        if ($messageModule != '' && !ModUtil::available($messageModule)) {
-            $messageModule = '';
-        }
-
-        return $messageModule;
-    }
 }
