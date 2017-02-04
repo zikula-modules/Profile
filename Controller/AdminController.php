@@ -411,6 +411,7 @@ class AdminController extends AbstractController
         $item = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'get', ['propid' => $dudid]);
         if ($item == false) {
             throw new NotFoundHttpException($this->__('Error! No such item found.'));
+
             return new Response();
         }
 
