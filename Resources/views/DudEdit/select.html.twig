@@ -4,7 +4,11 @@
         <select id="prop_{{ attributeName|e('html_attr') }}" name="{{ fieldName|e('html_attr') }}{% if selectMultiple != '' %}[]{% endif %}"{% if selectMultiple != '' %} placeholder="{{ __('Select')|e('html_attr') }}" {% endif %}{{ selectMultiple }} class="form-control" {% if required %}required="required" title="{{ __f('"%1$s: %2$s" is required. Please select an option.', { '%1$s': item.prop_fieldset, '%2$s': item.prop_label }) }}" x-moz-errormessage="{{ __f('"%1$s: %2$s" is required. Please select an option.', { '%1$s': item.prop_fieldset, '%2$s': item.prop_label })|e('html_attr') }}" oninvalid="this.setCustomValidity('{{ __('Please select an item in the list.')|e('html_attr') }}');" onchange="this.setCustomValidity('');" onblur="this.checkValidity();"{% else %}title="{{ __f('"%1$s: %2$s" is required. Please select an option.', { '%1$s': item.prop_fieldset, '%2$s': item.prop_label }) }}"{% endif %}>
             {% if selectMultiple == '' %}<option label="{{ __('Select')|e('html_attr') }}" value="">{{ __('Select') }}</option>{% endif %}
             {% for key, label in listOptions %}
-                <option value="{{ key|e('html_attr') }}"{% if key in selectedValue %} selected="selected"{% endif %}>{{ label }}</option>
+                {% if selectMultiple == '' %}
+                    <option value="{{ key|e('html_attr') }}"{% if key == selectedValue %} selected="selected"{% endif %}>{{ label }}</option>
+                {% else %}
+                    <option value="{{ key|e('html_attr') }}"{% if key in selectedValue %} selected="selected"{% endif %}>{{ label }}</option>
+                {% endif %}
             {% endfor %}
         </select>
         {% if attributeName == 'avatar' %}
