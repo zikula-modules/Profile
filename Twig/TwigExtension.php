@@ -563,9 +563,8 @@ class TwigExtension extends \Twig_Extension
 
             case 4:
                 $type = 'select';
-                if (DataUtil::is_serialized($userValue)) {
-                    $templateParameters['selectedValue'] = unserialize($userValue);
-                }
+                
+                $templateParameters['selectedValue'] = (DataUtil::is_serialized($userValue)) ? unserialize($userValue) : $userValue;
 
                 // multiple flag is the first field
                 $options = explode('@@', $item['prop_listoptions'], 2);
