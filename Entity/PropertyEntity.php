@@ -17,10 +17,7 @@ use Zikula\Core\Doctrine\EntityAccess;
  * Property entity class.
  *
  * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
- * @ORM\Table(name="user_property", indexes = {
- *     @ORM\index(name="prop_label", columns = {"label"}),
- *     @ORM\index(name="prop_attr", columns = {"attributename"})
- * })
+ * @ORM\Table(name="user_property")
  */
 class PropertyEntity extends EntityAccess
 {
@@ -31,152 +28,98 @@ class PropertyEntity extends EntityAccess
      * @ORM\Column(type="integer",name="id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $prop_id;
+    private $id;
 
     /**
-     * Label.
-     *
-     * @ORM\Column(type="string",name="label")
+     * @ORM\Column(type="string")
      */
-    private $prop_label = '';
+    private $label = '';
 
     /**
-     * Dtype.
-     *
-     * @ORM\Column(type="integer",name="dtype")
+     * @ORM\Column(type="text")
      */
-    private $prop_dtype = 0;
+    private $formType;
 
     /**
-     * Modname.
-     *
-     * @ORM\Column(type="string",length=64,name="modname")
+     * @ORM\Column(type="array")
      */
-    private $prop_modname = '';
+    private $formOptions;
 
     /**
-     * Weight.
-     *
-     * @ORM\Column(type="integer",name="weight")
+     * @ORM\Column(type="integer")
      */
-    private $prop_weight = 0;
+    private $weight = 0;
 
     /**
-     * Validation.
-     *
-     * @ORM\Column(type="text",nullable=true,name="validation")
+     * @return mixed
      */
-    private $prop_validation = null;
-
-    /**
-     * Attribute name.
-     *
-     * @ORM\Column(type="string",length=80,name="attributename")
-     */
-    private $prop_attribute_name = '';
-
-    /**
-     * @param string $attributename
-     */
-    public function setProp_attribute_name($attributename)
+    public function getId()
     {
-        $this->prop_attribute_name = $attributename;
+        return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getProp_attribute_name()
+    public function getLabel()
     {
-        return $this->prop_attribute_name;
-    }
-
-    /**
-     * @param int $dtype
-     */
-    public function setProp_dtype($dtype = 0)
-    {
-        $this->prop_dtype = $dtype;
-    }
-
-    /**
-     * @return int
-     */
-    public function getProp_dtype()
-    {
-        return $this->prop_dtype;
-    }
-
-    /**
-     * @return int
-     */
-    public function getProp_id()
-    {
-        return $this->prop_id;
+        return $this->label;
     }
 
     /**
      * @param string $label
      */
-    public function setProp_label($label)
+    public function setLabel($label)
     {
-        $this->prop_label = $label;
+        $this->label = $label;
     }
 
     /**
      * @return string
      */
-    public function getProp_label()
+    public function getFormType()
     {
-        return $this->prop_label;
+        return $this->formType;
     }
 
     /**
-     * @param string $modname
+     * @param string $formType
      */
-    public function setProp_modname($modname)
+    public function setFormType($formType)
     {
-        $this->prop_modname = $modname;
+        $this->formType = $formType;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getProp_modname()
+    public function getFormOptions()
     {
-        return $this->prop_modname;
+        return $this->formOptions;
     }
 
     /**
-     * @param string|null $validation
+     * @param array $formOptions
      */
-    public function setProp_validation($validation = null)
+    public function setFormOptions(array $formOptions)
     {
-        $this->prop_validation = $validation;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProp_validation()
-    {
-        return $this->prop_validation;
-    }
-
-    /**
-     * @param int $weight
-     */
-    public function setProp_weight($weight = 0)
-    {
-        $this->prop_weight = $weight;
+        $this->formOptions = $formOptions;
     }
 
     /**
      * @return int
      */
-    public function getProp_weight()
+    public function getWeight()
     {
-        return $this->prop_weight;
+        return $this->weight;
+    }
+
+    /**
+     * @param int $weight
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
     }
 
     /**
@@ -184,7 +127,7 @@ class PropertyEntity extends EntityAccess
      */
     public function incrementWeight()
     {
-        $this->prop_weight++;
+        $this->weight++;
     }
 
     /**
@@ -192,6 +135,6 @@ class PropertyEntity extends EntityAccess
      */
     public function decrementWeight()
     {
-        $this->prop_weight--;
+        $this->weight--;
     }
 }

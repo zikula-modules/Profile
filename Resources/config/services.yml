@@ -1,3 +1,6 @@
+parameters:
+    zikula_profile_module.property_prefix: 'zpmpp'
+
 services:
     zikula_profile_module.container.link_container:
         class: Zikula\ProfileModule\Container\LinkContainer
@@ -13,7 +16,7 @@ services:
         tags:
             - { name: zikula.link_container }
 
-    twig.extension.zikula_profile_module:
+    zikula_profile_module.twig.extension:
         class: Zikula\ProfileModule\Twig\TwigExtension
         public: false
         arguments:
@@ -35,7 +38,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    zikula.profile_module.bridge.profile_module_bridge:
+    zikula_profile_module.bridge.profile_module_bridge:
         class: Zikula\ProfileModule\Bridge\ProfileModuleBridge
         arguments:
           - "@router"
@@ -43,3 +46,11 @@ services:
           - "@zikula_users_module.user_repository"
         tags:
             - { name: zikula.profile_module, bundleName: ZikulaProfileModule }
+
+    zikula_profile_module.listener.attribute_name_translation_listener:
+        class: Zikula\ProfileModule\Listener\AttributeNameTranslationListener
+        arguments:
+          - "%locale%"
+          - "%zikula_profile_module.property_prefix%"
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

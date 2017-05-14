@@ -101,21 +101,19 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             case '2.0.0':
                 // nothing
             case '2.1.0':
+                // @todo
+                // update user_attributes table and rename attributes from profile module to include new prefix
+                $sql = "SELECT * FROM user_property";
+                $properties = $this->entityManager->getConnection()->fetchAll($sql);
+                $sql = "DROP TABLE user_property";
+                $this->entityManager->getConnection()->executeQuery($sql);
+                $this->schemaTool->create($this->entities);
+                foreach ($properties as $property) {
+                    $newProperty = $this->mergeToNewProperty($property);
+                }
+
+
         }
-//        $modVars = $this->getVars();
-//        $defaultModVars = $this->getDefaultModVars();
-//        // Remove modvars no longer in the default set.
-//        foreach ($modVars as $modVar => $value) {
-//            if (!array_key_exists($modVar, $defaultModVars)) {
-//                $this->delVar($modVar);
-//            }
-//        }
-//        // Add vars defined in the default set, but missing from the current set.
-//        foreach ($defaultModVars as $modVar => $value) {
-//            if (!array_key_exists($modVar, $modVars)) {
-//                $this->setVar($modVar, $value);
-//            }
-//        }
 
         // Update successful
         return true;
