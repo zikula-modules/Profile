@@ -67,7 +67,7 @@ class AttributeNameTranslationListener implements EventSubscriber
                     $this->translations[$this->locale][$name] = isset($property) ? /* @todo get translation here */$property->getLabel() : $name;
                 }
             }
-            $entity->setName($this->translations[$this->locale][$name]);
+            $entity->setExtra($this->translations[$this->locale][$name]);
         }
     }
 }
