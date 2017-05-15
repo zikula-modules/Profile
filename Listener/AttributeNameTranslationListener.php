@@ -14,6 +14,7 @@ namespace Zikula\ProfileModule\Listener;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Zikula\ExtensionsModule\Entity\ExtensionEntity;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\UsersModule\Entity\UserAttributeEntity;
 
@@ -63,7 +64,7 @@ class AttributeNameTranslationListener implements EventSubscriber
                 $this->translations[$this->locale][$name] = $name;
                 if (0 === strpos($name, $this->prefix)) {
                     $property = $entityManager->find(PropertyEntity::class, substr($name, strlen($this->prefix)));
-                    $this->translations[$this->locale][$name] = isset($property) ? /* @todo get translation here */$property->getProp_label() : $name;
+                    $this->translations[$this->locale][$name] = isset($property) ? /* @todo get translation here */$property->getLabel() : $name;
                 }
             }
             $entity->setName($this->translations[$this->locale][$name]);

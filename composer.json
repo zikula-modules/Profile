@@ -25,7 +25,7 @@
             "oldnames": ["Profile"],
             "capabilities": {
                 "admin": {"route": "zikulaprofilemodule_config_config"},
-                "user": {"route": "zikulaprofilemodule_profile_display"},
+                "user": {"route": "zikulaprofilemodule_profile_display"}
             },
             "securityschema": {
                 "ZikulaProfileModule::": "Module name::",

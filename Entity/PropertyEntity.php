@@ -38,17 +38,22 @@ class PropertyEntity extends EntityAccess
     /**
      * @ORM\Column(type="text")
      */
-    private $formType;
+    private $formType = '';
 
     /**
      * @ORM\Column(type="array")
      */
-    private $formOptions;
+    private $formOptions = [];
 
     /**
      * @ORM\Column(type="integer")
      */
     private $weight = 0;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active = 1;
 
     /**
      * @return mixed
@@ -136,5 +141,21 @@ class PropertyEntity extends EntityAccess
     public function decrementWeight()
     {
         $this->weight--;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 }

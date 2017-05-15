@@ -54,3 +54,7 @@ services:
           - "%zikula_profile_module.property_prefix%"
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    zikula_profile_module.helper.upgrade_helper:
+        class: Zikula\ProfileModule\Helper\UpgradeHelper
+        arguments: ['@translator.default']

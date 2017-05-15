@@ -633,7 +633,7 @@ class TwigExtension extends \Twig_Extension
                     $timestamp = DateUtil::makeTimestamp($userValue);
                 }
 
-                $templateParameters['valueDateTime'] = !empty($userValue) ? new DateTime($userValue) : null;
+                $templateParameters['valueDateTime'] = !empty($userValue) ? new \DateTime($userValue) : null;
                 $templateParameters['timestamp'] = $timestamp;
                 $templateParameters['formats'] = $formats;
                 break;

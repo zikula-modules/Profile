@@ -11,9 +11,13 @@
 namespace Zikula\ProfileModule;
 
 use EventUtil;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use System;
 use Zikula\Core\AbstractExtensionInstaller;
 use Zikula\ProfileModule\Entity\PropertyEntity;
+use Zikula\ProfileModule\Form\Type\AvatarType;
 
 /**
  * Profile module installer.
@@ -101,18 +105,37 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             case '2.0.0':
                 // nothing
             case '2.1.0':
-                // @todo
-                // update user_attributes table and rename attributes from profile module to include new prefix
+                // get old data and drop table
                 $sql = "SELECT * FROM user_property";
                 $properties = $this->entityManager->getConnection()->fetchAll($sql);
                 $sql = "DROP TABLE user_property";
                 $this->entityManager->getConnection()->executeQuery($sql);
+                // create new table & insert upgraded data
                 $this->schemaTool->create($this->entities);
+                $propertyToIdMap = [];
                 foreach ($properties as $property) {
-                    $newProperty = $this->mergeToNewProperty($property);
+                    $newProperty = $this->container->get('zikula_profile_module.helper.upgrade_helper')->mergeToNewProperty($property);
+                    $this->entityManager->persist($newProperty);
+                    $this->entityManager->flush();
+                    $propertyToIdMap[$property['attributename']] = $newProperty->getId();
                 }
-
-
+                // upgrade user attribute data to match new ids
+                $prefix = $this->container->getParameter('zikula_profile_module.property_prefix');
+                $attributes = $this->entityManager->getRepository('ZikulaUsersModule:UserAttributeEntity')->findAll();
+                $i = 0;
+                foreach ($attributes as $attribute) {
+                    if (array_key_exists($attribute->getName(), $propertyToIdMap)) {
+                        $attribute->setName($prefix . ':' . $propertyToIdMap[$attribute->getName()]);
+                        $i++;
+                    }
+                    if ($i > 50) {
+                        $this->entityManager->flush();
+                        $i = 0;
+                    }
+                }
+                $this->entityManager->flush();
+            case '3.0.0':
+                // future upgrades
         }
 
         // Update successful
@@ -149,261 +172,69 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     protected function defaultdata()
     {
         // _UREALNAME
-        $record = [];
-        $record['prop_label'] = no__('_UREALNAME');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 1;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME;
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextType::class);
+        $prop->setLabel($this->__('Real Name'));
+        $prop->setWeight(1);
         $this->entityManager->persist($prop);
 
         // _UFAKEMAIL
-        $record = [];
-        $record['prop_label'] = no__('_UFAKEMAIL');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 2;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'publicemail';
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextType::class);
+        $prop->setLabel($this->__('Public Email'));
+        $prop->setWeight(2);
         $this->entityManager->persist($prop);
 
         // _YOURHOMEPAGE
-        $record = [];
-        $record['prop_label'] = no__('_YOURHOMEPAGE');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 3;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'url';
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextType::class);
+        $prop->setLabel($this->__('Homepage'));
+        $prop->setWeight(3);
         $this->entityManager->persist($prop);
 
-        // _TIMEZONEOFFSET
-        $record = [];
-        $record['prop_label'] = no__('_TIMEZONEOFFSET');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 4;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 2,
-            'displaytype' => 4,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'tzoffset';
+        // _TIMEZONE
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TimezoneType::class);
+        $prop->setLabel($this->__('Timezone'));
+        $prop->setWeight(4);
         $this->entityManager->persist($prop);
 
         // _YOURAVATAR
-        $record = [];
-        $record['prop_label'] = no__('_YOURAVATAR');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 5;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 4,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'avatar';
         $prop = new PropertyEntity();
-        $prop->merge($record);
-        $this->entityManager->persist($prop);
-
-        // _YICQ
-        $record = [];
-        $record['prop_label'] = no__('_YICQ');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 6;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'icq';
-        $prop = new PropertyEntity();
-        $prop->merge($record);
-        $this->entityManager->persist($prop);
-
-        // _YAIM
-        $record = [];
-        $record['prop_label'] = no__('_YAIM');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 7;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'aim';
-        $prop = new PropertyEntity();
-        $prop->merge($record);
-        $this->entityManager->persist($prop);
-
-        // _YYIM
-        $record = [];
-        $record['prop_label'] = no__('_YYIM');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 8;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'yim';
-        $prop = new PropertyEntity();
-        $prop->merge($record);
-        $this->entityManager->persist($prop);
-
-        // _YMSNM
-        $record = [];
-        $record['prop_label'] = no__('_YMSNM');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 9;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'msnm';
-        $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(AvatarType::class);
+        $prop->setLabel($this->__('Avatar'));
+        $prop->setWeight(5);
         $this->entityManager->persist($prop);
 
         // _YLOCATION
-        $record = [];
-        $record['prop_label'] = no__('_YLOCATION');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 10;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'city';
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextType::class);
+        $prop->setLabel($this->__('Location'));
+        $prop->setWeight(6);
         $this->entityManager->persist($prop);
 
         // _YOCCUPATION
-        $record = [];
-        $record['prop_label'] = no__('_YOCCUPATION');
-        $record['prop_dtype'] = '1';
-        $record['prop_weight'] = '11';
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 0,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'occupation';
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextType::class);
+        $prop->setLabel($this->__('Occupation'));
+        $prop->setWeight(7);
         $this->entityManager->persist($prop);
 
         // _SIGNATURE
-        $record = [];
-        $record['prop_label'] = no__('_SIGNATURE');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 12;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 1,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'signature';
         $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextType::class);
+        $prop->setLabel($this->__('Signature'));
+        $prop->setWeight(8);
         $this->entityManager->persist($prop);
 
         // _EXTRAINFO
-        $record = [];
-        $record['prop_label'] = no__('_EXTRAINFO');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 13;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 1,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'extrainfo';
         $prop = new PropertyEntity();
-        $prop->merge($record);
-        $this->entityManager->persist($prop);
-
-        // _YINTERESTS
-        $record = [];
-        $record['prop_label'] = no__('_YINTERESTS');
-        $record['prop_dtype'] = 1;
-        $record['prop_weight'] = 14;
-        $record['prop_validation'] = serialize([
-            'required'    => 0,
-            'viewby'      => 0,
-            'displaytype' => 1,
-            'listoptions' => '',
-            'note'        => '',
-            'pattern'     => null,
-        ]);
-        $record['prop_attribute_name'] = 'interests';
-        $prop = new PropertyEntity();
-        $prop->merge($record);
+        $prop->setFormType(TextareaType::class);
+        $prop->setLabel($this->__('Extra info'));
+        $prop->setWeight(9);
         $this->entityManager->persist($prop);
 
         // flush all persisted entities
         $this->entityManager->flush();
-
-        // Set "tzoffset" and "avatar" to be shown in the registration form by default.
-        $this->setVar('dudregshow', ['tzoffset', 'avatar']);
     }
 }
