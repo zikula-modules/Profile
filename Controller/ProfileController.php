@@ -10,14 +10,11 @@
 
 namespace Zikula\ProfileModule\Controller;
 
-use DataUtil;
-use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use UserUtil;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Event\GenericEvent;
 
@@ -85,20 +82,20 @@ class ProfileController extends AbstractController
     public function editAction(Request $request, $uid = null)
     {
         // Security check
-        if (!UserUtil::isLoggedIn() || !$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_READ)) {
+        if (!\UserUtil::isLoggedIn() || !$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
 
-        $uid = isset($uid) ? $uid : UserUtil::getVar('uid');
+        $uid = isset($uid) ? $uid : \UserUtil::getVar('uid');
 
-        if ($uid != UserUtil::getVar('uid')) {
+        if ($uid != \UserUtil::getVar('uid')) {
             if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
                 throw new AccessDeniedException();
             }
         }
 
         // The API function is called.
-        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['uid' => $uid, 'get' => 'editable']);
+        $items = \ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['uid' => $uid, 'get' => 'editable']);
 
         // The return value of the function is checked here
         if ($items === false) {
@@ -108,7 +105,7 @@ class ProfileController extends AbstractController
         }
 
         // check if we get called form the update function in case of an error
-        $uname = $request->query->get('uname', UserUtil::getVar('uname'));
+        $uname = $request->query->get('uname', \UserUtil::getVar('uname'));
         $dynaData = $request->query->get('dynadata', []);
         $fieldSets = [];
 
@@ -147,8 +144,8 @@ class ProfileController extends AbstractController
      */
     public function updateAction(Request $request)
     {
-        $uid = $request->query->get('uid', UserUtil::getVar('uid'));
-        $user = UserUtil::getVars($uid);
+        $uid = $request->query->get('uid', \UserUtil::getVar('uid'));
+        $user = \UserUtil::getVars($uid);
         $dynaData = $request->request->get('dynadata', null);
         $event_args = [
             'uid'      => $uid,
@@ -167,7 +164,7 @@ class ProfileController extends AbstractController
         $dynaData = $request->request->get('dynadata', null);
 
         // Check for required fields - The API function is called.
-        $checkrequired = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', ['dynadata' => $dynaData]);
+        $checkrequired = \ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', ['dynadata' => $dynaData]);
         if ($checkrequired['result'] == true) {
             $this->addFlash('error', $this->__f('Error! A required profile item [%s] is missing.', ['%s' => $checkrequired['translatedFieldsStr']]));
             // we do not send the passwords here!
@@ -180,7 +177,7 @@ class ProfileController extends AbstractController
         }
 
         // Save updated data
-        $save = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'savedata', [
+        $save = \ModUtil::apiFunc('ZikulaProfileModule', 'user', 'savedata', [
             'uid'      => $uid,
             'dynadata' => $dynaData,
         ]);

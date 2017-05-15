@@ -117,7 +117,6 @@ class UpgradeHelper
             case DateType::class:
                 $options['format'] = $this->getDateFormatFromAlias($property['validation']['listoptions']);
                 break;
-
         }
         $newProperty->setFormOptions($options);
     }
