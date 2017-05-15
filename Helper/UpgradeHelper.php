@@ -61,6 +61,7 @@ class UpgradeHelper
      */
     public function mergeToNewProperty(array $property)
     {
+        $property['validation'] = unserialize($property['validation']);
         $newProperty = new PropertyEntity();
         $newProperty->setWeight($property['weight']);
         $newProperty->setActive($property['weight'] > 0);
