@@ -2,7 +2,7 @@
     <h5>{{ userinfo.uname|profileLinkByUserName() }}</h5>
     <p>
         {% if userinfo.__ATTRIBUTES__.avatar|default and userinfo.__ATTRIBUTES__.avatar not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
-            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\UsersModule\\Constant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\UsersModule\\Constant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
             {{ userInfo.uname|profileLinkByUserName('', avatarPath ~ '/' ~ userInfo.__ATTRIBUTES__.avatar) }}
             {{ userinfo.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
         {% elseif allowGravatars %}

@@ -14,4 +14,34 @@ namespace Zikula\ProfileModule;
 class ProfileConstant
 {
     const ATTRIBUTE_NAME_DISPLAY_NAME = 'realname';
+
+    /**
+     * Module variable key for the avatar image path.
+     */
+    const MODVAR_AVATAR_IMAGE_PATH = 'avatarpath';
+
+    /**
+     * Default value for the avatar image path.
+     */
+    const DEFAULT_AVATAR_IMAGE_PATH = 'images/avatar';
+
+    /**
+     * Module variable key for the flag indicating whether gravatars are allowed or not.
+     */
+    const MODVAR_GRAVATARS_ENABLED = 'allowgravatars';
+
+    /**
+     * Default value for the flag indicating whether gravatars are allowed or not.
+     */
+    const DEFAULT_GRAVATARS_ENABLED = true;
+
+    /**
+     * Module variable key for the file name containing the generic gravatar image.
+     */
+    const MODVAR_GRAVATAR_IMAGE = 'gravatarimage';
+
+    /**
+     * Default value for the file name containing the generic gravatar image.
+     */
+    const DEFAULT_GRAVATAR_IMAGE = 'gravatar.jpg';
 }

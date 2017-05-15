@@ -24,6 +24,7 @@ use UserUtil;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ExtensionsModule\Api\VariableApi;
+use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant as UsersConstant;
 
 /**
@@ -248,7 +249,7 @@ class TwigExtension extends \Twig_Extension
         // avatar
         if ($item['prop_attribute_name'] == 'avatar') {
             $baseurl = System::getBaseUrl();
-            $avatarPath = $this->variableApi->get(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
+            $avatarPath = $this->variableApi->get(UsersConstant::MODNAME, ProfileConstant::MODVAR_AVATAR_IMAGE_PATH, ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH);
             if (empty($userValue)) {
                 $userValue = 'blank.png';
             }
@@ -411,11 +412,11 @@ class TwigExtension extends \Twig_Extension
         // detect if we are in the registration form
         $onRegistrationForm = false;
 
-        if ((strtolower($this->request->query->get('module')) == 'zikulausersmodule')
-            && (strtolower($this->request->query->get('type')) == 'user')
-            && (strtolower($this->request->query->get('func')) == 'register')) {
-            $onRegistrationForm = true;
-        }
+//        if ((strtolower($this->request->query->get('module')) == 'zikulausersmodule')
+//            && (strtolower($this->request->query->get('type')) == 'user')
+//            && (strtolower($this->request->query->get('func')) == 'register')) {
+//            $onRegistrationForm = true;
+//        }
 
         // skip the field if not configured to be on the registration form
         if ($onRegistrationForm && !$item['prop_required']) {
@@ -513,7 +514,7 @@ class TwigExtension extends \Twig_Extension
             }
             $templateParameters['selectedValue'] = $userValue;
 
-            $avatarPath = $this->variableApi->get(UsersConstant::MODNAME, UsersConstant::MODVAR_AVATAR_IMAGE_PATH, UsersConstant::DEFAULT_AVATAR_IMAGE_PATH);
+            $avatarPath = $this->variableApi->get(UsersConstant::MODNAME, ProfileConstant::MODVAR_AVATAR_IMAGE_PATH, ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH);
 
             $finder = new Finder();
             $finder->files()->in($avatarPath)->name('/\.gif|\.jpg|\.png$/');
@@ -563,7 +564,7 @@ class TwigExtension extends \Twig_Extension
 
             case 4:
                 $type = 'select';
-                
+
                 $templateParameters['selectedValue'] = (DataUtil::is_serialized($userValue)) ? unserialize($userValue) : $userValue;
 
                 // multiple flag is the first field
