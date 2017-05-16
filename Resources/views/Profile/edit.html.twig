@@ -1,21 +1,9 @@
-{% set templateTitle = __('Edit profile') %}
-{{ include('@ZikulaProfileModule/menu.html.twig') }}
+{% form_theme form with [
+'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+] %}
+{{ moduleHeader('user', __('Edit profile'), true, true) }}
 
-<form id="modifyprofileform" class="form-horizontal" action="{{ path('zikulaprofilemodule_profile_update', { uid: uid }) }}" method="post" enctype="application/x-www-form-urlencoded">
-    <p class="alert alert-info">{{ __('Items marked with an asterisk (*) are required entries.') }}</p>
-    {% for fieldSet in fieldSets %}
-        <fieldset class="{{ fieldSet|e('html_attr') }}">
-            <legend>{{ fieldSet }}</legend>
-            {% for itemLabel, item in dudItems if item.prop_fieldset == fieldSet %}
-                {{ dudItemModify(item=item, userId=uid) }}
-            {% endfor %}
-        </fieldset>
-    {% endfor %}
-    <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-9">
-            <input class="btn btn-success" type="submit" value="{{ __('Submit') }}" />
-            <a class="btn btn-danger" href="{{ path('zikulaprofilemodule_profile_display') }}" title="{{ __('Cancel') }}">{{ __('Cancel') }}</a>
-            <input class="btn btn-default" type="reset" value="{{ __('Reset') }}" />
-        </div>
-    </div>
-</form>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}

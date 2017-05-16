@@ -6,29 +6,29 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-3 text-right">
+            <div class="col-sm-4 text-right">
                 <strong>{{ __('User name:') }}</strong>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-8">
                 <span>{{ user.uname }}</span>
             </div>
         </div>
         {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
             <div class="row">
-                <div class="col-sm-3 text-right">
+                <div class="col-sm-4 text-right">
                     <strong>{{ __('Registration date:') }}</strong>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-8">
                     <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
                 </div>
             </div>
         {% endif %}
         {% for attribute in user.attributes if attribute.value is not empty %}
         <div class="row">
-            <div class="col-sm-3 text-right">
+            <div class="col-sm-4 text-right">
                 <strong>{{ attribute.extra }}</strong>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-8">
                 <span>{{ attribute.value }}</span>
             </div>
         </div>
