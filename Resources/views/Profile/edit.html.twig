@@ -5,5 +5,13 @@
 {{ moduleHeader('user', __('Edit profile'), true, true) }}
 
 {{ form_start(form) }}
-{{ form_widget(form) }}
+{% for element in form if (element.vars.name != 'save') and (element.vars.name != 'cancel') %}
+    {{ form_row(element) }}
+{% endfor %}
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ form_widget(form.save) }}
+        {{ form_widget(form.cancel) }}
+    </div>
+</div>
 {{ form_end(form) }}
