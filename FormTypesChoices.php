@@ -47,23 +47,28 @@ class FormTypesChoices implements \ArrayAccess, \Iterator
         throw new \Exception('Not allowed to unset!');
     }
 
-    function rewind() {
+    function rewind()
+    {
         return reset($this->choices);
     }
 
-    function current() {
+    function current()
+    {
         return current($this->choices);
     }
 
-    function key() {
+    function key()
+    {
         return key($this->choices);
     }
 
-    function next() {
+    function next()
+    {
         return next($this->choices);
     }
 
-    function valid() {
+    function valid()
+    {
         return key($this->choices) !== null;
     }
 }

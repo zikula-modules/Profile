@@ -11,7 +11,6 @@
 
 namespace Zikula\ProfileModule\Form\Type;
 
-use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
