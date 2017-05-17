@@ -19,6 +19,9 @@ class ProfileConstant
      */
     const GET_FORM_TYPES_EVENT = 'profile_get_form_types';
 
+    /**
+     * the name of the attribute to obtain a realname. requires prefix + ':'
+     */
     const ATTRIBUTE_NAME_DISPLAY_NAME = 'realname';
 
     /**
