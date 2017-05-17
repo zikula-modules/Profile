@@ -43,11 +43,7 @@ class ConfigController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $dataValues = $this->getVars();
-        $dataValues['viewregdate'] = (bool) $dataValues['viewregdate'];
-
-        $form = $this->createForm(ConfigType::class,
-            $dataValues, [
+        $form = $this->createForm(ConfigType::class, $this->getVars(), [
                 'translator' => $this->get('translator.default'),
             ]
         );
@@ -56,10 +52,7 @@ class ConfigController extends AbstractController
             if ($form->get('save')->isClicked()) {
                 $formData = $form->getData();
                 $formData['viewregdate'] = ($formData['viewregdate'] == true ? 1 : 0);
-
-                // save modvars
                 $this->setVars($formData);
-
                 $this->addFlash('status', $this->__('Done! Module configuration updated.'));
             }
             if ($form->get('cancel')->isClicked()) {
@@ -67,10 +60,8 @@ class ConfigController extends AbstractController
             }
         }
 
-        $fieldSets = [];
-
         return [
-            'form'            => $form->createView(),
+            'form' => $form->createView(),
         ];
     }
 }

@@ -39,7 +39,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     protected function getDefaultModVars()
     {
         return [
-            'viewregdate'               => 0,
+            'viewregdate'               => false,
             'memberslistitemsperpage'   => 20,
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
@@ -134,6 +134,8 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                     }
                 }
                 $this->entityManager->flush();
+                // update boolean vars
+                $this->setVar('viewregdate', (bool) $this->getVar('viewregdate'));
             case '3.0.0':
                 // future upgrades
         }
