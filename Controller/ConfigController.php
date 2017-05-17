@@ -50,9 +50,7 @@ class ConfigController extends AbstractController
 
         if ($form->handleRequest($request)->isValid()) {
             if ($form->get('save')->isClicked()) {
-                $formData = $form->getData();
-                $formData['viewregdate'] = ($formData['viewregdate'] == true ? 1 : 0);
-                $this->setVars($formData);
+                $this->setVars($form->getData());
                 $this->addFlash('status', $this->__('Done! Module configuration updated.'));
             }
             if ($form->get('cancel')->isClicked()) {
