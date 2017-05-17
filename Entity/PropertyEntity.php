@@ -99,6 +99,9 @@ class PropertyEntity extends EntityAccess
 
     public function getFormOptions()
     {
+        if (!isset($this->formOptions['required'])) {
+            $this->formOptions['required'] = false;
+        }
         return $this->formOptions;
     }
 
