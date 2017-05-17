@@ -13,6 +13,12 @@ namespace Zikula\ProfileModule;
 
 class ProfileConstant
 {
+    /**
+     * Event called when creating the choices array for profile properties
+     * Subject is instance of \Zikula\ProfileModule\FormTypesChoices
+     */
+    const GET_FORM_TYPES_EVENT = 'profile_get_form_types';
+
     const ATTRIBUTE_NAME_DISPLAY_NAME = 'realname';
 
     /**

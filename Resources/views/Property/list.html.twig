@@ -1,0 +1,34 @@
+{{ adminHeader() }}
+
+<table class="table table-bordered table-striped">
+    <colgroup>
+        <col id="cId" />
+        <col id="cLabel" />
+        <col id="cFormType" />
+        <col id="cActive" />
+        <col id="cActions" />
+    </colgroup>
+    <thead>
+    <tr>
+        <th id="hId" scope="col"><label>{{ __('ID') }}</label></th>
+        <th id="hLabel" scope="col"><label>{{ __('Label') }}</label></th>
+        <th id="hFormType" scope="col"><label>{{ __('Form Type') }}</label></th>
+        <th id="hActive" scope="col"><label>{{ __('Active') }}</label></th>
+        <th id="hActions" scope="col"><label>{{ __('Actions') }}</label></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for property in properties %}
+        <tr>
+            <td headers="hId">{{ property.id}}</td>
+            <td headers="hLabel">{{ property.label }}</td>
+            <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>
+            <td headers="hActive">{{ property.active|yesNo }}</td>
+            <td headers="hActions">
+                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}"><i class="fa fa-pencil fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}"><i class="fa fa-trash-o fa-lg fa-fw"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

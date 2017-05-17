@@ -58,3 +58,9 @@ services:
     zikula_profile_module.helper.upgrade_helper:
         class: Zikula\ProfileModule\Helper\UpgradeHelper
         arguments: ['@translator.default']
+
+    zikula_profile_module.form.type.property_type:
+        class: Zikula\ProfileModule\Form\Type\PropertyType
+        arguments: ['@event_dispatcher']
+        tags:
+            - { name: form.type, alias: Zikula\ProfileModule\Form\Type\PropertyType }

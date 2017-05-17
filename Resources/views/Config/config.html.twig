@@ -30,16 +30,16 @@
 
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="profile_dudregshow">{{ __('Personal info items to include in user registration form') }}</label>
-                <div class="col-sm-9">
-                    {% for fieldSet in dudFieldSets %}
-                    <fieldset class="{{ fieldSet|e('html_attr')|lower }}">
-                        <legend>{{ fieldSet }}</legend>
-                        {% for key, item in dudFields if item.prop_fieldset == fieldSet %}
-                            {{ form_row(attribute(form, 'dudregshow_' ~ item.prop_attribute_name)) }}
-                        {% endfor %}
-                    </fieldset>
-                    {% endfor %}
-                </div>
+                {#<div class="col-sm-9">#}
+                    {#{% for fieldSet in dudFieldSets %}#}
+                    {#<fieldset class="{{ fieldSet|e('html_attr')|lower }}">#}
+                        {#<legend>{{ fieldSet }}</legend>#}
+                        {#{% for key, item in dudFields if item.prop_fieldset == fieldSet %}#}
+                            {#{{ form_row(attribute(form, 'dudregshow_' ~ item.prop_attribute_name)) }}#}
+                        {#{% endfor %}#}
+                    {#</fieldset>#}
+                    {#{% endfor %}#}
+                {#</div>#}
             </div>
         </fieldset>
 

@@ -160,6 +160,13 @@ class LinkContainer implements LinkContainerInterface
                 'icon' => 'ambulance text-danger',
             ];
         }
+        if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
+            $links[] = [
+                'url'  => $this->router->generate('zikulaprofilemodule_property_list'),
+                'text' => $this->translator->__('property list', 'zikulaprofilemodule'),
+                'icon' => 'list',
+            ];
+        }
 
         return $links;
     }

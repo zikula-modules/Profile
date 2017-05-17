@@ -1,0 +1,9 @@
+{% form_theme form with [
+'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+] %}
+{{ adminHeader() }}
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
