@@ -37,15 +37,27 @@ class ProfileModuleBridge implements ProfileModuleInterface
     private $userRepository;
 
     /**
+     * @var string
+     */
+    private $prefix;
+
+    /**
      * ProfileModuleBridge constructor.
      * @param RouterInterface $router
      * @param CurrentUserApi $currentUser
+     * @param UserRepositoryInterface $userRepository
+     * @param string $prefix
      */
-    public function __construct(RouterInterface $router, CurrentUserApi $currentUser, UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        RouterInterface $router,
+        CurrentUserApi $currentUser,
+        UserRepositoryInterface $userRepository,
+        $prefix
+    ) {
         $this->router = $router;
         $this->currentUser = $currentUser;
         $this->userRepository = $userRepository;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -59,8 +71,9 @@ class ProfileModuleBridge implements ProfileModuleInterface
         /** @var UserEntity $userEntity */
         $userEntity = $this->userRepository->find($uid);
         if ($userEntity) {
-            if ($userEntity->getAttributes()->containsKey(ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME)) {
-                return $userEntity->getAttributes()->get(ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME)->getValue();
+            $key = $this->prefix . ':' . ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME;
+            if ($userEntity->getAttributes()->containsKey($key)) {
+                return $userEntity->getAttributes()->get($key)->getValue();
             }
 
             return $userEntity->getUname();

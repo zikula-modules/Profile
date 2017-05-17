@@ -126,15 +126,15 @@ class LinkContainer implements LinkContainerInterface
 
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
             $links[] = [
-                'url'  => $this->router->generate('zikulaprofilemodule_admin_view'),
-                'text' => $this->translator->__('Fields', 'zikulaprofilemodule'),
+                'url'  => $this->router->generate('zikulaprofilemodule_property_list'),
+                'text' => $this->translator->__('property list', 'zikulaprofilemodule'),
                 'icon' => 'list',
             ];
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADD)) {
             $links[] = [
-                'url'  => $this->router->generate('zikulaprofilemodule_admin_edit'),
-                'text' => $this->translator->__('Create new field', 'zikulaprofilemodule'),
+                'url'  => $this->router->generate('zikulaprofilemodule_property_edit'),
+                'text' => $this->translator->__('Create new property', 'zikulaprofilemodule'),
                 'icon' => 'plus text-success',
             ];
         }
@@ -143,28 +143,6 @@ class LinkContainer implements LinkContainerInterface
                 'url'  => $this->router->generate('zikulaprofilemodule_config_config'),
                 'text' => $this->translator->__('Settings', 'zikulaprofilemodule'),
                 'icon' => 'wrench',
-            ];
-        }
-        if ($this->permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_MODERATE)) {
-            $links[] = [
-                'url'   => $this->router->generate('zikulaprofilemodule_admin_view'),
-                'text'  => $this->translator->__('Users administration', 'zikulaprofilemodule'),
-                'icon'  => 'user',
-                'links' => $this->usersLinkContainer->getLinks(LinkContainerInterface::TYPE_ADMIN),
-            ];
-        }
-        if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
-            $links[] = [
-                'url'  => $this->router->generate('zikulaprofilemodule_admin_help'),
-                'text' => $this->translator->__('Help', 'zikulaprofilemodule'),
-                'icon' => 'ambulance text-danger',
-            ];
-        }
-        if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
-            $links[] = [
-                'url'  => $this->router->generate('zikulaprofilemodule_property_list'),
-                'text' => $this->translator->__('property list', 'zikulaprofilemodule'),
-                'icon' => 'list',
             ];
         }
 

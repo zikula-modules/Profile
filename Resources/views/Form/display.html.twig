@@ -1,6 +1,0 @@
-{% for item in dudItems %}
-    <tr class="{{ cycle(['z-odd', 'z-even']) }}">
-        <td>{{ item.prop_label }}</td>
-        <td>{{ dudItemDisplay(item=item, userInfo=userInfo) }}</td>
-    </tr>
-{% endfor %}

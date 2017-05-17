@@ -39,7 +39,7 @@ class PropertyController extends AbstractController
         if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $properties = $this->getDoctrine()->getRepository(PropertyEntity::class)->findAll();
+        $properties = $this->getDoctrine()->getRepository(PropertyEntity::class)->findBy([], ['weight' => 'ASC']);
 
         return [
             'properties' => $properties
@@ -47,7 +47,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}")
+     * @Route("/edit/{id}", defaults={"id" = null})
      * @Theme("admin")
      * @Template
      *
@@ -114,6 +114,7 @@ class PropertyController extends AbstractController
         }
 
         return [
+            'id' => $propertyEntity->getId(),
             'form' => $form->createView()
         ];
     }

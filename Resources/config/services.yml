@@ -44,6 +44,7 @@ services:
           - "@router"
           - "@zikula_users_module.current_user"
           - "@zikula_users_module.user_repository"
+          - "%zikula_profile_module.property_prefix%"
         tags:
             - { name: zikula.profile_module, bundleName: ZikulaProfileModule }
 

@@ -2,6 +2,7 @@
 
 <table class="table table-bordered table-striped">
     <colgroup>
+        <col id="cWeight" />
         <col id="cId" />
         <col id="cLabel" />
         <col id="cFormType" />
@@ -10,6 +11,7 @@
     </colgroup>
     <thead>
     <tr>
+        <th id="hWeight" scope="col"><label>{{ __('Weight') }}</label></th>
         <th id="hId" scope="col"><label>{{ __('ID') }}</label></th>
         <th id="hLabel" scope="col"><label>{{ __('Label') }}</label></th>
         <th id="hFormType" scope="col"><label>{{ __('Form Type') }}</label></th>
@@ -20,6 +22,7 @@
     <tbody>
     {% for property in properties %}
         <tr>
+            <td headers="hId">{{ property.weight}}</td>
             <td headers="hId">{{ property.id}}</td>
             <td headers="hLabel">{{ property.label }}</td>
             <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>

@@ -63,6 +63,7 @@ class UpgradeHelper
     {
         $property['validation'] = unserialize($property['validation']);
         $newProperty = new PropertyEntity();
+        $newProperty->setId($property['attributename']);
         $newProperty->setWeight($property['weight']);
         $newProperty->setActive($property['weight'] > 0);
         $newProperty->setLabel($this->__(/** @Ignore */$property['label']));
@@ -99,9 +100,15 @@ class UpgradeHelper
     private function setFormOptions(PropertyEntity $newProperty, array $property)
     {
         $options = [];
-        $options['required'] = (bool) $property['validation']['required'];
-        $options['constraints'] = !empty($property['validation']['pattern']) ? [new Regex($property['validation']['pattern'])] : [];
-        $options['help'] = !empty($property['validation']['note']) ? $property['validation']['note'] : '';
+        if (true === $property['validation']['required'] || 1 === $property['validation']['required'] || !empty($property['validation']['required'])) {
+            $options['required'] = true;
+        }
+        if (!empty($property['validation']['pattern'])) {
+            $options['constraints'] = [new Regex($property['validation']['pattern'])];
+        }
+        if (!empty($property['validation']['note'])) {
+            $options['help'] = $property['validation']['note'];
+        }
         // this does not migrate 'viewby' which should be handled in permissions by property id
         switch ($newProperty->getFormType()) {
             case ChoiceType::class:

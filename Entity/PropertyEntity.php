@@ -11,6 +11,8 @@
 namespace Zikula\ProfileModule\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Zikula\Core\Doctrine\EntityAccess;
 
 /**
@@ -18,142 +20,118 @@ use Zikula\Core\Doctrine\EntityAccess;
  *
  * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
  * @ORM\Table(name="user_property")
+ * @UniqueEntity("id")
  */
 class PropertyEntity extends EntityAccess
 {
     /**
-     * id.
-     *
+     * Note this value is NOT auto-generated and must be manually created!
      * @ORM\Id
-     * @ORM\Column(type="integer",name="id")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string", unique=true)
+     * @param string
+     * @Assert\Regex("/^[a-zA-Z0-9\-\_]+$/")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string")
+     * @param string
+     * @Assert\NotBlank()
      */
     private $label = '';
 
     /**
      * @ORM\Column(type="text")
+     * @param string
+     * @Assert\NotBlank()
      */
     private $formType = '';
 
     /**
      * @ORM\Column(type="array")
+     * @param array
+     * @Assert\NotBlank()
      */
     private $formOptions = [];
 
     /**
      * @ORM\Column(type="integer")
+     * @param integer
+     * @Assert\GreaterThan(0)
      */
     private $weight = 0;
 
     /**
      * @ORM\Column(type="boolean")
+     * @param boolean
      */
-    private $active = 1;
+    private $active = true;
 
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
     public function getLabel()
     {
         return $this->label;
     }
 
-    /**
-     * @param string $label
-     */
     public function setLabel($label)
     {
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
     public function getFormType()
     {
         return $this->formType;
     }
 
-    /**
-     * @param string $formType
-     */
     public function setFormType($formType)
     {
         $this->formType = $formType;
     }
 
-    /**
-     * @return array
-     */
     public function getFormOptions()
     {
         return $this->formOptions;
     }
 
-    /**
-     * @param array $formOptions
-     */
     public function setFormOptions(array $formOptions)
     {
         $this->formOptions = $formOptions;
     }
 
-    /**
-     * @return int
-     */
     public function getWeight()
     {
         return $this->weight;
     }
 
-    /**
-     * @param int $weight
-     */
     public function setWeight($weight)
     {
         $this->weight = $weight;
     }
 
-    /**
-     * Increment weight.
-     */
     public function incrementWeight()
     {
         $this->weight++;
     }
 
-    /**
-     * Decrement weight.
-     */
     public function decrementWeight()
     {
         $this->weight--;
     }
 
-    /**
-     * @return mixed
-     */
     public function getActive()
     {
         return $this->active;
     }
 
-    /**
-     * @param mixed $active
-     */
     public function setActive($active)
     {
         $this->active = $active;

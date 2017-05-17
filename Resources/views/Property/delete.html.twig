@@ -5,5 +5,11 @@
 {{ adminHeader() }}
 
 {{ form_start(form) }}
-{{ form_widget(form) }}
+<div class="alert alert-danger">{{ __f('Are you sure you want to delete the property with ID: %id', {'%id': id}) }}</div>
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ form_widget(form.delete) }}
+        {{ form_widget(form.cancel) }}
+    </div>
+</div>
 {{ form_end(form) }}

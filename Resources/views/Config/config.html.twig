@@ -23,25 +23,6 @@
             {{ form_row(form.recentmembersitemsperpage) }}
             {{ form_row(form.filterunverified) }}
         </fieldset>
-        <fieldset>
-            <legend>{{ __('User registration form settings') }}</legend>
-            {{ form_row(form.viewregdate) }}
-            <p class="alert alert-info">{{ __("The personal info items that you activate below will be displayed in the user registration form if the 'Users' module is configured to display personal info items during user registration, and if the 'Profile' module is specified in the 'General settings manager' as the module to provide the site's user profile management functionality. Personal info items that are configured as 'Required' will always be displayed in the user registration form.") }}</p>
-
-            <div class="form-group">
-                <label class="col-sm-3 control-label" for="profile_dudregshow">{{ __('Personal info items to include in user registration form') }}</label>
-                {#<div class="col-sm-9">#}
-                    {#{% for fieldSet in dudFieldSets %}#}
-                    {#<fieldset class="{{ fieldSet|e('html_attr')|lower }}">#}
-                        {#<legend>{{ fieldSet }}</legend>#}
-                        {#{% for key, item in dudFields if item.prop_fieldset == fieldSet %}#}
-                            {#{{ form_row(attribute(form, 'dudregshow_' ~ item.prop_attribute_name)) }}#}
-                        {#{% endfor %}#}
-                    {#</fieldset>#}
-                    {#{% endfor %}#}
-                {#</div>#}
-            </div>
-        </fieldset>
 
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">

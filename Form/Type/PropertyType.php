@@ -11,6 +11,7 @@
 
 namespace Zikula\ProfileModule\Form\Type;
 
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
@@ -91,6 +92,7 @@ class PropertyType extends AbstractType
         $this->eventDispatcher->dispatch('test', new GenericEvent($choices));
 
         $builder
+            ->add('id', TextType::class)
             ->add('label', TextType::class)
             ->add('formType', ChoiceType::class, [
                 'choices' => $choices,
