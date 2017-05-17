@@ -65,12 +65,12 @@ class ProfileController extends AbstractController
                 $attributeValues[$attribute->getName()] = $attribute->getValue();
             }
         }
-        $properties = $this->getDoctrine()->getRepository('ZikulaProfileModule:PropertyEntity')->findBy(['active' => true]);
+        $properties = $this->getDoctrine()->getRepository('ZikulaProfileModule:PropertyEntity')->findBy(['active' => true], ['weight' => 'ASC']);
         $formBuilder = $this->createFormBuilder($attributeValues);
         foreach ($properties as $property) {
             $child = $prefix . ':' .$property->getId();
             $options = $property->getFormOptions();
-            $options['label'] = $userEntity->getAttributes()->get($child)->getExtra();
+            $options['label'] = isset($options['label']) ? $options['label'] : $userEntity->getAttributes()->get($child)->getExtra();
             $formBuilder->add($child, $property->getFormType(), $options);
         }
         $formBuilder->add('save', SubmitType::class, [
