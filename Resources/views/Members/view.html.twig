@@ -1,5 +1,4 @@
-{% set templateTitle = __('Registered users') %}
-{{ include('@ZikulaProfileModule/menu.html.twig') }}
+{{ moduleHeader('user', __('Registered users'), true, true) }}
 
 <form class="form-horizontal" action="{{ path('zikulaprofilemodule_members_view') }}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
@@ -125,8 +124,8 @@
 {{ pager({ rowcount: pager.amountOfItems, limit: pager.itemsPerPage, posvar: 'startnum', route: 'zikulaprofilemodule_members_view' }) }}
 
 <h3>{{ __('Statistics') }}</h3>
-<ul id="profile_status">
-    <li><strong>{{ __('Registered:') }}</strong> {{ amountOfRegisteredMembers }}</li>
-    <li><strong>{{ __('Online:') }}</strong> <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}">{{ amountOfOnlineMembers }}</a></li>
-    <li><strong>{{ __('Newest user:') }}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uname: newestMemberName }) }}" title="{{ __f('View profile of %uname%', { '%uname%': newestMemberName }) }}">{{ newestMemberName }}</a></li>
-</ul>
+{#<ul id="profile_status">#}
+    {#<li><strong>{{ __('Registered:') }}</strong> {{ amountOfRegisteredMembers }}</li>#}
+    {#<li><strong>{{ __('Online:') }}</strong> <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}">{{ amountOfOnlineMembers }}</a></li>#}
+    {#<li><strong>{{ __('Newest user:') }}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uname: newestMemberName }) }}" title="{{ __f('View profile of %uname%', { '%uname%': newestMemberName }) }}">{{ newestMemberName }}</a></li>#}
+{#</ul>#}

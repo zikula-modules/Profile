@@ -62,8 +62,12 @@ class AttributeNameTranslationListener implements EventSubscriber
             if (!isset($this->translations[$this->locale][$name])) {
                 $this->translations[$this->locale][$name] = $name;
                 if (0 === strpos($name, $this->prefix)) {
-                    $property = $entityManager->find(PropertyEntity::class, substr($name, strlen($this->prefix)));
-                    $this->translations[$this->locale][$name] = isset($property) ? /* @todo get translation here */$property->getLabel() : $name;
+                    try {
+                        $property = $entityManager->find(PropertyEntity::class, substr($name, strlen($this->prefix)));
+                        $this->translations[$this->locale][$name] = isset($property) ? /* @todo get translation here */$property->getLabel() : $name;
+                    } catch (\Exception $e) {
+                        // listener fails during upgrade. silently fail
+                    }
                 }
             }
             $entity->setExtra($this->translations[$this->locale][$name]);

@@ -10,11 +10,9 @@
 
 namespace Zikula\ProfileModule;
 
-use EventUtil;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
-use System;
 use Zikula\Core\AbstractExtensionInstaller;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
@@ -28,7 +26,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
      * @var array
      */
     private $entities = [
-        'Zikula\ProfileModule\Entity\PropertyEntity',
+        PropertyEntity::class,
     ];
 
     /**
@@ -39,11 +37,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     protected function getDefaultModVars()
     {
         return [
-            'viewregdate'               => false,
-            'memberslistitemsperpage'   => 20,
+            'viewregdate' => false,
+            'memberslistitemsperpage' => 20,
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
-            'filterunverified'          => 1,
+            'filterunverified' => true,
+            'activeminutes' => 10
         ];
     }
 
@@ -81,27 +80,14 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     public function upgrade($oldVersion)
     {
         // Only support upgrade from version 1.6 and up. Notify users if they have a version below that one.
-        if (version_compare($oldVersion, '1.6', '<')) {
+        if (version_compare($oldVersion, '2.0', '<')) {
             // Inform user about error, and how he can upgrade to this version
-            $this->addFlash('error', $this->__('Notice: This version does not support upgrades from versions less than 1.6. Please upgrade before upgrading again to this version.'));
+            $this->addFlash('error', $this->__('Notice: This version does not support upgrades from versions less than 2.0. Please upgrade before upgrading again to this version.'));
 
             return false;
         }
 
-        $connection = $this->entityManager->getConnection();
         switch ($oldVersion) {
-            case '1.6.0':
-            case '1.6.1':
-                // released with Core 1.3.6
-                // attributes migrated by Users mod
-
-                // check core for profile setting and update name
-                $profileModule = System::getVar('profilemodule', '');
-                if ($profileModule == 'Profile') {
-                    System::setVar('profilemodule', 'ZikulaProfileModule');
-                }
-                // remove persistent handlers which are replaced by event subscribers
-                EventUtil::unregisterPersistentModuleHandlers('Profile'); // use old name on purpose here
             case '2.0.0':
                 // nothing
             case '2.1.0':
@@ -135,12 +121,13 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 }
                 $this->entityManager->flush();
                 // update boolean vars
-                $this->setVar('viewregdate', (bool) $this->getVar('viewregdate'));
+                $this->setVar('viewregdate', (bool)$this->getVar('viewregdate'));
+                $this->setVar('filterunverified', (bool)$this->getVar('filterunverified'));
+                $this->setVar('activeminutes', 10);
             case '3.0.0':
                 // future upgrades
         }
 
-        // Update successful
         return true;
     }
 
@@ -159,84 +146,79 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             return false;
         }
 
-        // Delete any module variables
         $this->delVars();
 
-        // Deletion successful
         return true;
     }
 
     /**
      * Create the default data for the users module.
-     *
-     * @return void
      */
     protected function defaultdata()
     {
-        // _UREALNAME
         $prop = new PropertyEntity();
+        $prop->setId(ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME);
         $prop->setFormType(TextType::class);
         $prop->setLabel($this->__('Real Name'));
         $prop->setWeight(1);
         $this->entityManager->persist($prop);
 
-        // _UFAKEMAIL
         $prop = new PropertyEntity();
+        $prop->setId('publicemail');
         $prop->setFormType(TextType::class);
         $prop->setLabel($this->__('Public Email'));
         $prop->setWeight(2);
         $this->entityManager->persist($prop);
 
-        // _YOURHOMEPAGE
         $prop = new PropertyEntity();
+        $prop->setId('url');
         $prop->setFormType(TextType::class);
         $prop->setLabel($this->__('Homepage'));
         $prop->setWeight(3);
         $this->entityManager->persist($prop);
 
-        // _TIMEZONE
         $prop = new PropertyEntity();
+        $prop->setId('timezone');
         $prop->setFormType(TimezoneType::class);
         $prop->setLabel($this->__('Timezone'));
         $prop->setWeight(4);
         $this->entityManager->persist($prop);
 
-        // _YOURAVATAR
         $prop = new PropertyEntity();
+        $prop->setId('avatar');
         $prop->setFormType(AvatarType::class);
         $prop->setLabel($this->__('Avatar'));
         $prop->setWeight(5);
         $this->entityManager->persist($prop);
 
-        // _YLOCATION
         $prop = new PropertyEntity();
+        $prop->setId('city');
         $prop->setFormType(TextType::class);
         $prop->setLabel($this->__('Location'));
         $prop->setWeight(6);
         $this->entityManager->persist($prop);
 
-        // _YOCCUPATION
         $prop = new PropertyEntity();
+        $prop->setId('occupation');
         $prop->setFormType(TextType::class);
         $prop->setLabel($this->__('Occupation'));
         $prop->setWeight(7);
         $this->entityManager->persist($prop);
 
-        // _SIGNATURE
         $prop = new PropertyEntity();
+        $prop->setId('signature');
         $prop->setFormType(TextType::class);
         $prop->setLabel($this->__('Signature'));
         $prop->setWeight(8);
         $this->entityManager->persist($prop);
 
-        // _EXTRAINFO
         $prop = new PropertyEntity();
+        $prop->setId('extrainfo');
         $prop->setFormType(TextareaType::class);
         $prop->setLabel($this->__('Extra info'));
         $prop->setWeight(9);
         $this->entityManager->persist($prop);
 
-        // flush all persisted entities
         $this->entityManager->flush();
     }
 }

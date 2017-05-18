@@ -22,9 +22,6 @@ services:
         arguments:
           - "@translator.default"
           - "@request_stack"
-          - "@event_dispatcher"
-          - "@twig"
-          - "@zikula_extensions_module.api.variable"
         tags:
             - { name: twig.extension }
 

@@ -5,7 +5,7 @@
 {{ moduleHeader('user', __('Edit profile'), true, true) }}
 
 {{ form_start(form) }}
-{% for element in form if (element.vars.name != 'save') and (element.vars.name != 'cancel') %}
+{% for element in form if element.vars.name not in ['save', 'cancel'] %}
     {{ form_row(element) }}
 {% endfor %}
 <div class="form-group">

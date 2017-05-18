@@ -10,13 +10,12 @@
 
 namespace Zikula\ProfileModule\Controller;
 
-use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use UserUtil;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\SecurityCenterModule\Constant;
 use Zikula\SettingsModule\SettingsConstant;
 
 /**
@@ -29,33 +28,12 @@ class MembersController extends AbstractController
     /**
      * @Route("/view")
      * @Template
-     *
-     * View members list.
-     *
-     * This function provides the main members list view.
-     *
      * @param Request $request
-     *
-     * Parameters passed via GET or via POST:
-     * ---------------------------------------------------------------
-     * numeric startnum The ordinal number of the record at which to begin displaying records; not obtained via POST.
-     * string  sortby    A comma-separated list of fields on which the list of members should be sorted.
-     * mixed   searchby  Selection criteria for the query that retrieves the member list; one of 'uname' to select by user name, 'all' to select on all
-     *                      available dynamic user data properites, a numeric value indicating the property id of the property on which to select,
-     *                      an array indexed by property id containing values for each property on which to select, or a string containing the name of
-     *                      a property on which to select.
-     * string  sortorder One of 'ASC' or 'DESC' indicating whether sorting should be in ascending order or descending order.
-     * string  letter    If searchby is 'uname' then either a letter on which to match the beginning of a user name or a non-letter indicating that
-     *                      selection should include user names beginning with numbers and/or other symbols, if searchby is a numeric propery id or
-     *                      is a string containing the name of a property then the string on which to match the begining of the value for that property
-     *
      * @throws AccessDeniedException on failed permission check
-     *
-     * @return string The rendered template output
+     * @return array
      */
     public function viewAction(Request $request)
     {
-        // Security check
         if (!$this->hasPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
@@ -75,7 +53,7 @@ class MembersController extends AbstractController
             $letter = null;
         }
         if (empty($startnum)) {
-            $startnum = -1;
+            $startnum = null;
         }
 
         // get some permissions to filter item actions
@@ -102,35 +80,35 @@ class MembersController extends AbstractController
         ];
 
         // get full list of user id's
-        $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', $fetchargs);
-        $amountOfUsers = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'countitems', $fetchargs);
+        $users = $this->get('zikula_users_module.user_repository')->query([], [$sortby => $sortorder], $itemsPerPage, $startnum);
+        $amountOfUsers = $this->get('zikula_users_module.user_repository')->count();
 
-        foreach ($users as $userid => $user) {
-            //$user = array_merge(UserUtil::getVars($userid['uid']), $userid);
-            $isOnline = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'isonline', ['userid' => $userid]);
-            // is this user online
-            $users[$userid]['onlinestatus'] = $isOnline ? 1 : 0;
-            // filter out any dummy url's
-            if (isset($user['url']) && (!$user['url'] || in_array($user['url'], ['http://', 'http:///']))) {
-                $users[$userid]['url'] = '';
-            }
-        }
+//        foreach ($users as $userid => $user) {
+//            //$user = array_merge(UserUtil::getVars($userid['uid']), $userid);
+//            $isOnline = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'isonline', ['userid' => $userid]);
+//            // is this user online
+//            $users[$userid]['onlinestatus'] = $isOnline ? 1 : 0;
+//            // filter out any dummy url's
+//            if (isset($user['url']) && (!$user['url'] || in_array($user['url'], ['http://', 'http:///']))) {
+//                $users[$userid]['url'] = '';
+//            }
+//        }
         // get all active profile fields
-        $activeDuds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
-        $dudArray = [];
-        foreach ($activeDuds as $attr => $activeDud) {
-            $dudArray[$attr] = $activeDud['prop_id'];
-        }
-        unset($activeDuds);
+//        $activeDuds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
+//        $dudArray = [];
+//        foreach ($activeDuds as $attr => $activeDud) {
+//            $dudArray[$attr] = $activeDud['prop_id'];
+//        }
+//        unset($activeDuds);
 
         return [
-            'amountOfRegisteredMembers' => ModUtil::apiFunc('Users', 'user', 'countitems') - 1,
-            'amountOfOnlineMembers'     => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
-            'newestMemberName'          => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
+//            'amountOfRegisteredMembers' => ModUtil::apiFunc('Users', 'user', 'countitems') - 1,
+//            'amountOfOnlineMembers'     => ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getregisteredonline'),
+//            'newestMemberName'          => UserUtil::getVar('uname', ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getlatestuser')),
             // check if we should show the extra admin column
             'adminEdit'   => $edit,
             'adminDelete' => $delete,
-            'dudArray'    => $dudArray,
+//            'dudArray'    => $dudArray,
             'users'       => $users,
             'letter'      => $letter,
             'sortby'      => $sortby,
@@ -150,15 +128,11 @@ class MembersController extends AbstractController
      *
      * Displays last X registered users.
      *
-     * This function displays the last X users who registered at this site available from the module.
-     *
      * @throws AccessDeniedException on failed permission check
-     *
-     * @return string The rendered template output
+     * @return array
      */
     public function recentAction()
     {
-        // Security check
         if (!$this->hasPermission('ZikulaProfileModule:Members:recent', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
@@ -214,32 +188,30 @@ class MembersController extends AbstractController
      *
      * View users online.
      *
-     * This function displays the currently online users.
-     *
      * @throws AccessDeniedException on failed permission check
-     *
-     * @return string The rendered template output
+     * @return array
      */
     public function onlineAction()
     {
-        // Security check
         if (!$this->hasPermission('ZikulaProfileModule:Members:online', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
 
-        // get last 10 user id's
-        $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'whosonline');
-
-        // get all active profile fields
-        $activeDuds = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
-        $dudArray = array_keys($activeDuds);
-        unset($activeDuds);
+        $activeMinutes = $this->getVar('activeminutes');
+        $activeSince = new \DateTime();
+        $activeSince->modify("-$activeMinutes minutes");
+        $uids = $this->getDoctrine()->getRepository('ZikulaUsersModule:UserSessionEntity')->getUsersSince($activeSince);
+        $users = $this->getDoctrine()->getRepository('ZikulaUsersModule:UserEntity')->findBy(['uid' => $uids]);
+        if ($this->get('zikula_extensions_module.api.variable')->get('ZikulaSecurityCenterModule','sessionstoretofile', Constant::SESSION_STORAGE_FILE) == Constant::SESSION_STORAGE_FILE) {
+            $this->addFlash('danger', $this->__('Sessions are configured to store in a file and therefore this list is inaccurate.'));
+            if ($this->hasPermission('ZikulaSecurityCenterModule::', '::', ACCESS_ADMIN)) {
+                $link = $this->get('router')->generate('zikulasecuritycentermodule_config_config');
+                $this->addFlash('info', $this->__('Admin Message') . ": <a href='$link'>" . $this->__('Reconfigure sessions storage') . "</a>");
+            }
+        }
 
         return [
             'users' => $users,
-            // check which messaging module is available and add the necessary info
-            'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
-            'dudArray'      => $dudArray,
         ];
     }
 }

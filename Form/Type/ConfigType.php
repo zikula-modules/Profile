@@ -12,8 +12,13 @@
 namespace Zikula\ProfileModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Range;
+use Zikula\Common\Translator\IdentityTranslator;
 
 /**
  * Configuration form type class.
@@ -28,68 +33,57 @@ class ConfigType extends AbstractType
         $translator = $options['translator'];
 
         $builder
-            ->add('viewregdate', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                'label'    => $translator->__('Display the user\'s registration date'),
+            ->add('viewregdate', CheckboxType::class, [
+                'label' => $translator->__('Display the user\'s registration date'),
                 'required' => false
             ])
-            ->add('memberslistitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label'      => $translator->__('Users per page in \'Registered users list\''),
-                'empty_data' => 20,
-                'scale'      => 0,
-                'attr'       => [
+            ->add('memberslistitemsperpage', IntegerType::class, [
+                'constraints' => [new Range(['min' => 10, 'max' => 999])],
+                'label' => $translator->__('Users per page in \'Registered users list\''),
+                'scale' => 0,
+                'attr' => [
                     'maxlength' => 3
                 ]
             ])
-            ->add('onlinemembersitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label'      => $translator->__('Users per page in \'Users currently on-line\' page'),
-                'empty_data' => 20,
-                'scale'      => 0,
-                'attr'       => [
+            ->add('onlinemembersitemsperpage', IntegerType::class, [
+                'constraints' => [new Range(['min' => 10, 'max' => 999])],
+                'label' => $translator->__('Users per page in \'Users currently on-line\' page'),
+                'scale' => 0,
+                'attr' => [
                     'maxlength' => 3
                 ]
             ])
-            ->add('recentmembersitemsperpage', 'Symfony\Component\Form\Extension\Core\Type\IntegerType', [
-                'label'      => $translator->__('Users per page in \'Recent registrations\' page'),
-                'empty_data' => 20,
-                'scale'      => 0,
-                'attr'       => [
+            ->add('recentmembersitemsperpage', IntegerType::class, [
+                'constraints' => [new Range(['min' => 10, 'max' => 999])],
+                'label' => $translator->__('Users per page in \'Recent registrations\' page'),
+                'scale' => 0,
+                'attr' => [
                     'maxlength' => 3
                 ]
             ])
-            ->add('filterunverified', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
-                'label'      => $translator->__('Filter unverified users from \'Registered users list\''),
-                'empty_data' => '1',
-                'choices'    => [
-                    $translator->__('Yes') => '1',
-                    $translator->__('No')  => '0',
-                ],
-                'choices_as_values' => true,
-                'required'          => false,
-                'expanded'          => false,
-                'multiple'          => false,
-            ]);
-
-        foreach ($options['dudFields'] as $key => $item) {
-            $builder
-                ->add('dudregshow_'.$item['prop_attribute_name'], 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                    'label'    => $item['prop_label'],
-                    'required' => $item['prop_required'],
-                    'disabled' => $item['prop_required'],
-                ]);
-        }
-
-        $builder
-            ->add('save', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
+            ->add('activeminutes', IntegerType::class, [
+                'constraints' => [new Range(['min' => 1, 'max' => 99])],
+                'label' => $translator->__('Minutes a user is considered online'),
+                'scale' => 0,
+                'attr' => [
+                    'maxlength' => 2
+                ]
+            ])
+            ->add('filterunverified', CheckboxType::class, [
+                'label' => $translator->__('Filter unverified users from \'Registered users list\''),
+                'required' => false,
+            ])
+            ->add('save', SubmitType::class, [
                 'label' => $translator->__('Save'),
-                'icon'  => 'fa-check',
-                'attr'  => [
+                'icon' => 'fa-check',
+                'attr' => [
                     'class' => 'btn btn-success',
                 ],
             ])
-            ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
+            ->add('cancel', SubmitType::class, [
                 'label' => $translator->__('Cancel'),
-                'icon'  => 'fa-times',
-                'attr'  => [
+                'icon' => 'fa-times',
+                'attr' => [
                     'class' => 'btn btn-default',
                 ],
             ]);
@@ -109,8 +103,7 @@ class ConfigType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translator' => null,
-            'dudFields'  => [],
+            'translator' => new IdentityTranslator(),
         ]);
     }
 }
