@@ -202,7 +202,7 @@ class MembersController extends AbstractController
         $activeSince->modify("-$activeMinutes minutes");
         $uids = $this->getDoctrine()->getRepository('ZikulaUsersModule:UserSessionEntity')->getUsersSince($activeSince);
         $users = $this->getDoctrine()->getRepository('ZikulaUsersModule:UserEntity')->findBy(['uid' => $uids]);
-        if ($this->get('zikula_extensions_module.api.variable')->get('ZikulaSecurityCenterModule','sessionstoretofile', Constant::SESSION_STORAGE_FILE) == Constant::SESSION_STORAGE_FILE) {
+        if ($this->get('zikula_extensions_module.api.variable')->get('ZikulaSecurityCenterModule', 'sessionstoretofile', Constant::SESSION_STORAGE_FILE) == Constant::SESSION_STORAGE_FILE) {
             $this->addFlash('danger', $this->__('Sessions are configured to store in a file and therefore this list is inaccurate.'));
             if ($this->hasPermission('ZikulaSecurityCenterModule::', '::', ACCESS_ADMIN)) {
                 $link = $this->get('router')->generate('zikulasecuritycentermodule_config_config');
