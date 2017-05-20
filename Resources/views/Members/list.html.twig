@@ -33,7 +33,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th id="hUserName" scope="col">{{ __('User name') }}</th>
+                <th id="hUserName" scope="col">{{ __('Name') }}</th>
                 {% if messageModule|default %}
                     <th id="hMessages" scope="col">{{ __('Messages') }}</th>
                 {% endif %}
@@ -47,7 +47,7 @@
         <tbody>
             {% for user in users %}
             <tr>
-                <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;&nbsp;
+                <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                     {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
                     {% if online is same as(true) %}
                         <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="label label-success">{{ __('online') }}</span></a>

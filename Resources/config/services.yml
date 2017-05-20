@@ -62,3 +62,16 @@ services:
         arguments: ['@event_dispatcher']
         tags:
             - { name: form.type, alias: Zikula\ProfileModule\Form\Type\PropertyType }
+
+    zikula_profile_module.property_repository:
+        class: Zikula\ProfileModule\Entity\Repository\PropertyRepository
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+        arguments: ["ZikulaProfileModule:PropertyEntity"]
+
+    zikula_profile_module.form.property_type_factory:
+        class: Zikula\ProfileModule\Form\PropertyTypeFactory
+        arguments:
+            - '@form.factory'
+            - '@zikula_profile_module.property_repository'
+            - '@translator.default'
+            - '%zikula_profile_module.property_prefix%'

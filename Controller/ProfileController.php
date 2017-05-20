@@ -12,7 +12,8 @@ namespace Zikula\ProfileModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\UsersModule\Entity\UserEntity;
@@ -22,9 +23,6 @@ class ProfileController extends AbstractController
     /**
      * @Route("/display/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
      * @Template
-     *
-     * Display a profile.
-     *
      * @param UserEntity|null $userEntity
      * @throws AccessDeniedException on failed permission check
      * @return array
@@ -46,10 +44,11 @@ class ProfileController extends AbstractController
     /**
      * @Route("/edit/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
      * @Template
+     * @param Request $request
      * @param UserEntity|null $userEntity
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function editAction(UserEntity $userEntity = null)
+    public function editAction(Request $request, UserEntity $userEntity = null)
     {
         $currentUserUid = $this->get('zikula_users_module.current_user')->get('uid');
         if (empty($userEntity)) {
@@ -58,39 +57,23 @@ class ProfileController extends AbstractController
         if ($userEntity->getUid() != $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $prefix = $this->getParameter('zikula_profile_module.property_prefix');
-        $attributeValues = [];
-        foreach ($userEntity->getAttributes() as $attribute) {
-            if (0 === strpos($attribute->getName(), $prefix)) {
-                $attributeValues[$attribute->getName()] = $attribute->getValue();
+        $form = $this->get('zikula_profile_module.form.property_type_factory')->createForm($userEntity->getAttributes());
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->get('save')->isClicked() && $form->isValid()) {
+                $attributes = $form->getData();
+                foreach ($attributes as $attribute => $value) {
+                    $userEntity->setAttribute($attribute, $value);
+                }
+                $this->getDoctrine()->getManager()->flush();
             }
+
+            return $this->redirectToRoute('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
         }
-        $properties = $this->getDoctrine()->getRepository('ZikulaProfileModule:PropertyEntity')->findBy(['active' => true], ['weight' => 'ASC']);
-        $formBuilder = $this->createFormBuilder($attributeValues);
-        foreach ($properties as $property) {
-            $child = $prefix . ':' .$property->getId();
-            $options = $property->getFormOptions();
-            $options['label'] = isset($options['label']) ? $options['label'] : $userEntity->getAttributes()->get($child)->getExtra();
-            $formBuilder->add($child, $property->getFormType(), $options);
-        }
-        $formBuilder->add('save', SubmitType::class, [
-            'label' => $this->__('Save'),
-            'icon'  => 'fa-check',
-            'attr'  => [
-                'class' => 'btn btn-success',
-            ],
-        ]);
-        $formBuilder->add('cancel', SubmitType::class, [
-        'label' => $this->__('Cancel'),
-        'icon'  => 'fa-times',
-        'attr'  => [
-            'class' => 'btn btn-default',
-        ],
-    ]);
 
         return [
             'user' => $userEntity,
-            'form' => $formBuilder->getForm()->createView()
+            'form' => $form->createView()
         ];
     }
 }

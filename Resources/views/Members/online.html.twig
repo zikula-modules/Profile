@@ -13,9 +13,6 @@
     <table class="table table-striped">
         <colgroup>
             <col id="cUserName" />
-            {% if 'realname' in activeProperties %}
-                <col id="cRealName" />
-            {% endif %}
             {% if messageModule|default %}
                 <col id="cMessages" />
             {% endif %}
@@ -26,9 +23,6 @@
         <thead>
             <tr>
                 <th id="hUserName" scope="col">{{ __('User name') }}</th>
-                {% if 'realname' in activeProperties %}
-                    <th id="hRealName" scope="col">{{ __('Real name') }}</th>
-                {% endif %}
                 {% if messageModule|default %}
                     <th id="hMessages" scope="col">{{ __('Messages') }}</th>
                 {% endif %}
@@ -40,10 +34,7 @@
         <tbody>
             {% for user in users %}
             <tr>
-                <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong></td>
-                {% if 'realname' in activeProperties %}
-                    <td headers="hRealName">{{ user.attributes.realname|default('') }}</td>
-                {% endif %}
+                <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong> ({{ user.uname }})</td>
                 {% if messageModule|default %}
                     <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {% endif %}
