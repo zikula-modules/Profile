@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for user in users %}
+            {% for user in users if user.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS') %}
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                     {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
@@ -43,10 +43,9 @@
                 {% endif %}
                 {% if 'url' in activeProperties %}
                     <td headers="hSite">
-                        {% if user.attributes.url|default and user.attributes.url != 'http://' %}
-                        <a href="{{ user.attributes.url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ user.attributes.url|e('html_attr') }}"></i></a>
-                        {% else %}
-                        &nbsp;
+                        {% set url =  user.attributes[prefix ~ ':url']|default %}
+                        {% if url and url != 'http://' %}
+                            <a href="{{ url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
                         {% endif %}
                     </td>
                 {% endif %}

@@ -35,24 +35,32 @@ class MembersController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $startnum = $request->query->get('startnum', null);
-        $sortby = $request->get('sortby', 'uname');
+        $startNum = $request->query->get('startnum', null);
+        $sortBy = $request->get('sortby', 'uname');
         $searchby = $request->get('searchby', null);
-        $sortorder = $request->get('sortorder', null);
+        $sortOrder = $request->get('sortorder', null);
         $letter = $request->get('letter', null);
 
         $itemsPerPage = $this->getVar('memberslistitemsperpage', 20);
-        $users = $this->get('zikula_users_module.user_repository')->query([], [$sortby => $sortorder], $itemsPerPage, $startnum);
+        $critera = [];
+        if (isset($searchby)) {
+            $critera['uname'] = ['operator' => 'like', 'operand' => '%' . $searchby . '%'];
+        }
+        if (isset($letter)) {
+            $critera['uname'] = ['operator' => 'like', 'operand' => $letter . '%'];
+        }
+        $users = $this->get('zikula_users_module.user_repository')->query($critera, [$sortBy => $sortOrder], $itemsPerPage, $startNum);
         $amountOfUsers = $this->get('zikula_users_module.user_repository')->count();
 
         return [
+            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'amountOfRegisteredMembers' => $amountOfUsers - 1,
             'amountOfOnlineMembers' => count($this->getOnlineUids()),
             'newestMember' => $this->get('zikula_users_module.user_repository')->findBy([], ['user_regdate' => 'DESC'], 1)[0],
             'users' => $users,
             'letter' => $letter,
-            'sortby' => $sortby,
-            'sortorder' => $sortorder,
+            'sortby' => $sortBy,
+            'sortorder' => $sortOrder,
             'activeProperties' => $this->getActiveProperties(),
             'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
             'pager' => [
@@ -78,6 +86,7 @@ class MembersController extends AbstractController
         }
 
         return [
+            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties(),
             'users' => $this->get('zikula_users_module.user_repository')->findBy([], ['user_regdate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
             'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
@@ -100,6 +109,7 @@ class MembersController extends AbstractController
         }
 
         return [
+            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties(),
             'users' => $this->getDoctrine()->getRepository('ZikulaUsersModule:UserEntity')->findBy(['uid' => $this->getOnlineUids()]),
         ];

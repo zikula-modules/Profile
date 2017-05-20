@@ -5,11 +5,14 @@
         <div class="well">
             <div class="form-group">
                 <div class="col-sm-3 control-label">
-                    <label for="profile_letter" class="profile_letter">{{ __('Search') }}</label>
+                    <label for="searchby">{{ __('Search by Uname') }}</label>
                 </div>
                 <div class="col-sm-9">
-                    <span class="col-sm-3"><input class="form-control" id="profile_letter" type="text" name="letter" value="" maxlength="50" /></span>
-                    <span class="col-sm-9"><input class="btn btn-success" type="submit" value="{{ __('Submit') }}" /></span>
+                    <span class="col-sm-6"><input class="form-control" id="searchby" type="text" name="searchby" value="" maxlength="50" /></span>
+                    <span class="col-sm-6">
+                        <input class="btn btn-success" type="submit" value="{{ __('Submit') }}" />
+                        <a href="{{ path('zikulaprofilemodule_members_list') }}" class="btn btn-default">{{ __('Clear') }}</a>
+                    </span>
                 </div>
             </div>
         </div>
@@ -45,7 +48,7 @@
         </thead>
 
         <tbody>
-            {% for user in users %}
+            {% for user in users if user.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS') %}
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                     {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
@@ -60,10 +63,9 @@
                 {% endif %}
                 {% if 'url' in activeProperties %}
                     <td headers="hSite">
-                        {% if user.attributes.url|default and user.attributes.url != 'http://' %}
-                        <a href="{{ user.attributes.url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ user.attributes.url|e('html_attr') }}"></i></a>
-                        {% else %}
-                        &nbsp;
+                        {% set url =  user.attributes[prefix ~ ':url']|default %}
+                        {% if url and url != 'http://' %}
+                        <a href="{{ url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
                         {% endif %}
                     </td>
                 {% endif %}
