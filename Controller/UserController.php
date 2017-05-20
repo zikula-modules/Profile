@@ -109,9 +109,9 @@ class UserController extends AbstractController
      */
     public function viewmembersAction(Request $request)
     {
-        @trigger_error('The zikulaprofilemodule_user_viewmembers route is deprecated. please use zikulaprofilemodule_members_view instead.', E_USER_DEPRECATED);
+        @trigger_error('The zikulaprofilemodule_user_viewmembers route is deprecated. please use zikulaprofilemodule_members_list instead.', E_USER_DEPRECATED);
 
-        return $this->redirectToRoute('zikulaprofilemodule_members_view');
+        return $this->redirectToRoute('zikulaprofilemodule_members_list');
     }
 
     /**

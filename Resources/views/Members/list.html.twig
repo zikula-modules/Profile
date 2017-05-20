@@ -1,13 +1,28 @@
-{{ moduleHeader('user', __f('Last %s registered users', { '%s': getModVar('ZikulaProfileModule', 'recentmembersitemsperpage') }), true, true) }}
+{{ moduleHeader('user', __('Registered users'), true, true) }}
+
+<form class="form-horizontal" action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded">
+    <div>
+        <div class="well">
+            <div class="form-group">
+                <div class="col-sm-3 control-label">
+                    <label for="profile_letter" class="profile_letter">{{ __('Search') }}</label>
+                </div>
+                <div class="col-sm-9">
+                    <span class="col-sm-3"><input class="form-control" id="profile_letter" type="text" name="letter" value="" maxlength="50" /></span>
+                    <span class="col-sm-9"><input class="btn btn-success" type="submit" value="{{ __('Submit') }}" /></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="profile-alphafilter" class="text-center">
+        {{ pagerabc({ route: 'zikulaprofilemodule_members_list', posvar: 'letter', forwardvars: 'sortby', printempty: true }) }}
+    </div>
+</form>
 
 <div class="panel panel-default">
     <table class="table table-striped">
         <colgroup>
             <col id="cUserName" />
-            <col id="cRegistrationDate" />
-            {% if 'realname' in activeProperties %}
-                <col id="cRealName" />
-            {% endif %}
             {% if messageModule|default %}
                 <col id="cMessages" />
             {% endif %}
@@ -19,10 +34,6 @@
         <thead>
             <tr>
                 <th id="hUserName" scope="col">{{ __('User name') }}</th>
-                <th id="hRegistrationDate" scope="col">{{ __('Registration date') }}</th>
-                {% if 'realname' in activeProperties %}
-                    <th id="hRealName" scope="col">{{ __('Real name') }}</th>
-                {% endif %}
                 {% if messageModule|default %}
                     <th id="hMessages" scope="col">{{ __('Messages') }}</th>
                 {% endif %}
@@ -32,6 +43,7 @@
                 <th id="hActions" scope="col">{{ __('Actions') }}</th>
             </tr>
         </thead>
+
         <tbody>
             {% for user in users %}
             <tr>
@@ -43,10 +55,6 @@
                         <span class="label label-danger">{{ __('offline') }}</span>
                     {% endif %}
                 </td>
-                <td headers="hRegistrationDate">{{ user.user_regdate|localizeddate('medium', 'none')|default('') }}</td>
-                {% if 'realname' in activeProperties %}
-                    <td headers="hRealName">{{ user.attributes.realname|default('') }}</td>
-                {% endif %}
                 {% if messageModule|default %}
                     <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {% endif %}
@@ -63,10 +71,17 @@
                 <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: 'ZikulaMenuModule:Override:actions.html.twig'}) }}</td>
             </tr>
             {% else %}
-                <tr class="warning">
-                    <td colspan="6">{{ __('No recently registered users found.') }}</td>
-                </tr>
+                <tr class="danger"><td colspan="5">{{ __('No users found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+{{ pager({ rowcount: pager.amountOfItems, limit: pager.itemsPerPage, posvar: 'startnum', route: 'zikulaprofilemodule_members_list' }) }}
+
+<h3>{{ __('Statistics') }}</h3>
+<ul id="profile_status">
+    <li><strong>{{ __('Registered:') }}</strong> {{ amountOfRegisteredMembers }}</li>
+    <li><strong>{{ __('Online:') }}</strong> <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}">{{ amountOfOnlineMembers }}</a></li>
+    <li><strong>{{ __('Newest user:') }}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uid: newestMember.uid }) }}" title="{{ __f('View profile of %uname%', { '%uname%': newestMember.uname }) }}">{{ newestMember.uname }}</a></li>
+</ul>

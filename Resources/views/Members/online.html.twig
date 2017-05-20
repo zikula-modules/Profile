@@ -1,29 +1,38 @@
 {{ moduleHeader('user', __('Users online'), true, true) }}
 
+{% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
+    <div class="alert alert-info">{{ __('This information is not available.') }}
+    {% if hasPermission('ZikulaSecurityCenterModule::', '::', 'ACCESS_ADMIN') %}
+        <br />{{ __('Admin Message: Sessions are configured to store in a file.') }}&nbsp;
+        <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
+    {% endif %}
+    </div>
+{% else %}
+
 <div class="panel panel-default">
     <table class="table table-striped">
         <colgroup>
             <col id="cUserName" />
-            {% if dudArray.realname|default %}
+            {% if 'realname' in activeProperties %}
                 <col id="cRealName" />
             {% endif %}
             {% if messageModule|default %}
                 <col id="cMessages" />
             {% endif %}
-            {% if dudArray.url|default %}
+            {% if 'url' in activeProperties %}
                 <col id="cSite" />
             {% endif %}
         </colgroup>
         <thead>
             <tr>
                 <th id="hUserName" scope="col">{{ __('User name') }}</th>
-                {% if dudArray.realname|default %}
+                {% if 'realname' in activeProperties %}
                     <th id="hRealName" scope="col">{{ __('Real name') }}</th>
                 {% endif %}
                 {% if messageModule|default %}
                     <th id="hMessages" scope="col">{{ __('Messages') }}</th>
                 {% endif %}
-                {% if dudArray.url|default %}
+                {% if 'url' in activeProperties %}
                     <th id="hSite" scope="col">{{ __('Site') }}</th>
                 {% endif %}
             </tr>
@@ -32,13 +41,13 @@
             {% for user in users %}
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong></td>
-                {% if dudArray.realname|default %}
+                {% if 'realname' in activeProperties %}
                     <td headers="hRealName">{{ user.attributes.realname|default('') }}</td>
                 {% endif %}
                 {% if messageModule|default %}
                     <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
                 {% endif %}
-                {% if dudArray.url|default %}
+                {% if 'url' in activeProperties %}
                     <td headers="hSite">
                         {% if user.attributes.url|default and user.attributes.url != 'http://' %}
                         <a href="{{ user.attributes.url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ user.attributes.url|e('html_attr') }}"></i></a>
@@ -56,3 +65,4 @@
         </tbody>
     </table>
 </div>
+{% endif %}
