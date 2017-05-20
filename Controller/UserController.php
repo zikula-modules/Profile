@@ -34,7 +34,7 @@ class UserController extends AbstractController
      *
      * @throws NotFoundHttpException Thrown if the users block isn't found
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function usersBlockAction(Request $request)
     {

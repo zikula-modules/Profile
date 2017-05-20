@@ -32,7 +32,6 @@ class UserBlock extends AbstractBlockHandler
             return '';
         }
 
-
         if (!$currentUserApi->isLoggedIn() || \UserUtil::getVar('ublockon') != 1) {
             return '';
         }
