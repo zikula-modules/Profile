@@ -28,10 +28,9 @@
                 "user": {"route": "zikulaprofilemodule_profile_display"}
             },
             "securityschema": {
-                "ZikulaProfileModule::": "Module name::",
                 "ZikulaProfileModule::": "::",
                 "ZikulaProfileModule::view": "::",
-                "ZikulaProfileModule::item": "DynamicUserData PropertyName::DynamicUserData PropertyID",
+                "ZikulaProfileModule::item": "PropertyId::",
                 "ZikulaProfileModule:Members": "::",
                 "ZikulaProfileModule:Members:recent": "::",
                 "ZikulaProfileModule:Members:online": "::",

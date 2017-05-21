@@ -57,7 +57,7 @@ class ProfileController extends AbstractController
         if ($userEntity->getUid() != $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $form = $this->get('zikula_profile_module.form.property_type_factory')->createForm($userEntity->getAttributes());
+        $form = $this->get('zikula_profile_module.form.profile_type_factory')->createForm($userEntity->getAttributes());
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->get('save')->isClicked() && $form->isValid()) {

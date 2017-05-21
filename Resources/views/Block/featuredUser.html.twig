@@ -1,18 +1,23 @@
 <div class="text-center">
-    <h5>{{ userinfo.uname|profileLinkByUserName() }}</h5>
+    <h5>{{ user.uname|profileLinkByUserName() }}</h5>
     <p>
-        {% if userinfo.__ATTRIBUTES__.avatar|default and userinfo.__ATTRIBUTES__.avatar not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
+        {% set avatarValue = user.attributes[prefix~':avatar']['value']|default %}
+        {% if avatarValue|default and avatarValue not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
             {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
-            {{ userInfo.uname|profileLinkByUserName('', avatarPath ~ '/' ~ userInfo.__ATTRIBUTES__.avatar) }}
-            {{ userinfo.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
-        {% elseif allowGravatars %}
-            {{ zikulaprofilemodule_gravatar(email=userInfo.email) }}
+            {{ user.uname|profileLinkByUserName('', avatarPath~'/'~avatarValue) }}
+            {{ user.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
+        {% elseif getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_GRAVATARS_ENABLED')) %}
+            {{ zikulaprofilemodule_gravatar(user.email) }}
         {% endif %}
     </p>
-    {% for dudLabel, dudValue in dudArray %}
-        <p><strong>{{ dudLabel }}</strong><br />{{ dudValue }}</p>
+    {% for activeProperty in activeProperties
+        if user.attributes[prefix~':'~activeProperty.id]['value']|default
+        and activeProperty.id in blockProperties['fieldstoshow']
+        and hasPermission('ZikulaProfileModule::item', activeProperty.id~'::', 'ACCESS_READ')
+    %}
+        <p><strong>{{ user.attributes[prefix~':'~activeProperty.id]['extra'] }}</strong><br />{{ user.attributes[prefix~':'~activeProperty.id]['value'] }}</p>
     {% endfor %}
-    {% if showRegDate %}
-        <span>{{ __f('Registered on %s', { '%s': userInfo.user_regdate })|localizeddate('short', 'none') }}</span>
+    {% if blockProperties['showregdate'] %}
+        <span>{{ __f('Registered on %s', { '%s': user.user_regdate|localizeddate('short', 'none') }) }}</span>
     {% endif %}
 </div>

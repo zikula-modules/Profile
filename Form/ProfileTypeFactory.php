@@ -19,7 +19,7 @@ use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
-class PropertyTypeFactory
+class ProfileTypeFactory
 {
     /**
      * @var FormFactoryInterface

@@ -140,4 +140,12 @@ class PropertyEntity extends EntityAccess
     {
         $this->active = $active;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getId();
+    }
 }
