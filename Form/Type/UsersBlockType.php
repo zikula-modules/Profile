@@ -12,12 +12,13 @@
 namespace Zikula\ProfileModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Zikula\Common\Translator\IdentityTranslator;
 
-/**
- * Custom users block form type class.
- */
 class UsersBlockType extends AbstractType
 {
     /**
@@ -28,11 +29,11 @@ class UsersBlockType extends AbstractType
         $translator = $options['translator'];
 
         $builder
-            ->add('ublockon', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
+            ->add('ublockon', CheckboxType::class, [
                 'label'    => $translator->__('Enable your personal custom block'),
                 'required' => false,
             ])
-            ->add('ublock', 'Symfony\Component\Form\Extension\Core\Type\TextareaType', [
+            ->add('ublock', TextareaType::class, [
                 'label'    => $translator->__('Content of your custom block'),
                 'required' => false,
                 'attr'     => [
@@ -40,14 +41,14 @@ class UsersBlockType extends AbstractType
                     'rows' => 10,
                 ],
             ])
-            ->add('save', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
+            ->add('save', SubmitType::class, [
                 'label' => $translator->__('Save'),
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success',
                 ],
             ])
-            ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
+            ->add('cancel', SubmitType::class, [
                 'label' => $translator->__('Cancel'),
                 'icon'  => 'fa-times',
                 'attr'  => [
@@ -71,7 +72,7 @@ class UsersBlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translator' => null,
+            'translator' => new IdentityTranslator(),
         ]);
     }
 }

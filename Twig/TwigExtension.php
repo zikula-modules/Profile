@@ -14,9 +14,6 @@ namespace Zikula\ProfileModule\Twig;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Common\Translator\TranslatorInterface;
 
-/**
- * Twig extension class.
- */
 class TwigExtension extends \Twig_Extension
 {
     /**

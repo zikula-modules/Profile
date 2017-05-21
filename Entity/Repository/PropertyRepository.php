@@ -14,9 +14,6 @@ namespace Zikula\ProfileModule\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
-/**
- * Repository for the property entity.
- */
 class PropertyRepository extends EntityRepository implements PropertyRepositoryInterface
 {
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -15,9 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * Dependency injection extension for the Profile module.
- */
 class ZikulaProfileExtension extends Extension
 {
     /**

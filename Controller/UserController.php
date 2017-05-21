@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -20,10 +21,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserUtil;
 use Zikula\Core\Controller\AbstractController;
 
-/**
- * Class UserController
- * UI operations executable by general users.
- */
 class UserController extends AbstractController
 {
     /**

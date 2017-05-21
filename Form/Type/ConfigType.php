@@ -20,9 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Range;
 use Zikula\Common\Translator\IdentityTranslator;
 
-/**
- * Configuration form type class.
- */
 class ConfigType extends AbstractType
 {
     /**

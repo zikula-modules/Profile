@@ -12,7 +12,9 @@
 namespace Zikula\ProfileModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Zikula\Common\Translator\IdentityTranslator;
 
 class AvatarType extends AbstractType
 {
@@ -45,6 +47,6 @@ class AvatarType extends AbstractType
      */
     public function getParent()
     {
-        return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
+        return ChoiceType::class;
     }
 }

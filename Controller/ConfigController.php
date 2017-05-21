@@ -20,8 +20,6 @@ use Zikula\ProfileModule\Form\Type\ConfigType;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
- * Class ConfigController.
- *
  * @Route("/config")
  */
 class ConfigController extends AbstractController

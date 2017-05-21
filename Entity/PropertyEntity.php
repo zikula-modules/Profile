@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -16,8 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Zikula\Core\Doctrine\EntityAccess;
 
 /**
- * Property entity class.
- *
  * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
  * @ORM\Table(name="user_property")
  * @UniqueEntity("id")

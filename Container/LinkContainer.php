@@ -41,11 +41,6 @@ class LinkContainer implements LinkContainerInterface
     private $permissionApi;
 
     /**
-     * @var ExtensionApi
-     */
-    private $extensionApi;
-
-    /**
      * @var VariableApi
      */
     private $variableApi;
@@ -71,7 +66,6 @@ class LinkContainer implements LinkContainerInterface
      * @param TranslatorInterface $translator Translator service instance
      * @param RouterInterface $router RouterInterface service instance
      * @param PermissionApi $permissionApi PermissionApi service instance
-     * @param ExtensionApi $extensionApi ExtensionApi service instance
      * @param VariableApi $variableApi VariableApi service instance
      * @param CurrentUserApi $currentUserApi CurrentUserApi service instance
      * @param UsersLinkContainer $usersLinkContainer UsersLinkContainer service instance
@@ -81,7 +75,6 @@ class LinkContainer implements LinkContainerInterface
         TranslatorInterface $translator,
         RouterInterface $router,
         PermissionApi $permissionApi,
-        ExtensionApi $extensionApi,
         VariableApi $variableApi,
         CurrentUserApi $currentUserApi,
         UsersLinkContainer $usersLinkContainer,
@@ -90,7 +83,6 @@ class LinkContainer implements LinkContainerInterface
         $this->translator = $translator;
         $this->router = $router;
         $this->permissionApi = $permissionApi;
-        $this->extensionApi = $extensionApi;
         $this->variableApi = $variableApi;
         $this->currentUserApi = $currentUserApi;
         $this->usersLinkContainer = $usersLinkContainer;
@@ -158,8 +150,6 @@ class LinkContainer implements LinkContainerInterface
     {
         $links = [];
 
-        $profileIsAvailable = null !== $this->extensionApi->getModuleInstanceOrNull($this->getBundleName());
-
         if ($this->currentUserApi->isLoggedIn()) {
             if ($this->permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_READ)) {
                 $links[] = [
@@ -169,7 +159,7 @@ class LinkContainer implements LinkContainerInterface
                 ];
             }
 
-            if ($profileIsAvailable && $this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_READ)) {
+            if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url'   => $this->router->generate('zikulaprofilemodule_profile_display'),
                     'text'  => $this->translator->__('Profile'),
@@ -201,7 +191,7 @@ class LinkContainer implements LinkContainerInterface
             }
         }
 
-        if ($profileIsAvailable && $this->permissionApi->hasPermission($this->getBundleName().':Members:', '::', ACCESS_READ)) {
+        if ($this->permissionApi->hasPermission($this->getBundleName().':Members:', '::', ACCESS_READ)) {
             $membersLinks = [];
             if ($this->permissionApi->hasPermission($this->getBundleName().':Members:', '::', ACCESS_READ)) {
                 $membersLinks[] = [
