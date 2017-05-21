@@ -1,30 +1,39 @@
-{% if usersOnline %}
-<ul style="padding-left: 2em;">
-    {% for user in usersOnline %}
-    <li>
-        {{ user.uname|profileLinkByUserName('', '', maxLength) }}
-        {% if messageModule is not empty %}
-            {% if user.uid == currentUserId %}
-                {% set title = messageCount(user.uid, true) ~ __('unread') ~ "|" ~ messageCount(user.uid) ~ __('total') %}
-                ({{ messageInboxLink(user.uid, false, title) }})
-            {% else %}
-                <a href="{{ user.uid|messageSendLink(true) }}" title="{{ __f('Send private message to %s', { '%s': user.uname })|e('html_attr') }}"><i class="fa fa-envelope-o"></i></a>
-            {% endif %}
+{% if sessionsToFile %}
+    <div class="alert alert-info">{{ __('This information is not available.') }}
+        {% if hasPermission('ZikulaSecurityCenterModule::', '::', 'ACCESS_ADMIN') %}
+            <br />{{ __('Admin Message: Sessions are configured to store in a file.') }}&nbsp;
+            <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
         {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-<p class="text-info">
-    {% if amountOfOnlineGuests == 0 %}
-        {% set amountOfMembers = _fn('%s registered user', '%s registered users', amountOfOnlineMembers, { '%s': amountOfOnlineMembers }) %}
-        {{ __f('%s on-line.', { '%s': amountOfMembers }) }}
-    {% elseif amountOfOnlineMembers == 0 %}
-        {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
-        {{ __f('%s on-line.', { '%s': amountOfGuests }) }}
-    {% else %}
-        {% set amountOfMembers = _fn('%s registered user', '%s registered users', amountOfOnlineMembers, { '%s': amountOfOnlineMembers }) %}
-        {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
-        {{ __f('%1$s and %2$s on-line.', { '%1$s': amountOfMembers, '%2$s': amountOfGuests }) }}
+    </div>
+{% else %}
+    {% if sessions|length > 0 %}
+    <ul class="list-group">
+        {% for session in sessions %}
+        <li class="list-group-item">
+            {{ session.uid|profileLinkByUserId('', '', maxLength) }}
+            {% if messageModule is not empty %}
+                {% if session.uid == currentUser.uid %}
+                    {% set title = messageCount(session.uid, true) ~ __('unread') ~ "|" ~ messageCount(session.uid) ~ __('total') %}
+                    ({{ messageInboxLink(session.uid, false, title) }})
+                {% else %}
+                    <a href="{{ session.uid|messageSendLink(true) }}" title="{{ __('Send private message') }}"><i class="fa fa-envelope-o"></i></a>
+                {% endif %}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
     {% endif %}
-</p>
+    <p class="text-info">
+        {% if amountOfOnlineGuests == 0 %}
+            {% set amountOfMembers = _fn('%s registered user', '%s registered users', sessions|length, { '%s': sessions|length }) %}
+            {{ __f('%s on-line.', { '%s': amountOfMembers }) }}
+        {% elseif sessions|length == 0 %}
+            {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
+            {{ __f('%s on-line.', { '%s': amountOfGuests }) }}
+        {% else %}
+            {% set amountOfMembers = _fn('%s registered user', '%s registered users', sessions|length, { '%s': sessions|length }) %}
+            {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
+            {{ __f('%1$s and %2$s on-line.', { '%1$s': amountOfMembers, '%2$s': amountOfGuests }) }}
+        {% endif %}
+    </p>
+{% endif %}

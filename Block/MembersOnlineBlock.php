@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -10,13 +11,13 @@
 
 namespace Zikula\ProfileModule\Block;
 
-use ModUtil;
+use Doctrine\Common\Collections\Criteria;
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\ProfileModule\Block\Form\Type\MembersOnlineBlockType;
+use Zikula\SecurityCenterModule\Constant as SecCtrConstant;
 use Zikula\SettingsModule\SettingsConstant;
+use Zikula\UsersModule\Constant;
 
-/**
- * "Members Online" block.
- */
 class MembersOnlineBlock extends AbstractBlockHandler
 {
     /**
@@ -25,33 +26,43 @@ class MembersOnlineBlock extends AbstractBlockHandler
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if (!$this->hasPermission('ZikulaProfileModule:MembersOnlineblock:', $title.'::', ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaProfileModule:MembersOnlineblock:', $title . '::', ACCESS_READ)) {
             return '';
         }
 
-        // Defaults
-        if (!isset($properties['lengthmax']) || empty($properties['lengthmax'])) {
-            $properties['lengthmax'] = 30;
-        }
-
-        $currentUserApi = $this->get('zikula_users_module.current_user');
-        $userId = $currentUserApi->get('uid');
-        $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getallonline');
-        $usersOnline = [];
-        if ($users) {
-            foreach ($users['unames'] as $user) {
-                $usersOnline[] = $user;
-            }
+        $sessionsToFile = $this->get('zikula_extensions_module.api.variable')->getSystemVar('sessionstoretofile', SecCtrConstant::SESSION_STORAGE_FILE) == SecCtrConstant::SESSION_STORAGE_FILE;
+        if ($sessionsToFile) {
+            $sessions = [];
+            $guestCount = 0;
+        } else {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->neq('uid', Constant::USER_ID_ANONYMOUS))
+                ->andWhere(Criteria::expr()->neq('uid', null))
+                ->orderBy(['lastused' => 'DESC'])
+                ->setMaxResults($properties['amount']);
+            $sessions = $this->get('zikula_users_module.user_session_repository')->matching($criteria);
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->eq('uid', Constant::USER_ID_ANONYMOUS));
+            $guestCount = $this->get('zikula_users_module.user_session_repository')->matching($criteria)->count();
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/membersOnline.html.twig', [
-            'currentUserId'         => $userId,
-            'usersOnline'           => $usersOnline,
-            'maxLength'             => $properties['lengthmax'],
-            'messageModule'         => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
-            'amountOfOnlineMembers' => $users['numusers'],
-            'amountOfOnlineGuests'  => $users['numguests'],
+            'sessionsToFile' => $sessionsToFile,
+            'sessions' => $sessions,
+            'maxLength' => $properties['lengthmax'],
+            'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
+            'amountOfOnlineGuests' => (int) $guestCount,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormOptions()
+    {
+        return [
+            'translator' => $this->get('translator.default'),
+        ];
     }
 
     /**
@@ -59,7 +70,7 @@ class MembersOnlineBlock extends AbstractBlockHandler
      */
     public function getFormClassName()
     {
-        return 'Zikula\ProfileModule\Block\Form\Type\MembersOnlineBlockType';
+        return MembersOnlineBlockType::class;
     }
 
     /**

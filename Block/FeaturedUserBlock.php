@@ -12,6 +12,7 @@
 namespace Zikula\ProfileModule\Block;
 
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\ProfileModule\Block\Form\Type\FeaturedUserBlockType;
 
 class FeaturedUserBlock extends AbstractBlockHandler
 {
@@ -43,6 +44,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
     {
         return [
             'activeProperties' => $this->get('zikula_profile_module.property_repository')->findBy(['active' => true]),
+            'translator' => $this->get('translator.default'),
         ];
     }
 
@@ -51,7 +53,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
      */
     public function getFormClassName()
     {
-        return 'Zikula\ProfileModule\Block\Form\Type\FeaturedUserBlockType';
+        return FeaturedUserBlockType::class;
     }
 
     /**

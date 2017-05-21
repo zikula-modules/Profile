@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -10,12 +11,12 @@
 
 namespace Zikula\ProfileModule\Block;
 
-use ModUtil;
+use Doctrine\Common\Collections\Criteria;
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\ProfileModule\Block\Form\Type\LastSeenBlockType;
+use Zikula\SecurityCenterModule\Constant as SecCtrConstant;
+use Zikula\UsersModule\Constant;
 
-/**
- * "Last Seen" block.
- */
 class LastSeenBlock extends AbstractBlockHandler
 {
     /**
@@ -27,22 +28,32 @@ class LastSeenBlock extends AbstractBlockHandler
         if (!$this->hasPermission('ZikulaProfileModule:LastSeenblock:', $title.'::', ACCESS_READ)) {
             return '';
         }
-
-        // Defaults
-        if (!isset($properties['amount']) || empty($properties['amount'])) {
-            $properties['amount'] = 5;
+        $sessionsToFile = $this->get('zikula_extensions_module.api.variable')->getSystemVar('sessionstoretofile', SecCtrConstant::SESSION_STORAGE_FILE) == SecCtrConstant::SESSION_STORAGE_FILE;
+        if ($sessionsToFile) {
+            $sessions = [];
+        } else {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->neq('uid', Constant::USER_ID_ANONYMOUS))
+                ->andWhere(Criteria::expr()->neq('uid', null))
+                ->orderBy(['lastused' => 'DESC'])
+                ->setMaxResults($properties['amount']);
+            $sessions = $this->get('zikula_users_module.user_session_repository')->matching($criteria);
         }
 
-        // get last x logged in user id's
-        $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', [
-            'sortby'    => 'lastlogin',
-            'numitems'  => $properties['amount'],
-            'sortorder' => 'DESC',
-        ]);
-
         return $this->renderView('@ZikulaProfileModule/Block/lastSeen.html.twig', [
-            'users' => $users,
+            'sessionsToFile' => $sessionsToFile,
+            'sessions' => $sessions,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormOptions()
+    {
+        return [
+            'translator' => $this->get('translator.default'),
+        ];
     }
 
     /**
@@ -50,7 +61,7 @@ class LastSeenBlock extends AbstractBlockHandler
      */
     public function getFormClassName()
     {
-        return 'Zikula\ProfileModule\Block\Form\Type\LastSeenBlockType';
+        return LastSeenBlockType::class;
     }
 
     /**

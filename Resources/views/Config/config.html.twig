@@ -11,6 +11,11 @@
             {{ __('Settings') }}
             {{ pageSetVar('title', __('Profile settings')) }}
         </h3>
+        {% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
+        <div class="alert alert-danger">{{ __('Sessions are configured to store in a file. This prevents some functionality within the profile module related to tracking who is online.') }}&nbsp;
+                <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
+        </div>
+        {% endif %}
 
         {{ form_start(form) }}
         {{ form_errors(form) }}

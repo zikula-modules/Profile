@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Zikula\Common\Translator\IdentityTranslator;
 
 class FeaturedUserBlockType extends AbstractType
 {
@@ -26,15 +27,16 @@ class FeaturedUserBlockType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $translator = $options['translator'];
         $builder
             ->add('username', TextType::class, [
-                'label' => __('User name'),
+                'label' => $translator->__('User name'),
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('fieldstoshow', ChoiceType::class, [
-                'label' => __('Information to show'),
+                'label' => $translator->__('Information to show'),
                 'label_attr' => [
                     'class' => 'checkbox-inline',
                 ],
@@ -46,7 +48,7 @@ class FeaturedUserBlockType extends AbstractType
                 'choice_value' => 'id'
             ])
             ->add('showregdate', CheckboxType::class, [
-                'label' => __('Show registration date'),
+                'label' => $translator->__('Show registration date'),
                 'required' => false,
             ]);
     }
@@ -58,6 +60,7 @@ class FeaturedUserBlockType extends AbstractType
     {
         $resolver->setDefaults([
             'activeProperties' => [],
+            'translator' => new IdentityTranslator()
         ]);
     }
 

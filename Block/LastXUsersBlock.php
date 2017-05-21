@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -10,12 +11,9 @@
 
 namespace Zikula\ProfileModule\Block;
 
-use ModUtil;
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\ProfileModule\Block\Form\Type\LastXUsersBlockType;
 
-/**
- * "Last X Registered Users" block.
- */
 class LastXUsersBlock extends AbstractBlockHandler
 {
     /**
@@ -32,21 +30,19 @@ class LastXUsersBlock extends AbstractBlockHandler
             return '';
         }
 
-        // Defaults
-        if (!isset($properties['amount']) || empty($properties['amount'])) {
-            $properties['amount'] = 5;
-        }
-
-        // get last x registered user id's
-        $users = ModUtil::apiFunc('ZikulaProfileModule', 'memberslist', 'getall', [
-            'sortby'    => 'user_regdate',
-            'numitems'  => $properties['amount'],
-            'sortorder' => 'DESC',
-        ]);
-
         return $this->renderView('@ZikulaProfileModule/Block/lastXUsers.html.twig', [
-            'users' => $users,
+            'users' => $this->get('zikula_users_module.user_repository')->findBy([], ['user_regdate' => 'DESC'], $properties['amount']),
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormOptions()
+    {
+        return [
+            'translator' => $this->get('translator.default'),
+        ];
     }
 
     /**
@@ -54,7 +50,7 @@ class LastXUsersBlock extends AbstractBlockHandler
      */
     public function getFormClassName()
     {
-        return 'Zikula\ProfileModule\Block\Form\Type\LastXUsersBlockType';
+        return LastXUsersBlockType::class;
     }
 
     /**
