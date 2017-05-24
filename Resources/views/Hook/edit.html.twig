@@ -1,0 +1,12 @@
+{% form_theme form with [
+'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+] %}
+
+<fieldset>
+    <legend>{{ __('Profile') }}</legend>
+    {# intentionally no form_start(form) #}
+    {% for element in form if element.vars.name not in ['save', 'cancel'] %}
+        {{ form_row(element) }}
+    {% endfor %}
+</fieldset>

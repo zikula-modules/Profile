@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -10,16 +11,19 @@
 
 namespace Zikula\ProfileModule\Listener;
 
-use ModUtil;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig_Environment;
-use UserUtil;
 use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
+use Zikula\ProfileModule\Form\ProfileTypeFactory;
+use Zikula\UsersModule\Constant;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
+use Zikula\UsersModule\RegistrationEvents;
+use Zikula\UsersModule\UserEvents;
 
 /**
  * Hook-like event handlers for basic profile data.
@@ -37,6 +41,16 @@ class UsersUiListener implements EventSubscriberInterface
     private $kernel;
 
     /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
+     * @var ProfileTypeFactory
+     */
+    private $formFactory;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -47,11 +61,14 @@ class UsersUiListener implements EventSubscriberInterface
     protected $twig;
 
     /**
-     * Access to the request information.
-     *
-     * @var Request
+     * @var RegistryInterface
      */
-    protected $request;
+    protected $doctrine;
+
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
 
     /**
      * The validation object instance used when validating information entered during an edit phase.
@@ -63,39 +80,49 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param ZikulaHttpKernelInterface     $kernel       KernelInterface service instance
-     * @param TranslatorInterface $translator   TranslatorInterface service instance
-     * @param RequestStack        $requestStack RequestStack service instance
-     * @param Twig_Environment    $twig         Twig_Environment service instance
+     * @param ZikulaHttpKernelInterface $kernel
+     * @param UserRepositoryInterface $userRepository
+     * @param ProfileTypeFactory $factory
+     * @param TranslatorInterface $translator
+     * @param Twig_Environment $twig
+     * @param RegistryInterface $registry
+     * @param RequestStack $requestStack
      */
     public function __construct(
         ZikulaHttpKernelInterface $kernel,
+        UserRepositoryInterface $userRepository,
+        ProfileTypeFactory $factory,
         TranslatorInterface $translator,
-        RequestStack $requestStack,
-        Twig_Environment $twig
-    ) {
+        Twig_Environment $twig,
+        RegistryInterface $registry,
+        RequestStack $requestStack
+    )
+    {
         $this->kernel = $kernel;
+        $this->userRepository = $userRepository;
+        $this->formFactory = $factory;
         $this->translator = $translator;
-        $this->request = $requestStack->getCurrentRequest();
         $this->twig = $twig;
+        $this->doctrine = $registry;
+        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            'module.users.ui.display_view'                      => ['uiView'],
-            'module.users.ui.form_edit.new_user'                => ['uiEdit'],
-            'module.users.ui.form_edit.modify_user'             => ['uiEdit'],
-            'module.users.ui.form_edit.new_registration'        => ['uiEdit'],
-            'module.users.ui.form_edit.modify_registration'     => ['uiEdit'],
-            'module.users.ui.validate_edit.new_user'            => ['validateEdit'],
-            'module.users.ui.validate_edit.modify_user'         => ['validateEdit'],
-            'module.users.ui.validate_edit.new_registration'    => ['validateEdit'],
-            'module.users.ui.validate_edit.modify_registration' => ['validateEdit'],
-            'module.users.ui.process_edit.new_user'             => ['processEdit'],
-            'module.users.ui.process_edit.modify_user'          => ['processEdit'],
-            'module.users.ui.process_edit.new_registration'     => ['processEdit'],
-            'module.users.ui.process_edit.modify_registration'  => ['processEdit'],
+            UserEvents::DISPLAY_VIEW => ['uiView'],
+            UserEvents::NEW_FORM => ['uiEdit'],
+            UserEvents::MODIFY_FORM => ['uiEdit'],
+            RegistrationEvents::NEW_FORM => ['uiEdit'],
+            RegistrationEvents::MODIFY_FORM => ['uiEdit'],
+            UserEvents::NEW_VALIDATE => ['validateEdit'],
+            UserEvents::MODIFY_VALIDATE => ['validateEdit'],
+            RegistrationEvents::NEW_VALIDATE => ['validateEdit'],
+            RegistrationEvents::MODIFY_VALIDATE => ['validateEdit'],
+            UserEvents::NEW_VALIDATE => ['processEdit'],
+            UserEvents::MODIFY_PROCESS => ['processEdit'],
+            RegistrationEvents::NEW_PROCESS => ['processEdit'],
+            RegistrationEvents::MODIFY_PROCESS => ['processEdit'],
         ];
     }
 
@@ -112,7 +139,7 @@ class UsersUiListener implements EventSubscriberInterface
             return;
         }
 
-        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
+        $items = \ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
         if (!$items) {
             return;
         }
@@ -129,156 +156,76 @@ class UsersUiListener implements EventSubscriberInterface
      * Render form elements for display that allow a user to enter profile information for a user account as part of a
      * Users module hook-like UI event.
      *
-     * Parameters passed in via POST:
-     * ------------------------------
-     * array dynadata If reentering the editing phase after validation errors, an array containing the profile items to
-     *                  store for the user; otherwise not provided.
-     *
      * @param GenericEvent $event The event that triggered this function call, including the id of the user for which
      *                            profile items should be entered
-     *
-     * @return void
      */
     public function uiEdit(GenericEvent $event)
     {
         if (null === $this->kernel->getModule('ZikulaProfileModule')) {
             return;
         }
-
-        $items = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive', ['get' => 'editable']);
-        if (!$items) {
-            return;
-        }
-
-        $fieldSets = [];
-        foreach ($items as $propattr => $propdata) {
-            $fieldSet = (isset($propdata['prop_fieldset']) && !empty($propdata['prop_fieldset'])) ? $propdata['prop_fieldset'] : $this->translator->__('User Information');
-            $items[$propattr]['prop_fieldset'] = $fieldSet;
-            $fieldSets[$fieldSet] = $fieldSet;
-        }
-
-        // check if there's a user to edit
-        // or uses uid=1 to pull the default values from the anonymous user
-        $userId = $event->hasArgument('id') ? $event->getArgument('id') : null;
-        if (!isset($userId)) {
-            $userId = 1;
-        }
-
-        // Get the dynamic data that might have been posted
-        if ($this->request->isMethod('POST') && $this->request->request->has('dynadata')) {
-            $dynadata = $this->request->request->get('dynadata');
-        } else {
-            $dynadata = [];
-        }
-
-        // merge this temporary dynadata and the errors into the items array
-        foreach ($items as $prop_label => $item) {
-            foreach ($dynadata as $propname => $propdata) {
-                if ($item['prop_attribute_name'] == $propname) {
-                    $items[$prop_label]['temp_propdata'] = $propdata;
-                }
-            }
-        }
-
-        $errorFields = $this->validation ? $this->validation->getErrors() : [];
-
-        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/UsersUi/profile_ui_edit.html.twig', [
-            'dudItems'  => $items,
-            'dudErrors' => $errorFields,
-            'fieldSets' => $fieldSets,
-            'userId'    => $userId,
+        $user = $event->getSubject();
+        $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
+        $userEntity = $this->userRepository->find($uid);
+        $form = $this->formFactory->createForm($userEntity->getAttributes(), false);
+        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/Hook/edit.html.twig', [
+            'user' => $userEntity,
+            'form' => $form->createView()
         ]);
     }
 
     /**
      * Validate profile information entered for a user as part of the hook-like user UI events.
      *
-     * Parameters passed in via POST:
-     * ------------------------------
-     * array dynadata An array containing the profile items to store for the user.
-     *
      * @param GenericEvent $event The event that triggered this function call, including the id of the user for which
      *                            profile data was entered, and a collection in which to store the validation object
      *                            created by this function
-     *
-     * @return void
      */
     public function validateEdit(GenericEvent $event)
     {
         if (null === $this->kernel->getModule('ZikulaProfileModule')) {
             return;
         }
-
-        if (!$this->request->isMethod('POST')) {
-            return;
-        }
-
-        $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
-        $this->validation = new ValidationResponse('dynadata', $dynadata);
-        $requiredFailures = ModUtil::apiFunc('ZikulaProfileModule', 'user', 'checkrequired', [
-            'dynadata' => $dynadata,
-        ]);
-
-        $errorCount = 0;
-
-        if ($requiredFailures && $requiredFailures['result']) {
-            foreach ($requiredFailures['fields'] as $key => $fieldName) {
-                $this->validation->addError($fieldName,
-                    $this->translator->__f('The \'%s\' field is required.', ['%s' => $requiredFailures['translatedFields'][$key]])
-                );
-
-                $errorCount++;
+        $user = $event->getSubject();
+        $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
+        $userEntity = $this->userRepository->find($uid);
+        $form = $this->formFactory->createForm($userEntity->getAttributes(), false);
+        $form->handleRequest($this->requestStack->getCurrentRequest());
+        $this->validation = new ValidationResponse('', $form->getData());
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $errors = $form->getErrors();
+            foreach ($errors as $error) {
+                $this->validation->addError('', $error->getMessage());
             }
-        }
-
-        if ($errorCount > 0) {
-            $this->request->getSession()->getFlashBag()->add('error',
-                $this->translator->_fn(
-                    'There was a problem with one of the personal information fields.',
-                    'There were problems with %d personal information fields.',
-                    $errorCount,
-                    ['%d' => $errorCount]
-                )
-            );
         }
 
         $event->data->set(self::EVENT_KEY, $this->validation);
     }
 
     /**
-     * Respond to a `module.users.ui.process_edit` event to store profile data gathered when editing or creating a user account.
-     *
-     * Parameters passed in via POST:
-     * ------------------------------
-     * array dynadata An array containing the profile items to store for the user.
+     * Store profile data gathered when editing or creating a user account.
      *
      * @param GenericEvent $event The event that triggered this function call, containing the id of the user for which
      *                            profile information should be stored
-     *
-     * @return void
      */
     public function processEdit(GenericEvent $event)
     {
         if (null === $this->kernel->getModule('ZikulaProfileModule')) {
             return;
         }
-
-        if (!$this->request->isMethod('POST')) {
-            return;
-        }
-
-        if ($this->validation && !$this->validation->hasErrors()) {
-            $user = $event->getSubject();
-            $dynadata = $this->request->request->has('dynadata') ? $this->request->request->get('dynadata') : [];
-            foreach ($dynadata as $dudName => $dudItem) {
-                if (is_array($dudItem)) {
-                    foreach ($dudItem as $dudSubName => $dudSubItem) {
-                        UserUtil::setVar($dudSubName, $dudSubItem, $user['uid']);
-                    }
-                } else {
-                    UserUtil::setVar($dudName, $dudItem, $user['uid']);
+        $user = $event->getSubject();
+        $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
+        $userEntity = $this->userRepository->find($uid);
+        $form = $this->formFactory->createForm($userEntity->getAttributes(), false);
+        $form->handleRequest($this->requestStack->getCurrentRequest());
+        if ($form->isSubmitted()) {
+            $attributes = $form->getData();
+            foreach ($attributes as $attribute => $value) {
+                if (!empty($value)) {
+                    $userEntity->setAttribute($attribute, $value);
                 }
             }
+            $this->doctrine->getManager()->flush();
         }
     }
 }

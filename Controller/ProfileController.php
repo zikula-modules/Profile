@@ -38,6 +38,7 @@ class ProfileController extends AbstractController
         }
 
         return [
+            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'user' => $userEntity
         ];
     }

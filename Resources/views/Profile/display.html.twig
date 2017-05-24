@@ -5,6 +5,16 @@
         <h2 class="panel-title"><i class="fa fa-user-circle-o"></i> {{ __f('Profile for %uname', {'%uname': user.uname}) }}</h2>
     </div>
     <div class="panel-body">
+        <p>
+            {% set avatarValue = user.attributes[prefix~':avatar']['value']|default %}
+            {% if avatarValue|default and avatarValue not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
+                {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+                {{ user.uname|profileLinkByUserName('', avatarPath~'/'~avatarValue) }}
+                {{ user.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
+            {% elseif getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_GRAVATARS_ENABLED')) %}
+                {{ zikulaprofilemodule_gravatar(user.email) }}
+            {% endif %}
+        </p>
         <div class="row">
             <div class="col-sm-4 text-right">
                 <strong>{{ __('User name:') }}</strong>
@@ -23,7 +33,7 @@
                 </div>
             </div>
         {% endif %}
-        {% for attribute in user.attributes if attribute.value is not empty %}
+        {% for attribute in user.attributes if ((attribute.value is not empty) and (prefix in attribute.name)) %}
         <div class="row">
             <div class="col-sm-4 text-right">
                 <strong>{{ attribute.extra }}</strong>

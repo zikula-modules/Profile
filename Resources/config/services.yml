@@ -28,9 +28,12 @@ services:
         class: Zikula\ProfileModule\Listener\UsersUiListener
         arguments:
           - "@kernel"
+          - "@zikula_users_module.user_repository"
+          - "@zikula_profile_module.form.profile_type_factory"
           - "@translator.default"
-          - "@request_stack"
           - "@twig"
+          - "@doctrine"
+          - "@request_stack"
         tags:
             - { name: kernel.event_subscriber }
 

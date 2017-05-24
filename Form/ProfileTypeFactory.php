@@ -62,9 +62,10 @@ class ProfileTypeFactory
 
     /**
      * @param PersistentCollection $attributes
+     * @param bool $includeButtons
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function createForm(PersistentCollection $attributes)
+    public function createForm(PersistentCollection $attributes, $includeButtons = true)
     {
         $attributeValues = [];
         foreach ($attributes as $attribute) {
@@ -74,27 +75,29 @@ class ProfileTypeFactory
         }
         /** @var PropertyEntity[] $properties */
         $properties = $this->propertyRepository->findBy(['active' => true], ['weight' => 'ASC']);
-        $formBuilder = $this->formFactory->createBuilder(FormType::class, $attributeValues);
+        $formBuilder = $this->formFactory->createNamedBuilder('zikulaprofilemodule_editprofile', FormType::class, $attributeValues);
         foreach ($properties as $property) {
             $child = $this->prefix . ':' .$property->getId();
             $options = $property->getFormOptions();
-            $options['label'] = isset($options['label']) ? $options['label'] : $attributes->get($child)->getExtra();
+            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel();//$attributes->get($child)->getExtra();
             $formBuilder->add($child, $property->getFormType(), $options);
         }
-        $formBuilder->add('save', SubmitType::class, [
-            'label' => $this->translator->__('Save'),
-            'icon'  => 'fa-check',
-            'attr'  => [
-                'class' => 'btn btn-success',
-            ],
-        ]);
-        $formBuilder->add('cancel', SubmitType::class, [
-            'label' => $this->translator->__('Cancel'),
-            'icon'  => 'fa-times',
-            'attr'  => [
-                'class' => 'btn btn-default',
-            ],
-        ]);
+        if ($includeButtons) {
+            $formBuilder->add('save', SubmitType::class, [
+                'label' => $this->translator->__('Save'),
+                'icon' => 'fa-check',
+                'attr' => [
+                    'class' => 'btn btn-success',
+                ],
+            ]);
+            $formBuilder->add('cancel', SubmitType::class, [
+                'label' => $this->translator->__('Cancel'),
+                'icon' => 'fa-times',
+                'attr' => [
+                    'class' => 'btn btn-default',
+                ],
+            ]);
+        }
 
         return $formBuilder->getForm();
     }
