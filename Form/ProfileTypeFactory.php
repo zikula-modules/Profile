@@ -79,7 +79,7 @@ class ProfileTypeFactory
         foreach ($properties as $property) {
             $child = $this->prefix . ':' .$property->getId();
             $options = $property->getFormOptions();
-            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel();//$attributes->get($child)->getExtra();
+            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel(); //$attributes->get($child)->getExtra();
             $formBuilder->add($child, $property->getFormType(), $options);
         }
         if ($includeButtons) {

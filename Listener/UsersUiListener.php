@@ -96,8 +96,7 @@ class UsersUiListener implements EventSubscriberInterface
         Twig_Environment $twig,
         RegistryInterface $registry,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->kernel = $kernel;
         $this->userRepository = $userRepository;
         $this->formFactory = $factory;
