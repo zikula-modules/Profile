@@ -1,0 +1,33 @@
+<fieldset>
+    <legend>{{ __('Profile') }}</legend>
+    <p>
+        {% set avatarValue = user.attributes[prefix~':avatar']['value']|default %}
+        {% if avatarValue|default and avatarValue not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
+            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+            {{ user.uname|profileLinkByUserName('', avatarPath~'/'~avatarValue) }}
+            {{ user.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
+        {% elseif getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_GRAVATARS_ENABLED')) %}
+            {{ zikulaprofilemodule_gravatar(user.email) }}
+        {% endif %}
+    </p>
+    {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
+        <div class="row">
+            <div class="col-sm-4 text-right">
+                <strong>{{ __('Registration date:') }}</strong>
+            </div>
+            <div class="col-sm-8">
+                <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
+            </div>
+        </div>
+    {% endif %}
+    {% for attribute in user.attributes if ((attribute.value is not empty) and (prefix in attribute.name)) %}
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>{{ attribute.extra }}</strong>
+        </div>
+        <div class="col-sm-8">
+            <span>{{ attribute.value }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</fieldset>

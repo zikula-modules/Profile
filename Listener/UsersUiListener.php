@@ -15,7 +15,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig_Environment;
-use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
@@ -34,11 +33,6 @@ class UsersUiListener implements EventSubscriberInterface
      * The area name that this handler processes.
      */
     const EVENT_KEY = 'module.profile.users_ui_handler';
-
-    /**
-     * @var ZikulaHttpKernelInterface
-     */
-    private $kernel;
 
     /**
      * @var UserRepositoryInterface
@@ -71,6 +65,11 @@ class UsersUiListener implements EventSubscriberInterface
     protected $requestStack;
 
     /**
+     * @var string
+     */
+    protected $prefix;
+
+    /**
      * The validation object instance used when validating information entered during an edit phase.
      *
      * @var ValidationResponse
@@ -78,32 +77,30 @@ class UsersUiListener implements EventSubscriberInterface
     protected $validation;
 
     /**
-     * Constructor.
-     *
-     * @param ZikulaHttpKernelInterface $kernel
      * @param UserRepositoryInterface $userRepository
      * @param ProfileTypeFactory $factory
      * @param TranslatorInterface $translator
      * @param Twig_Environment $twig
      * @param RegistryInterface $registry
      * @param RequestStack $requestStack
+     * @param string $prefix
      */
     public function __construct(
-        ZikulaHttpKernelInterface $kernel,
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $factory,
         TranslatorInterface $translator,
         Twig_Environment $twig,
         RegistryInterface $registry,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        $prefix
     ) {
-        $this->kernel = $kernel;
         $this->userRepository = $userRepository;
         $this->formFactory = $factory;
         $this->translator = $translator;
         $this->twig = $twig;
         $this->doctrine = $registry;
         $this->requestStack = $requestStack;
+        $this->prefix = $prefix;
     }
 
     public static function getSubscribedEvents()
@@ -134,20 +131,9 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiView(GenericEvent $event)
     {
-        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
-            return;
-        }
-
-        $items = \ModUtil::apiFunc('ZikulaProfileModule', 'user', 'getallactive');
-        if (!$items) {
-            return;
-        }
-
-        $user = $event->getSubject();
-
-        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/UsersUi/profile_ui_view.html.twig', [
-            'dudItems' => $items,
-            'userInfo' => $user,
+        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/Hook/display.html.twig', [
+            'prefix' => $this->prefix,
+            'user' => $event->getSubject(),
         ]);
     }
 
@@ -160,9 +146,6 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function uiEdit(GenericEvent $event)
     {
-        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
-            return;
-        }
         $user = $event->getSubject();
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
         $userEntity = $this->userRepository->find($uid);
@@ -182,9 +165,6 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function validateEdit(GenericEvent $event)
     {
-        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
-            return;
-        }
         $user = $event->getSubject();
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
         $userEntity = $this->userRepository->find($uid);
@@ -209,9 +189,6 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function processEdit(GenericEvent $event)
     {
-        if (null === $this->kernel->getModule('ZikulaProfileModule')) {
-            return;
-        }
         $user = $event->getSubject();
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
         $userEntity = $this->userRepository->find($uid);
