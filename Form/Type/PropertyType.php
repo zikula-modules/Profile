@@ -39,6 +39,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\LocaleType;
 use Zikula\Common\Translator\IdentityTranslator;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\FormTypesChoices;
 
@@ -53,8 +54,9 @@ class PropertyType extends AbstractType
      * PropertyType constructor.
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -64,37 +66,11 @@ class PropertyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $translator = $options['translator'];
-        $choices = new FormTypesChoices([
-            $translator->__('Text') => TextType::class,
-            $translator->__('Textarea') => TextareaType::class,
-            $translator->__('Checkbox') => CheckboxType::class,
-            $translator->__('Email') => EmailType::class,
-            $translator->__('Url') => UrlType::class,
-            $translator->__('Avatar') => AvatarType::class,
-            $translator->__('Radio') => RadioType::class,
-            $translator->__('Choice') => ChoiceType::class,
-            $translator->__('Timezone') => TimezoneType::class,
-            $translator->__('Date') => DateType::class,
-            $translator->__('Birthday') => BirthdayType::class,
-            $translator->__('Time') => TimeType::class,
-            $translator->__('DateTime') => DateTimeType::class,
-            $translator->__('Integer') => IntegerType::class,
-            $translator->__('Money') => MoneyType::class,
-            $translator->__('Number') => NumberType::class,
-            $translator->__('Percent') => PercentType::class,
-            $translator->__('Range') => RangeType::class,
-            $translator->__('Country') => CountryType::class,
-            $translator->__('Language') => LanguageType::class,
-            $translator->__('Locale') => LocaleType::class,
-            $translator->__('Currency') => CurrencyType::class,
-        ]);
-        $this->eventDispatcher->dispatch('test', new GenericEvent($choices));
-
         $builder
             ->add('id', TextType::class)
-            ->add('label', TextType::class)
+            ->add('labels', CollectionType::class)
             ->add('formType', ChoiceType::class, [
-                'choices' => $choices,
+                'choices' => $this->getChoices($translator),
                 'choices_as_values' => true
             ])
             ->add('formOptions', CollectionType::class, [
@@ -133,5 +109,36 @@ class PropertyType extends AbstractType
         $resolver->setDefaults([
             'translator' => new IdentityTranslator(),
         ]);
+    }
+
+    private function getChoices(TranslatorInterface $translator)
+    {
+        $choices = new FormTypesChoices([
+            $translator->__('Text') => TextType::class,
+            $translator->__('Textarea') => TextareaType::class,
+            $translator->__('Checkbox') => CheckboxType::class,
+            $translator->__('Email') => EmailType::class,
+            $translator->__('Url') => UrlType::class,
+            $translator->__('Avatar') => AvatarType::class,
+            $translator->__('Radio') => RadioType::class,
+            $translator->__('Choice') => ChoiceType::class,
+            $translator->__('Timezone') => TimezoneType::class,
+            $translator->__('Date') => DateType::class,
+            $translator->__('Birthday') => BirthdayType::class,
+            $translator->__('Time') => TimeType::class,
+            $translator->__('DateTime') => DateTimeType::class,
+            $translator->__('Integer') => IntegerType::class,
+            $translator->__('Money') => MoneyType::class,
+            $translator->__('Number') => NumberType::class,
+            $translator->__('Percent') => PercentType::class,
+            $translator->__('Range') => RangeType::class,
+            $translator->__('Country') => CountryType::class,
+            $translator->__('Language') => LanguageType::class,
+            $translator->__('Locale') => LocaleType::class,
+            $translator->__('Currency') => CurrencyType::class,
+        ]);
+        $this->eventDispatcher->dispatch('test', new GenericEvent($choices));
+
+        return $choices;
     }
 }

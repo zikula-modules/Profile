@@ -33,11 +33,11 @@ class PropertyEntity extends EntityAccess
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="array")
      * @param string
-     * @Assert\NotBlank()
+     * @Assert\NotNull()
      */
-    private $label = '';
+    private $labels = [];
 
     /**
      * @ORM\Column(type="text")
@@ -49,7 +49,7 @@ class PropertyEntity extends EntityAccess
     /**
      * @ORM\Column(type="array")
      * @param array
-     * @Assert\NotBlank()
+     * @Assert\NotNull()
      */
     private $formOptions = [];
 
@@ -76,14 +76,27 @@ class PropertyEntity extends EntityAccess
         $this->id = $id;
     }
 
-    public function getLabel()
+    public function getLabels()
     {
-        return $this->label;
+        return $this->labels;
     }
 
-    public function setLabel($label)
+    public function getLabel($locale = '', $default = 'en')
     {
-        $this->label = $label;
+        if (!empty($locale) && isset($this->labels[$locale])) {
+            return $this->labels[$locale];
+        }
+        if (!empty($default) && isset($this->labels[$default])) {
+            return $this->labels[$default];
+        }
+        $values = array_values($this->labels);
+
+        return !empty($values[0])? $values[0] : $this->id;
+    }
+
+    public function setLabels(array $labels)
+    {
+        $this->labels = $labels;
     }
 
     public function getFormType()

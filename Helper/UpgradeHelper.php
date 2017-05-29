@@ -57,16 +57,17 @@ class UpgradeHelper
 
     /**
      * @param array $property
+     * @param string $locale
      * @return PropertyEntity
      */
-    public function mergeToNewProperty(array $property)
+    public function mergeToNewProperty(array $property, $locale = 'en')
     {
         $property['validation'] = unserialize($property['validation']);
         $newProperty = new PropertyEntity();
         $newProperty->setId($property['attributename']);
         $newProperty->setWeight($property['weight']);
         $newProperty->setActive($property['weight'] > 0);
-        $newProperty->setLabel($this->__(/** @Ignore */$property['label']));
+        $newProperty->setLabels([$locale => $this->__(/** @Ignore */$property['label'])]);
         $this->setFormType($newProperty, $property);
         $this->setFormOptions($newProperty, $property);
 

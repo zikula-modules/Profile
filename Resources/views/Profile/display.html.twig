@@ -44,4 +44,9 @@
         </div>
         {% endfor %}
     </div>
+    {% if currentUser.uid == user.uid or hasPermission('ZikulaProfileModule::edit', '::', 'ACCESS_EDIT') %}
+        <div class="panel-footer text-right">
+            <a class="btn btn-success btn-xs" href="{{ path('zikulaprofilemodule_profile_edit', {uid:user.uid}) }}"><i class="fa fa-pencil"></i> {{ __('Edit profile') }}</a>
+        </div>
+    {% endif %}
 </div>

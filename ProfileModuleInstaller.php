@@ -64,7 +64,8 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $this->setVars($this->getDefaultModVars());
 
         // create the default data for the module
-        $this->defaultdata();
+        $locale = $this->container->get('request_stack')->getMasterRequest()->getLocale();
+        $this->defaultdata($locale);
 
         // Initialisation successful
         return true;
@@ -99,8 +100,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 // create new table & insert upgraded data
                 $this->schemaTool->create($this->entities);
                 $propertyToIdMap = [];
+                $locale = $this->container->get('request_stack')->getMasterRequest()->getLocale();
                 foreach ($properties as $property) {
-                    $newProperty = $this->container->get('zikula_profile_module.helper.upgrade_helper')->mergeToNewProperty($property);
+                    $newProperty = $this->container->get('zikula_profile_module.helper.upgrade_helper')->mergeToNewProperty($property, $locale);
                     $this->entityManager->persist($newProperty);
                     $this->entityManager->flush();
                     $propertyToIdMap[$property['attributename']] = $newProperty->getId();
@@ -154,68 +156,68 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     /**
      * Create the default data for the users module.
      */
-    protected function defaultdata()
+    protected function defaultdata($locale)
     {
         $prop = new PropertyEntity();
         $prop->setId(ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME);
         $prop->setFormType(TextType::class);
-        $prop->setLabel($this->__('Real Name'));
+        $prop->setLabels([$locale => $this->__('Real Name')]);
         $prop->setWeight(1);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('publicemail');
         $prop->setFormType(TextType::class);
-        $prop->setLabel($this->__('Public Email'));
+        $prop->setLabels([$locale => $this->__('Public Email')]);
         $prop->setWeight(2);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('url');
         $prop->setFormType(TextType::class);
-        $prop->setLabel($this->__('Homepage'));
+        $prop->setLabels([$locale => $this->__('Homepage')]);
         $prop->setWeight(3);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('timezone');
         $prop->setFormType(TimezoneType::class);
-        $prop->setLabel($this->__('Timezone'));
+        $prop->setLabels([$locale => $this->__('Timezone')]);
         $prop->setWeight(4);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('avatar');
         $prop->setFormType(AvatarType::class);
-        $prop->setLabel($this->__('Avatar'));
+        $prop->setLabels([$locale => $this->__('Avatar')]);
         $prop->setWeight(5);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('city');
         $prop->setFormType(TextType::class);
-        $prop->setLabel($this->__('Location'));
+        $prop->setLabels([$locale => $this->__('Location')]);
         $prop->setWeight(6);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('occupation');
         $prop->setFormType(TextType::class);
-        $prop->setLabel($this->__('Occupation'));
+        $prop->setLabels([$locale => $this->__('Occupation')]);
         $prop->setWeight(7);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('signature');
         $prop->setFormType(TextType::class);
-        $prop->setLabel($this->__('Signature'));
+        $prop->setLabels([$locale => $this->__('Signature')]);
         $prop->setWeight(8);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('extrainfo');
         $prop->setFormType(TextareaType::class);
-        $prop->setLabel($this->__('Extra info'));
+        $prop->setLabels([$locale => $this->__('Extra info')]);
         $prop->setWeight(9);
         $this->entityManager->persist($prop);
 
