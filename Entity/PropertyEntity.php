@@ -91,7 +91,7 @@ class PropertyEntity extends EntityAccess
         }
         $values = array_values($this->labels);
 
-        return !empty($values[0])? $values[0] : $this->id;
+        return !empty($values[0]) ? $values[0] : $this->id;
     }
 
     public function setLabels(array $labels)
