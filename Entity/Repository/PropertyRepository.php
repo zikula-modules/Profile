@@ -16,4 +16,11 @@ use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
 class PropertyRepository extends EntityRepository implements PropertyRepositoryInterface
 {
+    public function getIndexedActive()
+    {
+        $qb = $this->createQueryBuilder('p', 'p.id')
+            ->where('p.active = true');
+
+        return $qb->getQuery()->getArrayResult();
+    }
 }

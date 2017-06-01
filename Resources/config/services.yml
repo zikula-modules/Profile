@@ -12,6 +12,7 @@ services:
           - "@zikula_users_module.current_user"
           - "@zikula_users_module.container.link_container"
           - "@zikula_users_module.internal.message_module_collector"
+          - "@zikula_blocks_module.block_repository"
         tags:
             - { name: zikula.link_container }
 
@@ -21,6 +22,8 @@ services:
         arguments:
           - "@translator.default"
           - "@request_stack"
+          - "@zikula_profile_module.property_repository"
+          - "%zikula_profile_module.property_prefix%"
         tags:
             - { name: twig.extension }
 

@@ -13,6 +13,7 @@ namespace Zikula\ProfileModule\Container;
 
 use ModUtil;
 use Symfony\Component\Routing\RouterInterface;
+use Zikula\BlocksModule\Entity\RepositoryInterface\BlockRepositoryInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -60,6 +61,11 @@ class LinkContainer implements LinkContainerInterface
     private $messageModuleCollector;
 
     /**
+     * @var BlockRepositoryInterface
+     */
+    private $blocksRepository;
+
+    /**
      * LinkContainer constructor.
      *
      * @param TranslatorInterface $translator Translator service instance
@@ -69,6 +75,7 @@ class LinkContainer implements LinkContainerInterface
      * @param CurrentUserApi $currentUserApi CurrentUserApi service instance
      * @param UsersLinkContainer $usersLinkContainer UsersLinkContainer service instance
      * @param MessageModuleCollector $messageModuleCollector
+     * @param BlockRepositoryInterface $blockRepository
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -77,7 +84,8 @@ class LinkContainer implements LinkContainerInterface
         VariableApi $variableApi,
         CurrentUserApi $currentUserApi,
         UsersLinkContainer $usersLinkContainer,
-        MessageModuleCollector $messageModuleCollector
+        MessageModuleCollector $messageModuleCollector,
+        BlockRepositoryInterface $blockRepository
     ) {
         $this->translator = $translator;
         $this->router = $router;
@@ -86,6 +94,7 @@ class LinkContainer implements LinkContainerInterface
         $this->currentUserApi = $currentUserApi;
         $this->usersLinkContainer = $usersLinkContainer;
         $this->messageModuleCollector = $messageModuleCollector;
+        $this->blocksRepository = $blockRepository;
     }
 
     /**
@@ -256,18 +265,8 @@ class LinkContainer implements LinkContainerInterface
         }
 
         // check if the users block exists
-        $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
-        $profileModuleId = ModUtil::getIdFromName($this->getBundleName());
-        $found = false;
-        if (is_array($blocks)) {
-            foreach ($blocks as $block) {
-                if ($block['module']['id'] == $profileModuleId && $block['bkey'] == 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock') {
-                    $found = true;
-                    break;
-                }
-            }
-        }
-        if ($found) {
+        $block = $this->blocksRepository->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
+        if (isset($block)) {
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_user_usersblock'),
                 'text'  => $this->translator->__('Personal custom block'),

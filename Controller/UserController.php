@@ -11,15 +11,15 @@
 
 namespace Zikula\ProfileModule\Controller;
 
-use ModUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use UserUtil;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\ProfileModule\Form\Type\UsersBlockType;
+use Zikula\UsersModule\Entity\UserEntity;
 
 class UserController extends AbstractController
 {
@@ -30,21 +30,12 @@ class UserController extends AbstractController
      * Display the configuration options for the users block.
      *
      * @throws NotFoundHttpException Thrown if the users block isn't found
-     *
      * @return array|RedirectResponse
      */
     public function usersBlockAction(Request $request)
     {
-        $blocks = ModUtil::apiFunc('ZikulaBlocksModule', 'user', 'getall');
-        $profileModuleId = ModUtil::getIdFromName('ZikulaProfileModule');
-        $found = false;
-        foreach ($blocks as $block) {
-            if ($block['module']['id'] == $profileModuleId && $block['bkey'] == 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock') {
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
+        $block = $this->get('zikula_blocks_module.block_repository')->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
+        if (!isset($block)) {
             throw new NotFoundHttpException();
         }
 
@@ -52,24 +43,25 @@ class UserController extends AbstractController
         if (!$currentUserApi->isLoggedIn()) {
             throw new AccessDeniedException();
         }
+        /** @var UserEntity $userEntity */
+        $userEntity = $this->get('zikula_users_module.user_repository')->find($currentUserApi->get('uid'));
 
         $formVars = [
-            'ublockon' => (bool) UserUtil::getVar('ublockon'),
-            'ublock'   => UserUtil::getVar('ublock'),
+            'ublockon' => $userEntity->hasAttribute('ublockon') ? (bool) $userEntity->getAttributeValue('ublockon') : false,
+            'ublock'   => $userEntity->hasAttribute('ublock') ? $userEntity->getAttributeValue('ublock') : '',
         ];
 
-        $form = $this->createForm('Zikula\ProfileModule\Form\Type\UsersBlockType', $formVars, [
+        $form = $this->createForm(UsersBlockType::class, $formVars, [
             'translator' => $this->get('translator.default'),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $formData = $form->getData();
-                $ublockon = isset($formData['ublockon']) ? (bool) $formData['ublockon'] : false;
-                $ublock = isset($formData['ublock']) ? $formData['ublock'] : '';
 
-                UserUtil::setVar('ublockon', $ublockon);
-                UserUtil::setVar('ublock', $ublock);
+                $userEntity->setAttribute('ublockon', $formData['ublockon']);
+                $userEntity->setAttribute('ublock', $formData['ublock']);
+                $this->getDoctrine()->getManager()->flush();
 
                 $this->addFlash('status', $this->__('Done! Saved custom block.'));
             }

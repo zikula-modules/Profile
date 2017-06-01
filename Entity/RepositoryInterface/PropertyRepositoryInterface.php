@@ -13,7 +13,12 @@ namespace Zikula\ProfileModule\Entity\RepositoryInterface;
 
 use Doctrine\Common\Collections\Selectable;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Zikula\ProfileModule\Entity\PropertyEntity;
 
 interface PropertyRepositoryInterface extends ObjectRepository, Selectable
 {
+    /**
+     * @return PropertyEntity[]
+     */
+    public function getIndexedActive();
 }

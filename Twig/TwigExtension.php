@@ -13,6 +13,8 @@ namespace Zikula\ProfileModule\Twig;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
+use Zikula\UsersModule\Entity\UserAttributeEntity;
 
 class TwigExtension extends \Twig_Extension
 {
@@ -27,17 +29,33 @@ class TwigExtension extends \Twig_Extension
     protected $requestStack;
 
     /**
+     * @var PropertyRepositoryInterface
+     */
+    protected $propertyRepository;
+
+    /**
+     * @var string
+     */
+    protected $prefix;
+
+    /**
      * TwigExtension constructor.
      *
      * @param TranslatorInterface $translator
      * @param RequestStack $requestStack
+     * @param PropertyRepositoryInterface $propertyRepository
+     * @param string $prefix
      */
     public function __construct(
         TranslatorInterface $translator,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        PropertyRepositoryInterface $propertyRepository,
+        $prefix
     ) {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
+        $this->propertyRepository = $propertyRepository;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -49,6 +67,13 @@ class TwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('zikulaprofilemodule_gravatar', [$this, 'getGravatarImage'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('zikulaprofilemodule_sortAttributesByWeight', [$this, 'sortAttributesByWeight'])
         ];
     }
 
@@ -81,5 +106,26 @@ class TwigExtension extends \Twig_Extension
         }
 
         return $result;
+    }
+
+    public function sortAttributesByWeight($attributes)
+    {
+        $properties = $this->propertyRepository->getIndexedActive();
+        $sorter = function ($att1, $att2) use ($properties) {
+            if ((0 !== strpos($att1, $this->prefix)) && (0 !== strpos($att2, $this->prefix))) {
+                return 0;
+            }
+            $n1 = substr($att1, strlen($this->prefix) + 1);
+            $n2 = substr($att2, strlen($this->prefix) + 1);
+            if (!isset($properties[$n1]) || !isset($properties[$n2])) {
+                return 0;
+            }
+
+            return $properties[$n1]['weight'] > $properties[$n2]['weight'];
+        };
+        $attributes = $attributes->toArray();
+        uksort($attributes, $sorter);
+
+        return $attributes;
     }
 }

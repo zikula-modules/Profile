@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Zikula package.
  *
@@ -10,7 +11,9 @@
 
 namespace Zikula\ProfileModule\Block;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\BlocksModule\Block\Form\Type\HtmlBlockType;
 
 /**
  * A user-customizable block.
@@ -27,21 +30,21 @@ class UserBlock extends AbstractBlockHandler
         if ($title == '') {
             $title = $this->__f('Custom block content for %s', ['%s' => $currentUserApi->get('uname')]);
         }
-
         if (!$this->hasPermission('Userblock::', $title.'::', ACCESS_READ)) {
             return '';
         }
-
-        if (!$currentUserApi->isLoggedIn() || \UserUtil::getVar('ublockon') != 1) {
+        /** @var ArrayCollection $attributes */
+        $attributes = $currentUserApi->get('attributes');
+        if (!$currentUserApi->isLoggedIn() || (bool) $attributes->get('ublockon') != true) {
             return '';
         }
 
-        return nl2br(\UserUtil::getVar('ublock'));
+        return nl2br($attributes->get('ublock'));
     }
 
     public function getFormClassName()
     {
-        return 'Zikula\BlocksModule\Block\Form\Type\HtmlBlockType';
+        return HtmlBlockType::class;
     }
 
     public function getFormTemplate()
