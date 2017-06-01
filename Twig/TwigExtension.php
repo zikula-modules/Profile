@@ -14,7 +14,6 @@ namespace Zikula\ProfileModule\Twig;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
-use Zikula\UsersModule\Entity\UserAttributeEntity;
 
 class TwigExtension extends \Twig_Extension
 {
