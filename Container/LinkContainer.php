@@ -268,9 +268,9 @@ class LinkContainer implements LinkContainerInterface
         $block = $this->blocksRepository->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
         if (isset($block)) {
             $links[] = [
-                'url'   => $this->router->generate('zikulaprofilemodule_user_usersblock'),
+                'url'   => $this->router->generate('zikulaprofilemodule_userblock_edit'),
                 'text'  => $this->translator->__('Personal custom block'),
-                'icon'  => 'home',
+                'icon'  => 'cube',
             ];
         }
 

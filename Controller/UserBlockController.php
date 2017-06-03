@@ -21,7 +21,7 @@ use Zikula\Core\Controller\AbstractController;
 use Zikula\ProfileModule\Form\Type\UsersBlockType;
 use Zikula\UsersModule\Entity\UserEntity;
 
-class UserController extends AbstractController
+class UserBlockController extends AbstractController
 {
     /**
      * @Route("/usersblock")
@@ -32,7 +32,7 @@ class UserController extends AbstractController
      * @throws NotFoundHttpException Thrown if the users block isn't found
      * @return array|RedirectResponse
      */
-    public function usersBlockAction(Request $request)
+    public function editAction(Request $request)
     {
         $block = $this->get('zikula_blocks_module.block_repository')->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
         if (!isset($block)) {
