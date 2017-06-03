@@ -28,6 +28,7 @@ class ZikulaProfileExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(realpath(__DIR__.'/../Resources/config')));
 
+        $loader->load('forms.yml');
         $loader->load('services.yml');
     }
 }

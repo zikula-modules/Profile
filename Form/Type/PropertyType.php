@@ -36,12 +36,15 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\LocaleType;
 use Zikula\Common\Translator\IdentityTranslator;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\FormTypesChoices;
+use Zikula\SettingsModule\Api\ApiInterface\LocaleApiInterface;
 
 class PropertyType extends AbstractType
 {
@@ -51,13 +54,21 @@ class PropertyType extends AbstractType
     private $eventDispatcher;
 
     /**
+     * @var LocaleApiInterface
+     */
+    private $localeApi;
+
+    /**
      * PropertyType constructor.
      * @param EventDispatcherInterface $eventDispatcher
+     * @param LocaleApiInterface $localeApi
      */
     public function __construct(
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        LocaleApiInterface $localeApi
     ) {
         $this->eventDispatcher = $eventDispatcher;
+        $this->localeApi = $localeApi;
     }
 
     /**
@@ -67,16 +78,27 @@ class PropertyType extends AbstractType
     {
         $translator = $options['translator'];
         $builder
-            ->add('id', TextType::class)
-            ->add('labels', CollectionType::class)
+            ->add('id', TextType::class, [
+                'label' => $translator->__('Id'),
+                'help' => $translator->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
+                'alert' => ['Once used, do not change the ID value or all profiles will lose their connection!' => 'warning']
+            ])
+            ->add('labels', CollectionType::class, [
+                'label' => $translator->__('Translated labels'),
+                'entry_type' => TranslationType::class
+            ])
             ->add('formType', ChoiceType::class, [
+                'label' => $translator->__('Field type'),
                 'choices' => $this->getChoices($translator),
                 'choices_as_values' => true
             ])
             ->add('formOptions', CollectionType::class, [
+                'label' => $translator->__('field options'),
                 'entry_options' => ['required' => false]
             ])
-            ->add('active', CheckboxType::class)
+            ->add('active', CheckboxType::class, [
+                'label' => $translator->__('Active'),
+            ])
             ->add('save', SubmitType::class, [
                 'label' => $translator->__('Save'),
                 'icon'  => 'fa-check',
@@ -91,6 +113,18 @@ class PropertyType extends AbstractType
                     'class' => 'btn btn-default',
                 ],
             ]);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $supportedLocales = $this->localeApi->getSupportedLocales();
+            $data = $event->getData();
+            $labels = $data['labels'];
+            foreach ($supportedLocales as $locale) {
+                if (!array_key_exists($locale, $labels)) {
+                    $labels[$locale] = $labels['en'];
+                }
+            }
+            $data['labels'] = $labels;
+            $event->setData($data);
+        });
     }
 
     /**

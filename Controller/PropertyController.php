@@ -63,13 +63,11 @@ class PropertyController extends AbstractController
         if (!isset($propertyEntity)) {
             $propertyEntity = new PropertyEntity();
         }
-        $this->transformTranslations($propertyEntity, $request);
         $form = $this->createForm(PropertyType::class, $propertyEntity);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $propertyEntity = $form->getData();
-                $this->reverseTransformTranslations($propertyEntity, $request);
                 $this->getDoctrine()->getManager()->persist($propertyEntity);
                 $this->getDoctrine()->getManager()->flush();
                 $this->addFlash('success', $this->__('Property saved.'));
@@ -119,27 +117,5 @@ class PropertyController extends AbstractController
             'id' => $propertyEntity->getId(),
             'form' => $form->createView()
         ];
-    }
-
-    private function transformTranslations(PropertyEntity $propertyEntity, Request $request)
-    {
-        $installedLanguageNames = $this->get('zikula_settings_module.locale_api')->getSupportedLocaleNames(null, $request->getLocale());
-        $values = [];
-        $labels = $propertyEntity->getLabels();
-        foreach ($installedLanguageNames as $languageName => $code) {
-            $values[$languageName] = !empty($labels[$code]) ? $labels[$code] : '';
-        }
-        $propertyEntity->setLabels($values);
-    }
-
-    private function reverseTransformTranslations(PropertyEntity $propertyEntity, Request $request)
-    {
-        $installedLanguageNames = $this->get('zikula_settings_module.locale_api')->getSupportedLocaleNames(null, $request->getLocale());
-        $values = [];
-        $labels = $propertyEntity->getLabels();
-        foreach ($installedLanguageNames as $languageName => $code) {
-            $values[$code] = !empty($labels[$languageName]) ? $labels[$languageName] : '';
-        }
-        $propertyEntity->setLabels($values);
     }
 }

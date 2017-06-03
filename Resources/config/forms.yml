@@ -1,0 +1,22 @@
+services:
+    zikula_profile_module.form.type.property_type:
+        class: Zikula\ProfileModule\Form\Type\PropertyType
+        arguments:
+            - '@event_dispatcher'
+            - '@zikula_settings_module.locale_api'
+        tags:
+            - { name: form.type, alias: Zikula\ProfileModule\Form\Type\PropertyType }
+
+    zikula.profile_module.form.type.translation_type:
+        class: Zikula\ProfileModule\Form\Type\TranslationType
+        arguments: ['@zikula_settings_module.locale_api']
+        tags:
+            - { name: form.type, alias: Zikula\ProfileModule\Form\Type\TranslationType }
+
+    zikula_profile_module.form.profile_type_factory:
+        class: Zikula\ProfileModule\Form\ProfileTypeFactory
+        arguments:
+            - '@form.factory'
+            - '@zikula_profile_module.property_repository'
+            - '@translator.default'
+            - '%zikula_profile_module.property_prefix%'
