@@ -101,8 +101,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->schemaTool->create($this->entities);
                 $propertyToIdMap = [];
                 $locale = $this->container->get('request_stack')->getMasterRequest()->getLocale();
+                $upgradeHelper = $this->container->get('zikula_profile_module.helper.upgrade_helper');
                 foreach ($properties as $property) {
-                    $newProperty = $this->container->get('zikula_profile_module.helper.upgrade_helper')->mergeToNewProperty($property, $locale);
+                    $newProperty = $upgradeHelper->mergeToNewProperty($property, $locale);
                     $this->entityManager->persist($newProperty);
                     $this->entityManager->flush();
                     $propertyToIdMap[$property['attributename']] = $newProperty->getId();
@@ -114,6 +115,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 foreach ($attributes as $attribute) {
                     if (array_key_exists($attribute->getName(), $propertyToIdMap)) {
                         $attribute->setName($prefix . ':' . $propertyToIdMap[$attribute->getName()]);
+                        $attribute->setValue($upgradeHelper->getModifiedAttributeValue($attribute, $prefix));
                         $i++;
                     }
                     if ($i > 50) {

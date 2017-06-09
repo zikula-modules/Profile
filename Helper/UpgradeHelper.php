@@ -26,9 +26,20 @@ use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
+use Zikula\UsersModule\Entity\UserAttributeEntity;
 
 class UpgradeHelper
 {
+    /**
+     * @var string
+     */
+    private $systemTimezone;
+
+    /**
+     * @var array
+     */
+    private $offsetMap = [];
+
     use TranslatorTrait;
 
     private $formTypeMap = [
@@ -44,15 +55,35 @@ class UpgradeHelper
     /**
      * UpgradeHelper constructor.
      * @param TranslatorInterface $translator
+     * @param string $timezone
      */
-    public function __construct(TranslatorInterface $translator)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        $timezone
+    ) {
         $this->setTranslator($translator);
+        $this->systemTimezone = $timezone;
+        $this->createOffsetMap();
     }
 
     public function setTranslator($translator)
     {
         $this->translator = $translator;
+    }
+
+    /**
+     * @param UserAttributeEntity $attribute
+     * @param string $prefix
+     * @return mixed
+     */
+    public function getModifiedAttributeValue(UserAttributeEntity $attribute, $prefix)
+    {
+        $value = $attribute->getValue();
+        if ($prefix . ':timezone' == $attribute->getName()) {
+            $value = isset($this->offsetMap[$value]) ? $this->offsetMap[$value] : $this->systemTimezone;
+        }
+
+        return $value;
     }
 
     /**
@@ -80,6 +111,7 @@ class UpgradeHelper
         switch ($property['attributename']) {
             case 'tzoffset':
                 $newProperty->setFormType(TimezoneType::class);
+                $newProperty->setId('timezone');
                 break;
             case 'avatar':
                 $newProperty->setFormType(AvatarType::class);
@@ -158,6 +190,18 @@ class UpgradeHelper
             case 'eur':
                 return 'j F Y';
                 break;
+        }
+    }
+
+    private function createOffsetMap()
+    {
+        $identifiers = \DateTimeZone::listIdentifiers();
+        foreach ($identifiers as $name) {
+            $now = new \DateTime(null, new \DateTimeZone($name));
+            $offsetValue = $now->getOffset() / 3600;
+            if (!isset($this->offsetMap[$offsetValue])) {
+                $this->offsetMap[$offsetValue] = $name;
+            }
         }
     }
 }

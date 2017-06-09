@@ -60,7 +60,9 @@ services:
 
     zikula_profile_module.helper.upgrade_helper:
         class: Zikula\ProfileModule\Helper\UpgradeHelper
-        arguments: ['@translator.default']
+        arguments:
+          - '@translator.default'
+          - "@=service('zikula_extensions_module.api.variable').getSystemVar('timezone')"
 
     zikula_profile_module.property_repository:
         class: Zikula\ProfileModule\Entity\Repository\PropertyRepository
