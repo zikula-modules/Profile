@@ -10,9 +10,11 @@
 
 namespace Zikula\ProfileModule;
 
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Zikula\Core\AbstractExtensionInstaller;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
@@ -169,14 +171,14 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
 
         $prop = new PropertyEntity();
         $prop->setId('publicemail');
-        $prop->setFormType(TextType::class);
+        $prop->setFormType(EmailType::class);
         $prop->setLabels([$locale => $this->__('Public Email')]);
         $prop->setWeight(2);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('url');
-        $prop->setFormType(TextType::class);
+        $prop->setFormType(UrlType::class);
         $prop->setLabels([$locale => $this->__('Homepage')]);
         $prop->setWeight(3);
         $this->entityManager->persist($prop);
