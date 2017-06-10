@@ -12,9 +12,14 @@
             {{ pageSetVar('title', __('Profile settings')) }}
         </h3>
         {% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
-        <div class="alert alert-danger">{{ __('Sessions are configured to store in a file. This prevents some functionality within the profile module related to tracking who is online.') }}&nbsp;
+            <div class="alert alert-danger">{{ __('Sessions are configured to store in a file. This prevents some functionality within the profile module related to tracking who is online.') }}&nbsp;
                 <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
-        </div>
+            </div>
+        {% endif %}
+        {% if getModVar('ZConfig', 'profilemodule') != 'ZikulaProfileModule' %}
+            <div class="alert alert-danger">{{ __('The profile module is not selected as the system profile module. This is needed for full functionality.') }}&nbsp;
+                <a href="{{ path('zikulasettingsmodule_settings_main') }}">{{ __('Update system settings') }}</a>
+            </div>
         {% endif %}
 
         {{ form_start(form) }}
