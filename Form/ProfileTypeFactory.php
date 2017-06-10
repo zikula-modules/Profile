@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
+use Zikula\ProfileModule\ProfileConstant;
 
 class ProfileTypeFactory
 {
@@ -75,7 +76,11 @@ class ProfileTypeFactory
         }
         /** @var PropertyEntity[] $properties */
         $properties = $this->propertyRepository->findBy(['active' => true], ['weight' => 'ASC']);
-        $formBuilder = $this->formFactory->createNamedBuilder('zikulaprofilemodule_editprofile', FormType::class, $attributeValues);
+        $formBuilder = $this->formFactory->createNamedBuilder(ProfileConstant::FORM_BLOCK_PREFIX, FormType::class, $attributeValues, [
+            'auto_initialize' => false,
+            'error_bubbling' => true,
+            'mapped' => false
+        ]);
         foreach ($properties as $property) {
             $child = $this->prefix . ':' .$property->getId();
             $options = $property->getFormOptions();

@@ -20,6 +20,11 @@ class ProfileConstant
     const GET_FORM_TYPES_EVENT = 'profile_get_form_types';
 
     /**
+     * the form data prefix
+     */
+    const FORM_BLOCK_PREFIX = 'zikulaprofilemodule_editprofile';
+
+    /**
      * the name of the attribute to obtain a realname. requires prefix + ':'
      */
     const ATTRIBUTE_NAME_DISPLAY_NAME = 'realname';
