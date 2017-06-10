@@ -44,6 +44,7 @@ use Zikula\Common\Translator\IdentityTranslator;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\FormTypesChoices;
+use Zikula\ProfileModule\ProfileEvents;
 use Zikula\SettingsModule\Api\ApiInterface\LocaleApiInterface;
 
 class PropertyType extends AbstractType
@@ -171,7 +172,7 @@ class PropertyType extends AbstractType
             $translator->__('Locale') => LocaleType::class,
             $translator->__('Currency') => CurrencyType::class,
         ]);
-        $this->eventDispatcher->dispatch('test', new GenericEvent($choices));
+        $this->eventDispatcher->dispatch(ProfileEvents::FORM_TYPE_CHOICES, new GenericEvent($choices));
 
         return $choices;
     }
