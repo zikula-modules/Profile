@@ -65,7 +65,11 @@ class ProfileController extends AbstractController
             if ($form->get('save')->isClicked() && $form->isValid()) {
                 $attributes = $form->getData();
                 foreach ($attributes as $attribute => $value) {
-                    $userEntity->setAttribute($attribute, $value);
+                    if (!empty($value)) {
+                        $userEntity->setAttribute($attribute, $value);
+                    } else {
+                        $userEntity->delAttribute($attribute);
+                    }
                 }
                 $this->getDoctrine()->getManager()->flush();
             }
