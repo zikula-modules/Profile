@@ -39,7 +39,9 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\LocaleType;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
@@ -104,6 +106,10 @@ class PropertyType extends AbstractType
             ->add('active', CheckboxType::class, [
                 'label' => $this->translator->__('Active'),
             ])
+            ->add('weight', IntegerType::class, [
+                'constraints' => [new GreaterThan(0)],
+                'empty_data' => 100
+            ])
             ->add('save', SubmitType::class, [
                 'label' => $this->translator->__('Save'),
                 'icon'  => 'fa-check',
@@ -124,15 +130,13 @@ class PropertyType extends AbstractType
             $labels = $data['labels'];
             foreach ($supportedLocales as $locale) {
                 if (!array_key_exists($locale, $labels)) {
-                    $labels[$locale] = $labels['en'];
+                    $labels[$locale] = isset($labels['en']) ? $labels['en'] : '';
                 }
             }
             $data['labels'] = $labels;
             $event->setData($data);
         });
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $data = $event->getData();
-            $formType = $data['formType'];
+        $formModifier = function (FormInterface $form, $formType = null) {
             switch ($formType) {
                 case ChoiceType::class:
                     $optionsType = ChoiceFormOptionsArrayType::class;
@@ -150,12 +154,26 @@ class PropertyType extends AbstractType
                 default:
                     $optionsType = FormOptionsArrayType::class;
             }
-            $form = $event->getForm();
             $form->add('formOptions', $optionsType, [
                 'label' => $this->translator->__('Field options'),
                 'translator' => $this->translator
             ]);
-        });
+        };
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formModifier) {
+                $data = $event->getData();
+                $formType = $data['formType'];
+                $formModifier($event->getForm(), $formType);
+            }
+        );
+        $builder->get('formType')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $formType = $event->getForm()->getData();
+                $formModifier($event->getForm()->getParent(), $formType);
+            }
+        );
     }
 
     /**
