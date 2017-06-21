@@ -26,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
@@ -43,6 +44,7 @@ use Zikula\Bundle\FormExtensionBundle\Form\Type\LocaleType;
 use Zikula\Common\Translator\IdentityTranslator;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
+use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\FormTypesChoices;
 use Zikula\ProfileModule\ProfileEvents;
 use Zikula\SettingsModule\Api\ApiInterface\LocaleApiInterface;
@@ -58,6 +60,11 @@ class PropertyType extends AbstractType
      * @var LocaleApiInterface
      */
     private $localeApi;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * PropertyType constructor.
@@ -77,38 +84,34 @@ class PropertyType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $translator = $options['translator'];
+        $this->translator = $options['translator'];
         $builder
             ->add('id', TextType::class, [
-                'label' => $translator->__('Id'),
-                'help' => $translator->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
+                'label' => $this->translator->__('Id'),
+                'help' => $this->translator->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
                 'alert' => ['Once used, do not change the ID value or all profiles will lose their connection!' => 'warning']
             ])
             ->add('labels', CollectionType::class, [
-                'label' => $translator->__('Translated labels'),
+                'label' => $this->translator->__('Translated labels'),
                 'entry_type' => TranslationType::class
             ])
             ->add('formType', ChoiceType::class, [
-                'label' => $translator->__('Field type'),
-                'choices' => $this->getChoices($translator),
+                'label' => $this->translator->__('Field type'),
+                'choices' => $this->getChoices(),
                 'choices_as_values' => true
             ])
-            ->add('formOptions', CollectionType::class, [
-                'label' => $translator->__('field options'),
-                'entry_options' => ['required' => false]
-            ])
             ->add('active', CheckboxType::class, [
-                'label' => $translator->__('Active'),
+                'label' => $this->translator->__('Active'),
             ])
             ->add('save', SubmitType::class, [
-                'label' => $translator->__('Save'),
+                'label' => $this->translator->__('Save'),
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success',
                 ],
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $translator->__('Cancel'),
+                'label' => $this->translator->__('Cancel'),
                 'icon'  => 'fa-times',
                 'attr'  => [
                     'class' => 'btn btn-default',
@@ -126,6 +129,27 @@ class PropertyType extends AbstractType
             $data['labels'] = $labels;
             $event->setData($data);
         });
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $data = $event->getData();
+            $formType = $data['formType'];
+            switch ($formType) {
+                case ChoiceType::class:
+                    $optionsType = ChoiceFormOptionsArrayType::class;
+                    break;
+                case DateType::class:
+                case DateTimeType::class:
+                case TimeType::class:
+                case BirthdayType::class:
+                    $optionsType = DateTimeFormOptionsArrayType::class;
+                    break;
+                default:
+                    $optionsType = FormOptionsArrayType::class;
+            }
+            $form = $event->getForm();
+            $form->add('formOptions', $optionsType, [
+                'label' => $this->translator->__('Field options'),
+            ]);
+        });
     }
 
     /**
@@ -142,35 +166,45 @@ class PropertyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'data_class' => PropertyEntity::class,
             'translator' => new IdentityTranslator(),
         ]);
     }
 
-    private function getChoices(TranslatorInterface $translator)
+    private function getChoices()
     {
         $choices = new FormTypesChoices([
-            $translator->__('Text') => TextType::class,
-            $translator->__('Textarea') => TextareaType::class,
-            $translator->__('Checkbox') => CheckboxType::class,
-            $translator->__('Email') => EmailType::class,
-            $translator->__('Url') => UrlType::class,
-            $translator->__('Avatar') => AvatarType::class,
-            $translator->__('Radio') => RadioType::class,
-            $translator->__('Choice') => ChoiceType::class,
-            $translator->__('Timezone') => TimezoneType::class,
-            $translator->__('Date') => DateType::class,
-            $translator->__('Birthday') => BirthdayType::class,
-            $translator->__('Time') => TimeType::class,
-            $translator->__('DateTime') => DateTimeType::class,
-            $translator->__('Integer') => IntegerType::class,
-            $translator->__('Money') => MoneyType::class,
-            $translator->__('Number') => NumberType::class,
-            $translator->__('Percent') => PercentType::class,
-            $translator->__('Range') => RangeType::class,
-            $translator->__('Country') => CountryType::class,
-            $translator->__('Language') => LanguageType::class,
-            $translator->__('Locale') => LocaleType::class,
-            $translator->__('Currency') => CurrencyType::class,
+            $this->translator->__('Text Fields') => [
+                $this->translator->__('Text') => TextType::class,
+                $this->translator->__('Textarea') => TextareaType::class,
+                $this->translator->__('Email') => EmailType::class,
+                $this->translator->__('Integer') => IntegerType::class,
+                $this->translator->__('Money') => MoneyType::class,
+                $this->translator->__('Number') => NumberType::class,
+                $this->translator->__('Password') => PasswordType::class,
+                $this->translator->__('Percent') => PercentType::class,
+                $this->translator->__('Url') => UrlType::class,
+                $this->translator->__('Range') => RangeType::class,
+            ],
+            $this->translator->__('Choice Fields') => [
+                $this->translator->__('Choice') => ChoiceType::class,
+                $this->translator->__('Country') => CountryType::class,
+                $this->translator->__('Language') => LanguageType::class,
+                $this->translator->__('Locale') => LocaleType::class,
+                $this->translator->__('Timezone') => TimezoneType::class,
+                $this->translator->__('Currency') => CurrencyType::class,
+            ],
+            $this->translator->__('Date and Time Fields') => [
+                $this->translator->__('Date') => DateType::class,
+                $this->translator->__('DateTime') => DateTimeType::class,
+                $this->translator->__('Time') => TimeType::class,
+                $this->translator->__('Birthday') => BirthdayType::class,
+            ],
+            $this->translator->__('Other Fields') => [
+                $this->translator->__('Checkbox') => CheckboxType::class,
+                $this->translator->__('Radio') => RadioType::class,
+                $this->translator->__('Avatar') => AvatarType::class,
+            ],
         ]);
         $this->eventDispatcher->dispatch(ProfileEvents::FORM_TYPE_CHOICES, new GenericEvent($choices));
 

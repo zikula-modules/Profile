@@ -14,6 +14,7 @@ namespace Zikula\ProfileModule\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Zikula\Common\Translator\IdentityTranslator;
 
 class AvatarType extends AbstractType
 {
@@ -23,11 +24,11 @@ class AvatarType extends AbstractType
     public function configureDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'translator' => new IdentityTranslator(),
             'choices' => [
                 'Gravatar' => 'gravatar.jpg',
                 'Blank' => 'blank.jpg',
                 ],
-            'label' => __('Avatar'),
             'required' => false,
             'choices_as_values' => true
         ]);

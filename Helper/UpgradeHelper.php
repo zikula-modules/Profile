@@ -144,6 +144,9 @@ class UpgradeHelper
         }
         // this does not migrate 'viewby' which should be handled in permissions by property id
         switch ($newProperty->getFormType()) {
+            case AvatarType::class:
+                $options['label'] = $this->__('Avatar');
+                break;
             case ChoiceType::class:
                 $listOptions = explode('@@', $property['validation']['listoptions'], 2);
                 $options['multiple'] = $listOptions[0];
