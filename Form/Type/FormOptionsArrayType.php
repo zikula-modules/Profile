@@ -13,34 +13,36 @@ namespace Zikula\ProfileModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zikula\Common\Translator\IdentityTranslator;
+use Zikula\Common\Translator\TranslatorInterface;
 
 class FormOptionsArrayType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $translator = $options['translator'];
+        $this->translator = $options['translator'];
 
         $builder
             ->add('required', CheckboxType::class, [
-                'label' => $translator->__('Required'),
+                'label' => $this->translator->__('Required'),
                 'required' => false,
             ])
             ->add('help', TextType::class, [
-                'label' => $translator->__('Help text'),
+                'label' => $this->translator->__('Help text'),
                 'required' => false,
             ])
-            ->add('constraints', CollectionType::class, [
-                'label' => $translator->__('Constraints'),
-                'required' => false,
-            ]);
+        ;
     }
 
     /**

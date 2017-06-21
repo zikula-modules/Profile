@@ -25,20 +25,18 @@ class ChoiceFormOptionsArrayType extends FormOptionsArrayType
     {
         parent::buildForm($builder, $options);
 
-        $translator = $options['translator'];
-
         $builder
             ->add('multiple', CheckboxType::class, [
-                'label' => $translator->__('Multiple'),
+                'label' => $this->translator->__('Multiple'),
                 'required' => false,
             ])
             ->add('expanded', CheckboxType::class, [
-                'label' => $translator->__('Expanded'),
+                'label' => $this->translator->__('Expanded'),
                 'required' => false,
             ])
             ->add('choices', TextType::class, [
-                'label' => $translator->__('Choices'),
-                'help' => $translator->__('A comma-delineated list.'),
+                'label' => $this->translator->__('Choices'),
+                'help' => $this->translator->__('A comma-delineated list.'),
                 'required' => false,
             ])
             ->add('choices_as_values', HiddenType::class, [ // not needed in Core-2.0

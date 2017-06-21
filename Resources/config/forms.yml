@@ -4,6 +4,7 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@zikula_settings_module.locale_api'
+            - '@translator.default'
         tags:
             - { name: form.type, alias: Zikula\ProfileModule\Form\Type\PropertyType }
 

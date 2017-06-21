@@ -70,13 +70,16 @@ class PropertyType extends AbstractType
      * PropertyType constructor.
      * @param EventDispatcherInterface $eventDispatcher
      * @param LocaleApiInterface $localeApi
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        LocaleApiInterface $localeApi
+        LocaleApiInterface $localeApi,
+        TranslatorInterface $translator
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->localeApi = $localeApi;
+        $this->translator = $translator;
     }
 
     /**
@@ -84,7 +87,6 @@ class PropertyType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->translator = $options['translator'];
         $builder
             ->add('id', TextType::class, [
                 'label' => $this->translator->__('Id'),
@@ -142,12 +144,17 @@ class PropertyType extends AbstractType
                 case BirthdayType::class:
                     $optionsType = DateTimeFormOptionsArrayType::class;
                     break;
+                case TextType::class:
+                case TextareaType::class:
+                    $optionsType = RegexibleFormOptionsArrayType::class;
+                    break;
                 default:
                     $optionsType = FormOptionsArrayType::class;
             }
             $form = $event->getForm();
             $form->add('formOptions', $optionsType, [
                 'label' => $this->translator->__('Field options'),
+                'translator' => $this->translator
             ]);
         });
     }
@@ -167,7 +174,6 @@ class PropertyType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PropertyEntity::class,
-            'translator' => new IdentityTranslator(),
         ]);
     }
 

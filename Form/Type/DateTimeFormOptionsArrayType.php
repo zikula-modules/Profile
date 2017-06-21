@@ -27,37 +27,35 @@ class DateTimeFormOptionsArrayType extends FormOptionsArrayType
     {
         parent::buildForm($builder, $options);
 
-        $translator = $options['translator'];
-
         $builder
             ->add('html5', CheckboxType::class, [
-                'label' => $translator->__('Html5'),
+                'label' => $this->translator->__('Html5'),
                 'required' => false,
             ])
             ->add('widget', ChoiceType::class, [
-                'label' => $translator->__('Widget'),
+                'label' => $this->translator->__('Widget'),
                 'choices' => [
-                    $translator->__('Choice') => 'choice',
-                    $translator->__('Text') => 'text',
-                    $translator->__('Single Text') => 'single_text',
+                    $this->translator->__('Choice') => 'choice',
+                    $this->translator->__('Text') => 'text',
+                    $this->translator->__('Single Text') => 'single_text',
                 ],
                 'choices_as_values' => true,
                 'data' => 'choice'
             ])
             ->add('input', ChoiceType::class, [
-                'label' => $translator->__('Input'),
+                'label' => $this->translator->__('Input'),
                 'choices' => [
-                    $translator->__('String') => 'string',
-                    $translator->__('DateTime Object') => 'datetime',
-                    $translator->__('Array') => 'array',
-                    $translator->__('Timestamp') => 'timestamp',
+                    $this->translator->__('String') => 'string',
+                    $this->translator->__('DateTime Object') => 'datetime',
+                    $this->translator->__('Array') => 'array',
+                    $this->translator->__('Timestamp') => 'timestamp',
                 ],
                 'choices_as_values' => true,
                 'data' => 'string'
             ])
             ->add('format', TextType::class, [
-                'label' => $translator->__('Format'),
-                'help' => $translator->__('e.g. yyyy-MM-dd'),
+                'label' => $this->translator->__('Format'),
+                'help' => $this->translator->__('e.g. yyyy-MM-dd'),
                 'required' => false,
             ])
             ->add('model_timezone', TimezoneType::class, [
