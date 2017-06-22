@@ -5,44 +5,44 @@
         <h2 class="panel-title"><i class="fa fa-user-circle-o"></i> {{ __f('Profile for %uname', {'%uname': user.uname}) }}</h2>
     </div>
     <div class="panel-body">
-        <p>
-            {% set avatarValue = user.attributes[prefix~':avatar']['value']|default %}
-            {% if avatarValue|default and avatarValue not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
-                {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
-                {{ user.uname|profileLinkByUserName('', avatarPath~'/'~avatarValue) }}
-                {{ user.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
-            {% elseif getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_GRAVATARS_ENABLED')) %}
-                {{ zikulaprofilemodule_gravatar(user.email) }}
-            {% endif %}
-        </p>
         <div class="row">
-            <div class="col-sm-4 text-right">
-                <strong>{{ __('User name:') }}</strong>
+            <div class="col-md-3 text-center">
+                {% set avatarValue = user.attributes[prefix~':avatar']['value']|default %}
+                {% if avatarValue|default and avatarValue not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
+                    {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
+                    {{ user.uname|profileLinkByUserName('', avatarPath~'/'~avatarValue) }}
+                    {{ user.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
+                {% elseif getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_GRAVATARS_ENABLED')) %}
+                    {{ zikulaprofilemodule_gravatar(user.email) }}
+                {% endif %}
             </div>
-            <div class="col-sm-8">
-                <span>{{ user.uname }}</span>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong>{{ __('User name:') }}</strong>
+                    </div>
+                    <div class="col-md-9">
+                        <span>{{ user.uname }}</span>
+                    </div>
+                    {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
+                        <div class="col-md-3 text-right">
+                            <strong>{{ __('Registration date:') }}</strong>
+                        </div>
+                        <div class="col-md-9">
+                            <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
+                        </div>
+                    {% endif %}
+                    {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if ((attribute.value is not empty) and (prefix in attribute.name)) %}
+                        <div class="col-md-3 text-right">
+                            <strong>{{ attribute.extra }}</strong>
+                        </div>
+                        <div class="col-md-9">
+                            <span>{{ attribute.value }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
-            <div class="row">
-                <div class="col-sm-4 text-right">
-                    <strong>{{ __('Registration date:') }}</strong>
-                </div>
-                <div class="col-sm-8">
-                    <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
-                </div>
-            </div>
-        {% endif %}
-        {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if ((attribute.value is not empty) and (prefix in attribute.name)) %}
-        <div class="row">
-            <div class="col-sm-4 text-right">
-                <strong>{{ attribute.extra }}</strong>
-            </div>
-            <div class="col-sm-8">
-                <span>{{ attribute.value }}</span>
-            </div>
-        </div>
-        {% endfor %}
     </div>
     {% if currentUser.uid == user.uid or hasPermission('ZikulaProfileModule::edit', '::', 'ACCESS_EDIT') %}
         <div class="panel-footer text-right">
