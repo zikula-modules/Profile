@@ -56,9 +56,7 @@ class DateTimeFormOptionsArrayType extends FormOptionsArrayType
                 'help' => $this->translator->__('e.g. yyyy-MM-dd'),
                 'required' => false,
             ])
-            ->add('model_timezone', TimezoneType::class, [
-//                'data' =>
-            ])
+            ->add('model_timezone', TimezoneType::class)
             ->add('choices_as_values', HiddenType::class, [ // not needed in Core-2.0
                 'data' => true
             ])

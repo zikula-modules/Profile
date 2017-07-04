@@ -28,7 +28,7 @@ class AvatarType extends AbstractType
             'choices' => [
                 'Gravatar' => 'gravatar.jpg',
                 'Blank' => 'blank.jpg',
-                ],
+            ],
             'required' => false,
             'choices_as_values' => true
         ]);
