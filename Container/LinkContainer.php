@@ -127,7 +127,7 @@ class LinkContainer implements LinkContainerInterface
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_property_list'),
-                'text' => $this->translator->__('property list', 'zikulaprofilemodule'),
+                'text' => $this->translator->__('Property list', 'zikulaprofilemodule'),
                 'icon' => 'list',
             ];
         }
@@ -173,6 +173,10 @@ class LinkContainer implements LinkContainerInterface
                     'text'  => $this->translator->__('Profile'),
                     'icon'  => 'user',
                     'links' => [
+                        [
+                            'url'  => $this->router->generate('zikulaprofilemodule_profile_display'),
+                            'text' => $this->translator->__('Display profile'),
+                        ],
                         [
                             'url'  => $this->router->generate('zikulaprofilemodule_profile_edit'),
                             'text' => $this->translator->__('Edit profile'),

@@ -24,23 +24,27 @@
                     <div class="col-md-9">
                         <span>{{ user.uname }}</span>
                     </div>
-                    {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
+                </div>
+                {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
+                    <div class="row">
                         <div class="col-md-3 text-right">
                             <strong>{{ __('Registration date:') }}</strong>
                         </div>
                         <div class="col-md-9">
                             <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
                         </div>
-                    {% endif %}
-                    {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if ((attribute.value is not empty) and (prefix in attribute.name)) %}
+                    </div>
+                {% endif %}
+                {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if ((attribute.value is not empty) and (prefix in attribute.name)) %}
+                    <div class="row">
                         <div class="col-md-3 text-right">
                             <strong>{{ attribute.extra }}</strong>
                         </div>
                         <div class="col-md-9">
                             <span>{{ attribute.value }}</span>
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
