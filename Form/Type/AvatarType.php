@@ -18,8 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zikula\Common\Translator\IdentityTranslator;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\ProfileModule\ProfileConstant;
-use Zikula\UsersModule\Constant as UsersConstant;
 
 class AvatarType extends AbstractType
 {

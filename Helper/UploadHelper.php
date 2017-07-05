@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadHelper
 {
-    /** 
+    /**
      * List of allowed file extensions
      * @var array
      */
