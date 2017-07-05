@@ -1,14 +1,7 @@
 <div class="text-center">
     <h5>{{ user.uname|profileLinkByUserName() }}</h5>
     <p>
-        {% set avatarValue = user.attributes[prefix~':avatar']['value']|default %}
-        {% if avatarValue|default and avatarValue not in ['blank.gif', 'blank.png', 'gravatar.jpg'] %}
-            {% set avatarPath = getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) %}
-            {{ user.uname|profileLinkByUserName('', avatarPath~'/'~avatarValue) }}
-            {{ user.uname|profileLinkByUserName('profileicon', '<i class="fa fa-user fa-2x"></i>') }}
-        {% elseif getModVar('ZikulaUsersModule', constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_GRAVATARS_ENABLED')) %}
-            {{ zikulaprofilemodule_gravatar(user.email) }}
-        {% endif %}
+        {{ user.uname|profileLinkByUserName('', userAvatar(user.uid)) }}
     </p>
     {% for activeProperty in activeProperties
         if user.attributes[prefix~':'~activeProperty.id]['value']|default

@@ -44,7 +44,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             'onlinemembersitemsperpage' => 20,
             'recentmembersitemsperpage' => 10,
             'filterunverified' => true,
-            'activeminutes' => 10
+            'activeminutes' => 10,
+            'allowUploads' => false,
+            'shrinkLargeImages' => true,
+            'maxSize' => 12000,
+            'maxWidth' => 80,
+            'maxHeight' => 80
         ];
     }
 
@@ -130,6 +135,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->setVar('viewregdate', (bool)$this->getVar('viewregdate'));
                 $this->setVar('filterunverified', (bool)$this->getVar('filterunverified'));
                 $this->setVar('activeminutes', 10);
+                // add new vars
+                $this->setVar('allowUploads', false);
+                $this->setVar('shrinkLargeImages', true);
+                $this->setVar('maxSize', 12000);
+                $this->setVar('maxWidth', 80);
+                $this->setVar('maxHeight', 80);
             case '3.0.0':
                 // future upgrades
         }

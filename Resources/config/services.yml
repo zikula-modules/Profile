@@ -20,8 +20,6 @@ services:
         class: Zikula\ProfileModule\Twig\TwigExtension
         public: false
         arguments:
-          - "@translator.default"
-          - "@request_stack"
           - "@zikula_profile_module.property_repository"
           - "%zikula_profile_module.property_prefix%"
         tags:
@@ -34,6 +32,7 @@ services:
           - "@zikula_profile_module.form.profile_type_factory"
           - "@twig"
           - "@doctrine"
+          - "@zikula_profile_module.helper.upload_helper"
           - "%zikula_profile_module.property_prefix%"
         tags:
             - { name: kernel.event_subscriber }
@@ -42,6 +41,8 @@ services:
         class: Zikula\ProfileModule\Bridge\ProfileModuleBridge
         arguments:
           - "@router"
+          - "@request_stack"
+          - "@zikula_extensions_module.api.variable"
           - "@zikula_users_module.current_user"
           - "@zikula_users_module.user_repository"
           - "%zikula_profile_module.property_prefix%"
@@ -61,6 +62,12 @@ services:
         arguments:
           - '@translator.default'
           - "@=service('zikula_extensions_module.api.variable').getSystemVar('timezone')"
+
+    zikula_profile_module.helper.upload_helper:
+        class: Zikula\ProfileModule\Helper\UploadHelper
+        arguments:
+            - "@=service('zikula_extensions_module.api.variable').getAll('ZikulaProfileModule')"
+            - "@=service('zikula_extensions_module.api.variable').get('ZikulaUsersModule', 'avatarpath', 'images/avatar')"
 
     zikula_profile_module.property_repository:
         class: Zikula\ProfileModule\Entity\Repository\PropertyRepository

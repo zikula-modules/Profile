@@ -13,6 +13,7 @@ namespace Zikula\ProfileModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -66,9 +67,14 @@ class ProfileController extends AbstractController
                 $attributes = $form->getData();
                 foreach ($attributes as $attribute => $value) {
                     if (!empty($value)) {
+                        if ($value instanceof UploadedFile) {
+                            $value = $this->get('zikula_profile_module.helper.upload_helper')->handleUpload($value, $userEntity->getUid());
+                        }
                         $userEntity->setAttribute($attribute, $value);
                     } else {
-                        $userEntity->delAttribute($attribute);
+                        if (false === strpos($attribute, 'avatar')) {
+                            $userEntity->delAttribute($attribute);
+                        }
                     }
                 }
                 $this->getDoctrine()->getManager()->flush();

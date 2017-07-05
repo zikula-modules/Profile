@@ -13,10 +13,12 @@ namespace Zikula\ProfileModule\Listener;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Twig_Environment;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
+use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
@@ -55,6 +57,11 @@ class UsersUiListener implements EventSubscriberInterface
     protected $doctrine;
 
     /**
+     * @var UploadHelper
+     */
+    protected $uploadHelper;
+
+    /**
      * @var string
      */
     protected $prefix;
@@ -71,6 +78,7 @@ class UsersUiListener implements EventSubscriberInterface
      * @param ProfileTypeFactory $factory
      * @param Twig_Environment $twig
      * @param RegistryInterface $registry
+     * @param UploadHelper $uploadHelper
      * @param string $prefix
      */
     public function __construct(
@@ -78,12 +86,14 @@ class UsersUiListener implements EventSubscriberInterface
         ProfileTypeFactory $factory,
         Twig_Environment $twig,
         RegistryInterface $registry,
+        UploadHelper $uploadHelper,
         $prefix
     ) {
         $this->userRepository = $userRepository;
         $this->formFactory = $factory;
         $this->twig = $twig;
         $this->doctrine = $registry;
+        $this->uploadHelper = $uploadHelper;
         $this->prefix = $prefix;
     }
 
@@ -134,9 +144,14 @@ class UsersUiListener implements EventSubscriberInterface
         $formData = $event->getFormData(ProfileConstant::FORM_BLOCK_PREFIX);
         foreach ($formData as $key => $value) {
             if (!empty($value)) {
+                if ($value instanceof UploadedFile) {
+                    $value = $this->uploadHelper->handleUpload($value, $userEntity->getUid());
+                }
                 $userEntity->setAttribute($key, $value);
             } else {
-                $userEntity->delAttribute($key);
+                if (false === strpos($key, 'avatar')) {
+                    $userEntity->delAttribute($key);
+                }
             }
         }
         $this->doctrine->getManager()->flush();

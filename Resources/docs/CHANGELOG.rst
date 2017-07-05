@@ -2,6 +2,12 @@
 CHANGELOG
 =========
 
+3.0.0
+=====
+    - Overhauled property management and translation
+    - Added new property types (e.g. money, birthday, and more)
+    - Overhauled avatar management
+
 2.1.0
 =====
     - Adapted to Zikula 1.4.3

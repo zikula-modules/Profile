@@ -34,6 +34,24 @@
             {{ form_row(form.activeminutes) }}
             {{ form_row(form.filterunverified) }}
         </fieldset>
+        <fieldset>
+            <legend>{{ __('Avatar settings') }}</legend>
+            {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'))) }}
+            {% if pathWarning is not empty %}
+                <p class="alert alert-danger"><strong>{{ pathWarning }}</strong></p>
+            {% endif %}
+            {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'))) }}
+            {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATAR_IMAGE'))) }}
+            {{ form_row(form.allowUploads) }}
+            <div id="uploadSettings">
+                {{ form_row(form.shrinkLargeImages) }}
+                <div id="shrinkSettings">
+                    {{ form_row(form.maxSize) }}
+                    {{ form_row(form.maxWidth) }}
+                    {{ form_row(form.maxHeight) }}
+                </div>
+            </div>
+        </fieldset>
 
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
@@ -45,3 +63,17 @@
     </div>
 </div>
 {{ adminFooter() }}
+<script>
+    (function($) {
+        $(document).ready(function() {
+            function updateDynamicFields()
+            {
+                $('#uploadSettings').toggleClass('hidden', !$('#zikulaprofilemodule_config_allowUploads').prop('checked'));
+                $('#shrinkSettings').toggleClass('hidden', !$('#zikulaprofilemodule_config_shrinkLargeImages').prop('checked'));
+            }
+
+            $('#zikulaprofilemodule_config_allowUploads, #zikulaprofilemodule_config_shrinkLargeImages').click(updateDynamicFields);
+            updateDynamicFields();
+        });
+    })(jQuery)
+</script>

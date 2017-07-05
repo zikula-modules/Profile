@@ -10,7 +10,8 @@ services:
 
     zikula.profile_module.form.type.translation_type:
         class: Zikula\ProfileModule\Form\Type\TranslationType
-        arguments: ['@zikula_settings_module.locale_api']
+        arguments:
+            - '@zikula_settings_module.locale_api'
         tags:
             - { name: form.type, alias: Zikula\ProfileModule\Form\Type\TranslationType }
 
@@ -21,3 +22,12 @@ services:
             - '@zikula_profile_module.property_repository'
             - '@translator.default'
             - '%zikula_profile_module.property_prefix%'
+
+    zikula.profile_module.form.type.avatar_type:
+        class: Zikula\ProfileModule\Form\Type\AvatarType
+        arguments:
+            - '@translator.default'
+            - "@=service('zikula_extensions_module.api.variable').getAll('ZikulaProfileModule')"
+            - "@=service('zikula_extensions_module.api.variable').get('ZikulaUsersModule', 'avatarpath', 'images/avatar')"
+        tags:
+            - { name: form.type, alias: Zikula\ProfileModule\Form\Type\AvatarType }
