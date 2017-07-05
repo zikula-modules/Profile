@@ -73,3 +73,9 @@ services:
         class: Zikula\ProfileModule\Entity\Repository\PropertyRepository
         factory: ["@doctrine.orm.default_entity_manager", getRepository]
         arguments: ["ZikulaProfileModule:PropertyEntity"]
+
+    zikula_profile_module.hook_subscriber.ui_hooks_subscriber:
+        class: Zikula\ProfileModule\HookSubscriber\UiHooksSubscriber
+        arguments: ['@translator.default']
+        tags:
+            - { name: zikula.hook_subscriber, areaName: 'subscriber.zikuklaprofilemodule.ui_hooks.profile_display' }
