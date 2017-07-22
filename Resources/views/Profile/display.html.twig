@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 {% endif %}
-                {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if ((attribute.value is not empty) and (prefix in attribute.name)) %}
+                {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if (attribute.value is not empty and prefix in attribute.name and 'avatar' not in attribute.formType|lower) %}
                     <div class="row">
                         <div class="col-md-3 text-right">
                             <strong>{{ attribute.extra }}</strong>
