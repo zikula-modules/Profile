@@ -134,12 +134,14 @@ class ProfileModuleBridge implements ProfileModuleInterface
         $avatar = isset($userAttributes[$key]) ? $userAttributes[$key] : $gravatarImage;
 
         $avatarUrl = '';
-        if (isset($avatar) && !empty($avatar) && !in_array($avatar, [$gravatarImage, 'blank.gif', 'blank.jpg'])) {
-            $request = $this->requestStack->getCurrentRequest();
-            $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
-        } elseif (true === $allowGravatars) {
-            $parameters = $this->makeAvatarSquare($parameters);
-            $avatarUrl = $this->getGravatarUrl($userEntity->getEmail(), $parameters);
+        if (!in_array($avatar, ['blank.gif', 'blank.jpg'])) {
+            if (isset($avatar) && !empty($avatar) && $avatar != $gravatarImage) {
+                $request = $this->requestStack->getCurrentRequest();
+                $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
+            } elseif (true === $allowGravatars) {
+                $parameters = $this->makeAvatarSquare($parameters);
+                $avatarUrl = $this->getGravatarUrl($userEntity->getEmail(), $parameters);
+            }
         }
 
         if (empty($avatarUrl)) {
