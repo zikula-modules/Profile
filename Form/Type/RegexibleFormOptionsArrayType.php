@@ -34,7 +34,7 @@ class RegexibleFormOptionsArrayType extends FormOptionsArrayType
             ->addModelTransformer(new CallbackTransformer(
                 function ($dataToDisplay) {
                     /** @var Regex $constraint */
-                    $constraint = isset($dataToDisplay[0]) ? $dataToDisplay[0] : new Regex('');
+                    $constraint = isset($dataToDisplay[0]) ? $dataToDisplay[0] : new Regex('/.*/');
 
                     return $constraint->pattern;
                 },
