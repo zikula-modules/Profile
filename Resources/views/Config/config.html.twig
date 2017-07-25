@@ -63,6 +63,7 @@
     </div>
 </div>
 {{ adminFooter() }}
+{% set customScript %}
 <script>
     (function($) {
         $(document).ready(function() {
@@ -77,3 +78,5 @@
         });
     })(jQuery)
 </script>
+{% endset %}
+{{ pageAddAsset('footer', customScript) }}
