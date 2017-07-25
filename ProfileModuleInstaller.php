@@ -142,6 +142,8 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->setVar('maxWidth', 80);
                 $this->setVar('maxHeight', 80);
             case '3.0.0':
+                // nothing
+            case '3.0.1':
                 // future upgrades
         }
 
