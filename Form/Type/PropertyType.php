@@ -104,6 +104,7 @@ class PropertyType extends AbstractType
                 'choices_as_values' => true
             ])
             ->add('active', CheckboxType::class, [
+                'required' => false,
                 'label' => $this->translator->__('Active'),
             ])
             ->add('weight', IntegerType::class, [
