@@ -144,6 +144,8 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             case '3.0.0':
                 // nothing
             case '3.0.1':
+                // nothing
+            case '3.0.2':
                 // future upgrades
         }
 
