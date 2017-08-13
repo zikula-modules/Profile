@@ -101,7 +101,8 @@ class PropertyType extends AbstractType
             ->add('formType', ChoiceType::class, [
                 'label' => $this->translator->__('Field type'),
                 'choices' => $this->getChoices(),
-                'choices_as_values' => true
+                'choices_as_values' => true,
+                'placeholder' => $this->translator->__('Select')
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
