@@ -29,7 +29,7 @@ class ConfigController extends AbstractController
     /**
      * @Route("/config")
      * @Theme("admin")
-     * @Template
+     * @Template("ZikulaProfileModule:Config:config.html.twig")
      *
      * @param Request $request
      *

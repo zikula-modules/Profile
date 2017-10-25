@@ -25,7 +25,8 @@ class ProfileController extends AbstractController
 {
     /**
      * @Route("/display/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
-     * @Template
+     * @Template("ZikulaProfileModule:Profile:display.html.twig")
+     *
      * @param UserEntity|null $userEntity
      * @throws AccessDeniedException on failed permission check
      * @return array
@@ -49,7 +50,8 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/edit/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
-     * @Template
+     * @Template("ZikulaProfileModule:Profile:edit.html.twig")
+     *
      * @param Request $request
      * @param UserEntity|null $userEntity
      * @return array|RedirectResponse

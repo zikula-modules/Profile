@@ -30,7 +30,8 @@ class PropertyController extends AbstractController
     /**
      * @Route("/list")
      * @Theme("admin")
-     * @Template
+     * @Template("ZikulaProfileModule:Property:list.html.twig")
+     *
      * @param Request $request
      * @return array
      */
@@ -49,7 +50,7 @@ class PropertyController extends AbstractController
     /**
      * @Route("/edit/{id}", defaults={"id" = null})
      * @Theme("admin")
-     * @Template
+     * @Template("ZikulaProfileModule:Property:edit.html.twig")
      *
      * @param Request $request
      * @param PropertyEntity $propertyEntity
@@ -87,7 +88,8 @@ class PropertyController extends AbstractController
     /**
      * @Route("/delete/{id}")
      * @Theme("admin")
-     * @Template
+     * @Template("ZikulaProfileModule:Property:delete.html.twig")
+     *
      * @param Request $request
      * @param PropertyEntity $propertyEntity
      * @return array|RedirectResponse

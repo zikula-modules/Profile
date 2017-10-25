@@ -25,7 +25,8 @@ class MembersController extends AbstractController
 {
     /**
      * @Route("/list")
-     * @Template
+     * @Template("ZikulaProfileModule:Members:list.html.twig")
+     *
      * @param Request $request
      * @throws AccessDeniedException on failed permission check
      * @return array
@@ -73,7 +74,7 @@ class MembersController extends AbstractController
 
     /**
      * @Route("/recent")
-     * @Template
+     * @Template("ZikulaProfileModule:Members:recent.html.twig")
      *
      * Displays last X registered users.
      *
@@ -96,7 +97,7 @@ class MembersController extends AbstractController
 
     /**
      * @Route("/online")
-     * @Template
+     * @Template("ZikulaProfileModule:Members:online.html.twig")
      *
      * View users online.
      *
