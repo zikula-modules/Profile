@@ -39,6 +39,9 @@ class RegexibleFormOptionsArrayType extends FormOptionsArrayType
                     return $constraint->pattern;
                 },
                 function ($dataToPersist) {
+                    if (!$dataToPersist) {
+                        $dataToPersist = new Regex('/.*/');
+                    }
                     return [new Regex($dataToPersist)];
                 }
             ))
