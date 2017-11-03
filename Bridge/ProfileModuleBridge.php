@@ -135,7 +135,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
 
         $avatarUrl = '';
         if (!in_array($avatar, ['blank.gif', 'blank.jpg'])) {
-            if (isset($avatar) && !empty($avatar) && $avatar != $gravatarImage) {
+            if (isset($avatar) && !empty($avatar) && $avatar != $gravatarImage && file_exists($avatarPath . '/' . $avatar)) {
                 $request = $this->requestStack->getCurrentRequest();
                 $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
             } elseif (true === $allowGravatars) {
