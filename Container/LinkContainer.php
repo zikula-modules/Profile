@@ -163,31 +163,31 @@ class LinkContainer implements LinkContainerInterface
                 $links[] = [
                     'url'  => $this->router->generate('zikulausersmodule_account_menu'),
                     'icon' => 'user-circle-o',
-                    'text' => $this->translator->__('Account menu'),
+                    'text' => $this->translator->__('Account menu', 'zikulaprofilemodule'),
                 ];
             }
 
             if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url'   => $this->router->generate('zikulaprofilemodule_profile_display'),
-                    'text'  => $this->translator->__('Profile'),
+                    'text'  => $this->translator->__('Profile', 'zikulaprofilemodule'),
                     'icon'  => 'user',
                     'links' => [
                         [
                             'url'  => $this->router->generate('zikulaprofilemodule_profile_display'),
-                            'text' => $this->translator->__('Display profile'),
+                            'text' => $this->translator->__('Display profile', 'zikulaprofilemodule'),
                         ],
                         [
                             'url'  => $this->router->generate('zikulaprofilemodule_profile_edit'),
-                            'text' => $this->translator->__('Edit profile'),
+                            'text' => $this->translator->__('Edit profile', 'zikulaprofilemodule'),
                         ],
                         [
                             'url'  => $this->router->generate('zikulazauthmodule_account_changeemail'),
-                            'text' => $this->translator->__('Change email address'),
+                            'text' => $this->translator->__('Change email address', 'zikulaprofilemodule'),
                         ],
                         [
                             'url'  => $this->router->generate('zikulazauthmodule_account_changepassword'),
-                            'text' => $this->translator->__('Change password'),
+                            'text' => $this->translator->__('Change password', 'zikulaprofilemodule'),
                         ],
                     ],
                 ];
@@ -197,36 +197,37 @@ class LinkContainer implements LinkContainerInterface
             if ($messageModule != '' && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule.'::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
-                    'text' => $this->translator->__('Messages'),
+                    'text' => $this->translator->__('Messages', 'zikulaprofilemodule'),
                     'icon' => 'envelope',
                 ];
             }
         }
 
-        if ($this->permissionApi->hasPermission($this->getBundleName().':Members:', '::', ACCESS_READ)) {
+        $component = $this->getBundleName() . ':Members:';
+        if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
             $membersLinks = [];
-            if ($this->permissionApi->hasPermission($this->getBundleName().':Members:', '::', ACCESS_READ)) {
+            if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
                 $membersLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_list'),
-                    'text' => $this->translator->__('Registered users'),
+                    'text' => $this->translator->__('Registered users', 'zikulaprofilemodule'),
                     'icon' => 'users',
                 ];
             }
-            if ($this->permissionApi->hasPermission($this->getBundleName().':Members:recent', '::', ACCESS_READ)) {
+            if ($this->permissionApi->hasPermission($component . 'recent', '::', ACCESS_READ)) {
                 $membersLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_recent'),
-                    'text' => $this->translator->__f('Last %s registered users', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)]),
+                    'text' => $this->translator->__f('Last %s registered users', 'zikulaprofilemodule', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)]),
                 ];
             }
-            if ($this->permissionApi->hasPermission($this->getBundleName().':Members:online', '::', ACCESS_READ)) {
+            if ($this->permissionApi->hasPermission($component . 'online', '::', ACCESS_READ)) {
                 $membersLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_online'),
-                    'text' => $this->translator->__('Users online'),
+                    'text' => $this->translator->__('Users online', 'zikulaprofilemodule'),
                 ];
             }
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_members_list'),
-                'text'  => $this->translator->__('Registered users'),
+                'text'  => $this->translator->__('Registered users', 'zikulaprofilemodule'),
                 'icon'  => 'list',
                 'links' => $membersLinks,
             ];
