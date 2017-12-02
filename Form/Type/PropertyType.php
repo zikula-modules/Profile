@@ -92,7 +92,7 @@ class PropertyType extends AbstractType
             ->add('id', TextType::class, [
                 'label' => $this->translator->__('Id'),
                 'help' => $this->translator->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
-                'alert' => ['Once used, do not change the ID value or all profiles will lose their connection!' => 'warning']
+                'alert' => [$this->translator->__('Once used, do not change the ID value or all profiles will lose their connection!') => 'warning']
             ])
             ->add('labels', CollectionType::class, [
                 'label' => $this->translator->__('Translated labels'),
@@ -109,6 +109,7 @@ class PropertyType extends AbstractType
                 'label' => $this->translator->__('Active'),
             ])
             ->add('weight', IntegerType::class, [
+                'label' => $this->translator->__('Weight'),
                 'constraints' => [new GreaterThan(0)],
                 'empty_data' => 100
             ])
