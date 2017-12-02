@@ -3,7 +3,7 @@
 'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
 ] %}
 {{ adminHeader() }}
-
+{{ pageSetVar('title', __('Delete property')) }}
 {{ form_start(form) }}
 <div class="alert alert-danger">{{ __f('Are you sure you want to delete the property with ID: %id', {'%id': id}) }}</div>
 <div class="form-group">
