@@ -11,9 +11,9 @@
 
 namespace Zikula\ProfileModule\Container;
 
-use ModUtil;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\BlocksModule\Entity\RepositoryInterface\BlockRepositoryInterface;
+use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -29,6 +29,11 @@ class LinkContainer implements LinkContainerInterface
      * @var TranslatorInterface
      */
     private $translator;
+
+    /**
+     * @var ZikulaHttpKernelInterface
+     */
+    private $kernel;
 
     /**
      * @var RouterInterface
@@ -69,6 +74,7 @@ class LinkContainer implements LinkContainerInterface
      * LinkContainer constructor.
      *
      * @param TranslatorInterface $translator Translator service instance
+     * @param ZikulaHttpKernelInterface $kernel Kernel service instance
      * @param RouterInterface $router RouterInterface service instance
      * @param PermissionApi $permissionApi PermissionApi service instance
      * @param VariableApi $variableApi VariableApi service instance
@@ -79,6 +85,7 @@ class LinkContainer implements LinkContainerInterface
      */
     public function __construct(
         TranslatorInterface $translator,
+        ZikulaHttpKernelInterface $kernel,
         RouterInterface $router,
         PermissionApi $permissionApi,
         VariableApi $variableApi,
@@ -88,6 +95,7 @@ class LinkContainer implements LinkContainerInterface
         BlockRepositoryInterface $blockRepository
     ) {
         $this->translator = $translator;
+        $this->kernel = $kernel;
         $this->router = $router;
         $this->permissionApi = $permissionApi;
         $this->variableApi = $variableApi;
@@ -194,7 +202,9 @@ class LinkContainer implements LinkContainerInterface
             }
 
             $messageModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '');
-            if ('' != $messageModule && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule.'::', '::', ACCESS_READ)) {
+            if ('' != $messageModule && $this->kernel->isBundle($messageModule)
+                && $this->permissionApi->hasPermission($messageModule . '::', '::', ACCESS_READ)
+            ) {
                 $links[] = [
                     'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
                     'text' => $this->translator->__('Messages', 'zikulaprofilemodule'),
@@ -261,7 +271,7 @@ class LinkContainer implements LinkContainerInterface
             'icon' => 'user',
         ];
 
-        if ($this->permissionApi->hasPermission($this->getBundleName().':Members:', '::', ACCESS_READ)) {
+        if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:', '::', ACCESS_READ)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_members_list'),
                 'text' => $this->translator->__('Registered users'),
