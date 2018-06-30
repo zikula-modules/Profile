@@ -226,7 +226,7 @@ class LinkContainer implements LinkContainerInterface
             if ($this->permissionApi->hasPermission($component . 'recent', '::', ACCESS_READ)) {
                 $membersLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_recent'),
-                    'text' => $this->translator->__f('Last %s registered users', 'zikulaprofilemodule', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)]),
+                    'text' => $this->translator->__f('Last %s registered users', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)], 'zikulaprofilemodule'),
                 ];
             }
             if ($this->permissionApi->hasPermission($component . 'online', '::', ACCESS_READ)) {
