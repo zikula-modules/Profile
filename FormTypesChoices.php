@@ -69,6 +69,6 @@ class FormTypesChoices implements \ArrayAccess, \Iterator
 
     public function valid()
     {
-        return key($this->choices) !== null;
+        return null !== key($this->choices);
     }
 }

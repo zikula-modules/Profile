@@ -27,7 +27,7 @@ class UserBlock extends AbstractBlockHandler
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
         $currentUserApi = $this->get('zikula_users_module.current_user');
-        if ($title == '') {
+        if ('' == $title) {
             $title = $this->__f('Custom block content for %s', ['%s' => $currentUserApi->get('uname')]);
         }
         if (!$this->hasPermission('Userblock::', $title.'::', ACCESS_READ)) {
@@ -35,7 +35,7 @@ class UserBlock extends AbstractBlockHandler
         }
         /** @var ArrayCollection $attributes */
         $attributes = $currentUserApi->get('attributes');
-        if (!$currentUserApi->isLoggedIn() || (bool) $attributes->get('ublockon') != true) {
+        if (!$currentUserApi->isLoggedIn() || true != (bool) $attributes->get('ublockon')) {
             return '';
         }
 

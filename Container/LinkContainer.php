@@ -194,7 +194,7 @@ class LinkContainer implements LinkContainerInterface
             }
 
             $messageModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '');
-            if ($messageModule != '' && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule.'::', '::', ACCESS_READ)) {
+            if ('' != $messageModule && ModUtil::available($messageModule) && $this->permissionApi->hasPermission($messageModule.'::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
                     'text' => $this->translator->__('Messages', 'zikulaprofilemodule'),

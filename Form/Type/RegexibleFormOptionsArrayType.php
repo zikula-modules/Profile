@@ -42,6 +42,7 @@ class RegexibleFormOptionsArrayType extends FormOptionsArrayType
                     if (!$dataToPersist) {
                         $dataToPersist = new Regex('/.*/');
                     }
+
                     return [new Regex($dataToPersist)];
                 }
             ))

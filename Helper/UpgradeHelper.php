@@ -125,7 +125,7 @@ class UpgradeHelper
             case 'country':
                 $newProperty->setFormType(CountryType::class);
         }
-        if (substr($property['attributename'], -8) == '_country') {
+        if ('_country' == substr($property['attributename'], -8)) {
             $newProperty->setFormType(CountryType::class);
         }
     }

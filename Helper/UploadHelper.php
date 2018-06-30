@@ -43,7 +43,7 @@ class UploadHelper
         $modVars = [],
         $avatarPath = ''
     ) {
-        $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/];
+        $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
         $this->modVars = $modVars;
         $this->avatarPath = $avatarPath;
     }
@@ -65,7 +65,7 @@ class UploadHelper
             return '';
         }
 
-        if ($file->getError() != UPLOAD_ERR_OK) {
+        if (UPLOAD_ERR_OK != $file->getError()) {
             return '';
         }
         if (!is_numeric($userId) || $userId < 1) {
