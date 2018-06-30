@@ -11,12 +11,12 @@
     </colgroup>
     <thead>
     <tr>
-        <th id="hWeight" scope="col"><label>{{ __('Weight') }}</label></th>
-        <th id="hId" scope="col"><label>{{ __('ID') }}</label></th>
-        <th id="hLabel" scope="col"><label>{{ __('Label') }}</label></th>
-        <th id="hFormType" scope="col"><label>{{ __('Form Type') }}</label></th>
-        <th id="hActive" scope="col"><label>{{ __('Active') }}</label></th>
-        <th id="hActions" scope="col"><label>{{ __('Actions') }}</label></th>
+        <th id="hWeight" scope="col">{{ __('Weight') }}</th>
+        <th id="hId" scope="col">{{ __('ID') }}</th>
+        <th id="hLabel" scope="col">{{ __('Label') }}</th>
+        <th id="hFormType" scope="col">{{ __('Form Type') }}</th>
+        <th id="hActive" scope="col">{{ __('Active') }}</th>
+        <th id="hActions" scope="col">{{ __('Actions') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -28,8 +28,8 @@
             <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>
             <td headers="hActive">{{ property.active|yesNo }}</td>
             <td headers="hActions">
-                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}"><i class="fa fa-pencil fa-lg fa-fw"></i></a>
-                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}"><i class="fa fa-trash-o fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}" title="{{ __('Edit property')|e('html_attr') }}"><i class="fa fa-pencil fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{{ __('Delete property')|e('html_attr') }}"><i class="fa fa-trash-o fa-lg fa-fw"></i></a>
             </td>
         </tr>
     {% endfor %}
