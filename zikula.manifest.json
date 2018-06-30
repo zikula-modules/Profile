@@ -10,8 +10,8 @@
         "icon": ""
     },
     "version": {
-        "semver": "3.0.3",
-        "compatibility": ">=1.5.0 <2.0",
+        "semver": "3.0.4",
+        "compatibility": ">=1.5.0 <3.0",
         "composerpath": "composer.json",
         "description": "Zikula Profile module.",
         "keywords": [
