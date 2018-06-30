@@ -34,7 +34,11 @@
                             <strong>{{ attribute.extra }}</strong>
                         </div>
                         <div class="col-md-9">
-                            <span>{{ attribute.value }}</span>
+                            {% if 'http://' in attribute.value or 'https://' in attribute.value %}
+                                <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>
+                            {% else %}
+                                <span>{{ attribute.value }}</span>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
