@@ -5,21 +5,25 @@
     </p>
     {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
         <div class="row">
-            <div class="col-sm-4 text-right">
+            <div class="col-sm-3 text-right">
                 <strong>{{ __('Registration date:') }}</strong>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-9">
                 <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
             </div>
         </div>
     {% endif %}
-    {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if (attribute.value is not empty and prefix in attribute.name and 'avatar' not in attribute.formType|lower) %}
+    {% for attribute in user.attributes|zikulaprofilemodule_sortAttributesByWeight if (attribute.value is not empty and prefix in attribute.name and 'avatar' not in attribute.extra|lower) %}
     <div class="row">
-        <div class="col-sm-4 text-right">
+        <div class="col-sm-3 text-right">
             <strong>{{ attribute.extra }}</strong>
         </div>
-        <div class="col-sm-8">
-            <span>{{ attribute.value }}</span>
+        <div class="col-sm-9">
+            {% if 'http://' in attribute.value or 'https://' in attribute.value %}
+                <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>
+            {% else %}
+                <span>{{ attribute.value }}</span>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
