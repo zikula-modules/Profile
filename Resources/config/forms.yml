@@ -22,6 +22,7 @@ services:
             - '@zikula_profile_module.property_repository'
             - '@translator.default'
             - '%zikula_profile_module.property_prefix%'
+            - '%locale%'
 
     zikula.profile_module.form.type.avatar_type:
         class: Zikula\ProfileModule\Form\Type\AvatarType

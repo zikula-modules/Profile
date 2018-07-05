@@ -43,22 +43,30 @@ class ProfileTypeFactory
     private $prefix;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * PropertyTypeFactory constructor.
      * @param FormFactoryInterface $formFactory
      * @param PropertyRepositoryInterface $propertyRepository
      * @param TranslatorInterface $translator
      * @param string $prefix
+     * @param string $locale
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         PropertyRepositoryInterface $propertyRepository,
         TranslatorInterface $translator,
-        $prefix
+        $prefix,
+        $locale
     ) {
         $this->formFactory = $formFactory;
         $this->propertyRepository = $propertyRepository;
         $this->translator = $translator;
         $this->prefix = $prefix;
+        $this->locale = $locale;
     }
 
     /**
@@ -84,7 +92,7 @@ class ProfileTypeFactory
         foreach ($properties as $property) {
             $child = $this->prefix . ':' .$property->getId();
             $options = $property->getFormOptions();
-            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel(); //$attributes->get($child)->getExtra();
+            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel($this->locale); //$attributes->get($child)->getExtra();
             $formBuilder->add($child, $property->getFormType(), $options);
         }
         if ($includeButtons) {
