@@ -3,7 +3,7 @@
 /*
  * This file is part of the Zikula package.
  *
- * Copyright Zikula Foundation - https://ziku.la/
+ * Copyright Zikula Foundation - http://zikula.org/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,6 +15,8 @@ use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
@@ -38,41 +40,41 @@ class ProfileTypeFactory
     private $translator;
 
     /**
-     * @var string
+     * @var RequestStack
      */
-    private $prefix;
+    private $requestStack;
 
     /**
      * @var string
      */
-    private $locale;
+    private $prefix;
 
     /**
      * PropertyTypeFactory constructor.
      * @param FormFactoryInterface $formFactory
      * @param PropertyRepositoryInterface $propertyRepository
      * @param TranslatorInterface $translator
+     * @param RequestStack $requestStack
      * @param string $prefix
-     * @param string $locale
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         PropertyRepositoryInterface $propertyRepository,
         TranslatorInterface $translator,
-        $prefix,
-        $locale
+        RequestStack $requestStack,
+        $prefix
     ) {
         $this->formFactory = $formFactory;
         $this->propertyRepository = $propertyRepository;
         $this->translator = $translator;
         $this->prefix = $prefix;
-        $this->locale = $locale;
+        $this->requestStack = $requestStack;
     }
 
     /**
      * @param PersistentCollection $attributes
      * @param bool $includeButtons
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     public function createForm(PersistentCollection $attributes, $includeButtons = true)
     {
@@ -89,10 +91,11 @@ class ProfileTypeFactory
             'error_bubbling' => true,
             'mapped' => false
         ]);
+        $locale = $this->requestStack->getCurrentRequest()->getLocale();
         foreach ($properties as $property) {
             $child = $this->prefix . ':' .$property->getId();
             $options = $property->getFormOptions();
-            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel($this->locale); //$attributes->get($child)->getExtra();
+            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel($locale); //$attributes->get($child)->getExtra();
             $formBuilder->add($child, $property->getFormType(), $options);
         }
         if ($includeButtons) {
