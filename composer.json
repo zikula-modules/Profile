@@ -1,13 +1,13 @@
 {
     "name": "zikula/profile-module",
-    "version": "3.0.6",
+    "version": "3.0.5",
     "description": "User profiles and member list",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
     "authors": [
         {
             "name": "Zikula Development Team",
-            "homepage": "https://ziku.la"
+            "homepage": "http://zikula.org"
         }
     ],
     "autoload": {
@@ -31,7 +31,7 @@
                 "ZikulaProfileModule::": "::",
                 "ZikulaProfileModule::view": "::",
                 "ZikulaProfileModule::item": "PropertyId::",
-                "ZikulaProfileModule:Members": "::",
+                "ZikulaProfileModule:Members:": "::",
                 "ZikulaProfileModule:Members:recent": "::",
                 "ZikulaProfileModule:Members:online": "::",
                 "ZikulaProfileModule:FeaturedUserblock:": "Block title::",
