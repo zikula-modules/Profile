@@ -267,14 +267,14 @@ class LinkContainer implements LinkContainerInterface
 
         $links[] = [
             'url'  => $this->router->generate('zikulaprofilemodule_profile_display', ['uid' => $this->currentUserApi->get('uid')]),
-            'text' => $this->translator->__('Profile'),
+            'text' => $this->translator->__('Profile', 'zikulaprofilemodule'),
             'icon' => 'user',
         ];
 
         if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:', '::', ACCESS_READ)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_members_list'),
-                'text' => $this->translator->__('Registered users'),
+                'text' => $this->translator->__('Registered users', 'zikulaprofilemodule'),
                 'icon' => 'users',
             ];
         }
@@ -284,7 +284,7 @@ class LinkContainer implements LinkContainerInterface
         if (isset($block)) {
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_userblock_edit'),
-                'text'  => $this->translator->__('Personal custom block'),
+                'text'  => $this->translator->__('Personal custom block', 'zikulaprofilemodule'),
                 'icon'  => 'cube',
             ];
         }
