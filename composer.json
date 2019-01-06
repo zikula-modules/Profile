@@ -1,6 +1,6 @@
 {
     "name": "zikula/profile-module",
-    "version": "3.0.6",
+    "version": "3.1.0",
     "description": "User profiles and member list",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
@@ -19,7 +19,7 @@
     "extra": {
         "zikula": {
             "class": "Zikula\\ProfileModule\\ZikulaProfileModule",
-            "core-compatibility": ">=1.5.0",
+            "core-compatibility": ">=3.0.0",
             "displayname": "Profile",
             "url": "profile",
             "oldnames": ["Profile"],
