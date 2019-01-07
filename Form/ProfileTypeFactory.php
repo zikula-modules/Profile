@@ -91,11 +91,11 @@ class ProfileTypeFactory
             'mapped' => false
         ]);
         $formBuilder->add('dynamicFields', InlineFormDefinitionType::class, [
-                'dynamicFieldsContainer' => $this->propertyRepository,
-                'prefix' => $this->prefix,
-                'translator' => $this->translator,
-                'label' => false,
-                'inherit_data' => true
+            'dynamicFieldsContainer' => $this->propertyRepository,
+            'prefix' => $this->prefix,
+            'translator' => $this->translator,
+            'label' => false,
+            'inherit_data' => true
         ]);
 
         if ($includeButtons) {

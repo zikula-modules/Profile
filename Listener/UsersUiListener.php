@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Twig_Environment;
 use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
 use Zikula\ProfileModule\Form\Type\AvatarType;
@@ -37,6 +38,11 @@ class UsersUiListener implements EventSubscriberInterface
      * The area name that this handler processes.
      */
     const EVENT_KEY = 'module.profile.users_ui_handler';
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var UserRepositoryInterface
@@ -76,6 +82,7 @@ class UsersUiListener implements EventSubscriberInterface
     protected $validation;
 
     /**
+     * @param TranslatorInterface $translator
      * @param UserRepositoryInterface $userRepository
      * @param ProfileTypeFactory $factory
      * @param Twig_Environment $twig
@@ -84,6 +91,7 @@ class UsersUiListener implements EventSubscriberInterface
      * @param string $prefix
      */
     public function __construct(
+        TranslatorInterface $translator,
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $factory,
         Twig_Environment $twig,
@@ -91,6 +99,7 @@ class UsersUiListener implements EventSubscriberInterface
         UploadHelper $uploadHelper,
         $prefix
     ) {
+        $this->translator = $translator;
         $this->userRepository = $userRepository;
         $this->formFactory = $factory;
         $this->twig = $twig;
@@ -165,12 +174,17 @@ class UsersUiListener implements EventSubscriberInterface
      */
     public function formTypeChoices(FormTypeChoiceEvent $event)
     {
-        $groupName = $this->translator->__('Other Fields');
-
         $choices = $event->getChoices();
+
+        $groupName = $this->translator->__('Other Fields');
         if (!isset($choices[$groupName])) {
             $choices[$groupName] = [];
         }
-        $choices[$groupName][] = AvatarType::class;
+
+        $groupChoices = $choices[$groupName];
+        $groupChoices[] = AvatarType::class;
+        $choices[$groupName] = $groupChoices;
+
+        $event->setChoices($choices);
     }
 }

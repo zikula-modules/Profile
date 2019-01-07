@@ -69,7 +69,8 @@ class PropertyType extends AbstractType
                 'entry_type' => TranslationType::class
             ])
             ->add('fieldInfo', DynamicFieldType::class, [
-                'label' => false
+                'label' => false,
+                'mapped' => false
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
