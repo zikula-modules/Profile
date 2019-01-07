@@ -176,13 +176,13 @@ class UsersUiListener implements EventSubscriberInterface
     {
         $choices = $event->getChoices();
 
-        $groupName = $this->translator->__('Other Fields');
+        $groupName = $this->translator->__('Other Fields', 'zikula');
         if (!isset($choices[$groupName])) {
             $choices[$groupName] = [];
         }
 
         $groupChoices = $choices[$groupName];
-        $groupChoices[] = AvatarType::class;
+        $groupChoices[$this->translator->__('Avatar')] = AvatarType::class;
         $choices[$groupName] = $groupChoices;
 
         $event->setChoices($choices);
