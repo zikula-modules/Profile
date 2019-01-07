@@ -15,9 +15,12 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Twig_Environment;
+use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
+use Zikula\ProfileModule\Form\Type\AvatarType;
 use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant;
@@ -35,6 +38,11 @@ class UsersUiListener implements EventSubscriberInterface
      * The area name that this handler processes.
      */
     const EVENT_KEY = 'module.profile.users_ui_handler';
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var UserRepositoryInterface
@@ -74,6 +82,7 @@ class UsersUiListener implements EventSubscriberInterface
     protected $validation;
 
     /**
+     * @param TranslatorInterface $translator
      * @param UserRepositoryInterface $userRepository
      * @param ProfileTypeFactory $factory
      * @param Twig_Environment $twig
@@ -82,6 +91,7 @@ class UsersUiListener implements EventSubscriberInterface
      * @param string $prefix
      */
     public function __construct(
+        TranslatorInterface $translator,
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $factory,
         Twig_Environment $twig,
@@ -89,6 +99,7 @@ class UsersUiListener implements EventSubscriberInterface
         UploadHelper $uploadHelper,
         $prefix
     ) {
+        $this->translator = $translator;
         $this->userRepository = $userRepository;
         $this->formFactory = $factory;
         $this->twig = $twig;
@@ -103,6 +114,7 @@ class UsersUiListener implements EventSubscriberInterface
             UserEvents::DISPLAY_VIEW => ['uiView'],
             UserEvents::EDIT_FORM => ['amendForm'],
             UserEvents::EDIT_FORM_HANDLE => ['editFormHandler'],
+            FormTypeChoiceEvent::NAME => ['formTypeChoices']
         ];
     }
 
@@ -155,5 +167,24 @@ class UsersUiListener implements EventSubscriberInterface
             }
         }
         $this->doctrine->getManager()->flush();
+    }
+
+    /**
+     * @param FormTypeChoiceEvent $event
+     */
+    public function formTypeChoices(FormTypeChoiceEvent $event)
+    {
+        $choices = $event->getChoices();
+
+        $groupName = $this->translator->__('Other Fields', 'zikula');
+        if (!isset($choices[$groupName])) {
+            $choices[$groupName] = [];
+        }
+
+        $groupChoices = $choices[$groupName];
+        $groupChoices[$this->translator->__('Avatar')] = AvatarType::class;
+        $choices[$groupName] = $groupChoices;
+
+        $event->setChoices($choices);
     }
 }

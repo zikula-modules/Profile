@@ -2,7 +2,6 @@ services:
     zikula_profile_module.form.type.property_type:
         class: Zikula\ProfileModule\Form\Type\PropertyType
         arguments:
-            - '@event_dispatcher'
             - '@zikula_settings_module.locale_api'
             - '@translator.default'
         tags:

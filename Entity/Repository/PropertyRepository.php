@@ -12,9 +12,10 @@
 namespace Zikula\ProfileModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Zikula\Bundle\FormExtensionBundle\DynamicFieldsContainerInterface;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
-class PropertyRepository extends EntityRepository implements PropertyRepositoryInterface
+class PropertyRepository extends EntityRepository implements PropertyRepositoryInterface, DynamicFieldsContainerInterface
 {
     public function getIndexedActive()
     {
@@ -22,5 +23,10 @@ class PropertyRepository extends EntityRepository implements PropertyRepositoryI
             ->where('p.active = true');
 
         return $qb->getQuery()->getArrayResult();
+    }
+
+    public function getDynamicFieldsSpecification()
+    {
+        return $this->findBy(['active' => true], ['weight' => 'ASC']);
     }
 }

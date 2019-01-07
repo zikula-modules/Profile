@@ -7,8 +7,7 @@
 {{ form_start(form) }}
 {{ form_row(form.id) }}
 {{ form_row(form.labels) }}
-{{ form_row(form.formType) }}
-{{ form_row(form.formOptions) }}
+{{ form_row(form.fieldInfo) }}
 {{ form_row(form.weight) }}
 {{ form_row(form.active) }}
 <div class="form-group">
@@ -18,4 +17,3 @@
     </div>
 </div>
 {{ form_end(form) }}
-{{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/ZikulaProfileModule.Property.Edit.js')) }}
