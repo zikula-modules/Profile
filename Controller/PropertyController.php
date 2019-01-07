@@ -69,9 +69,6 @@ class PropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $propertyEntity = $form->getData();
-                $fieldInfo = $form['fieldInfo']->getData();
-                $propertyEntity->setFormType($fieldInfo['formType']);
-                $propertyEntity->setFormOptions($fieldInfo['formOptions']);
                 $this->getDoctrine()->getManager()->persist($propertyEntity);
                 $this->getDoctrine()->getManager()->flush();
                 $this->addFlash('success', $this->__('Property saved.'));
