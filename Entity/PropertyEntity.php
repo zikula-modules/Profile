@@ -152,6 +152,26 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
     }
 
     /**
+     * @return array
+     */
+    public function getFieldInfo()
+    {
+        return [
+            'formType' => $this->getFormType(),
+            'formOptions' => $this->getFormOptions()
+        ];
+    }
+
+    /**
+     * @param array $fieldInfo
+     */
+    public function setFieldInfo(array $fieldInfo)
+    {
+        $this->setFormType($fieldInfo['formType']);
+        $this->setFormOptions($fieldInfo['formOptions']);
+    }
+
+    /**
      * @return integer
      */
     public function getWeight()
