@@ -151,7 +151,6 @@ class UpgradeHelper
                 $listOptions = explode('@@', $property['validation']['listoptions'], 2);
                 $options['multiple'] = $listOptions[0];
                 $options['choices'] = $this->generateChoices($property['validation']['listoptions']);
-                $options['choices_as_values'] = true; // @deprecated remove at Core-2.0
                 if (7 == $property['validation']['displaytype']) {
                     $options['multiple'] = true;
                     $options['expanded'] = true;

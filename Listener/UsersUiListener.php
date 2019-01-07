@@ -15,9 +15,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Twig_Environment;
+use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
+use Zikula\ProfileModule\Form\Type\AvatarType;
 use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant;
@@ -103,6 +105,7 @@ class UsersUiListener implements EventSubscriberInterface
             UserEvents::DISPLAY_VIEW => ['uiView'],
             UserEvents::EDIT_FORM => ['amendForm'],
             UserEvents::EDIT_FORM_HANDLE => ['editFormHandler'],
+            FormTypeChoiceEvent::NAME => ['formTypeChoices']
         ];
     }
 
@@ -155,5 +158,19 @@ class UsersUiListener implements EventSubscriberInterface
             }
         }
         $this->doctrine->getManager()->flush();
+    }
+
+    /**
+     * @param FormTypeChoiceEvent $event
+     */
+    public function formTypeChoices(FormTypeChoiceEvent $event)
+    {
+        $groupName = $this->translator->__('Other Fields');
+
+        $choices = $event->getChoices();
+        if (!isset($choices[$groupName])) {
+            $choices[$groupName] = [];
+        }
+        $choices[$groupName][] = AvatarType::class;
     }
 }

@@ -14,6 +14,7 @@ namespace Zikula\ProfileModule\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Zikula\Bundle\FormExtensionBundle\DynamicFieldInterface;
 use Zikula\Core\Doctrine\EntityAccess;
 
 /**
@@ -21,7 +22,7 @@ use Zikula\Core\Doctrine\EntityAccess;
  * @ORM\Table(name="user_property")
  * @UniqueEntity("id")
  */
-class PropertyEntity extends EntityAccess
+class PropertyEntity extends EntityAccess implements DynamicFieldInterface
 {
     /**
      * Note this value is NOT auto-generated and must be manually created!
@@ -66,21 +67,33 @@ class PropertyEntity extends EntityAccess
      */
     private $active = true;
 
+    /**
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param string $id
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
 
+    /**
+     * @return array
+     */
     public function getLabels()
     {
         return $this->labels;
     }
 
+    /**
+     * @return string
+     */
     public function getLabel($locale = '', $default = 'en')
     {
         if (!empty($locale) && isset($this->labels[$locale])) {
@@ -94,21 +107,33 @@ class PropertyEntity extends EntityAccess
         return !empty($values[0]) ? $values[0] : $this->id;
     }
 
+    /**
+     * @param array $labels
+     */
     public function setLabels(array $labels)
     {
         $this->labels = $labels;
     }
 
+    /**
+     * @return string
+     */
     public function getFormType()
     {
         return $this->formType;
     }
 
+    /**
+     * @return string $formType
+     */
     public function setFormType($formType)
     {
         $this->formType = $formType;
     }
 
+    /**
+     * @return array
+     */
     public function getFormOptions()
     {
         if (!isset($this->formOptions['required'])) {
@@ -118,16 +143,25 @@ class PropertyEntity extends EntityAccess
         return $this->formOptions;
     }
 
+    /**
+     * @param array $formOptions
+     */
     public function setFormOptions(array $formOptions)
     {
         $this->formOptions = $formOptions;
     }
 
+    /**
+     * @return integer
+     */
     public function getWeight()
     {
         return $this->weight;
     }
 
+    /**
+     * @param integer $weight
+     */
     public function setWeight($weight)
     {
         $this->weight = $weight;
@@ -143,11 +177,17 @@ class PropertyEntity extends EntityAccess
         $this->weight--;
     }
 
+    /**
+     * @return boolean
+     */
     public function getActive()
     {
         return $this->active;
     }
 
+    /**
+     * @param boolean $active
+     */
     public function setActive($active)
     {
         $this->active = $active;
@@ -159,5 +199,29 @@ class PropertyEntity extends EntityAccess
     public function __toString()
     {
         return $this->getId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return 'zpmpp';
+    }
+
+    /**
+     * @return array
+     */
+    public function getGroupNames()
+    {
+        return [];
     }
 }

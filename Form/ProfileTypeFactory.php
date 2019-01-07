@@ -18,9 +18,9 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\ProfileConstant;
+use Zikula\Bundle\FormExtensionBundle\Form\Type\InlineFormDefinitionType;
 
 class ProfileTypeFactory
 {
@@ -67,8 +67,8 @@ class ProfileTypeFactory
         $this->formFactory = $formFactory;
         $this->propertyRepository = $propertyRepository;
         $this->translator = $translator;
-        $this->prefix = $prefix;
         $this->requestStack = $requestStack;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -84,20 +84,20 @@ class ProfileTypeFactory
                 $attributeValues[$attribute->getName()] = $attribute->getValue();
             }
         }
-        /** @var PropertyEntity[] $properties */
-        $properties = $this->propertyRepository->findBy(['active' => true], ['weight' => 'ASC']);
+
         $formBuilder = $this->formFactory->createNamedBuilder(ProfileConstant::FORM_BLOCK_PREFIX, FormType::class, $attributeValues, [
             'auto_initialize' => false,
             'error_bubbling' => true,
             'mapped' => false
         ]);
-        $locale = $this->requestStack->getCurrentRequest()->getLocale();
-        foreach ($properties as $property) {
-            $child = $this->prefix . ':' .$property->getId();
-            $options = $property->getFormOptions();
-            $options['label'] = isset($options['label']) ? $options['label'] : $property->getLabel($locale); //$attributes->get($child)->getExtra();
-            $formBuilder->add($child, $property->getFormType(), $options);
-        }
+        $formBuilder->add('dynamicFields', InlineFormDefinitionType::class, [
+                'dynamicFieldsContainer' => $this->propertyRepository,
+                'prefix' => $this->prefix,
+                'translator' => $this->translator,
+                'label' => false,
+                'inherit_data' => true
+        ]);
+
         if ($includeButtons) {
             $formBuilder->add('save', SubmitType::class, [
                 'label' => $this->translator->__('Save'),
