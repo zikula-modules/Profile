@@ -92,7 +92,6 @@ class ProfileTypeFactory
         ]);
         $formBuilder->add('dynamicFields', InlineFormDefinitionType::class, [
             'dynamicFieldsContainer' => $this->propertyRepository,
-            'prefix' => $this->prefix,
             'translator' => $this->translator,
             'label' => false,
             'inherit_data' => true
