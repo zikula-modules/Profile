@@ -39,7 +39,8 @@ class UploadHelper
      *
      * @param VariableApiInterface $variableApi
      */
-    public function __construct(VariableApiInterface $variableApi) {
+    public function __construct(VariableApiInterface $variableApi)
+    {
         $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
         $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');

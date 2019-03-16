@@ -42,7 +42,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/featuredUser.html.twig', [
-            'prefix' => 'zpmpp',// TODO $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => 'zpmpp', // TODO $this->getParameter('zikula_profile_module.property_prefix'),
             'user' => $user,
             'blockProperties' => $properties,
             'activeProperties' => $this->propertyRepository->findBy(['active' => true]),
