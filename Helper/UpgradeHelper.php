@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Validator\Constraints\Regex;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
 use Zikula\UsersModule\Entity\UserAttributeEntity;
@@ -54,15 +55,16 @@ class UpgradeHelper
 
     /**
      * UpgradeHelper constructor.
+     *
      * @param TranslatorInterface $translator
-     * @param string $timezone
+     * @param VariableApiInterface $variableApi
      */
     public function __construct(
         TranslatorInterface $translator,
-        $timezone
+        VariableApiInterface $variableApi
     ) {
         $this->setTranslator($translator);
-        $this->systemTimezone = $timezone;
+        $this->systemTimezone = $variableApi->getSystemVar('timezone');
         $this->createOffsetMap();
     }
 

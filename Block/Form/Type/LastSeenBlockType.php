@@ -14,12 +14,30 @@ namespace Zikula\ProfileModule\Block\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Zikula\Common\Translator\IdentityTranslator;
+use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Common\Translator\TranslatorTrait;
 
 class LastSeenBlockType extends AbstractType
 {
+    use TranslatorTrait;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->setTranslator($translator);
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -27,23 +45,13 @@ class LastSeenBlockType extends AbstractType
     {
         $builder
             ->add('amount', IntegerType::class, [
-                'label' => $options['translator']->__('Number of recent visitors to display'),
+                'label' => $this->__('Number of recent visitors to display'),
                 'empty_data'  => 5,
                 'scale' => 0,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank()
                 ],
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translator' => new IdentityTranslator()
-        ]);
     }
 
     /**

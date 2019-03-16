@@ -14,6 +14,7 @@ namespace Zikula\ProfileModule\Helper;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 
 class UploadHelper
 {
@@ -36,16 +37,12 @@ class UploadHelper
     /**
      * UploadHelper constructor.
      *
-     * @param array $modVars
-     * @param string $avatarPath
+     * @param VariableApiInterface $variableApi
      */
-    public function __construct(
-        $modVars = [],
-        $avatarPath = ''
-    ) {
+    public function __construct(VariableApiInterface $variableApi) {
         $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
-        $this->modVars = $modVars;
-        $this->avatarPath = $avatarPath;
+        $this->modVars = $variableApi->getAll('ZikulaProfileModule');
+        $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');
     }
 
     /**

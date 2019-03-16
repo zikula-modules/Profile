@@ -18,25 +18,43 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Zikula\Common\Translator\IdentityTranslator;
+use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Common\Translator\TranslatorTrait;
 
 class FeaturedUserBlockType extends AbstractType
 {
+    use TranslatorTrait;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->setTranslator($translator);
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $translator = $options['translator'];
         $builder
             ->add('username', TextType::class, [
-                'label' => $translator->__('User name'),
+                'label' => $this->__('User name'),
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('fieldstoshow', ChoiceType::class, [
-                'label' => $translator->__('Information to show'),
+                'label' => $this->__('Information to show'),
                 'label_attr' => [
                     'class' => 'checkbox-inline',
                 ],
@@ -48,9 +66,10 @@ class FeaturedUserBlockType extends AbstractType
                 'choice_value' => 'id'
             ])
             ->add('showregdate', CheckboxType::class, [
-                'label' => $translator->__('Show registration date'),
+                'label' => $this->__('Show registration date'),
                 'required' => false,
-            ]);
+            ])
+        ;
     }
 
     /**
@@ -59,8 +78,7 @@ class FeaturedUserBlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'activeProperties' => [],
-            'translator' => new IdentityTranslator()
+            'activeProperties' => []
         ]);
     }
 

@@ -2,82 +2,30 @@ parameters:
     zikula_profile_module.property_prefix: 'zpmpp'
 
 services:
-    zikula_profile_module.container.link_container:
-        class: Zikula\ProfileModule\Container\LinkContainer
-        arguments:
-          - "@translator.default"
-          - "@kernel"
-          - "@jms_i18n_routing.router"
-          - "@zikula_permissions_module.api.permission"
-          - "@zikula_extensions_module.api.variable"
-          - "@zikula_users_module.current_user"
-          - "@zikula_users_module.container.link_container"
-          - "@zikula_users_module.internal.message_module_collector"
-          - "@zikula_blocks_module.block_repository"
-        tags:
-            - { name: zikula.link_container }
-
-    zikula_profile_module.twig.extension:
-        class: Zikula\ProfileModule\Twig\TwigExtension
+    _defaults:
+        autowire: true
+        autoconfigure: true
         public: false
-        arguments:
-          - "@zikula_profile_module.property_repository"
-          - "%zikula_profile_module.property_prefix%"
-        tags:
-            - { name: twig.extension }
+        bind:
+            $bundle: '@Zikula\ProfileModule\ZikulaProfileModule'
+            $prefix: '%zikula_profile_module.property_prefix%'
 
-    zikula_profile_module.event_listener:
-        class: Zikula\ProfileModule\Listener\UsersUiListener
-        arguments:
-          - "@translator.default"
-          - "@zikula_users_module.user_repository"
-          - "@zikula_profile_module.form.profile_type_factory"
-          - "@twig"
-          - "@doctrine"
-          - "@zikula_profile_module.helper.upload_helper"
-          - "%zikula_profile_module.property_prefix%"
-        tags:
-            - { name: kernel.event_subscriber }
+    Zikula\ProfileModule\:
+        resource: '../../*'
+        exclude: '../../{bootstrap.php,Tests,vendor}'
 
-    zikula_profile_module.bridge.profile_module_bridge:
-        class: Zikula\ProfileModule\Bridge\ProfileModuleBridge
-        arguments:
-          - "@router"
-          - "@request_stack"
-          - "@zikula_extensions_module.api.variable"
-          - "@zikula_users_module.current_user"
-          - "@zikula_users_module.user_repository"
-          - "%zikula_profile_module.property_prefix%"
-        tags:
-            - { name: zikula.profile_module, bundleName: ZikulaProfileModule }
+    Zikula\ProfileModule\Helper\:
+        resource: '../../Helper/*'
+        lazy: true
 
-    zikula_profile_module.listener.attribute_name_translation_listener:
-        class: Zikula\ProfileModule\Listener\AttributeNameTranslationListener
+    Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface: '@Zikula\ProfileModule\Entity\Repository\PropertyRepository'
+
+    Zikula\ProfileModule\Listener\AttributeNameTranslationListener:
         arguments:
-          - "%locale%"
-          - "%zikula_profile_module.property_prefix%"
+            $locale: '%locale%'
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    zikula_profile_module.helper.upgrade_helper:
-        class: Zikula\ProfileModule\Helper\UpgradeHelper
-        arguments:
-          - '@translator.default'
-          - "@=service('zikula_extensions_module.api.variable').getSystemVar('timezone')"
-
-    zikula_profile_module.helper.upload_helper:
-        class: Zikula\ProfileModule\Helper\UploadHelper
-        arguments:
-            - "@=service('zikula_extensions_module.api.variable').getAll('ZikulaProfileModule')"
-            - "@=service('zikula_extensions_module.api.variable').get('ZikulaUsersModule', 'avatarpath', 'images/avatar')"
-
-    zikula_profile_module.property_repository:
-        class: Zikula\ProfileModule\Entity\Repository\PropertyRepository
-        factory: ["@doctrine.orm.default_entity_manager", getRepository]
-        arguments: ["ZikulaProfileModule:PropertyEntity"]
-
-    zikula_profile_module.hook_subscriber.ui_hooks_subscriber:
-        class: Zikula\ProfileModule\HookSubscriber\UiHooksSubscriber
-        arguments: ['@translator.default']
+    Zikula\ProfileModule\Menu\MenuBuilder:
         tags:
-            - { name: zikula.hook_subscriber, areaName: 'subscriber.zikuklaprofilemodule.ui_hooks.profile_display' }
+            - { name: knp_menu.menu_builder, method: createAdminMenu, alias: zikulaProfileAdminMenu }

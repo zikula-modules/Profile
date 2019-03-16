@@ -14,7 +14,7 @@ namespace Zikula\ProfileModule\Listener;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Twig_Environment;
+use Twig\Environment;
 use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Common\Translator\TranslatorInterface;
@@ -55,7 +55,7 @@ class UsersUiListener implements EventSubscriberInterface
     private $formFactory;
 
     /**
-     * @var Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -85,7 +85,7 @@ class UsersUiListener implements EventSubscriberInterface
      * @param TranslatorInterface $translator
      * @param UserRepositoryInterface $userRepository
      * @param ProfileTypeFactory $factory
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      * @param RegistryInterface $registry
      * @param UploadHelper $uploadHelper
      * @param string $prefix
@@ -94,7 +94,7 @@ class UsersUiListener implements EventSubscriberInterface
         TranslatorInterface $translator,
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $factory,
-        Twig_Environment $twig,
+        Environment $twig,
         RegistryInterface $registry,
         UploadHelper $uploadHelper,
         $prefix

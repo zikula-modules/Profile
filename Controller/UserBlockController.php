@@ -17,8 +17,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\BlocksModule\Entity\RepositoryInterface\BlockRepositoryInterface;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\ProfileModule\Form\Type\UsersBlockType;
+use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Entity\UserEntity;
 
 class UserBlockController extends AbstractController
@@ -29,33 +32,40 @@ class UserBlockController extends AbstractController
      *
      * Display the configuration options for the users block.
      *
-     * @throws NotFoundHttpException Thrown if the users block isn't found
+     * @param Request $request
+     * @param BlockRepositoryInterface $blockRepository
+     * @param CurrentUserApiInterface $currentUserApi
+     * @param UserRepositoryInterface $userRepository
+     *
      * @return array|RedirectResponse
+     *
+     * @throws NotFoundHttpException Thrown if the users block isn't found
      */
-    public function editAction(Request $request)
-    {
-        $block = $this->get('zikula_blocks_module.block_repository')->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
+    public function editAction(
+        Request $request,
+        BlockRepositoryInterface $blockRepository,
+        CurrentUserApiInterface $currentUserApi,
+        UserRepositoryInterface $userRepository
+    ) {
+        $block = $blockRepository->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
         if (!isset($block)) {
             throw new NotFoundHttpException();
         }
 
-        $currentUserApi = $this->get('zikula_users_module.current_user');
         if (!$currentUserApi->isLoggedIn()) {
             throw new AccessDeniedException();
         }
         /** @var UserEntity $userEntity */
-        $userEntity = $this->get('zikula_users_module.user_repository')->find($currentUserApi->get('uid'));
+        $userEntity = $userRepository->find($currentUserApi->get('uid'));
 
         $formVars = [
             'ublockon' => $userEntity->hasAttribute('ublockon') ? (bool) $userEntity->getAttributeValue('ublockon') : false,
             'ublock'   => $userEntity->hasAttribute('ublock') ? $userEntity->getAttributeValue('ublock') : '',
         ];
 
-        $form = $this->createForm(UsersBlockType::class, $formVars, [
-            'translator' => $this->get('translator.default'),
-        ]);
-
-        if ($form->handleRequest($request)->isValid()) {
+        $form = $this->createForm(UsersBlockType::class, $formVars);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $formData = $form->getData();
 
@@ -73,7 +83,7 @@ class UserBlockController extends AbstractController
         }
 
         return [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
     }
 }

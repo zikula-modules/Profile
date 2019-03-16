@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\DeletionType;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\ProfileModule\Entity\PropertyEntity;
+use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\Type\PropertyType;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
@@ -33,14 +34,16 @@ class PropertyController extends AbstractController
      * @Template("ZikulaProfileModule:Property:list.html.twig")
      *
      * @param Request $request
+     * @param PropertyRepositoryInterface $propertyRepository
+     *
      * @return array
      */
-    public function listAction(Request $request)
+    public function listAction(Request $request, PropertyRepositoryInterface $propertyRepository)
     {
         if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $properties = $this->getDoctrine()->getRepository(PropertyEntity::class)->findBy([], ['weight' => 'ASC']);
+        $properties = $propertyRepository->findBy([], ['weight' => 'ASC']);
 
         return [
             'properties' => $properties
@@ -54,6 +57,7 @@ class PropertyController extends AbstractController
      *
      * @param Request $request
      * @param PropertyEntity $propertyEntity
+     *
      * @return array|RedirectResponse
      */
     public function editAction(Request $request, PropertyEntity $propertyEntity = null)

@@ -36,7 +36,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
     private $requestStack;
 
     /**
-     * @var VariableApi
+     * @var VariableApiInterface
      */
     private $variableApi;
 
@@ -233,5 +233,13 @@ class ProfileModuleBridge implements ProfileModuleInterface
         $url .= '&amp;r=' . (isset($parameters['rating']) ? $parameters['rating'] : 'g');
 
         return $url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBundleName()
+    {
+        return 'ZikulaProfileModule';
     }
 }

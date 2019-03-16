@@ -19,6 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\RouteUrl;
+use Zikula\ProfileModule\Form\ProfileTypeFactory;
+use Zikula\ProfileModule\Helper\UploadHelper;
+use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Entity\UserEntity;
 
 class ProfileController extends AbstractController
@@ -28,21 +32,28 @@ class ProfileController extends AbstractController
      * @Template("ZikulaProfileModule:Profile:display.html.twig")
      *
      * @param UserEntity|null $userEntity
-     * @throws AccessDeniedException on failed permission check
+     * @param CurrentUserApiInterface $currentUserApi
+     * @param UserRepositoryInterface $userRepository
+     *
      * @return array
+     *
+     * @throws AccessDeniedException on failed permission check
      */
-    public function displayAction(UserEntity $userEntity = null)
-    {
+    public function displayAction(
+        UserEntity $userEntity = null,
+        CurrentUserApiInterface $currentUserApi,
+        UserRepositoryInterface $userRepository
+    ) {
         if (!$this->hasPermission('ZikulaProfileModule::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         if (empty($userEntity)) {
-            $userEntity = $this->get('zikula_users_module.user_repository')->find($this->get('zikula_users_module.current_user')->get('uid'));
+            $userEntity = $userRepository->find($currentUserApi->get('uid'));
         }
         $routeUrl = new RouteUrl('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
             'user' => $userEntity,
             'routeUrl' => $routeUrl
         ];
@@ -54,18 +65,29 @@ class ProfileController extends AbstractController
      *
      * @param Request $request
      * @param UserEntity|null $userEntity
+     * @param CurrentUserApiInterface $currentUserApi
+     * @param UserRepositoryInterface $userRepository
+     * @param ProfileTypeFactory $profileTypeFactory
+     * @param UploadHelper $uploadHelper
+     *
      * @return array|RedirectResponse
      */
-    public function editAction(Request $request, UserEntity $userEntity = null)
-    {
-        $currentUserUid = $this->get('zikula_users_module.current_user')->get('uid');
+    public function editAction(
+        Request $request,
+        UserEntity $userEntity = null,
+        CurrentUserApiInterface $currentUserApi,
+        UserRepositoryInterface $userRepository,
+        ProfileTypeFactory $profileTypeFactory,
+        UploadHelper $uploadHelper
+    ) {
+        $currentUserUid = $currentUserApi->get('uid');
         if (empty($userEntity)) {
-            $userEntity = $this->get('zikula_users_module.user_repository')->find($currentUserUid);
+            $userEntity = $userRepository->find($currentUserUid);
         }
         if ($userEntity->getUid() != $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $form = $this->get('zikula_profile_module.form.profile_type_factory')->createForm($userEntity->getAttributes());
+        $form = $profileTypeFactory->createForm($userEntity->getAttributes());
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -73,7 +95,7 @@ class ProfileController extends AbstractController
                 foreach ($attributes as $attribute => $value) {
                     if (!empty($value)) {
                         if ($value instanceof UploadedFile) {
-                            $value = $this->get('zikula_profile_module.helper.upload_helper')->handleUpload($value, $userEntity->getUid());
+                            $value = $uploadHelper->handleUpload($value, $userEntity->getUid());
                         }
                         $userEntity->setAttribute($attribute, $value);
                     } else {

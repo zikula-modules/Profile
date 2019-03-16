@@ -24,32 +24,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\DynamicFieldType;
 use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\SettingsModule\Api\ApiInterface\LocaleApiInterface;
 
 class PropertyType extends AbstractType
 {
+    use TranslatorTrait;
+
     /**
      * @var LocaleApiInterface
      */
     private $localeApi;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * PropertyType constructor.
      *
-     * @param LocaleApiInterface $localeApi
      * @param TranslatorInterface $translator
+     * @param LocaleApiInterface $localeApi
      */
     public function __construct(
-        LocaleApiInterface $localeApi,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LocaleApiInterface $localeApi
     ) {
+        $this->setTranslator($translator);
         $this->localeApi = $localeApi;
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
     }
 
@@ -60,12 +66,12 @@ class PropertyType extends AbstractType
     {
         $builder
             ->add('id', TextType::class, [
-                'label' => $this->translator->__('Id'),
-                'help' => $this->translator->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
-                'alert' => [$this->translator->__('Once used, do not change the ID value or all profiles will lose their connection!') => 'warning']
+                'label' => $this->__('Id'),
+                'help' => $this->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
+                'alert' => [$this->__('Once used, do not change the ID value or all profiles will lose their connection!') => 'warning']
             ])
             ->add('labels', CollectionType::class, [
-                'label' => $this->translator->__('Translated labels'),
+                'label' => $this->__('Translated labels'),
                 'entry_type' => TranslationType::class
             ])
             ->add('fieldInfo', DynamicFieldType::class, [
@@ -73,22 +79,22 @@ class PropertyType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->translator->__('Active'),
+                'label' => $this->__('Active'),
             ])
             ->add('weight', IntegerType::class, [
-                'label' => $this->translator->__('Weight'),
+                'label' => $this->__('Weight'),
                 'constraints' => [new GreaterThan(0)],
                 'empty_data' => 100
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->translator->__('Save'),
+                'label' => $this->__('Save'),
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success',
                 ],
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $this->translator->__('Cancel'),
+                'label' => $this->__('Cancel'),
                 'icon'  => 'fa-times',
                 'attr'  => [
                     'class' => 'btn btn-default',
@@ -123,7 +129,7 @@ class PropertyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => PropertyEntity::class,
+            'data_class' => PropertyEntity::class
         ]);
     }
 }

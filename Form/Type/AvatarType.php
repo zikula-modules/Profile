@@ -16,15 +16,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zikula\Common\Translator\IdentityTranslator;
 use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 
 class AvatarType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    use TranslatorTrait;
 
     /**
      * @var array
@@ -40,17 +38,23 @@ class AvatarType extends AbstractType
      * AvatarType constructor.
      *
      * @param TranslatorInterface $translator
-     * @param array $modVars
-     * @param string $avatarPath
+     * @param VariableApiInterface $variableApi
      */
     public function __construct(
         TranslatorInterface $translator,
-        $modVars = [],
-        $avatarPath = ''
+        VariableApiInterface $variableApi
     ) {
+        $this->setTranslator($translator);
+        $this->modVars = $variableApi->getAll('ZikulaProfileModule');
+        $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
-        $this->modVars = $modVars;
-        $this->avatarPath = $avatarPath;
     }
 
     /**
@@ -59,7 +63,6 @@ class AvatarType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $defaults = [
-            'translator' => new IdentityTranslator(),
             'required' => false
         ];
 
@@ -84,18 +87,16 @@ class AvatarType extends AbstractType
                 'attr' => [
                     'class' => 'avatar-selector'
                 ],
-                'placeholder' => false,
-                'choices_as_values' => true
+                'placeholder' => false
             ]);
         } else {
             // upload mode
             $defaults['data_class'] = null; // allow string values instead of File objects
 
-            $translator = $this->translator;
             $defaults['help'] = [
-                $translator->__('Possible extensions') . ': ' . implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
-                $translator->__('Max. file size') . ': ' . $this->modVars['maxSize'] . ' ' . $translator->__('bytes'),
-                $translator->__('Max. dimensions') . ': ' . $this->modVars['maxWidth'] . 'x' . $this->modVars['maxHeight'] . ' ' . $translator->__('pixels')
+                $this->__('Possible extensions') . ': ' . implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
+                $this->__('Max. file size') . ': ' . $this->modVars['maxSize'] . ' ' . $this->__('bytes'),
+                $this->__('Max. dimensions') . ': ' . $this->modVars['maxWidth'] . 'x' . $this->modVars['maxHeight'] . ' ' . $this->__('pixels')
             ];
         }
 

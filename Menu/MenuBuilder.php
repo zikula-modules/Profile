@@ -12,34 +12,46 @@
 namespace Zikula\ProfileModule\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\PermissionsModule\Api\ApiInterface\PermissionApiInterface;
 
-class ActionsMenu implements ContainerAwareInterface
+class MenuBuilder
 {
-    use ContainerAwareTrait;
     use TranslatorTrait;
 
-    public function setTranslator($translator)
-    {
-        $this->translator = $translator;
+    /**
+     * @var FactoryInterface
+     */
+    private $factory;
+
+    /**
+     * @var PermissionApiInterface
+     */
+    private $permissionApi;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        FactoryInterface $factory,
+        PermissionApiInterface $permissionApi
+    ) {
+        $this->setTranslator($translator);
+        $this->factory = $factory;
+        $this->permissionApi = $permissionApi;
     }
 
-    public function adminMenu(FactoryInterface $factory, array $options)
+    public function createAdminMenu(array $options)
     {
-        $this->setTranslator($this->container->get('translator.default'));
-        $permissionApi = $this->container->get('zikula_permissions_module.api.permission');
         $user = $options['user'];
-        $menu = $factory->createItem('adminActions');
+        $menu = $this->factory->createItem('adminActions');
         $menu->setChildrenAttribute('class', 'list-inline');
-        if ($permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_EDIT)) {
+        if ($this->permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_EDIT)) {
             $menu->addChild($this->__f('Edit ":name"', [':name' => $user->getUname()]), [
                 'route' => 'zikulausersmodule_useradministration_modify',
                 'routeParameters' => ['user' => $user->getUid()],
             ])->setAttribute('icon', 'fa fa-pencil');
         }
-        if ($permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_DELETE)) {
+        if ($this->permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_DELETE)) {
             $menu->addChild($this->__f('Delete ":name"', [':name' => $user->getUname()]), [
                 'route' => 'zikulausersmodule_useradministration_delete',
                 'routeParameters' => ['user' => $user->getUid()],
@@ -47,5 +59,10 @@ class ActionsMenu implements ContainerAwareInterface
         }
 
         return $menu;
+    }
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
     }
 }

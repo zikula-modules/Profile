@@ -13,9 +13,21 @@ namespace Zikula\ProfileModule\Block;
 
 use Zikula\BlocksModule\AbstractBlockHandler;
 use Zikula\ProfileModule\Block\Form\Type\FeaturedUserBlockType;
+use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 
 class FeaturedUserBlock extends AbstractBlockHandler
 {
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
+     * @var PropertyRepositoryInterface
+     */
+    private $propertyRepository;
+
     /**
      * {@inheritdoc}
      */
@@ -24,16 +36,16 @@ class FeaturedUserBlock extends AbstractBlockHandler
         if (!$this->hasPermission('ZikulaProfileModule:FeaturedUserblock:', $properties['title'] . '::', ACCESS_READ)) {
             return '';
         }
-        $user = $this->get('zikula_users_module.user_repository')->findOneBy(['uname' => $properties['username']]);
+        $user = $this->userRepository->findOneBy(['uname' => $properties['username']]);
         if (empty($user)) {
             return '';
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/featuredUser.html.twig', [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => 'zpmpp',// TODO $this->getParameter('zikula_profile_module.property_prefix'),
             'user' => $user,
             'blockProperties' => $properties,
-            'activeProperties' => $this->get('zikula_profile_module.property_repository')->findBy(['active' => true]),
+            'activeProperties' => $this->propertyRepository->findBy(['active' => true]),
         ]);
     }
 
@@ -43,8 +55,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
     public function getFormOptions()
     {
         return [
-            'activeProperties' => $this->get('zikula_profile_module.property_repository')->findBy(['active' => true]),
-            'translator' => $this->get('translator.default'),
+            'activeProperties' => $this->propertyRepository->findBy(['active' => true])
         ];
     }
 
@@ -62,5 +73,23 @@ class FeaturedUserBlock extends AbstractBlockHandler
     public function getFormTemplate()
     {
         return '@ZikulaProfileModule/Block/featuredUser_modify.html.twig';
+    }
+
+    /**
+     * @required
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function setUserRepository(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * @required
+     * @param PropertyRepositoryInterface $propertyRepository
+     */
+    public function setPropertyRepository(PropertyRepositoryInterface $propertyRepository)
+    {
+        $this->propertyRepository = $propertyRepository;
     }
 }

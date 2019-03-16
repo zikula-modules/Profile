@@ -49,7 +49,7 @@
                         {% endif %}
                     </td>
                 {% endif %}
-                {% set rowActions = knp_menu_get('ZikulaProfileModule:ActionsMenu:adminMenu', [], {user: user}) %}
+                {% set rowActions = knp_menu_get('zikulaProfileAdminMenu', [], {user: user}) %}
                 <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: 'ZikulaMenuModule:Override:actions.html.twig'}) }}</td>
             </tr>
             {% else %}

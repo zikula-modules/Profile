@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\ProfileModule\Form\Type\ConfigType;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
@@ -32,19 +33,19 @@ class ConfigController extends AbstractController
      * @Template("ZikulaProfileModule:Config:config.html.twig")
      *
      * @param Request $request
-     *
-     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
+     * @param VariableApiInterface $variableApi
      *
      * @return array
+     *
+     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      */
-    public function configAction(Request $request)
+    public function configAction(Request $request, VariableApiInterface $variableApi)
     {
         if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
         $modVars = $this->getVars();
-        $variableApi = $this->get('zikula_extensions_module.api.variable');
 
         $varsInUsersModule = [
             ProfileConstant::MODVAR_AVATAR_IMAGE_PATH => ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH,
@@ -55,12 +56,9 @@ class ConfigController extends AbstractController
             $modVars[$varName] = $variableApi->get(UsersConstant::MODNAME, $varName, $defaultValue);
         }
 
-        $form = $this->createForm(ConfigType::class, $modVars, [
-                'translator' => $this->get('translator.default'),
-            ]
-        );
-
-        if ($form->handleRequest($request)->isValid()) {
+        $form = $this->createForm(ConfigType::class, $modVars);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $formData = $form->getData();
 
@@ -84,9 +82,9 @@ class ConfigController extends AbstractController
         if (true === $modVars['allowUploads']) {
             $path = $modVars[ProfileConstant::MODVAR_AVATAR_IMAGE_PATH];
             if (!(file_exists($path) && is_readable($path))) {
-                $pathWarning = $this->get('translator.default')->__('Warning! The avatar directory does not exist or is not readable for the webserver.');
+                $pathWarning = $this->__('Warning! The avatar directory does not exist or is not readable for the webserver.');
             } elseif (!is_writable($path)) {
-                $pathWarning = $this->get('translator.default')->__('Warning! The webserver cannot write to the avatar directory.');
+                $pathWarning = $this->__('Warning! The webserver cannot write to the avatar directory.');
             }
         }
 

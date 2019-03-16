@@ -13,12 +13,24 @@ namespace Zikula\ProfileModule\Block;
 
 use Doctrine\Common\Collections\Criteria;
 use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Block\Form\Type\LastSeenBlockType;
 use Zikula\SecurityCenterModule\Constant as SecCtrConstant;
 use Zikula\UsersModule\Constant;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserSessionRepositoryInterface;
 
 class LastSeenBlock extends AbstractBlockHandler
 {
+    /**
+     * @var VariableApiInterface
+     */
+    private $variableApi;
+
+    /**
+     * @var UserSessionRepositoryInterface
+     */
+    private $userSessionRepository;
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +41,7 @@ class LastSeenBlock extends AbstractBlockHandler
             return '';
         }
 
-        $sessionsToFile = SecCtrConstant::SESSION_STORAGE_FILE == $this->get('zikula_extensions_module.api.variable')->getSystemVar('sessionstoretofile', SecCtrConstant::SESSION_STORAGE_FILE);
+        $sessionsToFile = SecCtrConstant::SESSION_STORAGE_FILE == $this->variableApi->getSystemVar('sessionstoretofile', SecCtrConstant::SESSION_STORAGE_FILE);
         if ($sessionsToFile) {
             $sessions = [];
         } else {
@@ -38,23 +50,13 @@ class LastSeenBlock extends AbstractBlockHandler
                 ->andWhere(Criteria::expr()->neq('uid', null))
                 ->orderBy(['lastused' => 'DESC'])
                 ->setMaxResults($properties['amount']);
-            $sessions = $this->get('zikula_users_module.user_session_repository')->matching($criteria);
+            $sessions = $this->userSessionRepository->matching($criteria);
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/lastSeen.html.twig', [
             'sessionsToFile' => $sessionsToFile,
             'sessions' => $sessions,
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormOptions()
-    {
-        return [
-            'translator' => $this->get('translator.default'),
-        ];
     }
 
     /**
@@ -71,5 +73,23 @@ class LastSeenBlock extends AbstractBlockHandler
     public function getFormTemplate()
     {
         return '@ZikulaProfileModule/Block/lastSeen_modify.html.twig';
+    }
+
+    /**
+     * @required
+     * @param VariableApiInterface $variableApi
+     */
+    public function setVariableApi(VariableApiInterface $variableApi)
+    {
+        $this->variableApi = $variableApi;
+    }
+
+    /**
+     * @required
+     * @param UserSessionRepositoryInterface $userSessionRepository
+     */
+    public function setUserSessionRepository(UserSessionRepositoryInterface $userSessionRepository)
+    {
+        $this->userSessionRepository = $userSessionRepository;
     }
 }

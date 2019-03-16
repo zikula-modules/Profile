@@ -13,9 +13,15 @@ namespace Zikula\ProfileModule\Block;
 
 use Zikula\BlocksModule\AbstractBlockHandler;
 use Zikula\ProfileModule\Block\Form\Type\LastXUsersBlockType;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 
 class LastXUsersBlock extends AbstractBlockHandler
 {
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
     /**
      * Display block.
      *
@@ -31,18 +37,8 @@ class LastXUsersBlock extends AbstractBlockHandler
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/lastXUsers.html.twig', [
-            'users' => $this->get('zikula_users_module.user_repository')->findBy([], ['user_regdate' => 'DESC'], $properties['amount']),
+            'users' => $this->userRepository->findBy([], ['user_regdate' => 'DESC'], $properties['amount']),
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormOptions()
-    {
-        return [
-            'translator' => $this->get('translator.default'),
-        ];
     }
 
     /**
@@ -59,5 +55,14 @@ class LastXUsersBlock extends AbstractBlockHandler
     public function getFormTemplate()
     {
         return '@ZikulaProfileModule/Block/lastXUsers_modify.html.twig';
+    }
+
+    /**
+     * @required
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function setUserRepository(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
     }
 }

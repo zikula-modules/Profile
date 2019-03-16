@@ -26,6 +26,7 @@ class TranslationType extends AbstractType
 
     /**
      * TranslationType constructor.
+     *
      * @param LocaleApiInterface $localeApi
      */
     public function __construct(LocaleApiInterface $localeApi)

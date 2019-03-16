@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Zikula\Core\AbstractExtensionInstaller;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
+use Zikula\ProfileModule\Helper\UpgradeHelper;
 
 /**
  * Profile module installer.
@@ -108,7 +109,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->schemaTool->create($this->entities);
                 $propertyToIdMap = [];
                 $locale = $this->container->get('request_stack')->getMasterRequest()->getLocale();
-                $upgradeHelper = $this->container->get('zikula_profile_module.helper.upgrade_helper');
+                $upgradeHelper = $this->container->get(UpgradeHelper::class);
                 foreach ($properties as $property) {
                     $newProperty = $upgradeHelper->mergeToNewProperty($property, $locale);
                     $this->entityManager->persist($newProperty);

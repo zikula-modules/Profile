@@ -16,7 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\SettingsModule\SettingsConstant;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
+use Zikula\UsersModule\Entity\RepositoryInterface\UserSessionRepositoryInterface;
 
 /**
  * @Route("/members")
@@ -28,11 +32,22 @@ class MembersController extends AbstractController
      * @Template("ZikulaProfileModule:Members:list.html.twig")
      *
      * @param Request $request
-     * @throws AccessDeniedException on failed permission check
+     * @param PropertyRepositoryInterface $propertyRepository
+     * @param UserRepositoryInterface $userRepository
+     * @param UserSessionRepositoryInterface $userSessionRepository
+     * @param VariableApiInterface $variableApi
+     *
      * @return array
+     *
+     * @throws AccessDeniedException on failed permission check
      */
-    public function listAction(Request $request)
-    {
+    public function listAction(
+        Request $request,
+        PropertyRepositoryInterface $propertyRepository,
+        UserRepositoryInterface $userRepository,
+        UserSessionRepositoryInterface $userSessionRepository,
+        VariableApiInterface $variableApi
+    ) {
         if (!$this->hasPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
@@ -51,20 +66,20 @@ class MembersController extends AbstractController
         if (isset($letter)) {
             $critera['uname'] = ['operator' => 'like', 'operand' => $letter . '%'];
         }
-        $users = $this->get('zikula_users_module.user_repository')->query($critera, [$sortBy => $sortOrder], $itemsPerPage, $startNum);
-        $amountOfUsers = $this->get('zikula_users_module.user_repository')->count();
+        $users = $userRepository->query($critera, [$sortBy => $sortOrder], $itemsPerPage, $startNum);
+        $amountOfUsers = $userRepository->count();
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
             'amountOfRegisteredMembers' => $amountOfUsers - 1,
-            'amountOfOnlineMembers' => count($this->getOnlineUids()),
-            'newestMember' => $this->get('zikula_users_module.user_repository')->findBy([], ['user_regdate' => 'DESC'], 1)[0],
+            'amountOfOnlineMembers' => count($this->getOnlineUids($userSessionRepository)),
+            'newestMember' => $userRepository->findBy([], ['user_regdate' => 'DESC'], 1)[0],
             'users' => $users,
             'letter' => $letter,
             'sortby' => $sortBy,
             'sortorder' => $sortOrder,
-            'activeProperties' => $this->getActiveProperties(),
-            'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
+            'activeProperties' => $this->getActiveProperties($propertyRepository),
+            'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
             'pager' => [
                 'amountOfItems' => $amountOfUsers,
                 'itemsPerPage' => $itemsPerPage,
@@ -78,20 +93,28 @@ class MembersController extends AbstractController
      *
      * Displays last X registered users.
      *
-     * @throws AccessDeniedException on failed permission check
+     * @param PropertyRepositoryInterface $propertyRepository
+     * @param UserRepositoryInterface $userRepository
+     * @param VariableApiInterface $variableApi
+     *
      * @return array
+     *
+     * @throws AccessDeniedException on failed permission check
      */
-    public function recentAction()
-    {
+    public function recentAction(
+        PropertyRepositoryInterface $propertyRepository,
+        UserRepositoryInterface $userRepository,
+        VariableApiInterface $variableApi
+    ) {
         if (!$this->hasPermission('ZikulaProfileModule:Members:recent', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
-            'activeProperties' => $this->getActiveProperties(),
-            'users' => $this->get('zikula_users_module.user_repository')->findBy([], ['user_regdate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
-            'messageModule' => $this->get('zikula_extensions_module.api.variable')->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
+            'activeProperties' => $this->getActiveProperties($propertyRepository),
+            'users' => $userRepository->findBy([], ['user_regdate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
+            'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
         ];
     }
 
@@ -101,41 +124,53 @@ class MembersController extends AbstractController
      *
      * View users online.
      *
-     * @throws AccessDeniedException on failed permission check
+     * @param PropertyRepositoryInterface $propertyRepository
+     * @param UserRepositoryInterface $userRepository
+     * @param UserSessionRepositoryInterface $userSessionRepository
+     *
      * @return array
+     *
+     * @throws AccessDeniedException on failed permission check
      */
-    public function onlineAction()
-    {
+    public function onlineAction(
+        PropertyRepositoryInterface $propertyRepository,
+        UserRepositoryInterface $userRepository,
+        UserSessionRepositoryInterface $userSessionRepository
+    ) {
         if (!$this->hasPermission('ZikulaProfileModule:Members:online', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
-            'activeProperties' => $this->getActiveProperties(),
-            'users' => $this->getDoctrine()->getRepository('ZikulaUsersModule:UserEntity')->findBy(['uid' => $this->getOnlineUids()]),
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
+            'activeProperties' => $this->getActiveProperties($propertyRepository),
+            'users' => $userRepository->findBy(['uid' => $this->getOnlineUids($userSessionRepository)]),
         ];
     }
 
     /**
      * Get uids of online users
+     *
+     * @param UserSessionRepositoryInterface $userSessionRepository
+     *
      * @return array
      */
-    private function getOnlineUids()
+    private function getOnlineUids(UserSessionRepositoryInterface $userSessionRepository)
     {
         $activeMinutes = $this->getVar('activeminutes');
         $activeSince = new \DateTime();
         $activeSince->modify("-$activeMinutes minutes");
 
-        return $this->getDoctrine()->getRepository('ZikulaUsersModule:UserSessionEntity')->getUsersSince($activeSince);
+        return $userSessionRepository->getUsersSince($activeSince);
     }
 
     /**
+     * @param PropertyRepositoryInterface $propertyRepository
      * @return array
      */
-    private function getActiveProperties()
+    private function getActiveProperties(PropertyRepositoryInterface $propertyRepository)
     {
-        $properties = $this->getDoctrine()->getRepository('ZikulaProfileModule:PropertyEntity')->findBy(['active' => true]);
+        $properties = $propertyRepository->findBy(['active' => true]);
         $activeProperties = [];
         foreach ($properties as $property) {
             $activeProperties[]= $property->getId();

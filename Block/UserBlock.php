@@ -14,6 +14,7 @@ namespace Zikula\ProfileModule\Block;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zikula\BlocksModule\AbstractBlockHandler;
 use Zikula\BlocksModule\Block\Form\Type\HtmlBlockType;
+use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
 
 /**
  * A user-customizable block.
@@ -21,21 +22,26 @@ use Zikula\BlocksModule\Block\Form\Type\HtmlBlockType;
 class UserBlock extends AbstractBlockHandler
 {
     /**
+     * @var CurrentUserApiInterface
+     */
+    private $currentUserApi;
+
+    /**
      * {@inheritdoc}
      */
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        $currentUserApi = $this->get('zikula_users_module.current_user');
         if ('' == $title) {
-            $title = $this->__f('Custom block content for %s', ['%s' => $currentUserApi->get('uname')]);
+            $title = $this->__f('Custom block content for %s', ['%s' => $this->currentUserApi->get('uname')]);
         }
         if (!$this->hasPermission('Userblock::', $title.'::', ACCESS_READ)) {
             return '';
         }
+
         /** @var ArrayCollection $attributes */
-        $attributes = $currentUserApi->get('attributes');
-        if (!$currentUserApi->isLoggedIn() || true != (bool) $attributes->get('ublockon')) {
+        $attributes = $this->currentUserApi->get('attributes');
+        if (!$this->currentUserApi->isLoggedIn() || true != (bool) $attributes->get('ublockon')) {
             return '';
         }
 
@@ -50,5 +56,14 @@ class UserBlock extends AbstractBlockHandler
     public function getFormTemplate()
     {
         return '@ZikulaBlocksModule/Block/html_modify.html.twig';
+    }
+
+    /**
+     * @required
+     * @param CurrentUserApiInterface $currentUserApi
+     */
+    public function setCurrentUserApi(CurrentUserApiInterface $currentUserApi)
+    {
+        $this->currentUserApi = $currentUserApi;
     }
 }

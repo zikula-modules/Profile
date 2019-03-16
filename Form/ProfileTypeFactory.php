@@ -51,6 +51,7 @@ class ProfileTypeFactory
 
     /**
      * PropertyTypeFactory constructor.
+     *
      * @param FormFactoryInterface $formFactory
      * @param PropertyRepositoryInterface $propertyRepository
      * @param TranslatorInterface $translator
@@ -92,7 +93,6 @@ class ProfileTypeFactory
         ]);
         $formBuilder->add('dynamicFields', InlineFormDefinitionType::class, [
             'dynamicFieldsContainer' => $this->propertyRepository,
-            'translator' => $this->translator,
             'label' => false,
             'inherit_data' => true
         ]);

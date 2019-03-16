@@ -45,6 +45,11 @@ class UiHooksSubscriber implements HookSubscriberInterface
         return $this->translator->__('Profile Display');
     }
 
+    public function getAreaName()
+    {
+        return 'subscriber.zikulaprofilemodule.ui_hooks.profile_display';
+    }
+
     public function getEvents()
     {
         return [
