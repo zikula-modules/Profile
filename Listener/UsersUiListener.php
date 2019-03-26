@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -161,7 +162,7 @@ class UsersUiListener implements EventSubscriberInterface
                 }
                 $userEntity->setAttribute($key, $value);
             } else {
-                if (false === strpos($key, 'avatar')) {
+                if (false === mb_strpos($key, 'avatar')) {
                     $userEntity->delAttribute($key);
                 }
             }

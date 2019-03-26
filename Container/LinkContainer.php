@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -115,9 +116,9 @@ class LinkContainer implements LinkContainerInterface
      */
     public function getLinks($type = LinkContainerInterface::TYPE_ADMIN)
     {
-        $method = 'get'.ucfirst(strtolower($type));
+        $method = 'get'.ucfirst(mb_strtolower($type));
         if (method_exists($this, $method)) {
-            return $this->$method();
+            return $this->{$method}();
         }
 
         return [];
@@ -202,7 +203,7 @@ class LinkContainer implements LinkContainerInterface
             }
 
             $messageModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '');
-            if ('' != $messageModule && $this->kernel->isBundle($messageModule)
+            if ('' !== $messageModule && $this->kernel->isBundle($messageModule)
                 && $this->permissionApi->hasPermission($messageModule . '::', '::', ACCESS_READ)
             ) {
                 $links[] = [
@@ -257,7 +258,7 @@ class LinkContainer implements LinkContainerInterface
 
         // do not show any account links if Profile is not the Profile manager
         $profileModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_PROFILE_MODULE, '');
-        if ($profileModule != $this->getBundleName()) {
+        if ($profileModule !== $this->getBundleName()) {
             return $links;
         }
 

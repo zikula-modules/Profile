@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -126,7 +127,7 @@ class AvatarType extends AbstractType
      */
     private function allowUploads()
     {
-        $allowUploads = isset($this->modVars['allowUploads']) && true === boolval($this->modVars['allowUploads']);
+        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool) ($this->modVars['allowUploads']);
         if (!$allowUploads) {
             return false;
         }

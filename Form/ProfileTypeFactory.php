@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -17,10 +18,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Zikula\Bundle\FormExtensionBundle\Form\Type\InlineFormDefinitionType;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\ProfileConstant;
-use Zikula\Bundle\FormExtensionBundle\Form\Type\InlineFormDefinitionType;
 
 class ProfileTypeFactory
 {
@@ -81,7 +82,7 @@ class ProfileTypeFactory
     {
         $attributeValues = [];
         foreach ($attributes as $attribute) {
-            if (0 === strpos($attribute->getName(), $this->prefix)) {
+            if (0 === mb_strpos($attribute->getName(), $this->prefix)) {
                 $attributeValues[$attribute->getName()] = $attribute->getValue();
             }
         }

@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -50,11 +51,11 @@ class TwigExtension extends \Twig_Extension
     {
         $properties = $this->propertyRepository->getIndexedActive();
         $sorter = function ($att1, $att2) use ($properties) {
-            if ((0 !== strpos($att1, $this->prefix)) && (0 !== strpos($att2, $this->prefix))) {
+            if ((0 !== mb_strpos($att1, $this->prefix)) && (0 !== mb_strpos($att2, $this->prefix))) {
                 return 0;
             }
-            $n1 = substr($att1, strlen($this->prefix) + 1);
-            $n2 = substr($att2, strlen($this->prefix) + 1);
+            $n1 = mb_substr($att1, mb_strlen($this->prefix) + 1);
+            $n2 = mb_substr($att2, mb_strlen($this->prefix) + 1);
             if (!isset($properties[$n1]) || !isset($properties[$n2])) {
                 return 0;
             }

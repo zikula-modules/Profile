@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -159,7 +160,7 @@ class MembersController extends AbstractController
     {
         $activeMinutes = $this->getVar('activeminutes');
         $activeSince = new \DateTime();
-        $activeSince->modify("-$activeMinutes minutes");
+        $activeSince->modify("-${activeMinutes} minutes");
 
         return $userSessionRepository->getUsersSince($activeSince);
     }

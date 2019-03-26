@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -81,7 +82,7 @@ class UpgradeHelper
     public function getModifiedAttributeValue(UserAttributeEntity $attribute, $prefix)
     {
         $value = $attribute->getValue();
-        if ($prefix . ':timezone' == $attribute->getName()) {
+        if ($prefix . ':timezone' === $attribute->getName()) {
             $value = isset($this->offsetMap[$value]) ? $this->offsetMap[$value] : $this->systemTimezone;
         }
 
@@ -127,7 +128,7 @@ class UpgradeHelper
             case 'country':
                 $newProperty->setFormType(CountryType::class);
         }
-        if ('_country' == substr($property['attributename'], -8)) {
+        if ('_country' === mb_substr($property['attributename'], -8)) {
             $newProperty->setFormType(CountryType::class);
         }
     }
@@ -153,7 +154,7 @@ class UpgradeHelper
                 $listOptions = explode('@@', $property['validation']['listoptions'], 2);
                 $options['multiple'] = $listOptions[0];
                 $options['choices'] = $this->generateChoices($property['validation']['listoptions']);
-                if (7 == $property['validation']['displaytype']) {
+                if (7 === $property['validation']['displaytype']) {
                     $options['multiple'] = true;
                     $options['expanded'] = true;
                 }
@@ -173,7 +174,7 @@ class UpgradeHelper
         // translate them if needed
         foreach ($list as $id => $listItem) {
             $itemParts = explode('@', $listItem);
-            $value = isset($itemParts[1]) ? $itemParts[1] : $id;
+            $value = $itemParts[1] ?? $id;
             $display = !empty($itemParts[0]) ? $this->__(/** @Ignore */$itemParts[0]) : $id;
             $choices[$display] = $value;
         }
@@ -183,7 +184,7 @@ class UpgradeHelper
 
     private function getDateFormatFromAlias($format)
     {
-        switch (trim(strtolower($format))) {
+        switch (trim(mb_strtolower($format))) {
             case 'us':
                 return 'F j, Y';
                 break;

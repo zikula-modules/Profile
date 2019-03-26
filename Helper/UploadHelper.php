@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -55,7 +56,7 @@ class UploadHelper
      */
     public function handleUpload(UploadedFile $file, $userId = 0)
     {
-        $allowUploads = isset($this->modVars['allowUploads']) && true === boolval($this->modVars['allowUploads']);
+        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool) ($this->modVars['allowUploads']);
         if (!$allowUploads) {
             return '';
         }
@@ -63,7 +64,7 @@ class UploadHelper
             return '';
         }
 
-        if (UPLOAD_ERR_OK != $file->getError()) {
+        if (UPLOAD_ERR_OK !== $file->getError()) {
             return '';
         }
         if (!is_numeric($userId) || $userId < 1) {

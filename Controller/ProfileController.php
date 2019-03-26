@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -84,7 +85,7 @@ class ProfileController extends AbstractController
         if (empty($userEntity)) {
             $userEntity = $userRepository->find($currentUserUid);
         }
-        if ($userEntity->getUid() != $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
+        if ($userEntity->getUid() !== $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
         $form = $profileTypeFactory->createForm($userEntity->getAttributes());
@@ -99,7 +100,7 @@ class ProfileController extends AbstractController
                         }
                         $userEntity->setAttribute($attribute, $value);
                     } else {
-                        if (false === strpos($attribute, 'avatar')) {
+                        if (false === mb_strpos($attribute, 'avatar')) {
                             $userEntity->delAttribute($attribute);
                         }
                     }
