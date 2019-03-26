@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -12,6 +13,8 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Helper;
 
+use DateTime;
+use DateTimeZone;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
@@ -54,12 +57,6 @@ class UpgradeHelper
         7 => ChoiceType::class, // multi-checkbox
     ];
 
-    /**
-     * UpgradeHelper constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param VariableApiInterface $variableApi
-     */
     public function __construct(
         TranslatorInterface $translator,
         VariableApiInterface $variableApi
@@ -69,32 +66,22 @@ class UpgradeHelper
         $this->createOffsetMap();
     }
 
-    public function setTranslator($translator)
+    public function setTranslator($translator): void
     {
         $this->translator = $translator;
     }
 
-    /**
-     * @param UserAttributeEntity $attribute
-     * @param string $prefix
-     * @return mixed
-     */
-    public function getModifiedAttributeValue(UserAttributeEntity $attribute, $prefix)
+    public function getModifiedAttributeValue(UserAttributeEntity $attribute, string $prefix): string
     {
         $value = $attribute->getValue();
         if ($prefix . ':timezone' === $attribute->getName()) {
-            $value = isset($this->offsetMap[$value]) ? $this->offsetMap[$value] : $this->systemTimezone;
+            $value = $this->offsetMap[$value] ?? $this->systemTimezone;
         }
 
         return $value;
     }
 
-    /**
-     * @param array $property
-     * @param string $locale
-     * @return PropertyEntity
-     */
-    public function mergeToNewProperty(array $property, $locale = 'en')
+    public function mergeToNewProperty(array $property, string $locale = 'en'): PropertyEntity
     {
         $property['validation'] = unserialize($property['validation']);
         $newProperty = new PropertyEntity();
@@ -108,7 +95,7 @@ class UpgradeHelper
         return $newProperty;
     }
 
-    private function setFormType(PropertyEntity $newProperty, array $property)
+    private function setFormType(PropertyEntity $newProperty, array $property): void
     {
         $newProperty->setFormType($this->formTypeMap[$property['validation']['displaytype']]);
         switch ($property['attributename']) {
@@ -133,7 +120,7 @@ class UpgradeHelper
         }
     }
 
-    private function setFormOptions(PropertyEntity $newProperty, array $property)
+    private function setFormOptions(PropertyEntity $newProperty, array $property): void
     {
         $options = [];
         if (true === $property['validation']['required'] || 1 === $property['validation']['required'] || !empty($property['validation']['required'])) {
@@ -166,7 +153,7 @@ class UpgradeHelper
         $newProperty->setFormOptions($options);
     }
 
-    private function generateChoices($listOptions)
+    private function generateChoices(string $listOptions): array
     {
         $choices = [];
         $list = explode('@@', $listOptions);
@@ -182,9 +169,9 @@ class UpgradeHelper
         return $choices;
     }
 
-    private function getDateFormatFromAlias($format)
+    private function getDateFormatFromAlias(string $format): string
     {
-        switch (trim(mb_strtolower($format))) {
+        switch (mb_strtolower(trim($format))) {
             case 'us':
                 return 'F j, Y';
                 break;
@@ -198,11 +185,11 @@ class UpgradeHelper
         }
     }
 
-    private function createOffsetMap()
+    private function createOffsetMap(): void
     {
-        $identifiers = \DateTimeZone::listIdentifiers();
+        $identifiers = DateTimeZone::listIdentifiers();
         foreach ($identifiers as $name) {
-            $now = new \DateTime(null, new \DateTimeZone($name));
+            $now = new DateTime(null, new DateTimeZone($name));
             $offsetValue = $now->getOffset() / 3600;
             if (!isset($this->offsetMap[$offsetValue])) {
                 $this->offsetMap[$offsetValue] = $name;

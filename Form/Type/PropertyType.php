@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -38,12 +39,6 @@ class PropertyType extends AbstractType
      */
     private $localeApi;
 
-    /**
-     * PropertyType constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param LocaleApiInterface $localeApi
-     */
     public function __construct(
         TranslatorInterface $translator,
         LocaleApiInterface $localeApi
@@ -52,17 +47,11 @@ class PropertyType extends AbstractType
         $this->localeApi = $localeApi;
     }
 
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -116,17 +105,11 @@ class PropertyType extends AbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'zikulaprofilemodule_property';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -13,6 +14,7 @@ declare(strict_types=1);
 namespace Zikula\ProfileModule\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\PermissionsModule\Api\ApiInterface\PermissionApiInterface;
@@ -41,7 +43,7 @@ class MenuBuilder
         $this->permissionApi = $permissionApi;
     }
 
-    public function createAdminMenu(array $options)
+    public function createAdminMenu(array $options): ItemInterface
     {
         $user = $options['user'];
         $menu = $this->factory->createItem('adminActions');
@@ -62,7 +64,7 @@ class MenuBuilder
         return $menu;
     }
 
-    public function setTranslator($translator)
+    public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }

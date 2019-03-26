@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -23,14 +24,7 @@ class LastXUsersBlock extends AbstractBlockHandler
      */
     private $userRepository;
 
-    /**
-     * Display block.
-     *
-     * @param array $properties
-     *
-     * @return string the rendered block
-     */
-    public function display(array $properties)
+    public function display(array $properties): string
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
         if (!$this->hasPermission('ZikulaProfileModule:LastXUsersblock:', $title.'::', ACCESS_READ)) {
@@ -38,31 +32,21 @@ class LastXUsersBlock extends AbstractBlockHandler
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/lastXUsers.html.twig', [
-            'users' => $this->userRepository->findBy([], ['user_regdate' => 'DESC'], $properties['amount']),
+            'users' => $this->userRepository->findBy([], ['user_regdate' => 'DESC'], $properties['amount'])
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormClassName()
+    public function getFormClassName(): string
     {
         return LastXUsersBlockType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormTemplate()
+    public function getFormTemplate(): string
     {
         return '@ZikulaProfileModule/Block/lastXUsers_modify.html.twig';
     }
 
-    /**
-     * @required
-     * @param UserRepositoryInterface $userRepository
-     */
-    public function setUserRepository(UserRepositoryInterface $userRepository)
+    public function setUserRepository(UserRepositoryInterface $userRepository): void
     {
         $this->userRepository = $userRepository;
     }

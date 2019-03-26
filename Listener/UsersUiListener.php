@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -38,7 +39,7 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * The area name that this handler processes.
      */
-    const EVENT_KEY = 'module.profile.users_ui_handler';
+    public const EVENT_KEY = 'module.profile.users_ui_handler';
 
     /**
      * @var TranslatorInterface
@@ -82,15 +83,6 @@ class UsersUiListener implements EventSubscriberInterface
      */
     protected $validation;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param UserRepositoryInterface $userRepository
-     * @param ProfileTypeFactory $factory
-     * @param Environment $twig
-     * @param RegistryInterface $registry
-     * @param UploadHelper $uploadHelper
-     * @param string $prefix
-     */
     public function __construct(
         TranslatorInterface $translator,
         UserRepositoryInterface $userRepository,
@@ -98,7 +90,7 @@ class UsersUiListener implements EventSubscriberInterface
         Environment $twig,
         RegistryInterface $registry,
         UploadHelper $uploadHelper,
-        $prefix
+        string $prefix
     ) {
         $this->translator = $translator;
         $this->userRepository = $userRepository;
@@ -121,12 +113,8 @@ class UsersUiListener implements EventSubscriberInterface
 
     /**
      * Render and return profile information for display as part of a hook-like UI event issued from the Users module.
-     *
-     * @param GenericEvent $event The event that triggered this function call, including the subject of the display request
-     *
-     * @return void
      */
-    public function uiView(GenericEvent $event)
+    public function uiView(GenericEvent $event): void
     {
         $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/Hook/display.html.twig', [
             'prefix' => $this->prefix,
@@ -134,24 +122,20 @@ class UsersUiListener implements EventSubscriberInterface
         ]);
     }
 
-    /**
-     * @param UserFormAwareEvent $event
-     */
-    public function amendForm(UserFormAwareEvent $event)
+    public function amendForm(UserFormAwareEvent $event): void
     {
         $user = $event->getFormData();
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
         $userEntity = $this->userRepository->find($uid);
-        $profileForm = $this->formFactory->createForm($userEntity->getAttributes(), false);
+        $attributes = $userEntity->getAttributes() ?? [];
+        $profileForm = $this->formFactory->createForm($attributes, false);
         $event
             ->formAdd($profileForm)
-            ->addTemplate('@ZikulaProfileModule/Hook/edit.html.twig');
+            ->addTemplate('@ZikulaProfileModule/Hook/edit.html.twig')
+        ;
     }
 
-    /**
-     * @param UserFormDataEvent $event
-     */
-    public function editFormHandler(UserFormDataEvent $event)
+    public function editFormHandler(UserFormDataEvent $event): void
     {
         $userEntity = $event->getUserEntity();
         $formData = $event->getFormData(ProfileConstant::FORM_BLOCK_PREFIX);
@@ -161,19 +145,14 @@ class UsersUiListener implements EventSubscriberInterface
                     $value = $this->uploadHelper->handleUpload($value, $userEntity->getUid());
                 }
                 $userEntity->setAttribute($key, $value);
-            } else {
-                if (false === mb_strpos($key, 'avatar')) {
-                    $userEntity->delAttribute($key);
-                }
+            } elseif (false === mb_strpos($key, 'avatar')) {
+                $userEntity->delAttribute($key);
             }
         }
         $this->doctrine->getManager()->flush();
     }
 
-    /**
-     * @param FormTypeChoiceEvent $event
-     */
-    public function formTypeChoices(FormTypeChoiceEvent $event)
+    public function formTypeChoices(FormTypeChoiceEvent $event): void
     {
         $choices = $event->getChoices();
 

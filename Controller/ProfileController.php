@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -32,23 +33,17 @@ class ProfileController extends AbstractController
      * @Route("/display/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
      * @Template("ZikulaProfileModule:Profile:display.html.twig")
      *
-     * @param UserEntity|null $userEntity
-     * @param CurrentUserApiInterface $currentUserApi
-     * @param UserRepositoryInterface $userRepository
-     *
-     * @return array
-     *
      * @throws AccessDeniedException on failed permission check
      */
     public function displayAction(
-        UserEntity $userEntity = null,
         CurrentUserApiInterface $currentUserApi,
-        UserRepositoryInterface $userRepository
-    ) {
+        UserRepositoryInterface $userRepository,
+        UserEntity $userEntity = null
+    ): array {
         if (!$this->hasPermission('ZikulaProfileModule::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
-        if (empty($userEntity)) {
+        if (null === $userEntity) {
             $userEntity = $userRepository->find($currentUserApi->get('uid'));
         }
         $routeUrl = new RouteUrl('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
@@ -64,25 +59,18 @@ class ProfileController extends AbstractController
      * @Route("/edit/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
      * @Template("ZikulaProfileModule:Profile:edit.html.twig")
      *
-     * @param Request $request
-     * @param UserEntity|null $userEntity
-     * @param CurrentUserApiInterface $currentUserApi
-     * @param UserRepositoryInterface $userRepository
-     * @param ProfileTypeFactory $profileTypeFactory
-     * @param UploadHelper $uploadHelper
-     *
      * @return array|RedirectResponse
      */
     public function editAction(
         Request $request,
-        UserEntity $userEntity = null,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $profileTypeFactory,
-        UploadHelper $uploadHelper
+        UploadHelper $uploadHelper,
+        UserEntity $userEntity = null
     ) {
         $currentUserUid = $currentUserApi->get('uid');
-        if (empty($userEntity)) {
+        if (null === $userEntity) {
             $userEntity = $userRepository->find($currentUserUid);
         }
         if ($userEntity->getUid() !== $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
@@ -99,10 +87,8 @@ class ProfileController extends AbstractController
                             $value = $uploadHelper->handleUpload($value, $userEntity->getUid());
                         }
                         $userEntity->setAttribute($attribute, $value);
-                    } else {
-                        if (false === mb_strpos($attribute, 'avatar')) {
-                            $userEntity->delAttribute($attribute);
-                        }
+                    } elseif (false === mb_strpos($attribute, 'avatar')) {
+                        $userEntity->delAttribute($attribute);
                     }
                 }
                 $this->getDoctrine()->getManager()->flush();

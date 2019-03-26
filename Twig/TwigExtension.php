@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -12,9 +13,11 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Twig;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
-class TwigExtension extends \Twig_Extension
+class TwigExtension extends AbstractExtension
 {
     /**
      * @var PropertyRepositoryInterface
@@ -26,15 +29,9 @@ class TwigExtension extends \Twig_Extension
      */
     protected $prefix;
 
-    /**
-     * TwigExtension constructor.
-     *
-     * @param PropertyRepositoryInterface $propertyRepository
-     * @param string $prefix
-     */
     public function __construct(
         PropertyRepositoryInterface $propertyRepository,
-        $prefix
+        string $prefix
     ) {
         $this->propertyRepository = $propertyRepository;
         $this->prefix = $prefix;
@@ -43,11 +40,11 @@ class TwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('zikulaprofilemodule_sortAttributesByWeight', [$this, 'sortAttributesByWeight'])
+            new TwigFilter('zikulaprofilemodule_sortAttributesByWeight', [$this, 'sortAttributesByWeight'])
         ];
     }
 
-    public function sortAttributesByWeight($attributes)
+    public function sortAttributesByWeight(iterable $attributes): iterable
     {
         $properties = $this->propertyRepository->getIndexedActive();
         $sorter = function ($att1, $att2) use ($properties) {
@@ -56,7 +53,7 @@ class TwigExtension extends \Twig_Extension
             }
             $n1 = mb_substr($att1, mb_strlen($this->prefix) + 1);
             $n2 = mb_substr($att2, mb_strlen($this->prefix) + 1);
-            if (!isset($properties[$n1]) || !isset($properties[$n2])) {
+            if (!isset($properties[$n1], $properties[$n2])) {
                 return 0;
             }
 

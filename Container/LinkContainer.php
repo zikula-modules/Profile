@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -22,7 +23,6 @@ use Zikula\PermissionsModule\Api\PermissionApi;
 use Zikula\SettingsModule\SettingsConstant;
 use Zikula\UsersModule\Api\CurrentUserApi;
 use Zikula\UsersModule\Collector\MessageModuleCollector;
-use Zikula\UsersModule\Container\LinkContainer as UsersLinkContainer;
 
 class LinkContainer implements LinkContainerInterface
 {
@@ -57,11 +57,6 @@ class LinkContainer implements LinkContainerInterface
     private $currentUserApi;
 
     /**
-     * @var UsersLinkContainer
-     */
-    private $usersLinkContainer;
-
-    /**
      * @var MessageModuleCollector
      */
     private $messageModuleCollector;
@@ -71,19 +66,6 @@ class LinkContainer implements LinkContainerInterface
      */
     private $blocksRepository;
 
-    /**
-     * LinkContainer constructor.
-     *
-     * @param TranslatorInterface $translator Translator service instance
-     * @param ZikulaHttpKernelInterface $kernel Kernel service instance
-     * @param RouterInterface $router RouterInterface service instance
-     * @param PermissionApi $permissionApi PermissionApi service instance
-     * @param VariableApi $variableApi VariableApi service instance
-     * @param CurrentUserApi $currentUserApi CurrentUserApi service instance
-     * @param UsersLinkContainer $usersLinkContainer UsersLinkContainer service instance
-     * @param MessageModuleCollector $messageModuleCollector
-     * @param BlockRepositoryInterface $blockRepository
-     */
     public function __construct(
         TranslatorInterface $translator,
         ZikulaHttpKernelInterface $kernel,
@@ -91,7 +73,6 @@ class LinkContainer implements LinkContainerInterface
         PermissionApi $permissionApi,
         VariableApi $variableApi,
         CurrentUserApi $currentUserApi,
-        UsersLinkContainer $usersLinkContainer,
         MessageModuleCollector $messageModuleCollector,
         BlockRepositoryInterface $blockRepository
     ) {
@@ -101,20 +82,11 @@ class LinkContainer implements LinkContainerInterface
         $this->permissionApi = $permissionApi;
         $this->variableApi = $variableApi;
         $this->currentUserApi = $currentUserApi;
-        $this->usersLinkContainer = $usersLinkContainer;
         $this->messageModuleCollector = $messageModuleCollector;
         $this->blocksRepository = $blockRepository;
     }
 
-    /**
-     * get Links of any type for this extension
-     * required by the interface.
-     *
-     * @param string $type
-     *
-     * @return array
-     */
-    public function getLinks($type = LinkContainerInterface::TYPE_ADMIN)
+    public function getLinks(string $type = LinkContainerInterface::TYPE_ADMIN): array
     {
         $method = 'get'.ucfirst(mb_strtolower($type));
         if (method_exists($this, $method)) {
@@ -125,11 +97,9 @@ class LinkContainer implements LinkContainerInterface
     }
 
     /**
-     * get the Admin links for this extension.
-     *
-     * @return array
+     * Get the Admin links for this extension.
      */
-    private function getAdmin()
+    private function getAdmin(): array
     {
         $links = [];
 
@@ -159,11 +129,9 @@ class LinkContainer implements LinkContainerInterface
     }
 
     /**
-     * get the User links for this extension.
-     *
-     * @return array
+     * Get the User links for this extension.
      */
-    private function getUser()
+    private function getUser(): array
     {
         $links = [];
 
@@ -248,11 +216,9 @@ class LinkContainer implements LinkContainerInterface
     }
 
     /**
-     * get the Account links for this extension.
-     *
-     * @return array
+     * Get the Account links for this extension.
      */
-    private function getAccount()
+    private function getAccount(): array
     {
         $links = [];
 
@@ -293,12 +259,7 @@ class LinkContainer implements LinkContainerInterface
         return $links;
     }
 
-    /**
-     * set the BundleName as required by the interface.
-     *
-     * @return string
-     */
-    public function getBundleName()
+    public function getBundleName(): string
     {
         return 'ZikulaProfileModule';
     }

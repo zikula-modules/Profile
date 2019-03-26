@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -25,22 +26,14 @@ class TranslationType extends AbstractType
      */
     private $localeApi;
 
-    /**
-     * TranslationType constructor.
-     *
-     * @param LocaleApiInterface $localeApi
-     */
     public function __construct(LocaleApiInterface $localeApi)
     {
         $this->localeApi = $localeApi;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['label'] = array_search($view->vars['name'], $this->localeApi->getSupportedLocaleNames());
+        $view->vars['label'] = array_search($view->vars['name'], $this->localeApi->getSupportedLocaleNames(), true);
     }
 
     public function getParent()

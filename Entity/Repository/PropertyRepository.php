@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -18,7 +19,7 @@ use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
 class PropertyRepository extends EntityRepository implements PropertyRepositoryInterface, DynamicFieldsContainerInterface
 {
-    public function getIndexedActive()
+    public function getIndexedActive(): array
     {
         $qb = $this->createQueryBuilder('p', 'p.id')
             ->where('p.active = true');
@@ -26,7 +27,7 @@ class PropertyRepository extends EntityRepository implements PropertyRepositoryI
         return $qb->getQuery()->getArrayResult();
     }
 
-    public function getDynamicFieldsSpecification()
+    public function getDynamicFieldsSpecification(): array
     {
         return $this->findBy(['active' => true], ['weight' => 'ASC']);
     }

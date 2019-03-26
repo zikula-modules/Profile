@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -15,6 +16,7 @@ namespace Zikula\ProfileModule\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Exception;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\UsersModule\Entity\UserAttributeEntity;
 
@@ -28,19 +30,14 @@ class AttributeNameTranslationListener implements EventSubscriber
     /**
      * @var string
      */
-    private $locale = 'en';
+    private $locale;
 
     /**
      * @var string
      */
-    private $prefix = 'zpmpp';
+    private $prefix;
 
-    /**
-     * AttributeNameTranslationListener constructor.
-     * @param string $locale
-     * @param string $prefix
-     */
-    public function __construct($locale, $prefix)
+    public function __construct(string $locale, string $prefix)
     {
         $this->locale = $locale;
         $this->prefix = $prefix . ':';
@@ -49,11 +46,11 @@ class AttributeNameTranslationListener implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            Events::postLoad,
+            Events::postLoad
         ];
     }
 
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(LifecycleEventArgs $args): void
     {
         $entity = $args->getObject();
         $entityManager = $args->getObjectManager();
@@ -66,7 +63,7 @@ class AttributeNameTranslationListener implements EventSubscriber
                     try {
                         $property = $entityManager->find(PropertyEntity::class, mb_substr($name, mb_strlen($this->prefix)));
                         $this->translations[$this->locale][$name] = isset($property) ? $property->getLabel($this->locale) : $name;
-                    } catch (\Exception $e) {
+                    } catch (Exception $exception) {
                         // listener fails during upgrade. silently fail
                     }
                 }

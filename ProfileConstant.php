@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -18,45 +19,45 @@ class ProfileConstant
      * Event called when creating the choices array for profile properties
      * Subject is instance of \Zikula\ProfileModule\FormTypesChoices
      */
-    const GET_FORM_TYPES_EVENT = 'profile_get_form_types';
+    public const GET_FORM_TYPES_EVENT = 'profile_get_form_types';
 
     /**
-     * the form data prefix
+     * The form data prefix
      */
-    const FORM_BLOCK_PREFIX = 'zikulaprofilemodule_editprofile';
+    public const FORM_BLOCK_PREFIX = 'zikulaprofilemodule_editprofile';
 
     /**
-     * the name of the attribute to obtain a realname. requires prefix + ':'
+     * The name of the attribute to obtain a realname. requires prefix + ':'
      */
-    const ATTRIBUTE_NAME_DISPLAY_NAME = 'realname';
+    public const ATTRIBUTE_NAME_DISPLAY_NAME = 'realname';
 
     /**
      * Module variable key for the avatar image path.
      */
-    const MODVAR_AVATAR_IMAGE_PATH = 'avatarpath';
+    public const MODVAR_AVATAR_IMAGE_PATH = 'avatarpath';
 
     /**
      * Default value for the avatar image path.
      */
-    const DEFAULT_AVATAR_IMAGE_PATH = 'images/avatar';
+    public const DEFAULT_AVATAR_IMAGE_PATH = 'images/avatar';
 
     /**
      * Module variable key for the flag indicating whether gravatars are allowed or not.
      */
-    const MODVAR_GRAVATARS_ENABLED = 'allowgravatars';
+    public const MODVAR_GRAVATARS_ENABLED = 'allowgravatars';
 
     /**
      * Default value for the flag indicating whether gravatars are allowed or not.
      */
-    const DEFAULT_GRAVATARS_ENABLED = true;
+    public const DEFAULT_GRAVATARS_ENABLED = true;
 
     /**
      * Module variable key for the file name containing the generic gravatar image.
      */
-    const MODVAR_GRAVATAR_IMAGE = 'gravatarimage';
+    public const MODVAR_GRAVATAR_IMAGE = 'gravatarimage';
 
     /**
      * Default value for the file name containing the generic gravatar image.
      */
-    const DEFAULT_GRAVATAR_IMAGE = 'gravatar.jpg';
+    public const DEFAULT_GRAVATAR_IMAGE = 'gravatar.jpg';
 }

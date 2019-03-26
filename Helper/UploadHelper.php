@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -35,11 +36,6 @@ class UploadHelper
      */
     private $avatarPath;
 
-    /**
-     * UploadHelper constructor.
-     *
-     * @param VariableApiInterface $variableApi
-     */
     public function __construct(VariableApiInterface $variableApi)
     {
         $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
@@ -49,14 +45,10 @@ class UploadHelper
 
     /**
      * Process a given upload file.
-     *
-     * @param UploadedFile $file
-     * @param int $userId
-     * @return The resulting file name
      */
-    public function handleUpload(UploadedFile $file, $userId = 0)
+    public function handleUpload(UploadedFile $file, int $userId = 0): string
     {
-        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool) ($this->modVars['allowUploads']);
+        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool)$this->modVars['allowUploads'];
         if (!$allowUploads) {
             return '';
         }
@@ -91,7 +83,7 @@ class UploadHelper
 
         $extension = image_type_to_extension($imageInfo[2], false);
         // check for image type
-        if (!in_array($extension, $this->imageExtensions)) {
+        if (!in_array($extension, $this->imageExtensions, true)) {
             unlink($filePath);
 
             return '';

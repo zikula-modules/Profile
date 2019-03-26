@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -33,14 +34,9 @@ class ConfigController extends AbstractController
      * @Theme("admin")
      * @Template("ZikulaProfileModule:Config:config.html.twig")
      *
-     * @param Request $request
-     * @param VariableApiInterface $variableApi
-     *
-     * @return array
-     *
      * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      */
-    public function configAction(Request $request, VariableApiInterface $variableApi)
+    public function configAction(Request $request, VariableApiInterface $variableApi): array
     {
         if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();

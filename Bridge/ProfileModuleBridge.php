@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -12,6 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Bridge;
 
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
@@ -55,16 +57,6 @@ class ProfileModuleBridge implements ProfileModuleInterface
      */
     private $prefix;
 
-    /**
-     * ProfileModuleBridge constructor.
-     *
-     * @param RouterInterface $router
-     * @param RequestStack $requestStack
-     * @param VariableApiInterface $variableApi
-     * @param CurrentUserApi $currentUser
-     * @param UserRepositoryInterface $userRepository
-     * @param string $prefix
-     */
     public function __construct(
         RouterInterface $router,
         RequestStack $requestStack,
@@ -81,15 +73,11 @@ class ProfileModuleBridge implements ProfileModuleInterface
         $this->prefix = $prefix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDisplayName($uid = null)
+    public function getDisplayName($uid = null): string
     {
-        /** @var UserEntity $userEntity */
         $userEntity = $this->findUser($uid);
         if (!$userEntity) {
-            throw new \InvalidArgumentException('Invalid UID provided');
+            throw new InvalidArgumentException('Invalid UID provided');
         }
 
         $key = $this->prefix . ':' . ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME;
@@ -100,29 +88,21 @@ class ProfileModuleBridge implements ProfileModuleInterface
         return $userEntity->getUname();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getProfileUrl($uid = null)
+    public function getProfileUrl($uid = null): string
     {
-        /** @var UserEntity $userEntity */
         $userEntity = $this->findUser($uid);
         if (!$userEntity) {
-            throw new \InvalidArgumentException('Invalid UID provided');
+            throw new InvalidArgumentException('Invalid UID provided');
         }
 
         return $this->router->generate('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAvatar($uid = null, array $parameters = [])
+    public function getAvatar($uid = null, array $parameters = []): string
     {
-        /** @var UserEntity $userEntity */
         $userEntity = $this->findUser($uid);
         if (!$userEntity) {
-            throw new \InvalidArgumentException('Invalid UID provided');
+            throw new InvalidArgumentException('Invalid UID provided');
         }
 
         $gravatarImage = $this->variableApi->get(UsersConstant::MODNAME, ProfileConstant::MODVAR_GRAVATAR_IMAGE, ProfileConstant::DEFAULT_GRAVATAR_IMAGE);
@@ -137,7 +117,9 @@ class ProfileModuleBridge implements ProfileModuleInterface
         if (!in_array($avatar, ['blank.gif', 'blank.jpg'])) {
             if (isset($avatar) && !empty($avatar) && $avatar !== $gravatarImage && file_exists($avatarPath . '/' . $avatar)) {
                 $request = $this->requestStack->getCurrentRequest();
-                $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
+                if (null !== $request) {
+                    $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
+                }
             } elseif (true === $allowGravatars) {
                 $parameters = $this->makeAvatarSquare($parameters);
                 $avatarUrl = $this->getGravatarUrl($userEntity->getEmail(), $parameters);
@@ -153,8 +135,8 @@ class ProfileModuleBridge implements ProfileModuleInterface
             $parameters['class'] = 'img-responsive img-thumbnail';
         }
         $attributes = ' class="' . str_replace('"', '', htmlspecialchars($parameters['class'])) . '"';
-        $attributes .= isset($parameters['width']) ? ' width="' . (int) ($parameters['width']) . '"' : '';
-        $attributes .= isset($parameters['height']) ? ' height="' . (int) ($parameters['height']) . '"' : '';
+        $attributes .= isset($parameters['width']) ? ' width="' . (int)$parameters['width'] . '"' : '';
+        $attributes .= isset($parameters['height']) ? ' height="' . (int)$parameters['height'] . '"' : '';
 
         $result = '<img src="' . str_replace('"', '', htmlspecialchars($avatarUrl)) . '" title="' . str_replace('"', '', htmlspecialchars($userEntity->getUname())) . '" alt="' . str_replace('"', '', htmlspecialchars($userEntity->getUname())) . '"' . $attributes . ' />';
 
@@ -165,9 +147,8 @@ class ProfileModuleBridge implements ProfileModuleInterface
      * Finds a certain user based on either it's id or it's name.
      *
      * @param int|string $uid The user's id or name
-     * @return UserEntity
      */
-    private function findUser($uid = null)
+    private function findUser($uid = null): UserEntity
     {
         if (empty($uid) && $this->currentUser->isLoggedIn()) {
             $uid = $this->currentUser->get('uid');
@@ -187,11 +168,8 @@ class ProfileModuleBridge implements ProfileModuleInterface
 
     /**
      * Checks and updates the avatar image size parameters.
-     *
-     * @param array $parameters
-     * @return array
      */
-    private function makeAvatarSquare(array $parameters = [])
+    private function makeAvatarSquare(array $parameters = []): array
     {
         if (!isset($parameters['size'])) {
             if (isset($parameters['width']) || isset($parameters['height'])) {
@@ -218,27 +196,21 @@ class ProfileModuleBridge implements ProfileModuleInterface
      * Returns the URL to a gravatar image.
      *
      * @see http://en.gravatar.com/site/implement/images/php/
-     *
-     * @param string $emailAddress
-     * @param array $parameters
-     * @return string
      */
-    private function getGravatarUrl($emailAddress = '', array $parameters = [])
+    private function getGravatarUrl(string $emailAddress = '', array $parameters = []): string
     {
-        $url = $this->requestStack->getCurrentRequest()->isSecure() ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
+        $request = $this->requestStack->getCurrentRequest();
+        $url = null !== $request && $request->isSecure() ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
         $url .= md5(mb_strtolower(trim($emailAddress))).'.jpg';
 
-        $url .= '?s=' . (isset($parameters['size']) ? (int) ($parameters['size']) : 80);
+        $url .= '?s=' . (isset($parameters['size']) ? (int)$parameters['size'] : 80);
         $url .= '&amp;d=' . ($parameters['imageset'] ?? 'mm');
         $url .= '&amp;r=' . ($parameters['rating'] ?? 'g');
 
         return $url;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBundleName()
+    public function getBundleName(): string
     {
         return 'ZikulaProfileModule';
     }

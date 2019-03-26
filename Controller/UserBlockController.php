@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -32,11 +33,6 @@ class UserBlockController extends AbstractController
      * @Template("ZikulaProfileModule:UserBlock:edit.html.twig")
      *
      * Display the configuration options for the users block.
-     *
-     * @param Request $request
-     * @param BlockRepositoryInterface $blockRepository
-     * @param CurrentUserApiInterface $currentUserApi
-     * @param UserRepositoryInterface $userRepository
      *
      * @return array|RedirectResponse
      *

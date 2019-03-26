@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -32,10 +33,7 @@ class LastSeenBlock extends AbstractBlockHandler
      */
     private $userSessionRepository;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function display(array $properties)
+    public function display(array $properties): string
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
         if (!$this->hasPermission('ZikulaProfileModule:LastSeenblock:', $title.'::', ACCESS_READ)) {
@@ -56,40 +54,32 @@ class LastSeenBlock extends AbstractBlockHandler
 
         return $this->renderView('@ZikulaProfileModule/Block/lastSeen.html.twig', [
             'sessionsToFile' => $sessionsToFile,
-            'sessions' => $sessions,
+            'sessions' => $sessions
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormClassName()
+    public function getFormClassName(): string
     {
         return LastSeenBlockType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormTemplate()
+    public function getFormTemplate(): string
     {
         return '@ZikulaProfileModule/Block/lastSeen_modify.html.twig';
     }
 
     /**
      * @required
-     * @param VariableApiInterface $variableApi
-     */
-    public function setVariableApi(VariableApiInterface $variableApi)
+    */
+    public function setVariableApi(VariableApiInterface $variableApi): void
     {
         $this->variableApi = $variableApi;
     }
 
     /**
      * @required
-     * @param UserSessionRepositoryInterface $userSessionRepository
      */
-    public function setUserSessionRepository(UserSessionRepositoryInterface $userSessionRepository)
+    public function setUserSessionRepository(UserSessionRepositoryInterface $userSessionRepository): void
     {
         $this->userSessionRepository = $userSessionRepository;
     }

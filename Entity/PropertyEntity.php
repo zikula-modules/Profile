@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -68,34 +69,25 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
      */
     private $active = true;
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
-    public function setId($id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getLabels()
+    public function getLabels(): array
     {
         return $this->labels;
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel($locale = '', $default = 'en')
+    public function getLabel(string $locale = '', string $default = 'en'): string
     {
         if (!empty($locale) && isset($this->labels[$locale])) {
             return $this->labels[$locale];
@@ -105,37 +97,28 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
         }
         $values = array_values($this->labels);
 
-        return !empty($values[0]) ? $values[0] : $this->id;
+        return !empty($values[0]) ? array_shift($values) : $this->id;
     }
 
     /**
-     * @param array $labels
+     * @param string[] $labels
      */
-    public function setLabels(array $labels)
+    public function setLabels(array $labels): void
     {
         $this->labels = $labels;
     }
 
-    /**
-     * @return string
-     */
-    public function getFormType()
+    public function getFormType(): string
     {
         return $this->formType;
     }
 
-    /**
-     * @return string $formType
-     */
-    public function setFormType($formType)
+    public function setFormType(string $formType): void
     {
         $this->formType = $formType;
     }
 
-    /**
-     * @return array
-     */
-    public function getFormOptions()
+    public function getFormOptions(): array
     {
         if (!isset($this->formOptions['required'])) {
             $this->formOptions['required'] = false;
@@ -144,18 +127,12 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
         return $this->formOptions;
     }
 
-    /**
-     * @param array $formOptions
-     */
-    public function setFormOptions(array $formOptions)
+    public function setFormOptions(array $formOptions): void
     {
         $this->formOptions = $formOptions;
     }
 
-    /**
-     * @return array
-     */
-    public function getFieldInfo()
+    public function getFieldInfo(): array
     {
         return [
             'formType' => $this->getFormType(),
@@ -163,85 +140,58 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
         ];
     }
 
-    /**
-     * @param array $fieldInfo
-     */
-    public function setFieldInfo(array $fieldInfo)
+    public function setFieldInfo(array $fieldInfo): void
     {
         $this->setFormType($fieldInfo['formType']);
         $this->setFormOptions($fieldInfo['formOptions']);
     }
 
-    /**
-     * @return integer
-     */
-    public function getWeight()
+    public function getWeight(): int
     {
         return $this->weight;
     }
 
-    /**
-     * @param integer $weight
-     */
-    public function setWeight($weight)
+    public function setWeight(int $weight): void
     {
         $this->weight = $weight;
     }
 
-    public function incrementWeight()
+    public function incrementWeight(): void
     {
         $this->weight++;
     }
 
-    public function decrementWeight()
+    public function decrementWeight(): void
     {
         $this->weight--;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * @param boolean $active
-     */
-    public function setActive($active)
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getId();
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->getId();
     }
 
-    /**
-     * @return string
-     */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return 'zpmpp';
     }
 
-    /**
-     * @return array
-     */
-    public function getGroupNames()
+    public function getGroupNames(): array
     {
         return [];
     }

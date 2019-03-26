@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -29,10 +30,7 @@ class FeaturedUserBlock extends AbstractBlockHandler
      */
     private $propertyRepository;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function display(array $properties)
+    public function display(array $properties): string
     {
         if (!$this->hasPermission('ZikulaProfileModule:FeaturedUserblock:', $properties['title'] . '::', ACCESS_READ)) {
             return '';
@@ -46,50 +44,39 @@ class FeaturedUserBlock extends AbstractBlockHandler
             'prefix' => 'zpmpp', // TODO $this->getParameter('zikula_profile_module.property_prefix'),
             'user' => $user,
             'blockProperties' => $properties,
-            'activeProperties' => $this->propertyRepository->findBy(['active' => true]),
+            'activeProperties' => $this->propertyRepository->findBy(['active' => true])
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormOptions()
+    public function getFormOptions(): array
     {
         return [
             'activeProperties' => $this->propertyRepository->findBy(['active' => true])
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormClassName()
+    public function getFormClassName(): string
     {
         return FeaturedUserBlockType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormTemplate()
+    public function getFormTemplate(): string
     {
         return '@ZikulaProfileModule/Block/featuredUser_modify.html.twig';
     }
 
     /**
      * @required
-     * @param UserRepositoryInterface $userRepository
      */
-    public function setUserRepository(UserRepositoryInterface $userRepository)
+    public function setUserRepository(UserRepositoryInterface $userRepository): void
     {
         $this->userRepository = $userRepository;
     }
 
     /**
      * @required
-     * @param PropertyRepositoryInterface $propertyRepository
      */
-    public function setPropertyRepository(PropertyRepositoryInterface $propertyRepository)
+    public function setPropertyRepository(PropertyRepositoryInterface $propertyRepository): void
     {
         $this->propertyRepository = $propertyRepository;
     }

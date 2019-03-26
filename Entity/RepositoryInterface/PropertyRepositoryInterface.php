@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -21,5 +22,5 @@ interface PropertyRepositoryInterface extends ObjectRepository, Selectable
     /**
      * @return PropertyEntity[]
      */
-    public function getIndexedActive();
+    public function getIndexedActive(): array;
 }

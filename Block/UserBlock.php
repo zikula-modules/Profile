@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -27,10 +28,7 @@ class UserBlock extends AbstractBlockHandler
      */
     private $currentUserApi;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function display(array $properties)
+    public function display(array $properties): string
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
         if ('' === $title) {
@@ -49,21 +47,20 @@ class UserBlock extends AbstractBlockHandler
         return nl2br($attributes->get('ublock'));
     }
 
-    public function getFormClassName()
+    public function getFormClassName(): string
     {
         return HtmlBlockType::class;
     }
 
-    public function getFormTemplate()
+    public function getFormTemplate(): string
     {
         return '@ZikulaBlocksModule/Block/html_modify.html.twig';
     }
 
     /**
      * @required
-     * @param CurrentUserApiInterface $currentUserApi
      */
-    public function setCurrentUserApi(CurrentUserApiInterface $currentUserApi)
+    public function setCurrentUserApi(CurrentUserApiInterface $currentUserApi): void
     {
         $this->currentUserApi = $currentUserApi;
     }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -33,13 +34,8 @@ class PropertyController extends AbstractController
      * @Route("/list")
      * @Theme("admin")
      * @Template("ZikulaProfileModule:Property:list.html.twig")
-     *
-     * @param Request $request
-     * @param PropertyRepositoryInterface $propertyRepository
-     *
-     * @return array
      */
-    public function listAction(Request $request, PropertyRepositoryInterface $propertyRepository)
+    public function listAction(PropertyRepositoryInterface $propertyRepository): array
     {
         if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
@@ -55,9 +51,6 @@ class PropertyController extends AbstractController
      * @Route("/edit/{id}", defaults={"id" = null})
      * @Theme("admin")
      * @Template("ZikulaProfileModule:Property:edit.html.twig")
-     *
-     * @param Request $request
-     * @param PropertyEntity $propertyEntity
      *
      * @return array|RedirectResponse
      */
@@ -95,8 +88,6 @@ class PropertyController extends AbstractController
      * @Theme("admin")
      * @Template("ZikulaProfileModule:Property:delete.html.twig")
      *
-     * @param Request $request
-     * @param PropertyEntity $propertyEntity
      * @return array|RedirectResponse
      */
     public function deleteAction(Request $request, PropertyEntity $propertyEntity)

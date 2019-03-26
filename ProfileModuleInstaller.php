@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -12,6 +13,8 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule;
 
+use Exception;
+use PDOException;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,15 +34,13 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
      * @var array
      */
     private $entities = [
-        PropertyEntity::class,
+        PropertyEntity::class
     ];
 
     /**
      * Provides an array containing default values for module variables (settings).
-     *
-     * @return array An array indexed by variable name containing the default values for those variables
      */
-    protected function getDefaultModVars()
+    protected function getDefaultModVars(): array
     {
         return [
             'viewregdate' => false,
@@ -56,17 +57,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         ];
     }
 
-    /**
-     * Initialise the dynamic user data  module.
-     *
-     * @return bool True on success or false on failure
-     */
-    public function install()
+    public function install(): bool
     {
         try {
             $this->schemaTool->create($this->entities);
-        } catch (\Exception $e) {
-            $this->addFlash('error', $e->getMessage());
+        } catch (Exception $exception) {
+            $this->addFlash('error', $exception->getMessage());
 
             return false;
         }
@@ -81,14 +77,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         return true;
     }
 
-    /**
-     * Upgrade the dynamic user data module from an old version.
-     *
-     * @param string $oldVersion The version from which the upgrade is beginning (the currently installed version)
-     *
-     * @return bool True on success or false on failure
-     */
-    public function upgrade($oldVersion)
+    public function upgrade(string $oldVersion): bool
     {
         // Only support upgrade from version 1.6 and up. Notify users if they have a version below that one.
         if (version_compare($oldVersion, '2.0', '<')) {
@@ -103,9 +92,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 // nothing
             case '2.1.0':
                 // get old data and drop table
-                $sql = "SELECT * FROM user_property";
+                $sql = 'SELECT * FROM user_property';
                 $properties = $this->entityManager->getConnection()->fetchAll($sql);
-                $sql = "DROP TABLE user_property";
+                $sql = 'DROP TABLE user_property';
                 $this->entityManager->getConnection()->executeQuery($sql);
                 // create new table & insert upgraded data
                 $this->schemaTool->create($this->entities);
@@ -163,17 +152,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         return true;
     }
 
-    /**
-     * Delete the profile module.
-     *
-     * @return bool True on success or false on failure
-     */
-    public function uninstall()
+    public function uninstall(): bool
     {
         try {
             $this->schemaTool->drop($this->entities);
-        } catch (\PDOException $e) {
-            $this->addFlash('error', $e->getMessage());
+        } catch (PDOException $exception) {
+            $this->addFlash('error', $exception->getMessage());
 
             return false;
         }
@@ -184,9 +168,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * Create the default data for the users module.
+     * Create the default data for the Profile module.
      */
-    protected function defaultdata($locale)
+    protected function defaultdata(string $locale): void
     {
         $prop = new PropertyEntity();
         $prop->setId(ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME);

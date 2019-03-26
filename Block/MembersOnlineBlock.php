@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -33,10 +34,7 @@ class MembersOnlineBlock extends AbstractBlockHandler
      */
     private $userSessionRepository;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function display(array $properties)
+    public function display(array $properties): string
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
         if (!$this->hasPermission('ZikulaProfileModule:MembersOnlineblock:', $title . '::', ACCESS_READ)) {
@@ -64,40 +62,32 @@ class MembersOnlineBlock extends AbstractBlockHandler
             'sessions' => $sessions,
             'maxLength' => $properties['lengthmax'],
             'messageModule' => $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
-            'amountOfOnlineGuests' => (int) $guestCount,
+            'amountOfOnlineGuests' => $guestCount
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormClassName()
+    public function getFormClassName(): string
     {
         return MembersOnlineBlockType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormTemplate()
+    public function getFormTemplate(): string
     {
         return '@ZikulaProfileModule/Block/membersOnline_modify.html.twig';
     }
 
     /**
      * @required
-     * @param VariableApiInterface $variableApi
      */
-    public function setVariableApi(VariableApiInterface $variableApi)
+    public function setVariableApi(VariableApiInterface $variableApi): void
     {
         $this->variableApi = $variableApi;
     }
 
     /**
      * @required
-     * @param UserSessionRepositoryInterface $userSessionRepository
      */
-    public function setUserSessionRepository(UserSessionRepositoryInterface $userSessionRepository)
+    public function setUserSessionRepository(UserSessionRepositoryInterface $userSessionRepository): void
     {
         $this->userSessionRepository = $userSessionRepository;
     }

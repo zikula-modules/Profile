@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -12,6 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Controller;
 
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,14 +34,6 @@ class MembersController extends AbstractController
      * @Route("/list")
      * @Template("ZikulaProfileModule:Members:list.html.twig")
      *
-     * @param Request $request
-     * @param PropertyRepositoryInterface $propertyRepository
-     * @param UserRepositoryInterface $userRepository
-     * @param UserSessionRepositoryInterface $userSessionRepository
-     * @param VariableApiInterface $variableApi
-     *
-     * @return array
-     *
      * @throws AccessDeniedException on failed permission check
      */
     public function listAction(
@@ -48,16 +42,16 @@ class MembersController extends AbstractController
         UserRepositoryInterface $userRepository,
         UserSessionRepositoryInterface $userSessionRepository,
         VariableApiInterface $variableApi
-    ) {
+    ): array {
         if (!$this->hasPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
 
-        $startNum = $request->query->get('startnum', null);
+        $startNum = $request->query->get('startnum');
         $sortBy = $request->get('sortby', 'uname');
-        $searchby = $request->get('searchby', null);
-        $sortOrder = $request->get('sortorder', null);
-        $letter = $request->get('letter', null);
+        $searchby = $request->get('searchby');
+        $sortOrder = $request->get('sortorder');
+        $letter = $request->get('letter');
 
         $itemsPerPage = $this->getVar('memberslistitemsperpage', 20);
         $critera = [];
@@ -94,19 +88,13 @@ class MembersController extends AbstractController
      *
      * Displays last X registered users.
      *
-     * @param PropertyRepositoryInterface $propertyRepository
-     * @param UserRepositoryInterface $userRepository
-     * @param VariableApiInterface $variableApi
-     *
-     * @return array
-     *
      * @throws AccessDeniedException on failed permission check
      */
     public function recentAction(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         VariableApiInterface $variableApi
-    ) {
+    ): array {
         if (!$this->hasPermission('ZikulaProfileModule:Members:recent', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
@@ -125,19 +113,13 @@ class MembersController extends AbstractController
      *
      * View users online.
      *
-     * @param PropertyRepositoryInterface $propertyRepository
-     * @param UserRepositoryInterface $userRepository
-     * @param UserSessionRepositoryInterface $userSessionRepository
-     *
-     * @return array
-     *
      * @throws AccessDeniedException on failed permission check
      */
     public function onlineAction(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         UserSessionRepositoryInterface $userSessionRepository
-    ) {
+    ): array {
         if (!$this->hasPermission('ZikulaProfileModule:Members:online', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
@@ -150,26 +132,18 @@ class MembersController extends AbstractController
     }
 
     /**
-     * Get uids of online users
-     *
-     * @param UserSessionRepositoryInterface $userSessionRepository
-     *
-     * @return array
+     * Get uids of online users.
      */
-    private function getOnlineUids(UserSessionRepositoryInterface $userSessionRepository)
+    private function getOnlineUids(UserSessionRepositoryInterface $userSessionRepository): array
     {
         $activeMinutes = $this->getVar('activeminutes');
-        $activeSince = new \DateTime();
+        $activeSince = new DateTime();
         $activeSince->modify("-${activeMinutes} minutes");
 
         return $userSessionRepository->getUsersSince($activeSince);
     }
 
-    /**
-     * @param PropertyRepositoryInterface $propertyRepository
-     * @return array
-     */
-    private function getActiveProperties(PropertyRepositoryInterface $propertyRepository)
+    private function getActiveProperties(PropertyRepositoryInterface $propertyRepository): array
     {
         $properties = $propertyRepository->findBy(['active' => true]);
         $activeProperties = [];

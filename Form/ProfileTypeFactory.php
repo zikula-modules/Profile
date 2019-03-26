@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -17,7 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\InlineFormDefinitionType;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
@@ -41,44 +41,23 @@ class ProfileTypeFactory
     private $translator;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var string
      */
     private $prefix;
 
-    /**
-     * PropertyTypeFactory constructor.
-     *
-     * @param FormFactoryInterface $formFactory
-     * @param PropertyRepositoryInterface $propertyRepository
-     * @param TranslatorInterface $translator
-     * @param RequestStack $requestStack
-     * @param string $prefix
-     */
     public function __construct(
         FormFactoryInterface $formFactory,
         PropertyRepositoryInterface $propertyRepository,
         TranslatorInterface $translator,
-        RequestStack $requestStack,
-        $prefix
+        string $prefix
     ) {
         $this->formFactory = $formFactory;
         $this->propertyRepository = $propertyRepository;
         $this->translator = $translator;
-        $this->requestStack = $requestStack;
         $this->prefix = $prefix;
     }
 
-    /**
-     * @param PersistentCollection $attributes
-     * @param bool $includeButtons
-     * @return FormInterface
-     */
-    public function createForm(PersistentCollection $attributes, $includeButtons = true)
+    public function createForm(PersistentCollection $attributes, bool $includeButtons = true): FormInterface
     {
         $attributeValues = [];
         foreach ($attributes as $attribute) {

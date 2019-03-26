@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -35,12 +36,6 @@ class AvatarType extends AbstractType
      */
     private $avatarPath;
 
-    /**
-     * AvatarType constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param VariableApiInterface $variableApi
-     */
     public function __construct(
         TranslatorInterface $translator,
         VariableApiInterface $variableApi
@@ -50,17 +45,11 @@ class AvatarType extends AbstractType
         $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');
     }
 
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $defaults = [
@@ -79,7 +68,8 @@ class AvatarType extends AbstractType
                 $finder->files()->in($this->avatarPath)->notName('blank.jpg')->notName('gravatar.jpg')->sortByName();
 
                 foreach ($finder as $file) {
-                    $choices[$file->getFilename()] = $file->getFilename();
+                    $fileName = $file->getFilename();
+                    $choices[$fileName] = $fileName;
                 }
             }
 
@@ -104,17 +94,11 @@ class AvatarType extends AbstractType
         $resolver->setDefaults($defaults);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'zikula_profile_module_avatar';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParent()
     {
         return $this->allowUploads() ? FileType::class : ChoiceType::class;
@@ -122,12 +106,10 @@ class AvatarType extends AbstractType
 
     /**
      * Checks if uploads or choices should be used.
-     *
-     * @return boolean
      */
-    private function allowUploads()
+    private function allowUploads(): bool
     {
-        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool) ($this->modVars['allowUploads']);
+        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool)$this->modVars['allowUploads'];
         if (!$allowUploads) {
             return false;
         }
