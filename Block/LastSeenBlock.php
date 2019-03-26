@@ -70,7 +70,7 @@ class LastSeenBlock extends AbstractBlockHandler
 
     /**
      * @required
-    */
+     */
     public function setVariableApi(VariableApiInterface $variableApi): void
     {
         $this->variableApi = $variableApi;
