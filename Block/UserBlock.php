@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -32,7 +33,7 @@ class UserBlock extends AbstractBlockHandler
     public function display(array $properties)
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if ('' == $title) {
+        if ('' === $title) {
             $title = $this->__f('Custom block content for %s', ['%s' => $this->currentUserApi->get('uname')]);
         }
         if (!$this->hasPermission('Userblock::', $title.'::', ACCESS_READ)) {
@@ -41,7 +42,7 @@ class UserBlock extends AbstractBlockHandler
 
         /** @var ArrayCollection $attributes */
         $attributes = $this->currentUserApi->get('attributes');
-        if (!$this->currentUserApi->isLoggedIn() || true != (bool) $attributes->get('ublockon')) {
+        if (!$this->currentUserApi->isLoggedIn() || true !== (bool) $attributes->get('ublockon')) {
             return '';
         }
 

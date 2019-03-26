@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -17,8 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
-use Zikula\ProfileModule\ProfileConstant;
 use Zikula\ProfileModule\Form\Type\ConfigType;
+use Zikula\ProfileModule\ProfileConstant;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 use Zikula\UsersModule\Constant as UsersConstant;
 
@@ -63,7 +64,7 @@ class ConfigController extends AbstractController
                 $formData = $form->getData();
 
                 foreach ($varsInUsersModule as $varName => $defaultValue) {
-                    $value = isset($formData[$varName]) ? $formData[$varName] : $defaultValue;
+                    $value = $formData[$varName] ?? $defaultValue;
                     $variableApi->set(UsersConstant::MODNAME, $varName, $value);
                     if (isset($formData[$varName])) {
                         unset($formData[$varName]);

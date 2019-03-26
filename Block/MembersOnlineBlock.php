@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -42,7 +43,7 @@ class MembersOnlineBlock extends AbstractBlockHandler
             return '';
         }
 
-        $sessionsToFile = SecCtrConstant::SESSION_STORAGE_FILE == $this->variableApi->getSystemVar('sessionstoretofile', SecCtrConstant::SESSION_STORAGE_FILE);
+        $sessionsToFile = SecCtrConstant::SESSION_STORAGE_FILE === $this->variableApi->getSystemVar('sessionstoretofile', SecCtrConstant::SESSION_STORAGE_FILE);
         if ($sessionsToFile) {
             $sessions = [];
             $guestCount = 0;

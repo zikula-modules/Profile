@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -13,8 +14,8 @@ namespace Zikula\ProfileModule\Bridge;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Zikula\ProfileModule\ProfileConstant;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Api\CurrentUserApi;
 use Zikula\UsersModule\Constant as UsersConstant;
 use Zikula\UsersModule\Entity\Repository\UserRepository;
@@ -130,11 +131,11 @@ class ProfileModuleBridge implements ProfileModuleInterface
 
         $userAttributes = $userEntity->getAttributes();
         $key = $this->prefix . ':avatar';
-        $avatar = isset($userAttributes[$key]) ? $userAttributes[$key] : $gravatarImage;
+        $avatar = $userAttributes[$key] ?? $gravatarImage;
 
         $avatarUrl = '';
         if (!in_array($avatar, ['blank.gif', 'blank.jpg'])) {
-            if (isset($avatar) && !empty($avatar) && $avatar != $gravatarImage && file_exists($avatarPath . '/' . $avatar)) {
+            if (isset($avatar) && !empty($avatar) && $avatar !== $gravatarImage && file_exists($avatarPath . '/' . $avatar)) {
                 $request = $this->requestStack->getCurrentRequest();
                 $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
             } elseif (true === $allowGravatars) {
@@ -152,8 +153,8 @@ class ProfileModuleBridge implements ProfileModuleInterface
             $parameters['class'] = 'img-responsive img-thumbnail';
         }
         $attributes = ' class="' . str_replace('"', '', htmlspecialchars($parameters['class'])) . '"';
-        $attributes .= isset($parameters['width']) ? ' width="' . intval($parameters['width']) . '"' : '';
-        $attributes .= isset($parameters['height']) ? ' height="' . intval($parameters['height']) . '"' : '';
+        $attributes .= isset($parameters['width']) ? ' width="' . (int) ($parameters['width']) . '"' : '';
+        $attributes .= isset($parameters['height']) ? ' height="' . (int) ($parameters['height']) . '"' : '';
 
         $result = '<img src="' . str_replace('"', '', htmlspecialchars($avatarUrl)) . '" title="' . str_replace('"', '', htmlspecialchars($userEntity->getUname())) . '" alt="' . str_replace('"', '', htmlspecialchars($userEntity->getUname())) . '"' . $attributes . ' />';
 
@@ -225,11 +226,11 @@ class ProfileModuleBridge implements ProfileModuleInterface
     private function getGravatarUrl($emailAddress = '', array $parameters = [])
     {
         $url = $this->requestStack->getCurrentRequest()->isSecure() ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
-        $url .= md5(strtolower(trim($emailAddress))).'.jpg';
+        $url .= md5(mb_strtolower(trim($emailAddress))).'.jpg';
 
-        $url .= '?s=' . (isset($parameters['size']) ? intval($parameters['size']) : 80);
-        $url .= '&amp;d=' . (isset($parameters['imageset']) ? $parameters['imageset'] : 'mm');
-        $url .= '&amp;r=' . (isset($parameters['rating']) ? $parameters['rating'] : 'g');
+        $url .= '?s=' . (isset($parameters['size']) ? (int) ($parameters['size']) : 80);
+        $url .= '&amp;d=' . ($parameters['imageset'] ?? 'mm');
+        $url .= '&amp;r=' . ($parameters['rating'] ?? 'g');
 
         return $url;
     }

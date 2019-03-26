@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -11,9 +12,9 @@
 
 namespace Zikula\ProfileModule\Listener;
 
-use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\UsersModule\Entity\UserAttributeEntity;
 
@@ -61,9 +62,9 @@ class AttributeNameTranslationListener implements EventSubscriber
             $name = $entity->getName();
             if (!isset($this->translations[$this->locale][$name])) {
                 $this->translations[$this->locale][$name] = $name;
-                if (0 === strpos($name, $this->prefix)) {
+                if (0 === mb_strpos($name, $this->prefix)) {
                     try {
-                        $property = $entityManager->find(PropertyEntity::class, substr($name, strlen($this->prefix)));
+                        $property = $entityManager->find(PropertyEntity::class, mb_substr($name, mb_strlen($this->prefix)));
                         $this->translations[$this->locale][$name] = isset($property) ? $property->getLabel($this->locale) : $name;
                     } catch (\Exception $e) {
                         // listener fails during upgrade. silently fail

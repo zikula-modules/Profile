@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /*
  * This file is part of the Zikula package.
  *
@@ -107,7 +108,7 @@ class PropertyType extends AbstractType
             $labels = $data['labels'];
             foreach ($supportedLocales as $locale) {
                 if (!array_key_exists($locale, $labels)) {
-                    $labels[$locale] = isset($labels['en']) ? $labels['en'] : '';
+                    $labels[$locale] = $labels['en'] ?? '';
                 }
             }
             $data['labels'] = $labels;
