@@ -171,7 +171,7 @@ class LinkContainer implements LinkContainerInterface
             }
 
             $messageModule = $this->variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '');
-            if ('' !== $messageModule && $this->kernel->isBundle($messageModule)
+            if (null !== $messageModule && '' !== $messageModule && $this->kernel->isBundle($messageModule)
                 && $this->permissionApi->hasPermission($messageModule . '::', '::', ACCESS_READ)
             ) {
                 $links[] = [

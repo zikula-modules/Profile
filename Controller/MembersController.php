@@ -47,7 +47,7 @@ class MembersController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $startNum = $request->query->get('startnum');
+        $startNum = $request->query->getInt('startnum');
         $sortBy = $request->get('sortby', 'uname');
         $searchby = $request->get('searchby');
         $sortOrder = $request->get('sortorder');
