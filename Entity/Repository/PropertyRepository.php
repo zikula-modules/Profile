@@ -13,12 +13,19 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Entity\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Zikula\Bundle\FormExtensionBundle\DynamicFieldsContainerInterface;
+use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
-class PropertyRepository extends EntityRepository implements PropertyRepositoryInterface, DynamicFieldsContainerInterface
+class PropertyRepository extends ServiceEntityRepository implements PropertyRepositoryInterface, DynamicFieldsContainerInterface
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, PropertyEntity::class);
+    }
+
     public function getIndexedActive(): array
     {
         $qb = $this->createQueryBuilder('p', 'p.id')
