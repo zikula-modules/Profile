@@ -46,11 +46,17 @@ class MembersOnlineBlock extends AbstractBlockHandler
             $sessions = [];
             $guestCount = 0;
         } else {
+            $activeMinutes = $this->variableApi->get('ZikulaProfileModule', 'activeminutes');
+            $activeSince = new \DateTime();
+            $activeSince->modify("-$activeMinutes minutes");
+
             $criteria = Criteria::create()
                 ->where(Criteria::expr()->neq('uid', Constant::USER_ID_ANONYMOUS))
                 ->andWhere(Criteria::expr()->neq('uid', null))
+                ->andWhere(Criteria::expr()->gt('lastused', $activeSince))
                 ->orderBy(['lastused' => 'DESC'])
-                ->setMaxResults($properties['amount']);
+                //->setMaxResults($properties['amount'])
+            ;
             $sessions = $this->userSessionRepository->matching($criteria);
             $criteria = Criteria::create()
                 ->where(Criteria::expr()->eq('uid', Constant::USER_ID_ANONYMOUS));
