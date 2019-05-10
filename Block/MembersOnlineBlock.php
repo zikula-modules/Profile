@@ -48,7 +48,7 @@ class MembersOnlineBlock extends AbstractBlockHandler
         } else {
             $activeMinutes = $this->variableApi->get('ZikulaProfileModule', 'activeminutes');
             $activeSince = new \DateTime();
-            $activeSince->modify("-$activeMinutes minutes");
+            $activeSince->modify("-${activeMinutes} minutes");
 
             $criteria = Criteria::create()
                 ->where(Criteria::expr()->neq('uid', Constant::USER_ID_ANONYMOUS))
