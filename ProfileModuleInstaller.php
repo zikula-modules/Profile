@@ -70,7 +70,10 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $this->setVars($this->getDefaultModVars());
 
         // create the default data for the module
-        $locale = $this->container->get('request_stack')->getMasterRequest()->getLocale();
+        $requestStack = $this->container->get('request_stack');
+        $request = null !== $requestStack ? $requestStack->getMasterReqest() : null;
+        // fall back to English for CLI installations (#105)
+        $locale = null !== $request ? $requestStack->getLocale() : 'en';
         $this->defaultdata($locale);
 
         // Initialisation successful
@@ -99,7 +102,12 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 // create new table & insert upgraded data
                 $this->schemaTool->create($this->entities);
                 $propertyToIdMap = [];
-                $locale = $this->container->get('request_stack')->getMasterRequest()->getLocale();
+
+                $requestStack = $this->container->get('request_stack');
+                $request = null !== $requestStack ? $requestStack->getMasterReqest() : null;
+                // fall back to English for CLI installations (#105)
+                $locale = null !== $request ? $requestStack->getLocale() : 'en';
+
                 $upgradeHelper = $this->container->get(UpgradeHelper::class);
                 foreach ($properties as $property) {
                     $newProperty = $upgradeHelper->mergeToNewProperty($property, $locale);
