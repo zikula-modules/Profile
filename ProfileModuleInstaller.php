@@ -71,7 +71,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
 
         // create the default data for the module
         $requestStack = $this->container->get('request_stack');
-        $request = null !== $requestStack ? $requestStack->getMasterReqest() : null;
+        $request = null !== $requestStack ? $requestStack->getMasterRequest() : null;
         // fall back to English for CLI installations (#105)
         $locale = null !== $request ? $requestStack->getLocale() : 'en';
         $this->defaultdata($locale);
@@ -104,7 +104,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $propertyToIdMap = [];
 
                 $requestStack = $this->container->get('request_stack');
-                $request = null !== $requestStack ? $requestStack->getMasterReqest() : null;
+                $request = null !== $requestStack ? $requestStack->getMasterRequest() : null;
                 // fall back to English for CLI installations (#105)
                 $locale = null !== $request ? $requestStack->getLocale() : 'en';
 
