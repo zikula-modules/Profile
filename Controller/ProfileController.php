@@ -76,7 +76,17 @@ class ProfileController extends AbstractController
         if ($userEntity->getUid() !== $currentUserUid && !$this->hasPermission('ZikulaProfileModule::edit', '::', ACCESS_EDIT)) {
             throw new AccessDeniedException();
         }
-        $form = $profileTypeFactory->createForm($userEntity->getAttributes());
+        $attributes = $userEntity->getAttributes() ?? [];
+
+        // unpack json values (e.g. array for multi-valued options)
+        foreach ($attributes as $key => $attribute) {
+            $value = $attribute->getValue();
+            if (is_string($value) && is_array(json_decode($value, true)) && JSON_ERROR_NONE === json_last_error()) {
+                $attribute->setValue(json_decode($value, true));
+            }
+        }
+
+        $form = $profileTypeFactory->createForm($attributes);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -85,6 +95,9 @@ class ProfileController extends AbstractController
                     if (!empty($value)) {
                         if ($value instanceof UploadedFile) {
                             $value = $uploadHelper->handleUpload($value, $userEntity->getUid());
+                        } elseif (is_array($value)) {
+                            // pack multi-valued options into json
+                            $value = json_encode($value);
                         }
                         $userEntity->setAttribute($attribute, $value);
                     } elseif (false === mb_strpos($attribute, 'avatar')) {
