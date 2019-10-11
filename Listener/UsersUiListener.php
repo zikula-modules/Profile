@@ -162,7 +162,9 @@ class UsersUiListener implements EventSubscriberInterface
             }
         }
 
-        $this->doctrine->getManager()->flush();
+        // we do not call flush here on purpose because maybe
+        // other modules need to care for certain things before
+        // the Users module calls flush after all listeners finished
     }
 
     public function formTypeChoices(FormTypeChoiceEvent $event): void
