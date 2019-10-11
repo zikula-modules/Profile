@@ -69,7 +69,7 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
      */
     private $active = true;
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
