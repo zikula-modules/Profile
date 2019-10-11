@@ -15,7 +15,9 @@ namespace Zikula\ProfileModule\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
+use Zikula\UsersModule\Entity\UserAttributeEntity;
 
 class TwigExtension extends AbstractExtension
 {
@@ -23,6 +25,11 @@ class TwigExtension extends AbstractExtension
      * @var PropertyRepositoryInterface
      */
     protected $propertyRepository;
+
+    /**
+     * @var PropertyEntity[]
+     */
+    protected $properties;
 
     /**
      * @var string
@@ -34,19 +41,24 @@ class TwigExtension extends AbstractExtension
         string $prefix
     ) {
         $this->propertyRepository = $propertyRepository;
+        $this->properties = null;
         $this->prefix = $prefix;
     }
 
     public function getFilters()
     {
         return [
-            new TwigFilter('zikulaprofilemodule_sortAttributesByWeight', [$this, 'sortAttributesByWeight'])
+            new TwigFilter('zikulaprofilemodule_sortAttributesByWeight', [$this, 'sortAttributesByWeight']),
+            new TwigFilter('zikulaprofilemodule_formatPropertyForDisplay', [$this, 'formatPropertyForDisplay'])
         ];
     }
 
     public function sortAttributesByWeight(iterable $attributes): iterable
     {
-        $properties = $this->propertyRepository->getIndexedActive();
+        if (null === $this->properties) {
+            $this->properties = $this->propertyRepository->getIndexedActive();
+        }
+        $properties = $this->properties;
         $sorter = function ($att1, $att2) use ($properties) {
             if ((0 !== mb_strpos($att1, $this->prefix)) && (0 !== mb_strpos($att2, $this->prefix))) {
                 return 0;
@@ -63,5 +75,38 @@ class TwigExtension extends AbstractExtension
         uksort($attributes, $sorter);
 
         return $attributes;
+    }
+
+    public function formatPropertyForDisplay(UserAttributeEntity $attribute): string
+    {
+        $value = $attribute->getValue();
+        if (empty($value)) {
+            return $value;
+        }
+
+        if (null === $this->properties) {
+            $this->properties = $this->propertyRepository->getIndexedActive();
+        }
+
+        $attributeName = $attribute->getName();
+
+        foreach ($this->properties as $property) {
+            if ($attributeName !== $this->prefix . ':' . $property['id']) {
+                continue;
+            }
+            if ('Symfony\Component\Form\Extension\Core\Type\ChoiceType' == $property['formType']) {
+                if (isset($property['formOptions']['multiple']) && 1 == $property['formOptions']['multiple']) {
+                    $values = json_decode($value, true);
+                    $labels = [];
+                    $choices = array_flip($property['formOptions']['choices']);
+                    foreach ($values as $choiceId) {
+                        $labels[] = $choices[$choiceId];
+                    }
+                    $value = implode(', ', $labels);
+                }
+            }
+        }
+
+        return $value;
     }
 }

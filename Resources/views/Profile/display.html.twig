@@ -37,7 +37,7 @@
                             {% if 'http://' in attribute.value or 'https://' in attribute.value %}
                                 <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>
                             {% else %}
-                                <span>{{ attribute.value }}</span>
+                                <span>{{ attribute|zikulaprofilemodule_formatPropertyForDisplay }}</span>
                             {% endif %}
                         </div>
                     </div>
