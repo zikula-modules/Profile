@@ -128,6 +128,15 @@ class UsersUiListener implements EventSubscriberInterface
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
         $userEntity = $this->userRepository->find($uid);
         $attributes = $userEntity->getAttributes() ?? [];
+
+        // unpack json values (e.g. array for multi-valued options)
+        foreach ($attributes as $key => $attribute) {
+            $value = $attribute->getValue();
+            if (is_string($value) && is_array(json_decode($value, true)) && JSON_ERROR_NONE === json_last_error()) {
+                $attribute->setValue(json_decode($value, true));
+            }
+        }
+
         $profileForm = $this->formFactory->createForm($attributes, false);
         $event
             ->formAdd($profileForm)
@@ -143,12 +152,16 @@ class UsersUiListener implements EventSubscriberInterface
             if (!empty($value)) {
                 if ($value instanceof UploadedFile) {
                     $value = $this->uploadHelper->handleUpload($value, $userEntity->getUid());
+                } elseif (is_array($value)) {
+                    // pack multi-valued options into json
+                    $value = json_encode($value);
                 }
                 $userEntity->setAttribute($key, $value);
             } elseif (false === mb_strpos($key, 'avatar')) {
                 $userEntity->delAttribute($key);
             }
         }
+
         $this->doctrine->getManager()->flush();
     }
 
