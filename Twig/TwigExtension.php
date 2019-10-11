@@ -94,8 +94,8 @@ class TwigExtension extends AbstractExtension
             if ($attributeName !== $this->prefix . ':' . $property['id']) {
                 continue;
             }
-            if ('Symfony\Component\Form\Extension\Core\Type\ChoiceType' == $property['formType']) {
-                if (isset($property['formOptions']['multiple']) && 1 == $property['formOptions']['multiple']) {
+            if ('Symfony\Component\Form\Extension\Core\Type\ChoiceType' === $property['formType']) {
+                if (isset($property['formOptions']['multiple']) && true === $property['formOptions']['multiple']) {
                     $values = json_decode($value, true);
                     $labels = [];
                     $choices = array_flip($property['formOptions']['choices']);
