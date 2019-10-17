@@ -52,7 +52,7 @@ class TwigExtension extends AbstractExtension
             return $value;
         }
 
-        if (isset($property['formOptions']['multiple']) && 1 === $property['formOptions']['multiple']) {
+        if (isset($property['formOptions']['multiple']) && true === $property['formOptions']['multiple']) {
             $values = json_decode($value, true);
             $labels = [];
             $choices = array_flip($property['formOptions']['choices']);
