@@ -75,4 +75,3 @@ class TwigExtension extends AbstractExtension
         return $result;
     }
 }
-
