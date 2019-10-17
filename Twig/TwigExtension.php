@@ -46,11 +46,11 @@ class TwigExtension extends AbstractExtension
             return $value;
         }
 
-        if ('Symfony\Component\Form\Extension\Core\Type\ChoiceType' != $property['formType']) {
+        if ('Symfony\Component\Form\Extension\Core\Type\ChoiceType' !== $property['formType']) {
             return $value;
         }
 
-        if (isset($property['formOptions']['multiple']) && 1 == $property['formOptions']['multiple']) {
+        if (isset($property['formOptions']['multiple']) && 1 === $property['formOptions']['multiple']) {
             $values = json_decode($value, true);
             $labels = [];
             $choices = array_flip($property['formOptions']['choices']);

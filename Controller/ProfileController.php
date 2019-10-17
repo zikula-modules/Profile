@@ -40,7 +40,7 @@ class ProfileController extends AbstractController
         PropertyRepositoryInterface $propertyRepository,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository,
-        UserEntity $userEntity = null,
+        UserEntity $userEntity = null
     ): array {
         if (!$this->hasPermission('ZikulaProfileModule::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
