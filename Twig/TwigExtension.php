@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Twig;
 
+use Symfony\Component\Intl\Intl;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Zikula\ProfileModule\Entity\PropertyEntity;
@@ -33,7 +34,8 @@ class TwigExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('zikulaprofilemodule_formatPropertyForDisplay', [$this, 'formatPropertyForDisplay'])
+            new TwigFilter('zikulaprofilemodule_formatPropertyForDisplay', [$this, 'formatPropertyForDisplay']),
+            new TwigFilter('zikulaprofilemodule_countryName', [$this, 'getCountryName'])
         ];
     }
 
@@ -62,4 +64,15 @@ class TwigExtension extends AbstractExtension
 
         return $value;
     }
+
+    public function getCountryName(string $countryCode): string
+    {
+        $result = Intl::getRegionBundle()->getCountryName($countryCode);
+        if (false === $result) {
+            $result = $countryCode;
+        }
+
+        return $result;
+    }
 }
+

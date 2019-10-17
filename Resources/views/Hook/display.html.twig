@@ -20,6 +20,10 @@
                 <div class="col-sm-9">
                     {% if 'UrlType' == property.formType|split('\\')|last and ('http://' in attribute.value or 'https://' in attribute.value) %}
                         <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>
+                    {% elseif 'CountryType' == property.formType|split('\\')|last %}
+                        <span>{{ attribute.value|zikulaprofilemodule_countryName }}</span>
+                    {% elseif property.formType|split('\\')|last in ['LanguageType', 'LocaleType'] %}
+                        <span>{{ attribute.value|languageName }}</span>
                     {% else %}
                         <span>{{ property|zikulaprofilemodule_formatPropertyForDisplay(attribute) }}</span>
                     {% endif %}
