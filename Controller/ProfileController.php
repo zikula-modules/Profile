@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\RouteUrl;
+use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
 use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
@@ -36,9 +37,10 @@ class ProfileController extends AbstractController
      * @throws AccessDeniedException on failed permission check
      */
     public function displayAction(
+        PropertyRepositoryInterface $propertyRepository,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository,
-        UserEntity $userEntity = null
+        UserEntity $userEntity = null,
     ): array {
         if (!$this->hasPermission('ZikulaProfileModule::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
@@ -51,6 +53,7 @@ class ProfileController extends AbstractController
         return [
             'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
             'user' => $userEntity,
+            'activeProperties' => $propertyRepository->getDynamicFieldsSpecification(),
             'routeUrl' => $routeUrl
         ];
     }

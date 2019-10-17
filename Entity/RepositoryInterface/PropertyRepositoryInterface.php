@@ -23,4 +23,9 @@ interface PropertyRepositoryInterface extends ObjectRepository, Selectable
      * @return PropertyEntity[]
      */
     public function getIndexedActive(): array;
+
+    /**
+     * @return PropertyEntity[]
+     */
+    public function getDynamicFieldsSpecification(): array;
 }

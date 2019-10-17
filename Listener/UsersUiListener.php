@@ -21,6 +21,7 @@ use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Event\GenericEvent;
+use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
 use Zikula\ProfileModule\Form\Type\AvatarType;
 use Zikula\ProfileModule\Helper\UploadHelper;
@@ -50,6 +51,11 @@ class UsersUiListener implements EventSubscriberInterface
      * @var UserRepositoryInterface
      */
     private $userRepository;
+
+    /**
+     * @var PropertyRepositoryInterface
+     */
+    private $propertyRepository;
 
     /**
      * @var ProfileTypeFactory
@@ -86,6 +92,7 @@ class UsersUiListener implements EventSubscriberInterface
     public function __construct(
         TranslatorInterface $translator,
         UserRepositoryInterface $userRepository,
+        PropertyRepositoryInterface $propertyRepository,
         ProfileTypeFactory $factory,
         Environment $twig,
         RegistryInterface $registry,
@@ -94,6 +101,7 @@ class UsersUiListener implements EventSubscriberInterface
     ) {
         $this->translator = $translator;
         $this->userRepository = $userRepository;
+        $this->propertyRepository = $propertyRepository;
         $this->formFactory = $factory;
         $this->twig = $twig;
         $this->doctrine = $registry;
@@ -119,6 +127,7 @@ class UsersUiListener implements EventSubscriberInterface
         $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/Hook/display.html.twig', [
             'prefix' => $this->prefix,
             'user' => $event->getSubject(),
+            'activeProperties' => $this->propertyRepository->getDynamicFieldsSpecification()
         ]);
     }
 
