@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Zikula\ProfileModule\Listener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Exception;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\UsersModule\Entity\UserAttributeEntity;
