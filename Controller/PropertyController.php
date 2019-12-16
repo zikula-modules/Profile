@@ -33,7 +33,7 @@ class PropertyController extends AbstractController
     /**
      * @Route("/list")
      * @Theme("admin")
-     * @Template("ZikulaProfileModule:Property:list.html.twig")
+     * @Template("@ZikulaProfileModule/Property/list.html.twig")
      */
     public function listAction(PropertyRepositoryInterface $propertyRepository): array
     {
@@ -50,7 +50,7 @@ class PropertyController extends AbstractController
     /**
      * @Route("/edit/{id}", defaults={"id" = null})
      * @Theme("admin")
-     * @Template("ZikulaProfileModule:Property:edit.html.twig")
+     * @Template("@ZikulaProfileModule/Property/edit.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -86,7 +86,7 @@ class PropertyController extends AbstractController
     /**
      * @Route("/delete/{id}")
      * @Theme("admin")
-     * @Template("ZikulaProfileModule:Property:delete.html.twig")
+     * @Template("@ZikulaProfileModule/Property/delete.html.twig")
      *
      * @return array|RedirectResponse
      */

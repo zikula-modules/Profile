@@ -1,11 +1,11 @@
 {% form_theme form with [
-'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
-'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+    '@ZikulaFormExtension/Form/bootstrap_3_zikula_admin_layout.html.twig',
+    '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
 {{ adminHeader() }}
 {{ pageSetVar('title', __('Delete property')) }}
 {{ form_start(form) }}
-<div class="alert alert-danger">{{ __f('Are you sure you want to delete the property with ID: %id', {'%id': id}) }}</div>
+<p class="alert alert-danger">{{ __f('Are you sure you want to delete the property with ID: %id', {'%id': id}) }}</p>
 <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">
         {{ form_widget(form.delete) }}

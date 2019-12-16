@@ -30,7 +30,7 @@ class UserBlockController extends AbstractController
 {
     /**
      * @Route("/usersblock")
-     * @Template("ZikulaProfileModule:UserBlock:edit.html.twig")
+     * @Template("@ZikulaProfileModule/UserBlock/edit.html.twig")
      *
      * Display the configuration options for the users block.
      *

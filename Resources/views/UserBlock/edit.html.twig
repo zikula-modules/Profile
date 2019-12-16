@@ -1,13 +1,11 @@
 <h2>{{ __('Personal custom block') }}</h2>
-
 {% form_theme form with [
-    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
-    'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+    '@ZikulaFormExtension/Form/bootstrap_3_zikula_admin_layout.html.twig',
+    '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
 
 {{ form_start(form) }}
 {{ form_errors(form) }}
-
 <fieldset>
     <legend>{{ __('Block content') }}</legend>
     {{ form_row(form.ublockon) }}
