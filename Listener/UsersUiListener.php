@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Listener;
 
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Twig\Environment;
@@ -68,7 +68,7 @@ class UsersUiListener implements EventSubscriberInterface
     protected $twig;
 
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistry
      */
     protected $doctrine;
 
@@ -95,7 +95,7 @@ class UsersUiListener implements EventSubscriberInterface
         PropertyRepositoryInterface $propertyRepository,
         ProfileTypeFactory $factory,
         Environment $twig,
-        RegistryInterface $registry,
+        ManagerRegistry $registry,
         UploadHelper $uploadHelper,
         string $prefix
     ) {

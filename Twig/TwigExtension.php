@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Twig;
 
-use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Countries;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Zikula\ProfileModule\Entity\PropertyEntity;
@@ -67,7 +67,7 @@ class TwigExtension extends AbstractExtension
 
     public function getCountryName(string $countryCode): string
     {
-        $result = Intl::getRegionBundle()->getCountryName($countryCode);
+        $result = Countries::getName($countryCode);
         if (false === $result) {
             $result = $countryCode;
         }
