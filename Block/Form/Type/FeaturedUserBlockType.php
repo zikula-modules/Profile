@@ -53,7 +53,6 @@ class FeaturedUserBlockType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => true,
-                'choices_as_values' => true,
                 'choices' => $options['activeProperties'],
                 'choice_label' => 'label',
                 'choice_value' => 'id'
