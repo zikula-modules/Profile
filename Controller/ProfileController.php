@@ -51,7 +51,7 @@ class ProfileController extends AbstractController
         $routeUrl = new RouteUrl('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
 
         return [
-            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'user' => $userEntity,
             'activeProperties' => $propertyRepository->getDynamicFieldsSpecification(),
             'routeUrl' => $routeUrl
