@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Zikula\ProfileModule\Entity\RepositoryInterface;
 
 use Doctrine\Common\Collections\Selectable;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 
 interface PropertyRepositoryInterface extends ObjectRepository, Selectable
