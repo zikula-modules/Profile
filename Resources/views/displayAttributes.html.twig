@@ -19,15 +19,15 @@
                 {% if 'UrlType' == formType and ('http://' in attribute.value or 'https://' in attribute.value) %}
                     <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>
                 {% elseif 'CountryType' == formType %}
-                    <span>{{ attribute.value|countryName }}</span>
+                    <span>{{ attribute.value|country_name }}</span>
                 {% elseif 'CurrencyType' == formType %}
-                    <span>{{ attribute.value|currencyName }}</span>
+                    <span>{{ attribute.value|currency_name }}</span>
                 {% elseif 'LanguageType' == formType %}
-                    <span>{{ attribute.value|languageName }}</span>
+                    <span>{{ attribute.value|language_name }}</span>
                 {% elseif 'LocaleType' == formType %}
-                    <span>{{ attribute.value|localeName }}</span>
+                    <span>{{ attribute.value|locale_name }}</span>
                 {% elseif 'TimezoneType' == formType %}
-                    <span>{{ attribute.value|timezoneName }}</span>
+                    <span>{{ attribute.value|timezone_name }}</span>
                 {% else %}
                     <span>{{ property|zikulaprofilemodule_formatPropertyForDisplay(attribute) }}</span>
                 {% endif %}
