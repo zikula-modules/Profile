@@ -28,8 +28,8 @@
             <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>
             <td headers="hActive">{{ property.active|yesNo }}</td>
             <td headers="hActions">
-                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}" title="{{ __('Edit property')|e('html_attr') }}"><i class="fa fa-pencil fa-lg fa-fw"></i></a>
-                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{{ __('Delete property')|e('html_attr') }}"><i class="fa fa-trash-o fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}" title="{{ __('Edit property')|e('html_attr') }}"><i class="fa fa-pencil-alt fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{{ __('Delete property')|e('html_attr') }}"><i class="fa fa-trash-alt fa-lg fa-fw"></i></a>
             </td>
         </tr>
     {% endfor %}

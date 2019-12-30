@@ -36,7 +36,7 @@
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong> ({{ user.uname }})</td>
                 {% if messageModule|default %}
-                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
+                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope fa-lg"></i></a></td>
                 {% endif %}
                 {% if 'url' in activeProperties %}
                     <td headers="hSite">

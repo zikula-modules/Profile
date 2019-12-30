@@ -39,7 +39,7 @@
                 </td>
                 <td headers="hRegistrationDate">{{ user.user_regdate|localizeddate('medium', 'none')|default('') }}</td>
                 {% if messageModule|default %}
-                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope-o fa-lg"></i></a></td>
+                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope fa-lg"></i></a></td>
                 {% endif %}
                 {% if 'url' in activeProperties %}
                     <td headers="hSite">

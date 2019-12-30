@@ -2,7 +2,7 @@
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2 class="panel-title"><i class="fa fa-user-circle-o"></i> {{ __f('Profile for %uname', {'%uname': user.uname}) }}</h2>
+        <h2 class="panel-title"><i class="fa fa-user-circle"></i> {{ __f('Profile for %uname', {'%uname': user.uname}) }}</h2>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -25,7 +25,7 @@
     </div>
     {% if currentUser.uid == user.uid or hasPermission('ZikulaProfileModule::edit', '::', 'ACCESS_EDIT') %}
         <div class="panel-footer text-right">
-            <a class="btn btn-success btn-xs" href="{{ path('zikulaprofilemodule_profile_edit', {uid: user.uid}) }}"><i class="fa fa-pencil"></i> {{ __('Edit profile') }}</a>
+            <a class="btn btn-success btn-xs" href="{{ path('zikulaprofilemodule_profile_edit', {uid: user.uid}) }}"><i class="fa fa-pencil-alt"></i> {{ __('Edit profile') }}</a>
         </div>
     {% endif %}
 </div>

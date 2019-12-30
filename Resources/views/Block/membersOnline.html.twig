@@ -16,7 +16,7 @@
                     {% set title = messageCount(session.uid, true) ~ __('unread') ~ "|" ~ messageCount(session.uid) ~ __('total') %}
                     ({{ messageInboxLink(session.uid, false, title) }})
                 {% else %}
-                    <a href="{{ session.uid|messageSendLink(true) }}" title="{{ __('Send private message') }}"><i class="fa fa-envelope-o"></i></a>
+                    <a href="{{ session.uid|messageSendLink(true) }}" title="{{ __('Send private message') }}"><i class="fa fa-envelope"></i></a>
                 {% endif %}
             {% endif %}
         </li>
