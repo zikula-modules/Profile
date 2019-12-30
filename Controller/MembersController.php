@@ -65,7 +65,7 @@ class MembersController extends AbstractController
         $amountOfUsers = $userRepository->count();
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
             'amountOfRegisteredMembers' => $amountOfUsers - 1,
             'amountOfOnlineMembers' => count($this->getOnlineUids($userSessionRepository)),
             'newestMember' => $userRepository->findBy([], ['user_regdate' => 'DESC'], 1)[0],
@@ -100,7 +100,7 @@ class MembersController extends AbstractController
         }
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
             'users' => $userRepository->findBy([], ['user_regdate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
             'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
@@ -125,7 +125,7 @@ class MembersController extends AbstractController
         }
 
         return [
-            'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
+            'prefix' => $this->container->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
             'users' => $userRepository->findBy(['uid' => $this->getOnlineUids($userSessionRepository)]),
         ];
