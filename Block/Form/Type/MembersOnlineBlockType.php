@@ -40,14 +40,12 @@ class MembersOnlineBlockType extends AbstractType
             ->add('lengthmax', IntegerType::class, [
                 'label' => $this->__('Maximum number of characters to display'),
                 'empty_data'  => 30,
-                'scale' => 0,
                 'constraints' => [
                     new NotBlank()
                 ],
             ])
             ->add('amount', IntegerType::class, [
                 'label' => $this->__('Number of users to display'),
-                'scale' => 0,
                 'constraints' => [
                     new NotBlank()
                 ],

@@ -51,7 +51,6 @@ class ConfigType extends AbstractType
             ->add('memberslistitemsperpage', IntegerType::class, [
                 'constraints' => [new Range(['min' => 10, 'max' => 999])],
                 'label' => $this->__('Users per page in \'Registered users list\''),
-                'scale' => 0,
                 'attr' => [
                     'maxlength' => 3
                 ]
@@ -59,7 +58,6 @@ class ConfigType extends AbstractType
             ->add('onlinemembersitemsperpage', IntegerType::class, [
                 'constraints' => [new Range(['min' => 10, 'max' => 999])],
                 'label' => $this->__('Users per page in \'Users currently on-line\' page'),
-                'scale' => 0,
                 'attr' => [
                     'maxlength' => 3
                 ]
@@ -67,7 +65,6 @@ class ConfigType extends AbstractType
             ->add('recentmembersitemsperpage', IntegerType::class, [
                 'constraints' => [new Range(['min' => 10, 'max' => 999])],
                 'label' => $this->__('Users per page in \'Recent registrations\' page'),
-                'scale' => 0,
                 'attr' => [
                     'maxlength' => 3
                 ]
@@ -75,7 +72,6 @@ class ConfigType extends AbstractType
             ->add('activeminutes', IntegerType::class, [
                 'constraints' => [new Range(['min' => 1, 'max' => 99])],
                 'label' => $this->__('Minutes a user is considered online'),
-                'scale' => 0,
                 'attr' => [
                     'maxlength' => 2
                 ]
@@ -116,12 +112,10 @@ class ConfigType extends AbstractType
             ])
             ->add('maxSize', IntegerType::class, [
                 'label' => $this->__('Max. avatar filesize'),
-                'scale' => 0,
                 'input_group' => ['right' => $this->__('bytes')]
             ])
             ->add('maxWidth', IntegerType::class, [
                 'label' => $this->__('Max. width'),
-                'scale' => 0,
                 'attr' => [
                     'maxlength' => 4
                 ],
@@ -129,7 +123,6 @@ class ConfigType extends AbstractType
             ])
             ->add('maxHeight', IntegerType::class, [
                 'label' => $this->__('Max. height'),
-                'scale' => 0,
                 'attr' => [
                     'maxlength' => 4
                 ],

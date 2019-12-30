@@ -40,7 +40,6 @@ class LastSeenBlockType extends AbstractType
             ->add('amount', IntegerType::class, [
                 'label' => $this->__('Number of recent visitors to display'),
                 'empty_data'  => 5,
-                'scale' => 0,
                 'constraints' => [
                     new NotBlank()
                 ],

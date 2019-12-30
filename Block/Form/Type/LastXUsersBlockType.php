@@ -40,7 +40,6 @@ class LastXUsersBlockType extends AbstractType
             ->add('amount', IntegerType::class, [
                 'label' => $this->__('Number of recently-registered users to display'),
                 'empty_data'  => 5,
-                'scale' => 0,
                 'constraints' => [
                     new NotBlank()
                 ],
