@@ -48,7 +48,7 @@
         </thead>
 
         <tbody>
-            {% for user in users if user.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS') %}
+            {% for user in users|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                     {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
@@ -70,7 +70,7 @@
                     </td>
                 {% endif %}
                 {% set rowActions = knp_menu_get('zikulaProfileAdminMenu', [], {user: user}) %}
-                <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: 'ZikulaMenuModule:Override:actions.html.twig'}) }}</td>
+                <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}</td>
             </tr>
             {% else %}
                 <tr class="danger"><td colspan="5">{{ __('No users found.') }}</td></tr>
