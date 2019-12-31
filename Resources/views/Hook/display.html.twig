@@ -1,5 +1,5 @@
 <fieldset>
     <legend>{{ __('Profile') }}</legend>
     <p>{{ user.uname|profileLinkByUserName('', userAvatar(user.uid)) }}</p>
-    {{ include('@ZikulaProfileModule/displayAttributes.html.twig', {context: 'hook') }}
+    {{ include('@ZikulaProfileModule/displayAttributes.html.twig', {context: 'hook'}) }}
 </fieldset>

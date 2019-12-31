@@ -4,7 +4,7 @@
             <strong>{{ __('Registration date') }}</strong>
         </div>
         <div class="col-sm-9">
-            <span>{{ user.user_regdate|localizeddate('medium', 'none')|default('&nbsp;') }}</span>
+            <span>{{ user.user_regdate|format_date('medium')|default('&nbsp;') }}</span>
         </div>
     </div>
 {% endif %}
@@ -12,7 +12,7 @@
     {% for attribute in user.attributes|filter(a => a.value is not empty and a.name == prefix ~ ':' ~ property.id) %}
         <div class="row">
             <div class="col-sm-3 text-right">
-                <strong>{{ property.label(app.request.locale) }}</strong>
+                <strong>{{ property.label(app.request.locale|default('en')) }}</strong>
             </div>
             <div class="col-sm-9">
                 {% set formType = property.formType|split('\\')|last %}
