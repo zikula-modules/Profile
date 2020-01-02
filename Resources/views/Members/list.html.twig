@@ -1,26 +1,22 @@
 {{ moduleHeader('user', __('Registered users'), true, true) }}
 
-<form class="form-horizontal" action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded">
-    <div>
-        <div class="well">
-            <div class="form-group">
-                <div class="col-sm-3 control-label">
-                    <label for="searchby">{{ __('Search by Uname') }}</label>
-                </div>
-                <div class="col-sm-9">
-                    <span class="col-sm-6"><input class="form-control" id="searchby" type="text" name="searchby" value="" maxlength="50" /></span>
-                    <span class="col-sm-6">
-                        <input class="btn btn-success" type="submit" value="{{ __('Submit') }}" />
-                        <a href="{{ path('zikulaprofilemodule_members_list') }}" class="btn btn-default">{{ __('Clear') }}</a>
-                    </span>
-                </div>
+<form action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label for="searchby" class="col-sm-6 col-form-label">{{ __('Search by Uname') }}</label>
+            <div class="col-sm-6">
+                <input id="searchby" type="text" name="searchby" value="" maxlength="50" class="form-control" /></span>
             </div>
         </div>
-    </div>
-    <div id="profile-alphafilter" class="text-center">
-        {{ pagerabc({ route: 'zikulaprofilemodule_members_list', posvar: 'letter', forwardvars: 'sortby', printempty: true }) }}
+        <div class="col-md-4">
+            <input class="btn btn-success" type="submit" value="{{ __('Submit') }}" />
+            <a href="{{ path('zikulaprofilemodule_members_list') }}" class="btn btn-default">{{ __('Clear') }}</a>
+        </div>
     </div>
 </form>
+<div id="profile-alphafilter" class="text-center my-2">
+    {{ pagerabc({ route: 'zikulaprofilemodule_members_list', posvar: 'letter', forwardvars: 'sortby', printempty: true }) }}
+</div>
 
 <div class="panel panel-default">
     <table class="table table-striped">
