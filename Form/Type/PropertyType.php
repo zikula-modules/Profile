@@ -70,6 +70,7 @@ class PropertyType extends AbstractType
             ->add('active', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->__('Active'),
+                'label_attr' => ['class' => 'switch-custom']
             ])
             ->add('weight', IntegerType::class, [
                 'label' => $this->__('Weight'),

@@ -3,14 +3,14 @@
     <p>
         {{ user.uname|profileLinkByUserName('', userAvatar(user.uid)) }}
     </p>
-    {% for activeProperty in activeProperties
-        if user.attributes[prefix~':'~activeProperty.id]['value']|default
-        and activeProperty.id in blockProperties['fieldstoshow']
-        and hasPermission('ZikulaProfileModule::item', activeProperty.id~'::', 'ACCESS_READ')
-    %}
+    {% for activeProperty in activeProperties|filter(
+        prop => user.attributes[prefix~':'~prop.id]['value']|default
+            and prop.id in blockProperties['fieldstoshow']
+            and hasPermission('ZikulaProfileModule::item', prop.id~'::', 'ACCESS_READ')
+    ) %}
         <p><strong>{{ user.attributes[prefix~':'~activeProperty.id]['extra'] }}</strong><br />{{ user.attributes[prefix~':'~activeProperty.id]['value'] }}</p>
     {% endfor %}
     {% if blockProperties['showregdate'] %}
-        <span>{{ __f('Registered on %s', { '%s': user.user_regdate|localizeddate('short', 'none') }) }}</span>
+        <span>{{ __f('Registered on %s', { '%s': user.user_regdate|format_date('short') }) }}</span>
     {% endif %}
 </div>

@@ -22,9 +22,9 @@
     <tbody>
     {% for property in properties %}
         <tr>
-            <td headers="hId">{{ property.weight}}</td>
+            <td headers="hWeight">{{ property.weight}}</td>
             <td headers="hId">{{ property.id}}</td>
-            <td headers="hLabel">{{ property.label(app.request.locale) }}</td>
+            <td headers="hLabel">{{ property.label(app.request.locale|default('en')) }}</td>
             <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>
             <td headers="hActive">{{ property.active|yesNo }}</td>
             <td headers="hActions">

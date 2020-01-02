@@ -40,6 +40,7 @@ class UsersBlockType extends AbstractType
         $builder
             ->add('ublockon', CheckboxType::class, [
                 'label'    => $this->__('Enable your personal custom block'),
+                'label_attr' => ['class' => 'switch-custom'],
                 'required' => false,
             ])
             ->add('ublock', TextareaType::class, [

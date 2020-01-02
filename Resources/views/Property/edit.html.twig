@@ -3,6 +3,7 @@
     '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
 {{ adminHeader() }}
+
 {{ pageSetVar('title', __('Edit property')) }}
 {{ form_start(form) }}
 {{ form_row(form.id) }}
@@ -10,10 +11,12 @@
 {{ form_row(form.fieldInfo) }}
 {{ form_row(form.weight) }}
 {{ form_row(form.active) }}
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="col-md-9 offset-md-3">
         {{ form_widget(form.save) }}
         {{ form_widget(form.cancel) }}
     </div>
 </div>
 {{ form_end(form) }}
+
+{{ adminFooter() }}

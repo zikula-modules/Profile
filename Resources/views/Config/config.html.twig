@@ -53,8 +53,8 @@
             </div>
         </fieldset>
 
-        <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-9">
+        <div class="form-group row">
+            <div class="col-md-9 offset-md-3">
                 {{ form_widget(form.save) }}
                 {{ form_widget(form.cancel) }}
             </div>
@@ -68,11 +68,11 @@
     (function($) {
         $(document).ready(function() {
             function updateDynamicFields() {
-                $('#uploadSettings').toggleClass('hidden', !$('#zikulaprofilemodule_config_allowUploads').prop('checked'));
-                $('#shrinkSettings').toggleClass('hidden', !$('#zikulaprofilemodule_config_shrinkLargeImages').prop('checked'));
+                $('#uploadSettings').toggleClass('d-none', !$('#zikulaprofilemodule_config_allowUploads').prop('checked'));
+                $('#shrinkSettings').toggleClass('d-none', !$('#zikulaprofilemodule_config_shrinkLargeImages').prop('checked'));
             }
 
-            $('#zikulaprofilemodule_config_allowUploads, #zikulaprofilemodule_config_shrinkLargeImages').click(updateDynamicFields);
+            $('#zikulaprofilemodule_config_allowUploads, #zikulaprofilemodule_config_shrinkLargeImages').change(updateDynamicFields);
             updateDynamicFields();
         });
     })(jQuery)

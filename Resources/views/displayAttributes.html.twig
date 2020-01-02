@@ -1,9 +1,9 @@
 {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
     <div class="row">
-        <div class="col-sm-3 text-right">
+        <div class="col-md-3 text-right">
             <strong>{{ __('Registration date') }}</strong>
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             <span>{{ user.user_regdate|format_date('medium')|default('&nbsp;') }}</span>
         </div>
     </div>
@@ -11,10 +11,10 @@
 {% for property in activeProperties|filter(p => 'AvatarType' != p.formType|split('\\')|last) %}
     {% for attribute in user.attributes|filter(a => a.value is not empty and a.name == prefix ~ ':' ~ property.id) %}
         <div class="row">
-            <div class="col-sm-3 text-right">
+            <div class="col-md-3 text-right">
                 <strong>{{ property.label(app.request.locale|default('en')) }}</strong>
             </div>
-            <div class="col-sm-9">
+            <div class="col-md-9">
                 {% set formType = property.formType|split('\\')|last %}
                 {% if 'UrlType' == formType and ('http://' in attribute.value or 'https://' in attribute.value) %}
                     <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>

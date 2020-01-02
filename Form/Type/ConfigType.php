@@ -46,6 +46,7 @@ class ConfigType extends AbstractType
         $builder
             ->add('viewregdate', CheckboxType::class, [
                 'label' => $this->__('Display the user\'s registration date'),
+                'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add('memberslistitemsperpage', IntegerType::class, [
@@ -78,7 +79,8 @@ class ConfigType extends AbstractType
             ])
             ->add('filterunverified', CheckboxType::class, [
                 'label' => $this->__('Filter unverified users from \'Registered users list\''),
-                'required' => false,
+                'label_attr' => ['class' => 'switch-custom'],
+                'required' => false
             ])
             ->add(ProfileConstant::MODVAR_AVATAR_IMAGE_PATH, TextType::class, [
                 'label' => $this->__('Path to user\'s avatar images'),
@@ -89,6 +91,7 @@ class ConfigType extends AbstractType
             ])
             ->add(ProfileConstant::MODVAR_GRAVATARS_ENABLED, ChoiceType::class, [
                 'label' => $this->__('Allow usage of Gravatar'),
+                'label_attr' => ['class' => 'radio-custom'],
                 'choices' => [
                     $this->__('Yes') => 1,
                     $this->__('No') => 0
@@ -104,10 +107,12 @@ class ConfigType extends AbstractType
             ])
             ->add('allowUploads', CheckboxType::class, [
                 'label' => $this->__('Allow uploading custom avatar images'),
+                'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add('shrinkLargeImages', CheckboxType::class, [
                 'label' => $this->__('Shrink large images to maximum dimensions'),
+                'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add('maxSize', IntegerType::class, [

@@ -1,20 +1,18 @@
 {{ moduleHeader('user', __('Profile'), true, true) }}
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2 class="panel-title"><i class="fa fa-user-circle"></i> {{ __f('Profile for %uname', {'%uname': user.uname}) }}</h2>
-    </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-sm-3 text-center">
+<div class="card bg-light mb-3">
+    <div class="card-body">
+        <h2 class="card-title"><i class="fa fa-user-circle"></i> {{ __f('Profile for %uname', {'%uname': user.uname}) }}</h2>
+        <div class="card-text row">
+            <div class="col-md-3 text-center">
                 {{ userAvatar(user.uid) }}
             </div>
-            <div class="col-sm-9">
+            <div class="col-md-9">
                 <div class="row">
-                    <div class="col-sm-3 text-right">
+                    <div class="col-md-3 text-right">
                         <strong>{{ __('User name') }}</strong>
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         <span>{{ user.uname }}</span>
                     </div>
                 </div>
@@ -24,8 +22,8 @@
         </div>
     </div>
     {% if currentUser.uid == user.uid or hasPermission('ZikulaProfileModule::edit', '::', 'ACCESS_EDIT') %}
-        <div class="panel-footer text-right">
-            <a class="btn btn-success btn-xs" href="{{ path('zikulaprofilemodule_profile_edit', {uid: user.uid}) }}"><i class="fa fa-pencil-alt"></i> {{ __('Edit profile') }}</a>
+        <div class="card-footer text-right">
+            <a class="btn btn-success btn-sm" href="{{ path('zikulaprofilemodule_profile_edit', {uid: user.uid}) }}"><i class="fa fa-pencil-alt"></i> {{ __('Edit profile') }}</a>
         </div>
     {% endif %}
 </div>
