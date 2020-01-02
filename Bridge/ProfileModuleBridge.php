@@ -132,7 +132,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
         }
 
         if (!isset($parameters['class'])) {
-            $parameters['class'] = 'img-responsive img-thumbnail';
+            $parameters['class'] = 'img-fluid img-thumbnail';
         }
         $attributes = ' class="' . str_replace('"', '', htmlspecialchars($parameters['class'])) . '"';
         $attributes .= isset($parameters['width']) ? ' width="' . (int)$parameters['width'] . '"' : '';
