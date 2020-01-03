@@ -3,65 +3,59 @@
     '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
 {{ adminHeader() }}
+<h3>
+    <span class="fa fa-wrench"></span>
+    {{ __('Settings') }}
+    {{ pageSetVar('title', __('Profile settings')) }}
+</h3>
+{% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
+    <div class="alert alert-danger">{{ __('Sessions are configured to store in a file. This prevents some functionality within the profile module related to tracking who is online.') }}&nbsp;
+        <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
+    </div>
+{% endif %}
+{% if getModVar('ZConfig', 'profilemodule') != 'ZikulaProfileModule' %}
+    <div class="alert alert-danger">{{ __('The profile module is not selected as the system profile module. This is needed for full functionality.') }}&nbsp;
+        <a href="{{ path('zikulasettingsmodule_settings_main') }}">{{ __('Update system settings') }}</a>
+    </div>
+{% endif %}
 
-<div class="container-fluid">
-    <div class="row">
-        <h3>
-            <span class="fa fa-wrench"></span>
-            {{ __('Settings') }}
-            {{ pageSetVar('title', __('Profile settings')) }}
-        </h3>
-        {% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
-            <div class="alert alert-danger">{{ __('Sessions are configured to store in a file. This prevents some functionality within the profile module related to tracking who is online.') }}&nbsp;
-                <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
-            </div>
-        {% endif %}
-        {% if getModVar('ZConfig', 'profilemodule') != 'ZikulaProfileModule' %}
-            <div class="alert alert-danger">{{ __('The profile module is not selected as the system profile module. This is needed for full functionality.') }}&nbsp;
-                <a href="{{ path('zikulasettingsmodule_settings_main') }}">{{ __('Update system settings') }}</a>
-            </div>
-        {% endif %}
+{{ form_start(form) }}
+{{ form_errors(form) }}
 
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-
-        <fieldset>
-            <legend>{{ __('Registered users list settings') }}</legend>
-            {{ form_row(form.viewregdate) }}
-            {{ form_row(form.memberslistitemsperpage) }}
-            {{ form_row(form.onlinemembersitemsperpage) }}
-            {{ form_row(form.recentmembersitemsperpage) }}
-            {{ form_row(form.activeminutes) }}
-            {{ form_row(form.filterunverified) }}
-        </fieldset>
-        <fieldset>
-            <legend>{{ __('Avatar settings') }}</legend>
-            {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'))) }}
-            {% if pathWarning is not empty %}
-                <p class="alert alert-danger"><strong>{{ pathWarning }}</strong></p>
-            {% endif %}
-            {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'))) }}
-            {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATAR_IMAGE'))) }}
-            {{ form_row(form.allowUploads) }}
-            <div id="uploadSettings">
-                {{ form_row(form.shrinkLargeImages) }}
-                <div id="shrinkSettings">
-                    {{ form_row(form.maxSize) }}
-                    {{ form_row(form.maxWidth) }}
-                    {{ form_row(form.maxHeight) }}
-                </div>
-            </div>
-        </fieldset>
-
-        <div class="form-group row">
-            <div class="col-md-9 offset-md-3">
-                {{ form_widget(form.save) }}
-                {{ form_widget(form.cancel) }}
-            </div>
+<fieldset>
+    <legend>{{ __('Registered users list settings') }}</legend>
+    {{ form_row(form.viewregdate) }}
+    {{ form_row(form.memberslistitemsperpage) }}
+    {{ form_row(form.onlinemembersitemsperpage) }}
+    {{ form_row(form.recentmembersitemsperpage) }}
+    {{ form_row(form.activeminutes) }}
+    {{ form_row(form.filterunverified) }}
+</fieldset>
+<fieldset>
+    <legend>{{ __('Avatar settings') }}</legend>
+    {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'))) }}
+    {% if pathWarning is not empty %}
+        <p class="alert alert-danger"><strong>{{ pathWarning }}</strong></p>
+    {% endif %}
+    {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATARS_ENABLED'))) }}
+    {{ form_row(attribute(form, constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_GRAVATAR_IMAGE'))) }}
+    {{ form_row(form.allowUploads) }}
+    <div id="uploadSettings">
+        {{ form_row(form.shrinkLargeImages) }}
+        <div id="shrinkSettings">
+            {{ form_row(form.maxSize) }}
+            {{ form_row(form.maxWidth) }}
+            {{ form_row(form.maxHeight) }}
         </div>
-        {{ form_end(form) }}
+    </div>
+</fieldset>
+<div class="form-group row">
+    <div class="col-md-9 offset-md-3">
+        {{ form_widget(form.save) }}
+        {{ form_widget(form.cancel) }}
     </div>
 </div>
+{{ form_end(form) }}
 {{ adminFooter() }}
 {% set customScript %}
 <script>

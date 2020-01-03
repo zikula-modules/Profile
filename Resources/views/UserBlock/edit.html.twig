@@ -3,7 +3,6 @@
     '@ZikulaFormExtension/Form/bootstrap_4_zikula_admin_layout.html.twig',
     '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
-
 {{ form_start(form) }}
 {{ form_errors(form) }}
 <fieldset>
@@ -13,7 +12,6 @@
 
     <p>{{ __("Notice: Your personal custom block is a special block that will display in site pages when you are logged-in to the site. It is only displayed for you, and you choose what content it contains. One example of what you can do with the block is to use HTML code to include links to Web pages on this site or another site. Are there site pages that you frequently visit but that don't have links in the main menu? You can insert a link to them here, so that they are easily accessible for you. To see this block during your visits, don't forget to activate the 'Enable your personal custom block' checkbox. Afterwards, click 'Save' to save your changes.") }}</p>
 </fieldset>
-
 <div class="form-group row">
     <div class="col-md-9 offset-md-3">
         {{ form_widget(form.save) }}

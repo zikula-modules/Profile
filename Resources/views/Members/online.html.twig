@@ -8,9 +8,7 @@
     {% endif %}
     </div>
 {% else %}
-
-<div class="panel panel-default">
-    <table class="table table-striped">
+    <table class="table table-bordered table-striped">
         <colgroup>
             <col id="cUserName" />
             {% if messageModule|default %}
@@ -52,5 +50,4 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
 {% endif %}

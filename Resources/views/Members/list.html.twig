@@ -18,63 +18,60 @@
     {{ pagerabc({ route: 'zikulaprofilemodule_members_list', posvar: 'letter', forwardvars: 'sortby', printempty: true }) }}
 </div>
 
-<div class="panel panel-default">
-    <table class="table table-striped">
-        <colgroup>
-            <col id="cUserName" />
+<table class="table table-bordered table-striped">
+    <colgroup>
+        <col id="cUserName" />
+        {% if messageModule|default %}
+            <col id="cMessages" />
+        {% endif %}
+        {% if 'url' in activeProperties %}
+            <col id="cSite" />
+        {% endif %}
+        <col id="cActions" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th id="hUserName" scope="col">{{ __('Name') }}</th>
             {% if messageModule|default %}
-                <col id="cMessages" />
+                <th id="hMessages" scope="col">{{ __('Messages') }}</th>
             {% endif %}
             {% if 'url' in activeProperties %}
-                <col id="cSite" />
+                <th id="hSite" scope="col">{{ __('Site') }}</th>
             {% endif %}
-            <col id="cActions" />
-        </colgroup>
-        <thead>
-            <tr>
-                <th id="hUserName" scope="col">{{ __('Name') }}</th>
-                {% if messageModule|default %}
-                    <th id="hMessages" scope="col">{{ __('Messages') }}</th>
-                {% endif %}
-                {% if 'url' in activeProperties %}
-                    <th id="hSite" scope="col">{{ __('Site') }}</th>
-                {% endif %}
-                <th id="hActions" scope="col">{{ __('Actions') }}</th>
-            </tr>
-        </thead>
+            <th id="hActions" scope="col">{{ __('Actions') }}</th>
+        </tr>
+    </thead>
 
-        <tbody>
-            {% for user in users|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
-            <tr>
-                <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
-                    {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
-                    {% if online is same as(true) %}
-                        <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="badge badge-success">{{ __('online') }}</span></a>
-                    {% elseif online is same as(false) %}
-                        <span class="badge badge-danger">{{ __('offline') }}</span>
+    <tbody>
+        {% for user in users|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
+        <tr>
+            <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
+                {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
+                {% if online is same as(true) %}
+                    <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="badge badge-success">{{ __('online') }}</span></a>
+                {% elseif online is same as(false) %}
+                    <span class="badge badge-danger">{{ __('offline') }}</span>
+                {% endif %}
+            </td>
+            {% if messageModule|default %}
+                <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope fa-lg"></i></a></td>
+            {% endif %}
+            {% if 'url' in activeProperties %}
+                <td headers="hSite">
+                    {% set url =  user.attributes[prefix ~ ':url']|default %}
+                    {% if url and url != 'http://' %}
+                    <a href="{{ url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
                     {% endif %}
                 </td>
-                {% if messageModule|default %}
-                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope fa-lg"></i></a></td>
-                {% endif %}
-                {% if 'url' in activeProperties %}
-                    <td headers="hSite">
-                        {% set url =  user.attributes[prefix ~ ':url']|default %}
-                        {% if url and url != 'http://' %}
-                        <a href="{{ url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
-                        {% endif %}
-                    </td>
-                {% endif %}
-                {% set rowActions = knp_menu_get('zikulaProfileAdminMenu', [], {user: user}) %}
-                <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}</td>
-            </tr>
-            {% else %}
-                <tr class="table-info"><td colspan="4" class="text-center">{{ __('No users found.') }}</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
+            {% endif %}
+            {% set rowActions = knp_menu_get('zikulaProfileAdminMenu', [], {user: user}) %}
+            <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}</td>
+        </tr>
+        {% else %}
+            <tr class="table-info"><td colspan="4" class="text-center">{{ __('No users found.') }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
 {{ pager({ rowcount: pager.amountOfItems, limit: pager.itemsPerPage, posvar: 'startnum', route: 'zikulaprofilemodule_members_list' }) }}
 
 <h3>{{ __('Statistics') }}</h3>
