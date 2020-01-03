@@ -48,9 +48,7 @@
                 {% endif %}
             </tr>
             {% else %}
-                <tr class="table-warning">
-                    <td colspan="3">{{ __('No registered users are currently online.') }}</td>
-                </tr>
+                <tr class="table-info"><td colspan="3" class="text-center">{{ __('No registered users are currently online.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>

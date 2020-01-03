@@ -32,6 +32,8 @@
                 <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{{ __('Delete property')|e('html_attr') }}"><i class="fa fa-trash-alt fa-lg fa-fw"></i></a>
             </td>
         </tr>
+    {% else %}
+        <tr class="table-info"><td colspan="6" class="text-center">{{ __('No items found.') }}</td></tr>
     {% endfor %}
     </tbody>
 </table>

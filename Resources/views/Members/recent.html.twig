@@ -53,9 +53,7 @@
                 <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}</td>
             </tr>
             {% else %}
-                <tr class="warning">
-                    <td colspan="5">{{ __('No recently registered users found.') }}</td>
-                </tr>
+                <tr class="table-info"><td colspan="5" class="text-center">{{ __('No recently registered users found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>
