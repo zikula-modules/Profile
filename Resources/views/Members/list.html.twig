@@ -49,9 +49,9 @@
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                     {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
                     {% if online is same as(true) %}
-                        <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="label label-success">{{ __('online') }}</span></a>
+                        <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="badge badge-success">{{ __('online') }}</span></a>
                     {% elseif online is same as(false) %}
-                        <span class="label label-danger">{{ __('offline') }}</span>
+                        <span class="badge badge-danger">{{ __('offline') }}</span>
                     {% endif %}
                 </td>
                 {% if messageModule|default %}
