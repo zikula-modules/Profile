@@ -59,6 +59,7 @@ class FeaturedUserBlockType extends AbstractType
             ])
             ->add('showregdate', CheckboxType::class, [
                 'label' => $this->__('Show registration date'),
+                'label_attr' => ['class' => 'switch-custom'],
                 'required' => false,
             ])
         ;
