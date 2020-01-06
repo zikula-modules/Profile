@@ -17,6 +17,7 @@
         {{ form_widget(form.cancel) }}
     </div>
     <input type="hidden" id="avatarPath" value="{{ getModVar(constant('Zikula\\UsersModule\\Constant::MODNAME'), constant('Zikula\\ProfileModule\\ProfileConstant::MODVAR_AVATAR_IMAGE_PATH'), constant('Zikula\\ProfileModule\\ProfileConstant::DEFAULT_AVATAR_IMAGE_PATH')) }}" />
+    <input type="hidden" id="gravatarUrl" value="{{ gravatarUrl|e('html_attr') }}" />
 </div>
 {{ form_end(form) }}
 {{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/ZikulaProfileModule.Avatar.Edit.js')) }}

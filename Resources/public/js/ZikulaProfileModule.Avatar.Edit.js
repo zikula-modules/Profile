@@ -9,7 +9,7 @@
             avatarUrl = '';
             if ('blank.jpg' !== $(this).val()) {
                 if ('' === $(this).val() || 'gravatar.jpg' === $(this).val()) {
-                    avatarUrl = '//www.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af.jpg?d=mm&r=g&s=80&f=1';
+                    avatarUrl = $('#gravatarUrl').val();
                 } else {
                     avatarUrl = Zikula.Config.baseURL + Zikula.Config.baseURI + '/' + $('#avatarPath').val() + '/' + $(this).val();
                 }

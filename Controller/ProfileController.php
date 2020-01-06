@@ -23,6 +23,7 @@ use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\RouteUrl;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
+use Zikula\ProfileModule\Helper\GravatarHelper;
 use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
@@ -70,6 +71,7 @@ class ProfileController extends AbstractController
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $profileTypeFactory,
         UploadHelper $uploadHelper,
+        GravatarHelper $gravatarHelper,
         UserEntity $userEntity = null
     ) {
         $currentUserUid = $currentUserApi->get('uid');
@@ -118,7 +120,8 @@ class ProfileController extends AbstractController
 
         return [
             'user' => $userEntity,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'gravatarUrl' => $gravatarHelper->getGravatarUrl($userEntity->getEmail())
         ];
     }
 }

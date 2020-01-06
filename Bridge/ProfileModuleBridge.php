@@ -17,10 +17,10 @@ use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\ProfileModule\Helper\GravatarHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
 use Zikula\UsersModule\Constant as UsersConstant;
-use Zikula\UsersModule\Entity\Repository\UserRepository;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Entity\UserEntity;
 use Zikula\UsersModule\ProfileModule\ProfileModuleInterface;
@@ -48,9 +48,14 @@ class ProfileModuleBridge implements ProfileModuleInterface
     private $currentUser;
 
     /**
-     * @var UserRepository
+     * @var UserRepositoryInterface
      */
     private $userRepository;
+
+    /**
+     * @var GravatarHelper
+     */
+    private $gravatarHelper;
 
     /**
      * @var string
@@ -63,6 +68,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
         VariableApiInterface $variableApi,
         CurrentUserApiInterface $currentUser,
         UserRepositoryInterface $userRepository,
+        GravatarHelper $gravatarHelper,
         $prefix
     ) {
         $this->router = $router;
@@ -70,6 +76,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
         $this->variableApi = $variableApi;
         $this->currentUser = $currentUser;
         $this->userRepository = $userRepository;
+        $this->gravatarHelper = $gravatarHelper;
         $this->prefix = $prefix;
     }
 
@@ -114,15 +121,15 @@ class ProfileModuleBridge implements ProfileModuleInterface
         $avatar = $userAttributes[$key] ?? $gravatarImage;
 
         $avatarUrl = '';
-        if (!in_array($avatar, ['blank.gif', 'blank.jpg'])) {
+        if (!in_array($avatar, ['blank.gif', 'blank.jpg'], true)) {
             if (isset($avatar) && !empty($avatar) && $avatar !== $gravatarImage && file_exists($avatarPath . '/' . $avatar)) {
                 $request = $this->requestStack->getCurrentRequest();
                 if (null !== $request) {
                     $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
                 }
             } elseif (true === $allowGravatars) {
-                $parameters = $this->makeAvatarSquare($parameters);
-                $avatarUrl = $this->getGravatarUrl($userEntity->getEmail(), $parameters);
+                $parameters = $this->squareSize($parameters);
+                $avatarUrl = $this->gravatarHelper->getGravatarUrl($userEntity->getEmail(), $parameters);
             }
         }
 
@@ -169,7 +176,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
     /**
      * Checks and updates the avatar image size parameters.
      */
-    private function makeAvatarSquare(array $parameters = []): array
+    private function squareSize(array $parameters = []): array
     {
         if (!isset($parameters['size'])) {
             if (isset($parameters['width']) || isset($parameters['height'])) {
@@ -190,24 +197,6 @@ class ProfileModuleBridge implements ProfileModuleInterface
         $parameters['height'] = $parameters['size'];
 
         return $parameters;
-    }
-
-    /**
-     * Returns the URL to a gravatar image.
-     *
-     * @see http://en.gravatar.com/site/implement/images/php/
-     */
-    private function getGravatarUrl(string $emailAddress = '', array $parameters = []): string
-    {
-        $request = $this->requestStack->getCurrentRequest();
-        $url = null !== $request && $request->isSecure() ? 'https://secure.gravatar.com/avatar/' : 'http://www.gravatar.com/avatar/';
-        $url .= md5(mb_strtolower(trim($emailAddress))).'.jpg';
-
-        $url .= '?s=' . (isset($parameters['size']) ? (int)$parameters['size'] : 80);
-        $url .= '&amp;d=' . ($parameters['imageset'] ?? 'mm');
-        $url .= '&amp;r=' . ($parameters['rating'] ?? 'g');
-
-        return $url;
     }
 
     public function getBundleName(): string
