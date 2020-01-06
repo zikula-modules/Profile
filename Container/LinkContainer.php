@@ -21,8 +21,9 @@ use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 use Zikula\SettingsModule\SettingsConstant;
-use Zikula\UsersModule\Api\CurrentUserApi;
+use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
 use Zikula\UsersModule\Collector\MessageModuleCollector;
+use Zikula\UsersModule\Constant as UsersConstant;
 
 class LinkContainer implements LinkContainerInterface
 {
@@ -52,7 +53,7 @@ class LinkContainer implements LinkContainerInterface
     private $variableApi;
 
     /**
-     * @var CurrentUserApi
+     * @var CurrentUserApiInterface
      */
     private $currentUserApi;
 
@@ -72,7 +73,7 @@ class LinkContainer implements LinkContainerInterface
         RouterInterface $router,
         PermissionApi $permissionApi,
         VariableApi $variableApi,
-        CurrentUserApi $currentUserApi,
+        CurrentUserApiInterface $currentUserApi,
         MessageModuleCollector $messageModuleCollector,
         BlockRepositoryInterface $blockRepository
     ) {
@@ -136,7 +137,7 @@ class LinkContainer implements LinkContainerInterface
         $links = [];
 
         if ($this->currentUserApi->isLoggedIn()) {
-            if ($this->permissionApi->hasPermission('ZikulaUsersModule::', '::', ACCESS_READ)) {
+            if ($this->permissionApi->hasPermission(UsersConstant::MODNAME . '::', '::', ACCESS_READ)) {
                 $links[] = [
                     'url'  => $this->router->generate('zikulausersmodule_account_menu'),
                     'icon' => 'user-circle',

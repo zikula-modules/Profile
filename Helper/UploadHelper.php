@@ -17,6 +17,7 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\UsersModule\Constant as UsersConstant;
 
 class UploadHelper
 {
@@ -40,7 +41,7 @@ class UploadHelper
     {
         $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
-        $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'web/uploads/avatar');
+        $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
     }
 
     /**

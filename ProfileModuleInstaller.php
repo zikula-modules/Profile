@@ -26,6 +26,7 @@ use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
 use Zikula\ProfileModule\Helper\UpgradeHelper;
+use Zikula\UsersModule\Constant as UsersConstant;
 use Zikula\UsersModule\Entity\UserAttributeEntity;
 
 /**
@@ -151,9 +152,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             case '3.0.4':
             case '3.0.5': // 3.0.5 was the last version delivered with Zikula 2.*
                 $variableApi = $this->container->get(VariableApi::class);
-                $avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');
+                $avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'images/avatar');
                 if ('images/avatar' === $avatarPath) {
-                    $variableApi->set('ZikulaUsersModule', 'avatarpath', 'web/uploads/avatar');
+                    $variableApi->set(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
                 }
             case '3.0.12':
                 // future upgrades
