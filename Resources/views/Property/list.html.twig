@@ -1,5 +1,6 @@
 {{ adminHeader() }}
 {{ pageSetVar('title', __('Property list')) }}
+<h3><i class="fa fa-list"></i> {{ __('Property list') }}</h3>
 <table class="table table-bordered table-striped">
     <colgroup>
         <col id="cWeight" />
@@ -27,7 +28,7 @@
             <td headers="hLabel">{{ property.label(app.request.locale|default('en')) }}</td>
             <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>
             <td headers="hActive">{{ property.active|yesNo }}</td>
-            <td headers="hActions">
+            <td headers="hActions" class="actions">
                 <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}" title="{{ __('Edit property')|e('html_attr') }}"><i class="fa fa-pencil-alt fa-lg fa-fw"></i></a>
                 <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{{ __('Delete property')|e('html_attr') }}"><i class="fa fa-trash-alt fa-lg fa-fw"></i></a>
             </td>

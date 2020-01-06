@@ -1,10 +1,16 @@
+{{ adminHeader() }}
+{{ pageSetVar('title', __('Edit property')) }}
+<h3>
+    {% if form.vars.value.id|default %}
+        <i class="fa fa-pencil-alt"></i> {{ __('Edit property') }}
+    {% else %}
+        <i class="fa fa-plus"></i> {{ __('Create new property') }}
+    {% endif %}
+</h3>
 {% form_theme form with [
     '@ZikulaFormExtension/Form/bootstrap_4_zikula_admin_layout.html.twig',
     '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
-{{ adminHeader() }}
-
-{{ pageSetVar('title', __('Edit property')) }}
 {{ form_start(form) }}
 {{ form_row(form.id) }}
 {{ form_row(form.labels) }}
@@ -18,5 +24,4 @@
     </div>
 </div>
 {{ form_end(form) }}
-
 {{ adminFooter() }}

@@ -1,6 +1,9 @@
-{{ moduleHeader('user', __f('Last %s registered users', { '%s': getModVar('ZikulaProfileModule', 'recentmembersitemsperpage') }), true, true) }}
-
-<table class="table table-bordered table-striped">
+{{ moduleHeader('user', __('Members'), true, true) }}
+<h3>
+    <span class="fa fa-door-open"></span>
+    {{ __f('Last %s registered users', {'%s': getModVar('ZikulaProfileModule', 'recentmembersitemsperpage')}) }}
+</h3>
+<table class="table table-bordered table-striped table-sm">
     <colgroup>
         <col id="cUserName" />
         <col id="cRegistrationDate" />
@@ -49,7 +52,9 @@
                 </td>
             {% endif %}
             {% set rowActions = knp_menu_get('zikulaProfileAdminMenu', [], {user: user}) %}
-            <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}</td>
+            <td headers="hActions" class="actions">
+                {{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}
+            </td>
         </tr>
         {% else %}
             <tr class="table-info"><td colspan="5" class="text-center">{{ __('No recently registered users found.') }}</td></tr>

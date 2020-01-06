@@ -113,6 +113,9 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
         }
 
+        // detach user entity because attributes may be altered for the form (e.g. multiple choice fields)
+        $this->getDoctrine()->getManager()->detach($userEntity);
+
         return [
             'user' => $userEntity,
             'form' => $form->createView()

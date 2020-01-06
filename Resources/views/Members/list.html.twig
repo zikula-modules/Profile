@@ -1,5 +1,8 @@
-{{ moduleHeader('user', __('Registered users'), true, true) }}
-
+{{ moduleHeader('user', __('Members'), true, true) }}
+<h3>
+    <span class="fa fa-users"></span>
+    {{ __('Registered users') }}
+</h3>
 <form action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
     <div class="form-row">
         <div class="form-group col-md-8">
@@ -18,7 +21,7 @@
     {{ pagerabc({ route: 'zikulaprofilemodule_members_list', posvar: 'letter', forwardvars: 'sortby', printempty: true }) }}
 </div>
 
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped table-sm">
     <colgroup>
         <col id="cUserName" />
         {% if messageModule|default %}
@@ -65,7 +68,9 @@
                 </td>
             {% endif %}
             {% set rowActions = knp_menu_get('zikulaProfileAdminMenu', [], {user: user}) %}
-            <td headers="hActions" class="actions text-right">{{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}</td>
+            <td headers="hActions" class="actions">
+                {{ knp_menu_render(rowActions, {template: '@ZikulaMenuModule/Override/actions.html.twig'}) }}
+            </td>
         </tr>
         {% else %}
             <tr class="table-info"><td colspan="4" class="text-center">{{ __('No users found.') }}</td></tr>

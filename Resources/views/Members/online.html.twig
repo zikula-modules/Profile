@@ -1,5 +1,8 @@
-{{ moduleHeader('user', __('Users online'), true, true) }}
-
+{{ moduleHeader('user', __('Members'), true, true) }}
+<h3>
+    <span class="fa fa-user-check"></span>
+    {{ __('Users online') }}
+</h3>
 {% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
     <div class="alert alert-info">{{ __('This information is not available.') }}
     {% if hasPermission('ZikulaSecurityCenterModule::', '::', 'ACCESS_ADMIN') %}
@@ -8,7 +11,7 @@
     {% endif %}
     </div>
 {% else %}
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped table-sm">
         <colgroup>
             <col id="cUserName" />
             {% if messageModule|default %}
