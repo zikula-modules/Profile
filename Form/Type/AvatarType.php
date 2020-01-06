@@ -42,7 +42,7 @@ class AvatarType extends AbstractType
     ) {
         $this->setTranslator($translator);
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
-        $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');
+        $this->avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'web/uploads/avatar');
     }
 
     public function setTranslator(TranslatorInterface $translator): void

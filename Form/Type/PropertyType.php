@@ -81,15 +81,15 @@ class PropertyType extends AbstractType
                 'label' => $this->__('Save'),
                 'icon'  => 'fa-check',
                 'attr'  => [
-                    'class' => 'btn btn-success',
-                ],
+                    'class' => 'btn btn-success'
+                ]
             ])
             ->add('cancel', SubmitType::class, [
                 'label' => $this->__('Cancel'),
                 'icon'  => 'fa-times',
                 'attr'  => [
-                    'class' => 'btn btn-default',
-                ],
+                    'class' => 'btn btn-default'
+                ]
             ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

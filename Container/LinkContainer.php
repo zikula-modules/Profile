@@ -107,21 +107,21 @@ class LinkContainer implements LinkContainerInterface
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_property_list'),
                 'text' => $this->translator->__('Property list', 'zikulaprofilemodule'),
-                'icon' => 'list',
+                'icon' => 'list'
             ];
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADD)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_property_edit'),
                 'text' => $this->translator->__('Create new property', 'zikulaprofilemodule'),
-                'icon' => 'plus text-success',
+                'icon' => 'plus text-success'
             ];
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADMIN)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_config_config'),
                 'text' => $this->translator->__('Settings', 'zikulaprofilemodule'),
-                'icon' => 'wrench',
+                'icon' => 'wrench'
             ];
         }
 
@@ -140,7 +140,7 @@ class LinkContainer implements LinkContainerInterface
                 $links[] = [
                     'url'  => $this->router->generate('zikulausersmodule_account_menu'),
                     'icon' => 'user-circle',
-                    'text' => $this->translator->__('Account menu', 'zikulaprofilemodule'),
+                    'text' => $this->translator->__('Account menu', 'zikulaprofilemodule')
                 ];
             }
 
@@ -165,8 +165,8 @@ class LinkContainer implements LinkContainerInterface
                         [
                             'url'  => $this->router->generate('zikulazauthmodule_account_changepassword'),
                             'text' => $this->translator->__('Change password', 'zikulaprofilemodule'),
-                        ],
-                    ],
+                        ]
+                    ]
                 ];
             }
 
@@ -177,7 +177,7 @@ class LinkContainer implements LinkContainerInterface
                 $links[] = [
                     'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
                     'text' => $this->translator->__('Messages', 'zikulaprofilemodule'),
-                    'icon' => 'envelope',
+                    'icon' => 'envelope'
                 ];
             }
         }
@@ -210,7 +210,7 @@ class LinkContainer implements LinkContainerInterface
                 'url'   => $this->router->generate('zikulaprofilemodule_members_list'),
                 'text'  => $this->translator->__('Members', 'zikulaprofilemodule'),
                 'icon' => 'users',
-                'links' => $membersLinks,
+                'links' => $membersLinks
             ];
         }
 
@@ -237,14 +237,14 @@ class LinkContainer implements LinkContainerInterface
         $links[] = [
             'url'  => $this->router->generate('zikulaprofilemodule_profile_display', ['uid' => $this->currentUserApi->get('uid')]),
             'text' => $this->translator->__('Profile', 'zikulaprofilemodule'),
-            'icon' => 'user',
+            'icon' => 'user'
         ];
 
         if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:', '::', ACCESS_READ)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_members_list'),
                 'text' => $this->translator->__('Registered users', 'zikulaprofilemodule'),
-                'icon' => 'user-friends',
+                'icon' => 'user-friends'
             ];
         }
 
@@ -254,7 +254,7 @@ class LinkContainer implements LinkContainerInterface
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_userblock_edit'),
                 'text'  => $this->translator->__('Personal custom block', 'zikulaprofilemodule'),
-                'icon'  => 'cube',
+                'icon'  => 'cube'
             ];
         }
 
