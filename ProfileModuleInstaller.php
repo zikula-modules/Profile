@@ -20,10 +20,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Core\AbstractExtensionInstaller;
+use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;
 use Zikula\ProfileModule\Helper\UpgradeHelper;
+use Zikula\UsersModule\Entity\UserAttributeEntity;
 
 /**
  * Profile module installer.
@@ -70,7 +73,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $this->setVars($this->getDefaultModVars());
 
         // create the default data for the module
-        $requestStack = $this->container->get('request_stack');
+        $requestStack = $this->container->get(RequestStack::class);
         $request = null !== $requestStack ? $requestStack->getMasterRequest() : null;
         // fall back to English for CLI installations (#105)
         $locale = null !== $request ? $requestStack->getLocale() : 'en';
@@ -103,7 +106,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->schemaTool->create($this->entities);
                 $propertyToIdMap = [];
 
-                $requestStack = $this->container->get('request_stack');
+                $requestStack = $this->container->get(RequestStack::class);
                 $request = null !== $requestStack ? $requestStack->getMasterRequest() : null;
                 // fall back to English for CLI installations (#105)
                 $locale = null !== $request ? $requestStack->getLocale() : 'en';
@@ -117,7 +120,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 }
                 // upgrade user attribute data to match new ids
                 $prefix = $this->container->getParameter('zikula_profile_module.property_prefix');
-                $attributes = $this->entityManager->getRepository('ZikulaUsersModule:UserAttributeEntity')->findAll();
+                $attributes = $this->entityManager->getRepository(UserAttributeEntity::class)->findAll();
                 $i = 0;
                 foreach ($attributes as $attribute) {
                     if (array_key_exists($attribute->getName(), $propertyToIdMap)) {
@@ -142,18 +145,17 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->setVar('maxWidth', 80);
                 $this->setVar('maxHeight', 80);
             case '3.0.0':
-                // nothing
             case '3.0.1':
-                // nothing
             case '3.0.2':
-                // nothing
             case '3.0.3':
-                // nothing
             case '3.0.4':
-                // nothing
-            case '3.0.5':
-                // nothing
-            case '3.0.6':
+            case '3.0.5': // 3.0.5 was the last version delivered with Zikula 2.*
+                $variableApi = $this->container->get(VariableApi::class);
+                $avatarPath = $variableApi->get('ZikulaUsersModule', 'avatarpath', 'images/avatar');
+                if ('images/avatar' === $avatarPath) {
+                    $variableApi->set('ZikulaUsersModule', 'avatarpath', 'web/uploads/avatar');
+                }
+            case '3.0.12':
                 // future upgrades
         }
 
