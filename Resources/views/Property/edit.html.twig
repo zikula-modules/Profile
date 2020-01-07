@@ -2,9 +2,9 @@
 {{ pageSetVar('title', __('Edit property')) }}
 <h3>
     {% if form.vars.value.id|default %}
-        <i class="fa fa-pencil-alt"></i> {{ __('Edit property') }}
+        <i class="fa fa-pencil-alt"></i> {% trans %}Edit property{% endtrans %}
     {% else %}
-        <i class="fa fa-plus"></i> {{ __('Create new property') }}
+        <i class="fa fa-plus"></i> {% trans %}Create new property{% endtrans %}
     {% endif %}
 </h3>
 {% form_theme form with [

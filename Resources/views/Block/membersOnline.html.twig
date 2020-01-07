@@ -1,8 +1,8 @@
 {% if sessionsToFile %}
-    <div class="alert alert-info">{{ __('This information is not available.') }}
+    <div class="alert alert-info">{% trans %}This information is not available.{% endtrans %}
         {% if hasPermission('ZikulaSecurityCenterModule::', '::', 'ACCESS_ADMIN') %}
-            <br />{{ __('Admin Message: Sessions are configured to store in a file.') }}&nbsp;
-            <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
+            <br />{% trans %}Admin Message: Sessions are configured to store in a file.{% endtrans %}&nbsp;
+            <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{% trans %}Reconfigure session storage{% endtrans %}</a>
         {% endif %}
     </div>
 {% else %}
@@ -13,10 +13,10 @@
             {{ session.uid|profileLinkByUserId('', '', maxLength) }}
             {% if messageModule is not empty %}
                 {% if session.uid == currentUser.uid %}
-                    {% set title = messageCount(session.uid, true) ~ __('unread') ~ "|" ~ messageCount(session.uid) ~ __('total') %}
+                    {% set title = messageCount(session.uid, true) ~ 'unread'|trans ~ "|" ~ messageCount(session.uid) ~ 'total'|trans %}
                     ({{ messageInboxLink(session.uid, false, title) }})
                 {% else %}
-                    <a href="{{ session.uid|messageSendLink(true) }}" title="{{ __('Send private message') }}"><i class="fa fa-envelope"></i></a>
+                    <a href="{{ session.uid|messageSendLink(true) }}" title="{% trans %}Send private message{% endtrans %}"><i class="fa fa-envelope"></i></a>
                 {% endif %}
             {% endif %}
         </li>
@@ -25,15 +25,15 @@
     {% endif %}
     <p class="text-info">
         {% if amountOfOnlineGuests == 0 %}
-            {% set amountOfMembers = _fn('%s registered user', '%s registered users', sessions|length, { '%s': sessions|length }) %}
-            {{ __f('%s on-line.', { '%s': amountOfMembers }) }}
+            {% set amountOfMembers = '%s registered user'|trans({ '%s': sessions|length, '%count%': sessions|length }) %}
+            {% trans with { '%s': amountOfMembers } %}%s on-line.{% endtrans %}
         {% elseif sessions|length == 0 %}
-            {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
-            {{ __f('%s on-line.', { '%s': amountOfGuests }) }}
+            {% set amountOfGuests = '%s anonymous guest'|trans({ '%s': amountOfOnlineGuests, '%count%': amountOfOnlineGuests }) %}
+            {% trans with { '%s': amountOfGuests } %}%s on-line.{% endtrans %}
         {% else %}
-            {% set amountOfMembers = _fn('%s registered user', '%s registered users', sessions|length, { '%s': sessions|length }) %}
-            {% set amountOfGuests = _fn('%s anonymous guest', '%s anonymous guests', amountOfOnlineGuests, { '%s': amountOfOnlineGuests }) %}
-            {{ __f('%1$s and %2$s on-line.', { '%1$s': amountOfMembers, '%2$s': amountOfGuests }) }}
+            {% set amountOfMembers = '%s registered user'|trans({ '%s': sessions|length, '%count%': sessions|length }) %}
+            {% set amountOfGuests = '%s anonymous guest'|trans({ '%s': amountOfOnlineGuests, '%count%': amountOfOnlineGuests }) %}
+            {% trans with { '%1$s': amountOfMembers, '%2$s': amountOfGuests } %}%1$s and %2$s on-line.{% endtrans %}
         {% endif %}
     </p>
 {% endif %}

@@ -1,5 +1,5 @@
 <fieldset>
-    <legend>{{ __('Profile') }}</legend>
+    <legend>{% trans %}Profile{% endtrans %}</legend>
     {% for element in form.zikulaprofilemodule_editprofile %}
         {{ form_row(element) }}
     {% endfor %}

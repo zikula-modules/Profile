@@ -6,7 +6,7 @@
     '@ZikulaFormExtension/Form/form_div_layout.html.twig'
 ] %}
 {{ form_start(form) }}
-<p class="alert alert-danger">{{ __f('Are you sure you want to delete the property with ID: %id', {'%id': id}) }}</p>
+<p class="alert alert-danger">{% trans with {'%id': id} %}Are you sure you want to delete the property with ID: %id{% endtrans %}</p>
 <div class="form-group row">
     <div class="col-md-9 offset-md-3">
         {{ form_widget(form.delete) }}

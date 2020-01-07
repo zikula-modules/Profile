@@ -1,19 +1,19 @@
-{{ moduleHeader('user', __('Members'), true, true) }}
+{{ moduleHeader('user', 'Members'|trans, true, true) }}
 <h3>
     <span class="fa fa-users"></span>
-    {{ __('Registered users') }}
+    {% trans %}Registered users{% endtrans %}
 </h3>
 <form action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label for="searchby" class="col-sm-6 col-form-label">{{ __('Search by Uname') }}</label>
+            <label for="searchby" class="col-sm-6 col-form-label">{% trans %}Search by Uname{% endtrans %}</label>
             <div class="col-sm-6">
                 <input id="searchby" type="text" name="searchby" value="" maxlength="50" class="form-control" /></span>
             </div>
         </div>
         <div class="col-md-4">
-            <input class="btn btn-success" type="submit" value="{{ __('Submit') }}" />
-            <a href="{{ path('zikulaprofilemodule_members_list') }}" class="btn btn-default">{{ __('Clear') }}</a>
+            <input class="btn btn-success" type="submit" value="{% trans %}Submit{% endtrans %}" />
+            <a href="{{ path('zikulaprofilemodule_members_list') }}" class="btn btn-default">{% trans %}Clear{% endtrans %}</a>
         </div>
     </div>
 </form>
@@ -34,14 +34,14 @@
     </colgroup>
     <thead>
         <tr>
-            <th id="hUserName" scope="col">{{ __('Name') }}</th>
+            <th id="hUserName" scope="col">{% trans %}Name{% endtrans %}</th>
             {% if messageModule|default %}
-                <th id="hMessages" scope="col">{{ __('Messages') }}</th>
+                <th id="hMessages" scope="col">{% trans %}Messages{% endtrans %}</th>
             {% endif %}
             {% if 'url' in activeProperties %}
-                <th id="hSite" scope="col">{{ __('Site') }}</th>
+                <th id="hSite" scope="col">{% trans %}Site{% endtrans %}</th>
             {% endif %}
-            <th id="hActions" scope="col">{{ __('Actions') }}</th>
+            <th id="hActions" scope="col">{% trans %}Actions{% endtrans %}</th>
         </tr>
     </thead>
 
@@ -51,9 +51,9 @@
             <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                 {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
                 {% if online is same as(true) %}
-                    <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}"><span class="badge badge-success">{{ __('online') }}</span></a>
+                    <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{% trans %}View users online{% endtrans %}"><span class="badge badge-success">{% trans %}online{% endtrans %}</span></a>
                 {% elseif online is same as(false) %}
-                    <span class="badge badge-danger">{{ __('offline') }}</span>
+                    <span class="badge badge-danger">{% trans %}offline{% endtrans %}</span>
                 {% endif %}
             </td>
             {% if messageModule|default %}
@@ -73,15 +73,15 @@
             </td>
         </tr>
         {% else %}
-            <tr class="table-info"><td colspan="4" class="text-center">{{ __('No users found.') }}</td></tr>
+            <tr class="table-info"><td colspan="4" class="text-center">{% trans %}No users found.{% endtrans %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
 {{ pager({ rowcount: pager.amountOfItems, limit: pager.itemsPerPage, posvar: 'startnum', route: 'zikulaprofilemodule_members_list' }) }}
 
-<h3>{{ __('Statistics') }}</h3>
+<h3>{% trans %}Statistics{% endtrans %}</h3>
 <ul id="profile_status">
-    <li><strong>{{ __('Registered:') }}</strong> {{ amountOfRegisteredMembers }}</li>
-    <li><strong>{{ __('Online:') }}</strong> <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{{ __('View users online') }}">{{ amountOfOnlineMembers }}</a></li>
-    <li><strong>{{ __('Newest user:') }}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uid: newestMember.uid }) }}" title="{{ __f('View profile of %uname%', { '%uname%': newestMember.uname }) }}">{{ newestMember.uname }}</a></li>
+    <li><strong>{% trans %}Registered:{% endtrans %}</strong> {{ amountOfRegisteredMembers }}</li>
+    <li><strong>{% trans %}Online:{% endtrans %}</strong> <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{% trans %}View users online{% endtrans %}">{{ amountOfOnlineMembers }}</a></li>
+    <li><strong>{% trans %}Newest user:{% endtrans %}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uid: newestMember.uid }) }}" title="{% trans with { '%uname%': newestMember.uname } %}View profile of %uname%{% endtrans %}">{{ newestMember.uname }}</a></li>
 </ul>

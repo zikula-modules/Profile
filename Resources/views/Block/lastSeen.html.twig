@@ -1,8 +1,8 @@
 {% if sessionsToFile %}
-    <div class="alert alert-info">{{ __('This information is not available.') }}
+    <div class="alert alert-info">{% trans %}This information is not available.{% endtrans %}
         {% if hasPermission('ZikulaSecurityCenterModule::', '::', 'ACCESS_ADMIN') %}
-            <br />{{ __('Admin Message: Sessions are configured to store in a file.') }}&nbsp;
-            <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{{ __('Reconfigure session storage') }}</a>
+            <br />{% trans %}Admin Message: Sessions are configured to store in a file.{% endtrans %}&nbsp;
+            <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{% trans %}Reconfigure session storage{% endtrans %}</a>
         {% endif %}
     </div>
 {% else %}
