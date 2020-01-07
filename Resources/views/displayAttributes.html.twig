@@ -1,7 +1,7 @@
 {% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
     <div class="row">
         <div class="col-md-3 text-right">
-            <strong>{{ __('Registration date') }}</strong>
+            <strong>{% trans %}Registration date{% endtrans %}</strong>
         </div>
         <div class="col-md-9">
             <span>{{ user.user_regdate|format_date('medium')|default('&nbsp;') }}</span>
@@ -17,7 +17,7 @@
             <div class="col-md-9">
                 {% set formType = property.formType|split('\\')|last %}
                 {% if 'UrlType' == formType and ('http://' in attribute.value or 'https://' in attribute.value) %}
-                    <span><a href="{{ attribute.value|e('html_attr') }}" title="{{ __('Visit this page')|e('html_attr') }}">{{ attribute.value }}</a></span>
+                    <span><a href="{{ attribute.value|e('html_attr') }}" title="{% trans %}Visit this page'{% endtrans %}|e('html_attr')">{{ attribute.value }}</a></span>
                 {% elseif 'CountryType' == formType %}
                     <span>{{ attribute.value|country_name }}</span>
                 {% elseif 'CurrencyType' == formType %}

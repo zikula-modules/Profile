@@ -1,7 +1,7 @@
-{{ moduleHeader('user', __('Edit profile'), true, true) }}
+{{ moduleHeader('user', 'Edit profile'|trans, true, true) }}
 <h3>
     <span class="fa fa-pencil-alt"></span>
-    {{ __('Edit profile') }}
+    {% trans %}Edit profile{% endtrans %}
 </h3>
 {% form_theme form with [
     '@ZikulaFormExtension/Form/bootstrap_4_zikula_admin_layout.html.twig',
