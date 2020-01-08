@@ -79,14 +79,14 @@ class ProfileTypeFactory
 
         if ($includeButtons) {
             $formBuilder->add('save', SubmitType::class, [
-                'label' => $this->translator->__('Save'),
+                'label' => $this->translator->trans('Save'),
                 'icon' => 'fa-check',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]
             ]);
             $formBuilder->add('cancel', SubmitType::class, [
-                'label' => $this->translator->__('Cancel'),
+                'label' => $this->translator->trans('Cancel'),
                 'icon' => 'fa-times',
                 'attr' => [
                     'class' => 'btn btn-default'

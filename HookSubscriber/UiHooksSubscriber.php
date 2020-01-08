@@ -41,7 +41,7 @@ class UiHooksSubscriber implements HookSubscriberInterface
 
     public function getTitle(): string
     {
-        return $this->translator->__('Profile Display');
+        return $this->translator->trans('Profile Display');
     }
 
     public function getAreaName(): string

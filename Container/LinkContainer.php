@@ -108,21 +108,21 @@ class LinkContainer implements LinkContainerInterface
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_property_list'),
-                'text' => $this->translator->__('Property list', 'zikulaprofilemodule'),
+                'text' => $this->translator->trans('Property list', [], 'zikulaprofilemodule'),
                 'icon' => 'list'
             ];
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADD)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_property_edit'),
-                'text' => $this->translator->__('Create new property', 'zikulaprofilemodule'),
+                'text' => $this->translator->trans('Create new property', [], 'zikulaprofilemodule'),
                 'icon' => 'plus text-success'
             ];
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADMIN)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_config_config'),
-                'text' => $this->translator->__('Settings', 'zikulaprofilemodule'),
+                'text' => $this->translator->trans('Settings', [], 'zikulaprofilemodule'),
                 'icon' => 'wrench'
             ];
         }
@@ -142,7 +142,7 @@ class LinkContainer implements LinkContainerInterface
                 $links[] = [
                     'url'  => $this->router->generate('zikulausersmodule_account_menu'),
                     'icon' => 'user-circle',
-                    'text' => $this->translator->__('Account menu', 'zikulaprofilemodule')
+                    'text' => $this->translator->trans('Account menu', [], 'zikulaprofilemodule')
                 ];
             }
 
@@ -150,11 +150,11 @@ class LinkContainer implements LinkContainerInterface
                 $subLinks = [
                     [
                         'url'  => $this->router->generate('zikulaprofilemodule_profile_display'),
-                        'text' => $this->translator->__('Display profile', 'zikulaprofilemodule'),
+                        'text' => $this->translator->trans('Display profile', [], 'zikulaprofilemodule'),
                     ],
                     [
                         'url'  => $this->router->generate('zikulaprofilemodule_profile_edit'),
-                        'text' => $this->translator->__('Edit profile', 'zikulaprofilemodule'),
+                        'text' => $this->translator->trans('Edit profile', [], 'zikulaprofilemodule'),
                     ]
                 ];
                 $attributes = $this->currentUserApi->get('attributes');
@@ -170,16 +170,16 @@ class LinkContainer implements LinkContainerInterface
                 if (in_array($authMethod, $zauthMethods)) {
                     $subLinks[] = [
                         'url'  => $this->router->generate('zikulazauthmodule_account_changeemail'),
-                        'text' => $this->translator->__('Change email address', 'zikulaprofilemodule'),
+                        'text' => $this->translator->trans('Change email address', [], 'zikulaprofilemodule'),
                     ];
                     $subLinks[] = [
                         'url'  => $this->router->generate('zikulazauthmodule_account_changepassword'),
-                        'text' => $this->translator->__('Change password', 'zikulaprofilemodule'),
+                        'text' => $this->translator->trans('Change password', [], 'zikulaprofilemodule'),
                     ];
                 }
                 $links[] = [
                     'url'   => $this->router->generate('zikulaprofilemodule_profile_display'),
-                    'text'  => $this->translator->__('Profile', 'zikulaprofilemodule'),
+                    'text'  => $this->translator->trans('Profile', [], 'zikulaprofilemodule'),
                     'icon'  => 'user',
                     'links' => $subLinks
                 ];
@@ -191,7 +191,7 @@ class LinkContainer implements LinkContainerInterface
             ) {
                 $links[] = [
                     'url'  => $this->messageModuleCollector->getSelected()->getInboxUrl(),
-                    'text' => $this->translator->__('Messages', 'zikulaprofilemodule'),
+                    'text' => $this->translator->trans('Messages', [], 'zikulaprofilemodule'),
                     'icon' => 'envelope'
                 ];
             }
@@ -203,27 +203,27 @@ class LinkContainer implements LinkContainerInterface
             if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
                 $subLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_list'),
-                    'text' => $this->translator->__('Registered users', 'zikulaprofilemodule'),
+                    'text' => $this->translator->trans('Registered users', [], 'zikulaprofilemodule'),
                     'icon' => 'user-friends'
                 ];
             }
             if ($this->permissionApi->hasPermission($component . 'recent', '::', ACCESS_READ)) {
                 $subLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_recent'),
-                    'text' => $this->translator->__f('Last %s registered users', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)], 'zikulaprofilemodule'),
+                    'text' => $this->translator->trans('Last %s registered users', ['%s' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)], 'zikulaprofilemodule'),
                     'icon' => 'door-open'
                 ];
             }
             if ($this->permissionApi->hasPermission($component . 'online', '::', ACCESS_READ)) {
                 $subLinks[] = [
                     'url'  => $this->router->generate('zikulaprofilemodule_members_online'),
-                    'text' => $this->translator->__('Users online', 'zikulaprofilemodule'),
+                    'text' => $this->translator->trans('Users online', [], 'zikulaprofilemodule'),
                     'icon' => 'user-check'
                 ];
             }
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_members_list'),
-                'text'  => $this->translator->__('Members', 'zikulaprofilemodule'),
+                'text'  => $this->translator->trans('Members', [], 'zikulaprofilemodule'),
                 'icon' => 'users',
                 'links' => $subLinks
             ];
@@ -251,14 +251,14 @@ class LinkContainer implements LinkContainerInterface
 
         $links[] = [
             'url'  => $this->router->generate('zikulaprofilemodule_profile_display', ['uid' => $this->currentUserApi->get('uid')]),
-            'text' => $this->translator->__('Profile', 'zikulaprofilemodule'),
+            'text' => $this->translator->trans('Profile', [], 'zikulaprofilemodule'),
             'icon' => 'user'
         ];
 
         if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:', '::', ACCESS_READ)) {
             $links[] = [
                 'url'  => $this->router->generate('zikulaprofilemodule_members_list'),
-                'text' => $this->translator->__('Registered users', 'zikulaprofilemodule'),
+                'text' => $this->translator->trans('Registered users', [], 'zikulaprofilemodule'),
                 'icon' => 'user-friends'
             ];
         }
@@ -268,7 +268,7 @@ class LinkContainer implements LinkContainerInterface
         if (isset($block)) {
             $links[] = [
                 'url'   => $this->router->generate('zikulaprofilemodule_userblock_edit'),
-                'text'  => $this->translator->__('Personal custom block', 'zikulaprofilemodule'),
+                'text'  => $this->translator->trans('Personal custom block', [], 'zikulaprofilemodule'),
                 'icon'  => 'cube'
             ];
         }
