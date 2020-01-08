@@ -39,12 +39,12 @@ class UsersBlockType extends AbstractType
     {
         $builder
             ->add('ublockon', CheckboxType::class, [
-                'label'    => $this->__('Enable your personal custom block'),
+                'label'    => $this->trans('Enable your personal custom block'),
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false,
             ])
             ->add('ublock', TextareaType::class, [
-                'label'    => $this->__('Content of your custom block'),
+                'label'    => $this->trans('Content of your custom block'),
                 'required' => false,
                 'attr'     => [
                     'cols' => 80,
@@ -52,14 +52,14 @@ class UsersBlockType extends AbstractType
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->__('Save'),
+                'label' => $this->trans('Save'),
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success',
                 ],
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $this->__('Cancel'),
+                'label' => $this->trans('Cancel'),
                 'icon'  => 'fa-times',
                 'attr'  => [
                     'class'          => 'btn btn-default',

@@ -88,7 +88,7 @@ class UpgradeHelper
         $newProperty->setId($property['attributename']);
         $newProperty->setWeight($property['weight']);
         $newProperty->setActive($property['weight'] > 0);
-        $newProperty->setLabels([$locale => $this->__(/** @Ignore */$property['label'])]);
+        $newProperty->setLabels([$locale => $this->trans(/** @Ignore */$property['label'])]);
         $this->setFormType($newProperty, $property);
         $this->setFormOptions($newProperty, $property);
 
@@ -135,7 +135,7 @@ class UpgradeHelper
         // this does not migrate 'viewby' which should be handled in permissions by property id
         switch ($newProperty->getFormType()) {
             case AvatarType::class:
-                $options['label'] = $this->__('Avatar');
+                $options['label'] = $this->trans('Avatar');
                 break;
             case ChoiceType::class:
                 $listOptions = explode('@@', $property['validation']['listoptions'], 2);
@@ -162,7 +162,7 @@ class UpgradeHelper
         foreach ($list as $id => $listItem) {
             $itemParts = explode('@', $listItem);
             $value = $itemParts[1] ?? $id;
-            $display = !empty($itemParts[0]) ? $this->__(/** @Ignore */$itemParts[0]) : $id;
+            $display = !empty($itemParts[0]) ? $this->trans(/** @Ignore */$itemParts[0]) : $id;
             $choices[$display] = $value;
         }
 

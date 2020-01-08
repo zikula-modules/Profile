@@ -86,9 +86,9 @@ class AvatarType extends AbstractType
             $defaults['data_class'] = null; // allow string values instead of File objects
 
             $defaults['help'] = [
-                $this->__('Possible extensions') . ': ' . implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
-                $this->__('Max. file size') . ': ' . $this->modVars['maxSize'] . ' ' . $this->__('bytes'),
-                $this->__('Max. dimensions') . ': ' . $this->modVars['maxWidth'] . 'x' . $this->modVars['maxHeight'] . ' ' . $this->__('pixels')
+                $this->trans('Possible extensions') . ': ' . implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
+                $this->trans('Max. file size') . ': ' . $this->modVars['maxSize'] . ' ' . $this->trans('bytes'),
+                $this->trans('Max. dimensions') . ': ' . $this->modVars['maxWidth'] . 'x' . $this->modVars['maxHeight'] . ' ' . $this->trans('pixels')
             ];
         }
 

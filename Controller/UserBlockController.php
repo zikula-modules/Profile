@@ -70,10 +70,10 @@ class UserBlockController extends AbstractController
                 $userEntity->setAttribute('ublock', $formData['ublock']);
                 $this->getDoctrine()->getManager()->flush();
 
-                $this->addFlash('status', $this->__('Done! Saved custom block.'));
+                $this->addFlash('status', $this->trans('Done! Saved custom block.'));
             }
             if ($form->get('cancel')->isClicked()) {
-                $this->addFlash('status', $this->__('Operation cancelled.'));
+                $this->addFlash('status', $this->trans('Operation cancelled.'));
             }
 
             return $this->redirectToRoute('zikulausersmodule_account_menu');

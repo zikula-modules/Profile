@@ -68,10 +68,10 @@ class ConfigController extends AbstractController
                 }
 
                 $this->setVars($formData);
-                $this->addFlash('status', $this->__('Done! Module configuration updated.'));
+                $this->addFlash('status', $this->trans('Done! Module configuration updated.'));
             }
             if ($form->get('cancel')->isClicked()) {
-                $this->addFlash('status', $this->__('Operation cancelled.'));
+                $this->addFlash('status', $this->trans('Operation cancelled.'));
             }
         }
 
@@ -79,9 +79,9 @@ class ConfigController extends AbstractController
         if (true === $modVars['allowUploads']) {
             $path = $modVars[ProfileConstant::MODVAR_AVATAR_IMAGE_PATH];
             if (!(file_exists($path) && is_readable($path))) {
-                $pathWarning = $this->__('Warning! The avatar directory does not exist or is not readable for the webserver.');
+                $pathWarning = $this->trans('Warning! The avatar directory does not exist or is not readable for the webserver.');
             } elseif (!is_writable($path)) {
-                $pathWarning = $this->__('Warning! The webserver cannot write to the avatar directory.');
+                $pathWarning = $this->trans('Warning! The webserver cannot write to the avatar directory.');
             }
         }
 

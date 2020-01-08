@@ -89,7 +89,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         // Only support upgrade from version 1.6 and up. Notify users if they have a version below that one.
         if (version_compare($oldVersion, '2.0', '<')) {
             // Inform user about error, and how he can upgrade to this version
-            $this->addFlash('error', $this->__('Notice: This version does not support upgrades from versions less than 2.0. Please upgrade before upgrading again to this version.'));
+            $this->addFlash('error', $this->trans('Notice: This version does not support upgrades from versions less than 2.0. Please upgrade before upgrading again to this version.'));
 
             return false;
         }
@@ -186,63 +186,63 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $prop = new PropertyEntity();
         $prop->setId(ProfileConstant::ATTRIBUTE_NAME_DISPLAY_NAME);
         $prop->setFormType(TextType::class);
-        $prop->setLabels([$locale => $this->__('Real Name')]);
+        $prop->setLabels([$locale => $this->trans('Real Name')]);
         $prop->setWeight(1);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('publicemail');
         $prop->setFormType(EmailType::class);
-        $prop->setLabels([$locale => $this->__('Public Email')]);
+        $prop->setLabels([$locale => $this->trans('Public Email')]);
         $prop->setWeight(2);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('url');
         $prop->setFormType(UrlType::class);
-        $prop->setLabels([$locale => $this->__('Homepage')]);
+        $prop->setLabels([$locale => $this->trans('Homepage')]);
         $prop->setWeight(3);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('timezone');
         $prop->setFormType(TimezoneType::class);
-        $prop->setLabels([$locale => $this->__('Timezone')]);
+        $prop->setLabels([$locale => $this->trans('Timezone')]);
         $prop->setWeight(4);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('avatar');
         $prop->setFormType(AvatarType::class);
-        $prop->setLabels([$locale => $this->__('Avatar')]);
+        $prop->setLabels([$locale => $this->trans('Avatar')]);
         $prop->setWeight(5);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('city');
         $prop->setFormType(TextType::class);
-        $prop->setLabels([$locale => $this->__('Location')]);
+        $prop->setLabels([$locale => $this->trans('Location')]);
         $prop->setWeight(6);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('occupation');
         $prop->setFormType(TextType::class);
-        $prop->setLabels([$locale => $this->__('Occupation')]);
+        $prop->setLabels([$locale => $this->trans('Occupation')]);
         $prop->setWeight(7);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('signature');
         $prop->setFormType(TextType::class);
-        $prop->setLabels([$locale => $this->__('Signature')]);
+        $prop->setLabels([$locale => $this->trans('Signature')]);
         $prop->setWeight(8);
         $this->entityManager->persist($prop);
 
         $prop = new PropertyEntity();
         $prop->setId('extrainfo');
         $prop->setFormType(TextareaType::class);
-        $prop->setLabels([$locale => $this->__('Extra info')]);
+        $prop->setLabels([$locale => $this->trans('Extra info')]);
         $prop->setWeight(9);
         $this->entityManager->persist($prop);
 

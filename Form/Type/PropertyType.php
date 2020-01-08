@@ -56,12 +56,12 @@ class PropertyType extends AbstractType
     {
         $builder
             ->add('id', TextType::class, [
-                'label' => $this->__('Id'),
-                'help' => $this->__('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
-                'alert' => [$this->__('Once used, do not change the ID value or all profiles will lose their connection!') => 'warning']
+                'label' => $this->trans('Id'),
+                'help' => $this->trans('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
+                'alert' => [$this->trans('Once used, do not change the ID value or all profiles will lose their connection!') => 'warning']
             ])
             ->add('labels', CollectionType::class, [
-                'label' => $this->__('Translated labels'),
+                'label' => $this->trans('Translated labels'),
                 'entry_type' => TranslationType::class
             ])
             ->add('fieldInfo', DynamicFieldType::class, [
@@ -69,23 +69,23 @@ class PropertyType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->__('Active'),
+                'label' => $this->trans('Active'),
                 'label_attr' => ['class' => 'switch-custom']
             ])
             ->add('weight', IntegerType::class, [
-                'label' => $this->__('Weight'),
+                'label' => $this->trans('Weight'),
                 'constraints' => [new GreaterThan(0)],
                 'empty_data' => 100
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->__('Save'),
+                'label' => $this->trans('Save'),
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success'
                 ]
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $this->__('Cancel'),
+                'label' => $this->trans('Cancel'),
                 'icon'  => 'fa-times',
                 'attr'  => [
                     'class' => 'btn btn-default'

@@ -69,10 +69,10 @@ class PropertyController extends AbstractController
                 $propertyEntity = $form->getData();
                 $this->getDoctrine()->getManager()->persist($propertyEntity);
                 $this->getDoctrine()->getManager()->flush();
-                $this->addFlash('success', $this->__('Property saved.'));
+                $this->addFlash('success', $this->trans('Property saved.'));
             }
             if ($form->get('cancel')->isClicked()) {
-                $this->addFlash('info', $this->__('Operation cancelled.'));
+                $this->addFlash('info', $this->trans('Operation cancelled.'));
             }
 
             return $this->redirectToRoute('zikulaprofilemodule_property_list');
@@ -102,10 +102,10 @@ class PropertyController extends AbstractController
                 $propertyEntity = $form->getData();
                 $this->getDoctrine()->getManager()->remove($propertyEntity);
                 $this->getDoctrine()->getManager()->flush();
-                $this->addFlash('success', $this->__('Property removed.'));
+                $this->addFlash('success', $this->trans('Property removed.'));
             }
             if ($form->get('cancel')->isClicked()) {
-                $this->addFlash('info', $this->__('Operation cancelled.'));
+                $this->addFlash('info', $this->trans('Operation cancelled.'));
             }
 
             return $this->redirectToRoute('zikulaprofilemodule_property_list');

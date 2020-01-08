@@ -41,13 +41,13 @@ class FeaturedUserBlockType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => $this->__('User name'),
+                'label' => $this->trans('User name'),
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('fieldstoshow', ChoiceType::class, [
-                'label' => $this->__('Information to show'),
+                'label' => $this->trans('Information to show'),
                 'label_attr' => [
                     'class' => 'checkbox-inline',
                 ],
@@ -58,7 +58,7 @@ class FeaturedUserBlockType extends AbstractType
                 'choice_value' => 'id'
             ])
             ->add('showregdate', CheckboxType::class, [
-                'label' => $this->__('Show registration date'),
+                'label' => $this->trans('Show registration date'),
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false,
             ])
