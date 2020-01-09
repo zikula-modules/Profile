@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Zikula\ProfileModule\Container;
 
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\BlocksModule\Entity\RepositoryInterface\BlockRepositoryInterface;
 use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\Core\LinkContainer\LinkContainerInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\PermissionsModule\Api\ApiInterface\PermissionApiInterface;
