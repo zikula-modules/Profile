@@ -25,7 +25,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\DynamicFieldType;
-use Zikula\Common\Translator\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\SettingsModule\Api\ApiInterface\LocaleApiInterface;
@@ -45,11 +45,6 @@ class PropertyType extends AbstractType
     ) {
         $this->setTranslator($translator);
         $this->localeApi = $localeApi;
-    }
-
-    public function setTranslator(TranslatorInterface $translator): void
-    {
-        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

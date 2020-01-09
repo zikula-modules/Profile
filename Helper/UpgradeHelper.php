@@ -26,7 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Validator\Constraints\Regex;
-use Zikula\Common\Translator\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
@@ -64,11 +64,6 @@ class UpgradeHelper
         $this->setTranslator($translator);
         $this->systemTimezone = $variableApi->getSystemVar('timezone');
         $this->createOffsetMap();
-    }
-
-    public function setTranslator($translator): void
-    {
-        $this->translator = $translator;
     }
 
     public function getModifiedAttributeValue(UserAttributeEntity $attribute, string $prefix): string

@@ -18,7 +18,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zikula\Common\Translator\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\UsersModule\Constant as UsersConstant;
@@ -44,11 +44,6 @@ class AvatarType extends AbstractType
         $this->setTranslator($translator);
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
         $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
-    }
-
-    public function setTranslator(TranslatorInterface $translator): void
-    {
-        $this->translator = $translator;
     }
 
     public function configureOptions(OptionsResolver $resolver)

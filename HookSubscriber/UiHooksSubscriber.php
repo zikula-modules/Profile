@@ -15,7 +15,7 @@ namespace Zikula\ProfileModule\HookSubscriber;
 
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\HookSubscriberInterface;
-use Zikula\Common\Translator\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UiHooksSubscriber implements HookSubscriberInterface
 {
