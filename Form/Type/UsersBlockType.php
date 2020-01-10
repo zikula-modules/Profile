@@ -21,13 +21,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class UsersBlockType extends AbstractType
 {
-    use TranslatorTrait;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->setTranslator($translator);
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
