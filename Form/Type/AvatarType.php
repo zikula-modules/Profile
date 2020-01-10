@@ -18,15 +18,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\UsersModule\Constant as UsersConstant;
 
 class AvatarType extends AbstractType
 {
-    use TranslatorTrait;
-
     /**
      * @var array
      */
@@ -37,11 +33,8 @@ class AvatarType extends AbstractType
      */
     private $avatarPath;
 
-    public function __construct(
-        TranslatorInterface $translator,
-        VariableApiInterface $variableApi
-    ) {
-        $this->setTranslator($translator);
+    public function __construct(VariableApiInterface $variableApi)
+    {
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
         $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
     }
@@ -81,9 +74,15 @@ class AvatarType extends AbstractType
             $defaults['data_class'] = null; // allow string values instead of File objects
 
             $defaults['help'] = [
-                $this->trans('Possible extensions') . ': ' . implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
-                $this->trans('Max. file size') . ': ' . $this->modVars['maxSize'] . ' ' . $this->trans('bytes'),
-                $this->trans('Max. dimensions') . ': ' . $this->modVars['maxWidth'] . 'x' . $this->modVars['maxHeight'] . ' ' . $this->trans('pixels')
+                'Possible extensions: %extensions%',
+                'Max. file size: %maxSize% bytes',
+                'Max. dimensions: %maxWidth%x%maxHeight% pixels'
+            ];
+            $defaults['help_translation_parameters'] = [
+                '%extensions%' => implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
+                '%maxSize%' => $this->modVars['maxSize'],
+                '%maxWidth%' => $this->modVars['maxWidth'],
+                '%maxHeight%' => $this->modVars['maxHeight']
             ];
         }
 

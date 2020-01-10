@@ -18,8 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
 
 class UsersBlockType extends AbstractType
 {
@@ -34,12 +32,12 @@ class UsersBlockType extends AbstractType
     {
         $builder
             ->add('ublockon', CheckboxType::class, [
-                'label'    => $this->trans('Enable your personal custom block'),
+                'label'    => 'Enable your personal custom block',
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false,
             ])
             ->add('ublock', TextareaType::class, [
-                'label'    => $this->trans('Content of your custom block'),
+                'label'    => 'Content of your custom block',
                 'required' => false,
                 'attr'     => [
                     'cols' => 80,
@@ -47,14 +45,14 @@ class UsersBlockType extends AbstractType
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save'),
+                'label' => 'Save',
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success',
                 ],
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $this->trans('Cancel'),
+                'label' => 'Cancel',
                 'icon'  => 'fa-times',
                 'attr'  => [
                     'class'          => 'btn btn-default',

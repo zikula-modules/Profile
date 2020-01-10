@@ -23,123 +23,114 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ProfileModule\ProfileConstant;
 
 class ConfigType extends AbstractType
 {
-    use TranslatorTrait;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->setTranslator($translator);
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('viewregdate', CheckboxType::class, [
-                'label' => $this->trans('Display the user\'s registration date'),
+                'label' => 'Display the user\'s registration date',
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add('memberslistitemsperpage', IntegerType::class, [
                 'constraints' => [new Range(['min' => 10, 'max' => 999])],
-                'label' => $this->trans('Users per page in \'Registered users list\''),
+                'label' => 'Users per page in \'Registered users list\'',
                 'attr' => [
                     'maxlength' => 3
                 ]
             ])
             ->add('onlinemembersitemsperpage', IntegerType::class, [
                 'constraints' => [new Range(['min' => 10, 'max' => 999])],
-                'label' => $this->trans('Users per page in \'Users currently on-line\' page'),
+                'label' => 'Users per page in \'Users currently on-line\' page',
                 'attr' => [
                     'maxlength' => 3
                 ]
             ])
             ->add('recentmembersitemsperpage', IntegerType::class, [
                 'constraints' => [new Range(['min' => 10, 'max' => 999])],
-                'label' => $this->trans('Users per page in \'Recent registrations\' page'),
+                'label' => 'Users per page in \'Recent registrations\' page',
                 'attr' => [
                     'maxlength' => 3
                 ]
             ])
             ->add('activeminutes', IntegerType::class, [
                 'constraints' => [new Range(['min' => 1, 'max' => 99])],
-                'label' => $this->trans('Minutes a user is considered online'),
+                'label' => 'Minutes a user is considered online',
                 'attr' => [
                     'maxlength' => 2
                 ]
             ])
             ->add('filterunverified', CheckboxType::class, [
-                'label' => $this->trans('Filter unverified users from \'Registered users list\''),
+                'label' => 'Filter unverified users from \'Registered users list\'',
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add(ProfileConstant::MODVAR_AVATAR_IMAGE_PATH, TextType::class, [
-                'label' => $this->trans('Path to user\'s avatar images'),
+                'label' => 'Path to user\'s avatar images',
                 'constraints' => [
                     new NotBlank(),
                     new Type('string')
                 ]
             ])
             ->add(ProfileConstant::MODVAR_GRAVATARS_ENABLED, ChoiceType::class, [
-                'label' => $this->trans('Allow usage of Gravatar'),
+                'label' => 'Allow usage of Gravatar',
                 'label_attr' => ['class' => 'radio-custom'],
                 'choices' => [
-                    $this->trans('Yes') => 1,
-                    $this->trans('No') => 0
+                    'Yes' => 1,
+                    'No' => 0
                 ],
                 'expanded' => true
             ])
             ->add(ProfileConstant::MODVAR_GRAVATAR_IMAGE, TextType::class, [
-                'label' => $this->trans('Default avatar image (used as fallback)'),
+                'label' => 'Default avatar image (used as fallback)',
                 'constraints' => [
                     new NotBlank(),
                     new Type('string')
                 ]
             ])
             ->add('allowUploads', CheckboxType::class, [
-                'label' => $this->trans('Allow uploading custom avatar images'),
+                'label' => 'Allow uploading custom avatar images',
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add('shrinkLargeImages', CheckboxType::class, [
-                'label' => $this->trans('Shrink large images to maximum dimensions'),
+                'label' => 'Shrink large images to maximum dimensions',
                 'label_attr' => ['class' => 'switch-custom'],
                 'required' => false
             ])
             ->add('maxSize', IntegerType::class, [
-                'label' => $this->trans('Max. avatar filesize'),
-                'input_group' => ['right' => $this->trans('bytes')]
+                'label' => 'Max. avatar filesize',
+                'input_group' => ['right' => 'bytes']
             ])
             ->add('maxWidth', IntegerType::class, [
-                'label' => $this->trans('Max. width'),
+                'label' => 'Max. width',
                 'attr' => [
                     'maxlength' => 4
                 ],
-                'input_group' => ['right' => $this->trans('pixels')]
+                'input_group' => ['right' => 'pixels']
             ])
             ->add('maxHeight', IntegerType::class, [
-                'label' => $this->trans('Max. height'),
+                'label' => 'Max. height',
                 'attr' => [
                     'maxlength' => 4
                 ],
-                'input_group' => ['right' => $this->trans('pixels')]
+                'input_group' => ['right' => 'pixels']
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save'),
+                'label' => 'Save',
                 'icon' => 'fa-check',
                 'attr' => [
-                    'class' => 'btn btn-success',
+                    'class' => 'btn btn-success'
                 ],
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $this->trans('Cancel'),
+                'label' => 'Cancel',
                 'icon' => 'fa-times',
                 'attr' => [
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-default'
                 ],
             ])
         ;

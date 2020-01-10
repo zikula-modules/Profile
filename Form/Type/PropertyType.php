@@ -24,26 +24,19 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThan;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\DynamicFieldType;
-use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\SettingsModule\Api\ApiInterface\LocaleApiInterface;
 
 class PropertyType extends AbstractType
 {
-    use TranslatorTrait;
-
     /**
      * @var LocaleApiInterface
      */
     private $localeApi;
 
-    public function __construct(
-        TranslatorInterface $translator,
-        LocaleApiInterface $localeApi
-    ) {
-        $this->setTranslator($translator);
+    public function __construct(LocaleApiInterface $localeApi)
+    {
         $this->localeApi = $localeApi;
     }
 
@@ -51,12 +44,12 @@ class PropertyType extends AbstractType
     {
         $builder
             ->add('id', TextType::class, [
-                'label' => $this->trans('Id'),
-                'help' => $this->trans('Unique, simple string. No spaces. a-z, 0-9, _ and -'),
-                'alert' => [$this->trans('Once used, do not change the ID value or all profiles will lose their connection!') => 'warning']
+                'label' => 'Id',
+                'help' => 'Unique, simple string. No spaces. a-z, 0-9, _ and -',
+                'alert' => ['Once used, do not change the ID value or all profiles will lose their connection!' => 'warning']
             ])
             ->add('labels', CollectionType::class, [
-                'label' => $this->trans('Translated labels'),
+                'label' => 'Translated labels',
                 'entry_type' => TranslationType::class
             ])
             ->add('fieldInfo', DynamicFieldType::class, [
@@ -64,23 +57,23 @@ class PropertyType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Active'),
+                'label' => 'Active',
                 'label_attr' => ['class' => 'switch-custom']
             ])
             ->add('weight', IntegerType::class, [
-                'label' => $this->trans('Weight'),
+                'label' => 'Weight',
                 'constraints' => [new GreaterThan(0)],
                 'empty_data' => 100
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save'),
+                'label' => 'Save',
                 'icon'  => 'fa-check',
                 'attr'  => [
                     'class' => 'btn btn-success'
                 ]
             ])
             ->add('cancel', SubmitType::class, [
-                'label' => $this->trans('Cancel'),
+                'label' => 'Cancel',
                 'icon'  => 'fa-times',
                 'attr'  => [
                     'class' => 'btn btn-default'
