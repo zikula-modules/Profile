@@ -45,7 +45,7 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
     /**
      * @ORM\Column(type="text")
      * @param string
-     * @Assert\NotBlank()
+     * @Assert\Length(min="0", max="255", allowEmptyString="false")
      */
     private $formType = '';
 
@@ -58,7 +58,7 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @param integer
+     * @param int
      * @Assert\GreaterThan(0)
      */
     private $weight = 0;
