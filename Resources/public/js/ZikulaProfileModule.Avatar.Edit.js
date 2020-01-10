@@ -15,7 +15,7 @@
                 }
             }
 
-            avatarPreview = '' !== avatarUrl ? '<img src="' + avatarUrl + '" alt="' + Translator.__('Avatar') + '" class="img-fluid img-thumbnail" />' : '';
+            avatarPreview = '' !== avatarUrl ? '<img src="' + avatarUrl + '" alt="' + Translator.trans('Avatar') + '" class="img-fluid img-thumbnail" />' : '';
 
             $(this).parent().append('<p class="avatar-preview" style="margin-top: 20px">' + avatarPreview + '</p>');
         });
