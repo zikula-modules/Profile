@@ -1,6 +1,6 @@
 {{ adminHeader() }}
 {{ pageSetVar('title', 'Property list'|trans) }}
-<h3><i class="fa fa-list"></i> {% trans %}Property list{% endtrans %}</h3>
+<h3><i class="fas fa-list"></i> {% trans %}Property list{% endtrans %}</h3>
 <table class="table table-bordered table-striped">
     <colgroup>
         <col id="cWeight" />
@@ -29,8 +29,8 @@
             <td headers="hFormType">{{ property.formType|split('\\')|last }}</td>
             <td headers="hActive">{{ property.active|yesNo }}</td>
             <td headers="hActions" class="actions">
-                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}" title="{% trans %}Edit property{% endtrans %}|e('html_attr')"><i class="fa fa-pencil-alt fa-lg fa-fw"></i></a>
-                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{% trans %}Delete property{% endtrans %}|e('html_attr')"><i class="fa fa-trash-alt fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_edit', {id: property.id}) }}" title="{% trans %}Edit property{% endtrans %}|e('html_attr')"><i class="fas fa-pencil-alt fa-lg fa-fw"></i></a>
+                <a href="{{ path('zikulaprofilemodule_property_delete', {id: property.id}) }}" title="{% trans %}Delete property{% endtrans %}|e('html_attr')"><i class="fas fa-trash-alt fa-lg fa-fw"></i></a>
             </td>
         </tr>
     {% else %}

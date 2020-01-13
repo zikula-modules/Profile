@@ -1,6 +1,6 @@
 {{ moduleHeader('user', 'Members'|trans, true, true) }}
 <h3>
-    <span class="fa fa-user-check"></span>
+    <span class="fas fa-user-check"></span>
     {% trans %}Users online{% endtrans %}
 </h3>
 {% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
@@ -37,13 +37,13 @@
             <tr>
                 <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong> ({{ user.uname }})</td>
                 {% if messageModule|default %}
-                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope fa-lg"></i></a></td>
+                    <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fas fa-envelope fa-lg"></i></a></td>
                 {% endif %}
                 {% if 'url' in activeProperties %}
                     <td headers="hSite">
                         {% set url =  user.attributes[prefix ~ ':url']|default %}
                         {% if url and url != 'http://' %}
-                            <a href="{{ url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
+                            <a href="{{ url|e('html_attr') }}"><i class="fas fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
                         {% endif %}
                     </td>
                 {% endif %}

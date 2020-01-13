@@ -53,13 +53,13 @@ class MenuBuilder
             $menu->addChild($this->trans('Edit ":name"', [':name' => $user->getUname()]), [
                 'route' => 'zikulausersmodule_useradministration_modify',
                 'routeParameters' => ['user' => $user->getUid()],
-            ])->setAttribute('icon', 'fa fa-pencil-alt');
+            ])->setAttribute('icon', 'fas fa-pencil-alt');
         }
         if ($this->permissionApi->hasPermission(UsersConstant::MODNAME . '::', '::', ACCESS_DELETE)) {
             $menu->addChild($this->trans('Delete ":name"', [':name' => $user->getUname()]), [
                 'route' => 'zikulausersmodule_useradministration_delete',
                 'routeParameters' => ['user' => $user->getUid()],
-            ])->setAttribute('icon', 'fa fa-trash-alt');
+            ])->setAttribute('icon', 'fas fa-trash-alt');
         }
 
         return $menu;

@@ -1,6 +1,6 @@
 {{ moduleHeader('user', 'Members'|trans, true, true) }}
 <h3>
-    <span class="fa fa-door-open"></span>
+    <span class="fas fa-door-open"></span>
     {% trans with {'%s': getModVar('ZikulaProfileModule', 'recentmembersitemsperpage')} %}Last %s registered users{% endtrans %}
 </h3>
 <table class="table table-bordered table-striped table-sm">
@@ -41,13 +41,13 @@
             </td>
             <td headers="hRegistrationDate">{{ user.user_regdate|format_date('medium')|default('') }}</td>
             {% if messageModule|default %}
-                <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fa fa-envelope fa-lg"></i></a></td>
+                <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fas fa-envelope fa-lg"></i></a></td>
             {% endif %}
             {% if 'url' in activeProperties %}
                 <td headers="hSite">
                     {% set url =  user.attributes[prefix ~ ':url']|default %}
                     {% if url and url != 'http://' %}
-                        <a href="{{ url|e('html_attr') }}"><i class="fa fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
+                        <a href="{{ url|e('html_attr') }}"><i class="fas fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
                     {% endif %}
                 </td>
             {% endif %}

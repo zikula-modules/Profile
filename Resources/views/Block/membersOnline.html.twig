@@ -16,7 +16,7 @@
                     {% set title = messageCount(session.uid, true) ~ 'unread'|trans ~ "|" ~ messageCount(session.uid) ~ 'total'|trans %}
                     ({{ messageInboxLink(session.uid, false, title) }})
                 {% else %}
-                    <a href="{{ session.uid|messageSendLink(true) }}" title="{% trans %}Send private message{% endtrans %}"><i class="fa fa-envelope"></i></a>
+                    <a href="{{ session.uid|messageSendLink(true) }}" title="{% trans %}Send private message{% endtrans %}"><i class="fas fa-envelope"></i></a>
                 {% endif %}
             {% endif %}
         </li>
