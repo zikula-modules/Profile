@@ -24,7 +24,10 @@
             "url": "profile",
             "oldnames": ["Profile"],
             "capabilities": {
-                "admin": {"route": "zikulaprofilemodule_property_list"},
+                "admin": {
+                    "route": "zikulaprofilemodule_property_list",
+                    "icon": "fas fa-id-card"
+                },
                 "user": {"route": "zikulaprofilemodule_profile_display"}
             },
             "securityschema": {
