@@ -41,16 +41,15 @@ class UsersBlockType extends AbstractType
                 'label' => 'Save',
                 'icon'  => 'fa-check',
                 'attr'  => [
-                    'class' => 'btn btn-success',
-                ],
+                    'class' => 'btn-success'
+                ]
             ])
             ->add('cancel', SubmitType::class, [
                 'label' => 'Cancel',
                 'icon'  => 'fa-times',
                 'attr'  => [
-                    'class'          => 'btn btn-default',
-                    'formnovalidate' => 'formnovalidate',
-                ],
+                    'formnovalidate' => 'formnovalidate'
+                ]
             ])
         ;
     }

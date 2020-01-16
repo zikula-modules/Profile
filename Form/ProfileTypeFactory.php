@@ -82,14 +82,14 @@ class ProfileTypeFactory
                 'label' => $this->translator->trans('Save'),
                 'icon' => 'fa-check',
                 'attr' => [
-                    'class' => 'btn btn-success'
+                    'class' => 'btn-success'
                 ]
             ]);
             $formBuilder->add('cancel', SubmitType::class, [
                 'label' => $this->translator->trans('Cancel'),
                 'icon' => 'fa-times',
                 'attr' => [
-                    'class' => 'btn btn-default'
+                    'class' => 'btn-default'
                 ]
             ]);
         }
