@@ -8,7 +8,7 @@
 {% else %}
     <ul class="list-group">
         {% for session in sessions %}
-            <li class="list-group-item">{{ session.uid|profileLinkByUserId() }} ({{ session.lastused|localizeddate('medium', 'short') }})</li>
+            <li class="list-group-item">{{ session.uid|profileLinkByUserId() }} ({{ session.lastused|format_datetime('medium', 'short') }})</li>
         {% endfor %}
     </ul>
 {% endif %}

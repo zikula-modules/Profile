@@ -20,42 +20,34 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
+use Translation\Extractor\Annotation\Ignore;
 
 class FeaturedUserBlockType extends AbstractType
 {
-    use TranslatorTrait;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->setTranslator($translator);
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => $this->trans('User name'),
+                'label' => 'User name',
                 'constraints' => [
-                    new NotBlank(),
-                ],
+                    new NotBlank()
+                ]
             ])
             ->add('fieldstoshow', ChoiceType::class, [
-                'label' => $this->trans('Information to show'),
+                'label' => 'Information to show',
                 'label_attr' => [
-                    'class' => 'checkbox-inline',
+                    'class' => 'checkbox-inline'
                 ],
                 'expanded' => true,
                 'multiple' => true,
-                'choices' => $options['activeProperties'],
+                'choices' => /** @Ignore*/$options['activeProperties'],
                 'choice_label' => 'label',
                 'choice_value' => 'id'
             ])
             ->add('showregdate', CheckboxType::class, [
-                'label' => $this->trans('Show registration date'),
+                'label' => 'Show registration date',
                 'label_attr' => ['class' => 'switch-custom'],
-                'required' => false,
+                'required' => false
             ])
         ;
     }

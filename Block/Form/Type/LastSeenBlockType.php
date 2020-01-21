@@ -17,28 +17,20 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
 
 class LastSeenBlockType extends AbstractType
 {
-    use TranslatorTrait;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->setTranslator($translator);
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('amount', IntegerType::class, [
-                'label' => $this->trans('Number of recent visitors to display'),
+                'label' => 'Number of recent visitors to display',
                 'empty_data'  => 5,
                 'constraints' => [
                     new NotBlank()
-                ],
-            ]);
+                ]
+            ])
+        ;
     }
 
     public function getBlockPrefix()
