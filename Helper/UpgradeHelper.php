@@ -27,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\Bundle\CoreBundle\Translation\TranslatorTrait;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Form\Type\AvatarType;

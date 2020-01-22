@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\Controller\AbstractController;
+use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Form\Type\ConfigType;
 use Zikula\ProfileModule\ProfileConstant;

@@ -16,7 +16,7 @@ namespace Zikula\ProfileModule\Menu;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\Bundle\CoreBundle\Translation\TranslatorTrait;
 use Zikula\PermissionsModule\Api\ApiInterface\PermissionApiInterface;
 use Zikula\UsersModule\Constant as UsersConstant;
 

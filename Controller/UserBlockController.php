@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\BlocksModule\Entity\RepositoryInterface\BlockRepositoryInterface;
-use Zikula\Core\Controller\AbstractController;
+use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\ProfileModule\Form\Type\UsersBlockType;
 use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;

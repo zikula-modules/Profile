@@ -16,8 +16,8 @@ namespace Zikula\ProfileModule\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Zikula\Bundle\CoreBundle\Doctrine\EntityAccess;
 use Zikula\Bundle\FormExtensionBundle\DynamicFieldInterface;
-use Zikula\Core\Doctrine\EntityAccess;
 
 /**
  * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
