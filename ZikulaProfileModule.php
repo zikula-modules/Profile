@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule;
 
-use Zikula\ExtensionsModule\Bundle\AbstractModule;
+use Zikula\ExtensionsModule\AbstractModule;
 
 /**
  * Profile module class.
