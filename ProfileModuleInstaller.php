@@ -154,7 +154,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $variableApi = $this->container->get(VariableApi::class);
                 $avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'images/avatar');
                 if ('images/avatar' === $avatarPath) {
-                    $variableApi->set(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
+                    $variableApi->set(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
                 }
             case '3.0.12':
                 // future upgrades

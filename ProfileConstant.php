@@ -39,7 +39,7 @@ class ProfileConstant
     /**
      * Default value for the avatar image path.
      */
-    public const DEFAULT_AVATAR_IMAGE_PATH = 'web/uploads/avatar';
+    public const DEFAULT_AVATAR_IMAGE_PATH = 'public/uploads/avatar';
 
     /**
      * Module variable key for the flag indicating whether gravatars are allowed or not.

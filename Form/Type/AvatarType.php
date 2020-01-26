@@ -36,7 +36,7 @@ class AvatarType extends AbstractType
     public function __construct(VariableApiInterface $variableApi)
     {
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
-        $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
+        $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
     }
 
     public function configureOptions(OptionsResolver $resolver)

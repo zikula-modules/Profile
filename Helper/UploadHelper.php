@@ -41,7 +41,7 @@ class UploadHelper
     {
         $this->imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
-        $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'web/uploads/avatar');
+        $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
     }
 
     /**
