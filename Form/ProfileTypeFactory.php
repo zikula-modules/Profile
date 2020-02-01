@@ -87,10 +87,7 @@ class ProfileTypeFactory
             ]);
             $formBuilder->add('cancel', SubmitType::class, [
                 'label' => $this->translator->trans('Cancel'),
-                'icon' => 'fa-times',
-                'attr' => [
-                    'class' => 'btn-default'
-                ]
+                'icon' => 'fa-times'
             ]);
         }
 
