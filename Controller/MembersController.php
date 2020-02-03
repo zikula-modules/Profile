@@ -68,7 +68,7 @@ class MembersController extends AbstractController
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'amountOfRegisteredMembers' => $amountOfUsers - 1,
             'amountOfOnlineMembers' => count($this->getOnlineUids($userSessionRepository)),
-            'newestMember' => $userRepository->findBy([], ['user_regdate' => 'DESC'], 1)[0],
+            'newestMember' => $userRepository->findBy([], ['registrationDate' => 'DESC'], 1)[0],
             'users' => $users,
             'letter' => $letter,
             'sortby' => $sortBy,
@@ -102,7 +102,7 @@ class MembersController extends AbstractController
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'users' => $userRepository->findBy([], ['user_regdate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
+            'users' => $userRepository->findBy([], ['registrationDate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
             'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
         ];
     }

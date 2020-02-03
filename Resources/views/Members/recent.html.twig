@@ -39,7 +39,7 @@
                     <span class="badge badge-danger">{% trans %}offline{% endtrans %}</span>
                 {% endif %}
             </td>
-            <td headers="hRegistrationDate">{{ user.user_regdate|format_date('medium')|default('') }}</td>
+            <td headers="hRegistrationDate">{{ user.registrationDate|format_date('medium')|default('') }}</td>
             {% if messageModule|default %}
                 <td headers="hMessages"><a href="{{ user.uid|messageSendLink(true) }}"><i class="fas fa-envelope fa-lg"></i></a></td>
             {% endif %}

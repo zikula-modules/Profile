@@ -32,7 +32,7 @@ class LastXUsersBlock extends AbstractBlockHandler
         }
 
         return $this->renderView('@ZikulaProfileModule/Block/lastXUsers.html.twig', [
-            'users' => $this->userRepository->findBy([], ['user_regdate' => 'DESC'], $properties['amount'])
+            'users' => $this->userRepository->findBy([], ['registrationDate' => 'DESC'], $properties['amount'])
         ]);
     }
 

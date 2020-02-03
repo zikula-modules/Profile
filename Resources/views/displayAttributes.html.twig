@@ -1,10 +1,10 @@
-{% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.user_regdate != '1970-01-01 00:00:00' %}
+{% if getModVar('ZikulaProfileModule', 'viewregdate', 1) == 1 and user.registrationDate != '1970-01-01 00:00:00' %}
     <div class="row">
         <div class="col-md-3 text-right">
             <strong>{% trans %}Registration date{% endtrans %}</strong>
         </div>
         <div class="col-md-9">
-            <span>{{ user.user_regdate|format_date('medium')|default('&nbsp;') }}</span>
+            <span>{{ user.registrationDate|format_date('medium')|default('&nbsp;') }}</span>
         </div>
     </div>
 {% endif %}
