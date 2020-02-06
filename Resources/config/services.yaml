@@ -7,7 +7,7 @@ services:
         autoconfigure: true
         public: false
         bind:
-            $bundle: '@Zikula\ProfileModule\ZikulaProfileModule'
+            $extension: '@Zikula\ProfileModule\ZikulaProfileModule'
             $prefix: '%zikula_profile_module.property_prefix%'
 
     Zikula\ProfileModule\:
