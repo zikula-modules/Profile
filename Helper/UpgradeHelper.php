@@ -184,7 +184,7 @@ class UpgradeHelper
     {
         $identifiers = DateTimeZone::listIdentifiers();
         foreach ($identifiers as $name) {
-            $now = new DateTime(null, new DateTimeZone($name));
+            $now = new DateTime('now', new DateTimeZone($name));
             $offsetValue = $now->getOffset() / 3600;
             if (!isset($this->offsetMap[$offsetValue])) {
                 $this->offsetMap[$offsetValue] = $name;
