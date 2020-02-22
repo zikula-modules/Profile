@@ -14,7 +14,7 @@
         "psr-4": { "Zikula\\ProfileModule\\": "" }
     },
     "require": {
-        "php": ">=7.2.0"
+        "php": ">=7.2.5"
     },
     "extra": {
         "zikula": {
@@ -23,12 +23,14 @@
             "displayname": "Profile",
             "url": "profile",
             "oldnames": ["Profile"],
+            "icon": "fas fa-id-card",
             "capabilities": {
                 "admin": {
-                    "route": "zikulaprofilemodule_property_list",
-                    "icon": "fas fa-id-card"
+                    "route": "zikulaprofilemodule_property_list"
                 },
-                "user": {"route": "zikulaprofilemodule_profile_display"}
+                "user": {
+                    "route": "zikulaprofilemodule_profile_display"
+                }
             },
             "securityschema": {
                 "ZikulaProfileModule::": "::",
