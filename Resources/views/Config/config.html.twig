@@ -57,19 +57,4 @@
 </div>
 {{ form_end(form) }}
 {{ adminFooter() }}
-{% set customScript %}
-<script>
-    (function($) {
-        $(document).ready(function() {
-            function updateDynamicFields() {
-                $('#uploadSettings').toggleClass('d-none', !$('#zikulaprofilemodule_config_allowUploads').prop('checked'));
-                $('#shrinkSettings').toggleClass('d-none', !$('#zikulaprofilemodule_config_shrinkLargeImages').prop('checked'));
-            }
-
-            $('#zikulaprofilemodule_config_allowUploads, #zikulaprofilemodule_config_shrinkLargeImages').change(updateDynamicFields);
-            updateDynamicFields();
-        });
-    })(jQuery)
-</script>
-{% endset %}
-{{ pageAddAsset('footer', customScript) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaProfileModule:js/ZikulaProfileModule.Config.js')) }}
