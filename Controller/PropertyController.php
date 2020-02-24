@@ -17,9 +17,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\DeletionType;
+use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Entity\PropertyEntity;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\Type\PropertyType;
@@ -27,6 +27,7 @@ use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
  * @Route("/property")
+ * @PermissionCheck("edit")
  */
 class PropertyController extends AbstractController
 {
@@ -37,9 +38,6 @@ class PropertyController extends AbstractController
      */
     public function listAction(PropertyRepositoryInterface $propertyRepository): array
     {
-        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
-            throw new AccessDeniedException();
-        }
         $properties = $propertyRepository->findBy([], ['weight' => 'ASC']);
 
         return [
@@ -56,9 +54,6 @@ class PropertyController extends AbstractController
      */
     public function editAction(Request $request, PropertyEntity $propertyEntity = null)
     {
-        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
-            throw new AccessDeniedException();
-        }
         if (!isset($propertyEntity)) {
             $propertyEntity = new PropertyEntity();
         }
@@ -92,9 +87,6 @@ class PropertyController extends AbstractController
      */
     public function deleteAction(Request $request, PropertyEntity $propertyEntity)
     {
-        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_EDIT)) {
-            throw new AccessDeniedException();
-        }
         $form = $this->createForm(DeletionType::class, $propertyEntity);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -17,9 +17,9 @@ use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\SettingsModule\SettingsConstant;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
@@ -32,9 +32,8 @@ class MembersController extends AbstractController
 {
     /**
      * @Route("/list")
+     * @PermissionCheck({"$_zkModule:Members:", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/list.html.twig")
-     *
-     * @throws AccessDeniedException on failed permission check
      */
     public function listAction(
         Request $request,
@@ -43,10 +42,6 @@ class MembersController extends AbstractController
         UserSessionRepositoryInterface $userSessionRepository,
         VariableApiInterface $variableApi
     ): array {
-        if (!$this->hasPermission('ZikulaProfileModule:Members:', '::', ACCESS_READ)) {
-            throw new AccessDeniedException();
-        }
-
         $startNum = $request->query->getInt('startnum');
         $sortBy = $request->get('sortby', 'uname');
         $searchby = $request->get('searchby');
@@ -84,21 +79,16 @@ class MembersController extends AbstractController
 
     /**
      * @Route("/recent")
+     * @PermissionCheck({"$_zkModule:Members:recent", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/recent.html.twig")
      *
      * Displays last X registered users.
-     *
-     * @throws AccessDeniedException on failed permission check
      */
     public function recentAction(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         VariableApiInterface $variableApi
     ): array {
-        if (!$this->hasPermission('ZikulaProfileModule:Members:recent', '::', ACCESS_READ)) {
-            throw new AccessDeniedException();
-        }
-
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
@@ -109,21 +99,16 @@ class MembersController extends AbstractController
 
     /**
      * @Route("/online")
+     * @PermissionCheck({"$_zkModule:Members:online", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/online.html.twig")
      *
      * View users online.
-     *
-     * @throws AccessDeniedException on failed permission check
      */
     public function onlineAction(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         UserSessionRepositoryInterface $userSessionRepository
     ): array {
-        if (!$this->hasPermission('ZikulaProfileModule:Members:online', '::', ACCESS_READ)) {
-            throw new AccessDeniedException();
-        }
-
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),

@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\Bundle\CoreBundle\RouteUrl;
+use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
 use Zikula\ProfileModule\Helper\GravatarHelper;
@@ -33,9 +34,8 @@ class ProfileController extends AbstractController
 {
     /**
      * @Route("/display/{uid}", requirements={"uid" = "\d+"}, defaults={"uid" = null})
+     * @PermissionCheck({"$_zkModule::view", "::", "read"})
      * @Template("@ZikulaProfileModule/Profile/display.html.twig")
-     *
-     * @throws AccessDeniedException on failed permission check
      */
     public function displayAction(
         PropertyRepositoryInterface $propertyRepository,
@@ -43,9 +43,6 @@ class ProfileController extends AbstractController
         UserRepositoryInterface $userRepository,
         UserEntity $userEntity = null
     ): array {
-        if (!$this->hasPermission('ZikulaProfileModule::view', '::', ACCESS_READ)) {
-            throw new AccessDeniedException();
-        }
         if (null === $userEntity) {
             $userEntity = $userRepository->find($currentUserApi->get('uid'));
         }

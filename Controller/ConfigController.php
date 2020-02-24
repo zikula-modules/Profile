@@ -16,9 +16,9 @@ namespace Zikula\ProfileModule\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Form\Type\ConfigType;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
@@ -26,6 +26,7 @@ use Zikula\UsersModule\Constant as UsersConstant;
 
 /**
  * @Route("/config")
+ * @PermissionCheck("admin")
  */
 class ConfigController extends AbstractController
 {
@@ -33,15 +34,9 @@ class ConfigController extends AbstractController
      * @Route("/config")
      * @Theme("admin")
      * @Template("@ZikulaProfileModule/Config/config.html.twig")
-     *
-     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
      */
     public function configAction(Request $request, VariableApiInterface $variableApi): array
     {
-        if (!$this->hasPermission('ZikulaProfileModule::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-
         $modVars = $this->getVars();
 
         $varsInUsersModule = [
