@@ -1,13 +1,10 @@
-{% form_theme form with [
-    '@ZikulaFormExtension/Form/bootstrap_4_zikula_admin_layout.html.twig',
-    '@ZikulaFormExtension/Form/form_div_layout.html.twig'
-] %}
 {{ adminHeader() }}
 <h3>
     <span class="fas fa-wrench"></span>
     {% trans %}Settings{% endtrans %}
     {{ pageSetVar('title', 'Profile settings'|trans) }}
 </h3>
+
 {% if getModVar('ZConfig', 'sessionstoretofile', constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE')) == constant('Zikula\\SecurityCenterModule\\Constant::SESSION_STORAGE_FILE') %}
     <div class="alert alert-danger">{% trans %}Sessions are configured to store in a file. This prevents some functionality within the profile module related to tracking who is online.{% endtrans %}&nbsp;
         <a href="{{ path('zikulasecuritycentermodule_config_config') }}">{% trans %}Reconfigure session storage{% endtrans %}</a>

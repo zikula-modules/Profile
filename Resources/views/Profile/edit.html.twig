@@ -3,10 +3,7 @@
     <span class="fas fa-pencil-alt"></span>
     {% trans %}Edit profile{% endtrans %}
 </h3>
-{% form_theme form with [
-    '@ZikulaFormExtension/Form/bootstrap_4_zikula_admin_layout.html.twig',
-    '@ZikulaFormExtension/Form/form_div_layout.html.twig'
-] %}
+
 {{ form_start(form) }}
 {% for element in form|filter(e => e.vars.name not in ['save', 'cancel']) %}
     {{ form_row(element) }}

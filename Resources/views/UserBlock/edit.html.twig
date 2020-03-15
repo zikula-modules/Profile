@@ -1,8 +1,4 @@
 <h2>{% trans %}Personal custom block{% endtrans %}</h2>
-{% form_theme form with [
-    '@ZikulaFormExtension/Form/bootstrap_4_zikula_admin_layout.html.twig',
-    '@ZikulaFormExtension/Form/form_div_layout.html.twig'
-] %}
 {{ form_start(form) }}
 {{ form_errors(form) }}
 <fieldset>
