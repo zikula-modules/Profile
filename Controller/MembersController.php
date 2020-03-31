@@ -32,7 +32,7 @@ use Zikula\UsersModule\Entity\RepositoryInterface\UserSessionRepositoryInterface
 class MembersController extends AbstractController
 {
     /**
-     * @Route("/list/{page}")
+     * @Route("/list/{page}", methods = {"GET"}, requirements={"page" = "\d+"})
      * @PermissionCheck({"$_zkModule:Members:", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/list.html.twig")
      */
@@ -84,7 +84,7 @@ class MembersController extends AbstractController
     }
 
     /**
-     * @Route("/recent/{page}")
+     * @Route("/recent/{page}", methods = {"GET"}, requirements={"page" = "\d+"})
      * @PermissionCheck({"$_zkModule:Members:recent", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/recent.html.twig")
      *
@@ -109,7 +109,7 @@ class MembersController extends AbstractController
     }
 
     /**
-     * @Route("/online/{page}")
+     * @Route("/online/{page}", methods = {"GET"}, requirements={"page" = "\d+"})
      * @PermissionCheck({"$_zkModule:Members:online", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/online.html.twig")
      *
