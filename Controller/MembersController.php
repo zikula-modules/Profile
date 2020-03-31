@@ -64,9 +64,9 @@ class MembersController extends AbstractController
         }
 
         $pageSize = $this->getVar('memberslistitemsperpage', 20);
-        $users = $userRepository->query($critera, [$sortBy => $sortOrder], $pageSize, $page);
-        $users->setRoute('zikulaprofilemodule_members_list');
-        $users->setRouteParameters($routeParameters);
+        $paginator = $userRepository->query($critera, [$sortBy => $sortOrder], $page, $pageSize);
+        $paginator->setRoute('zikulaprofilemodule_members_list');
+        $paginator->setRouteParameters($routeParameters);
         unset($routeParameters['letter']);
 
         return [
@@ -74,7 +74,7 @@ class MembersController extends AbstractController
             'amountOfRegisteredMembers' => $userRepository->count() - 1,
             'amountOfOnlineMembers' => count($this->getOnlineUids($userSessionRepository)),
             'newestMember' => $userRepository->findBy([], ['registrationDate' => 'DESC'], 1)[0],
-            'paginator' => $users,
+            'paginator' => $paginator,
             'alpha' => new AlphaFilter('zikulaprofilemodule_members_list', $routeParameters, $letter),
             'sortby' => $sortBy,
             'sortorder' => $sortOrder,
@@ -97,13 +97,13 @@ class MembersController extends AbstractController
         int $page = 1
     ): array {
         $pageSize = $this->getVar('recentmembersitemsperpage');
-        $users = $userRepository->query([], ['registrationDate' => 'DESC'], $pageSize, $page);
-        $users->setRoute('zikulaprofilemodule_members_recent');
+        $paginator = $userRepository->query([], ['registrationDate' => 'DESC'], $page, $pageSize);
+        $paginator->setRoute('zikulaprofilemodule_members_recent');
 
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'paginator' => $users,
+            'paginator' => $paginator,
             'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
         ];
     }
@@ -123,13 +123,13 @@ class MembersController extends AbstractController
     ): array {
         $criteria = ['uid' => ['operator' => 'in', 'operand' => $this->getOnlineUids($userSessionRepository)]];
         $pageSize = $this->getVar('onlinemembersitemsperpage');
-        $users = $userRepository->query($criteria, [], $pageSize, $page);
-        $users->setRoute('zikulaprofilemodule_members_online');
+        $paginator = $userRepository->query($criteria, [], $page, $pageSize);
+        $paginator->setRoute('zikulaprofilemodule_members_online');
 
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'paginator' => $users
+            'paginator' => $paginator
         ];
     }
 
