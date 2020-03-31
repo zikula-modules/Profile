@@ -112,7 +112,7 @@ class MembersController extends AbstractController
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'users' => $userRepository->findBy(['uid' => $this->getOnlineUids($userSessionRepository)]),
+            'users' => $userRepository->findBy(['uid' => $this->getOnlineUids($userSessionRepository)], [], $this->getVar('onlinemembersitemsperpage'))
         ];
     }
 

@@ -61,7 +61,7 @@
             {% endif %}
             {% if 'url' in activeProperties %}
                 <td headers="hSite">
-                    {% set url =  user.attributes[prefix ~ ':url']|default %}
+                    {% set url = user.attributes[prefix ~ ':url']|default %}
                     {% if url and url != 'http://' %}
                     <a href="{{ url|e('html_attr') }}"><i class="fas fa-globe fa-lg" title="{{ url|e('html_attr') }}"></i></a>
                     {% endif %}

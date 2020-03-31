@@ -170,10 +170,13 @@ class ExtensionMenu implements ExtensionMenuInterface
         if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
             $menu->addChild('Members', [
                 'route' => 'zikulaprofilemodule_members_list',
-            ])->setAttribute('icon', 'fas fa-users');
+            ])
+                ->setAttribute('icon', 'fas fa-users')
+                ->setAttribute('dropdown', true)
+            ;
 
             if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
-                $menu['Members']->addChild('Change password', [
+                $menu['Members']->addChild('Members list', [
                     'route' => 'zikulaprofilemodule_members_list',
                 ])->setAttribute('icon', 'fas fa-user-friends');
             }
