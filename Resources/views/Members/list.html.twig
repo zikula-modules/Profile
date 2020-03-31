@@ -6,7 +6,7 @@
 <form action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label for="searchby" class="col-sm-6 col-form-label">{% trans %}Search by Uname{% endtrans %}</label>
+            <label for="searchby" class="col-sm-6 col-form-label">{% trans %}Search by user name{% endtrans %}</label>
             <div class="col-sm-6">
                 <input id="searchby" type="text" name="searchby" value="" maxlength="50" class="form-control" /></span>
             </div>
@@ -18,7 +18,7 @@
     </div>
 </form>
 <div id="profile-alphafilter" class="text-center my-2">
-    {{ pagerabc({ route: 'zikulaprofilemodule_members_list', posvar: 'letter', forwardvars: 'sortby', printempty: true }) }}
+    {{ include(alpha.template) }}
 </div>
 
 <table class="table table-bordered table-striped table-sm">
@@ -46,7 +46,7 @@
     </thead>
 
     <tbody>
-        {% for user in users|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
+        {% for user in paginator.results|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
         <tr>
             <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                 {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
@@ -77,11 +77,11 @@
         {% endfor %}
     </tbody>
 </table>
-{{ pager({ rowcount: pager.amountOfItems, limit: pager.itemsPerPage, posvar: 'startnum', route: 'zikulaprofilemodule_members_list' }) }}
+{{ include(paginator.template) }}
 
 <h3>{% trans %}Statistics{% endtrans %}</h3>
 <ul id="profile_status">
     <li><strong>{% trans %}Registered:{% endtrans %}</strong> {{ amountOfRegisteredMembers }}</li>
     <li><strong>{% trans %}Online:{% endtrans %}</strong> <a href="{{ path('zikulaprofilemodule_members_online') }}" title="{% trans %}View users online{% endtrans %}">{{ amountOfOnlineMembers }}</a></li>
-    <li><strong>{% trans %}Newest user:{% endtrans %}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uid: newestMember.uid }) }}" title="{% trans with { '%uname%': newestMember.uname } %}View profile of %uname%{% endtrans %}">{{ newestMember.uname }}</a></li>
+    <li><strong>{% trans %}Newest user:{% endtrans %}</strong> <a href="{{ path('zikulaprofilemodule_profile_display', { uid: newestMember.uid }) }}" title="{% trans with {'%uname%': newestMember.uname} %}View profile of %uname%{% endtrans %}">{{ newestMember.uname }}</a></li>
 </ul>

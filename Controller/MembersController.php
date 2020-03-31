@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
+use Zikula\Bundle\CoreBundle\Filter\AlphaFilter;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
@@ -31,7 +32,7 @@ use Zikula\UsersModule\Entity\RepositoryInterface\UserSessionRepositoryInterface
 class MembersController extends AbstractController
 {
     /**
-     * @Route("/list")
+     * @Route("/list/{page}")
      * @PermissionCheck({"$_zkModule:Members:", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/list.html.twig")
      */
@@ -40,45 +41,50 @@ class MembersController extends AbstractController
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         UserSessionRepositoryInterface $userSessionRepository,
-        VariableApiInterface $variableApi
+        VariableApiInterface $variableApi,
+        int $page = 1
     ): array {
-        $startNum = $request->query->getInt('startnum');
+        $searchBy = $request->get('searchby');
         $sortBy = $request->get('sortby', 'uname');
-        $searchby = $request->get('searchby');
         $sortOrder = $request->get('sortorder');
-        $letter = $request->get('letter');
+        $letter = $request->get('letter', '');
+        $routeParameters = [
+            'searchby' => $searchBy,
+            'sortby' => $sortBy,
+            'sortorder' => $sortOrder,
+            'letter' => $letter
+        ];
 
-        $itemsPerPage = $this->getVar('memberslistitemsperpage', 20);
         $critera = [];
-        if (isset($searchby)) {
-            $critera['uname'] = ['operator' => 'like', 'operand' => '%' . $searchby . '%'];
+        if (isset($searchBy)) {
+            $critera['uname'] = ['operator' => 'like', 'operand' => '%' . $searchBy . '%'];
         }
         if (isset($letter)) {
             $critera['uname'] = ['operator' => 'like', 'operand' => $letter . '%'];
         }
-        $users = $userRepository->query($critera, [$sortBy => $sortOrder], $itemsPerPage, $startNum);
-        $amountOfUsers = $userRepository->count();
+
+        $pageSize = $this->getVar('memberslistitemsperpage', 20);
+        $users = $userRepository->query($critera, [$sortBy => $sortOrder], $pageSize, $page);
+        $users->setRoute('zikulaprofilemodule_members_list');
+        $users->setRouteParameters($routeParameters);
+        unset($routeParameters['letter']);
 
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
-            'amountOfRegisteredMembers' => $amountOfUsers - 1,
+            'amountOfRegisteredMembers' => $userRepository->count() - 1,
             'amountOfOnlineMembers' => count($this->getOnlineUids($userSessionRepository)),
             'newestMember' => $userRepository->findBy([], ['registrationDate' => 'DESC'], 1)[0],
-            'users' => $users,
-            'letter' => $letter,
+            'paginator' => $users,
+            'alpha' => new AlphaFilter('zikulaprofilemodule_members_list', $routeParameters, $letter),
             'sortby' => $sortBy,
             'sortorder' => $sortOrder,
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, ''),
-            'pager' => [
-                'amountOfItems' => $amountOfUsers,
-                'itemsPerPage' => $itemsPerPage,
-            ],
+            'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
         ];
     }
 
     /**
-     * @Route("/recent")
+     * @Route("/recent/{page}")
      * @PermissionCheck({"$_zkModule:Members:recent", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/recent.html.twig")
      *
@@ -87,18 +93,23 @@ class MembersController extends AbstractController
     public function recentAction(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
-        VariableApiInterface $variableApi
+        VariableApiInterface $variableApi,
+        int $page = 1
     ): array {
+        $pageSize = $this->getVar('recentmembersitemsperpage');
+        $users = $userRepository->query([], ['registrationDate' => 'DESC'], $pageSize, $page);
+        $users->setRoute('zikulaprofilemodule_members_recent');
+
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'users' => $userRepository->findBy([], ['registrationDate' => 'DESC'], $this->getVar('recentmembersitemsperpage')),
+            'paginator' => $users,
             'messageModule' => $variableApi->getSystemVar(SettingsConstant::SYSTEM_VAR_MESSAGE_MODULE, '')
         ];
     }
 
     /**
-     * @Route("/online")
+     * @Route("/online/{page}")
      * @PermissionCheck({"$_zkModule:Members:online", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/online.html.twig")
      *
@@ -107,12 +118,18 @@ class MembersController extends AbstractController
     public function onlineAction(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
-        UserSessionRepositoryInterface $userSessionRepository
+        UserSessionRepositoryInterface $userSessionRepository,
+        int $page = 1
     ): array {
+        $criteria = ['uid' => ['operator' => 'in', 'operand' => $this->getOnlineUids($userSessionRepository)]];
+        $pageSize = $this->getVar('onlinemembersitemsperpage');
+        $users = $userRepository->query($criteria, [], $pageSize, $page);
+        $users->setRoute('zikulaprofilemodule_members_online');
+
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'activeProperties' => $this->getActiveProperties($propertyRepository),
-            'users' => $userRepository->findBy(['uid' => $this->getOnlineUids($userSessionRepository)], [], $this->getVar('onlinemembersitemsperpage'))
+            'paginator' => $users
         ];
     }
 

@@ -29,7 +29,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for user in users|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
+        {% for user in paginator.results|filter(u => u.uid != constant('Zikula\\UsersModule\\Constant::USER_ID_ANONYMOUS')) %}
         <tr>
             <td headers="hUserName"><strong>{{ user.uname|profileLinkByUserName() }}</strong>&nbsp;({{ user.uname }})&nbsp;
                 {% set online = user|onlineSince(getModVar('ZikulaProfileModule', 'activeminutes', 10)) %}
@@ -61,3 +61,4 @@
         {% endfor %}
     </tbody>
 </table>
+{{ include(paginator.template) }}

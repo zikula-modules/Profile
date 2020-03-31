@@ -1,7 +1,7 @@
 zikulaprofilemodule_config_config: /config/config
-zikulaprofilemodule_members_list: /members/list
-zikulaprofilemodule_members_recent: /members/recent
-zikulaprofilemodule_members_online: /members/online
+zikulaprofilemodule_members_list: '/members/list/{page}'
+zikulaprofilemodule_members_recent: '/members/recent/{page}'
+zikulaprofilemodule_members_online: '/members/online/{page}'
 zikulaprofilemodule_profile_display: '/display/{uid}'
 zikulaprofilemodule_profile_edit: '/edit/{uid}'
 zikulaprofilemodule_property_list: /property/list
