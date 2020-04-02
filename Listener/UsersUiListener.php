@@ -27,6 +27,7 @@ use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
+use Zikula\UsersModule\Event\UserAccountDisplayEvent;
 use Zikula\UsersModule\Event\UserFormPostCreatedEvent;
 use Zikula\UsersModule\Event\UserFormPostValidatedEvent;
 use Zikula\UsersModule\UserEvents;
@@ -104,7 +105,7 @@ class UsersUiListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            UserEvents::DISPLAY_VIEW => ['uiView'],
+            UserAccountDisplayEvent::class => ['uiView'],
             UserFormPostCreatedEvent::class => ['amendForm'],
             UserFormPostValidatedEvent::class => ['editFormHandler'],
             FormTypeChoiceEvent::NAME => ['formTypeChoices']
@@ -114,13 +115,13 @@ class UsersUiListener implements EventSubscriberInterface
     /**
      * Render and return profile information for display as part of a hook-like UI event issued from the Users module.
      */
-    public function uiView(GenericEvent $event): void
+    public function uiView(UserAccountDisplayEvent $event): void
     {
-        $event->data[self::EVENT_KEY] = $this->twig->render('@ZikulaProfileModule/Hook/display.html.twig', [
+        $event->addContent(self::EVENT_KEY, $this->twig->render('@ZikulaProfileModule/Hook/display.html.twig', [
             'prefix' => $this->prefix,
-            'user' => $event->getSubject(),
+            'user' => $event->getUser(),
             'activeProperties' => $this->propertyRepository->getDynamicFieldsSpecification()
-        ]);
+        ]));
     }
 
     public function amendForm(UserFormPostCreatedEvent $event): void
