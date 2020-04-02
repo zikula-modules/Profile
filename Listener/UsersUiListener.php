@@ -27,8 +27,8 @@ use Zikula\ProfileModule\Helper\UploadHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
-use Zikula\UsersModule\Event\UserFormAwareEvent;
-use Zikula\UsersModule\Event\UserFormDataEvent;
+use Zikula\UsersModule\Event\UserFormPostCreatedEvent;
+use Zikula\UsersModule\Event\UserFormPostValidatedEvent;
 use Zikula\UsersModule\UserEvents;
 
 /**
@@ -105,8 +105,8 @@ class UsersUiListener implements EventSubscriberInterface
     {
         return [
             UserEvents::DISPLAY_VIEW => ['uiView'],
-            UserEvents::EDIT_FORM => ['amendForm'],
-            UserEvents::EDIT_FORM_HANDLE => ['editFormHandler'],
+            UserFormPostCreatedEvent::class => ['amendForm'],
+            UserFormPostValidatedEvent::class => ['editFormHandler'],
             FormTypeChoiceEvent::NAME => ['formTypeChoices']
         ];
     }
@@ -123,7 +123,7 @@ class UsersUiListener implements EventSubscriberInterface
         ]);
     }
 
-    public function amendForm(UserFormAwareEvent $event): void
+    public function amendForm(UserFormPostCreatedEvent $event): void
     {
         $user = $event->getFormData();
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
@@ -145,9 +145,9 @@ class UsersUiListener implements EventSubscriberInterface
         ;
     }
 
-    public function editFormHandler(UserFormDataEvent $event): void
+    public function editFormHandler(UserFormPostValidatedEvent $event): void
     {
-        $userEntity = $event->getUserEntity();
+        $userEntity = $event->getUser();
         $formData = $event->getFormData(ProfileConstant::FORM_BLOCK_PREFIX);
         foreach ($formData as $key => $value) {
             if (!empty($value)) {
