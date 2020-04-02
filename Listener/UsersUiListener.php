@@ -17,7 +17,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
-use Zikula\Bundle\CoreBundle\Event\GenericEvent;
 use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
@@ -30,7 +29,6 @@ use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Event\UserAccountDisplayEvent;
 use Zikula\UsersModule\Event\UserFormPostCreatedEvent;
 use Zikula\UsersModule\Event\UserFormPostValidatedEvent;
-use Zikula\UsersModule\UserEvents;
 
 /**
  * Hook-like event handlers for basic profile data.
