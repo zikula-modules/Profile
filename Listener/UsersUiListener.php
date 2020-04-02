@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Zikula\Bundle\CoreBundle\Event\GenericEvent;
 use Zikula\Bundle\FormExtensionBundle\Event\FormTypeChoiceEvent;
 use Zikula\Bundle\HookBundle\Hook\ValidationResponse;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
@@ -27,8 +28,9 @@ use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Constant;
 use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Event\UserAccountDisplayEvent;
-use Zikula\UsersModule\Event\UserFormPostCreatedEvent;
-use Zikula\UsersModule\Event\UserFormPostValidatedEvent;
+use Zikula\UsersModule\Event\EditUserFormPostCreatedEvent;
+use Zikula\UsersModule\Event\EditUserFormPostValidatedEvent;
+use Zikula\UsersModule\UserEvents;
 
 /**
  * Hook-like event handlers for basic profile data.
@@ -104,8 +106,8 @@ class UsersUiListener implements EventSubscriberInterface
     {
         return [
             UserAccountDisplayEvent::class => ['uiView'],
-            UserFormPostCreatedEvent::class => ['amendForm'],
-            UserFormPostValidatedEvent::class => ['editFormHandler'],
+            EditUserFormPostCreatedEvent::class => ['amendForm'],
+            EditUserFormPostValidatedEvent::class => ['editFormHandler'],
             FormTypeChoiceEvent::NAME => ['formTypeChoices']
         ];
     }
@@ -122,7 +124,7 @@ class UsersUiListener implements EventSubscriberInterface
         ]));
     }
 
-    public function amendForm(UserFormPostCreatedEvent $event): void
+    public function amendForm(EditUserFormPostCreatedEvent $event): void
     {
         $user = $event->getFormData();
         $uid = !empty($user['uid']) ? $user['uid'] : Constant::USER_ID_ANONYMOUS;
@@ -144,7 +146,7 @@ class UsersUiListener implements EventSubscriberInterface
         ;
     }
 
-    public function editFormHandler(UserFormPostValidatedEvent $event): void
+    public function editFormHandler(EditUserFormPostValidatedEvent $event): void
     {
         $userEntity = $event->getUser();
         $formData = $event->getFormData(ProfileConstant::FORM_BLOCK_PREFIX);
