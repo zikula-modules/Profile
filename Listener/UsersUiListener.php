@@ -106,7 +106,7 @@ class UsersUiListener implements EventSubscriberInterface
             UserAccountDisplayEvent::class => ['uiView'],
             EditUserFormPostCreatedEvent::class => ['amendForm'],
             EditUserFormPostValidatedEvent::class => ['editFormHandler'],
-            FormTypeChoiceEvent::NAME => ['formTypeChoices']
+            FormTypeChoiceEvent::class => ['formTypeChoices']
         ];
     }
 
