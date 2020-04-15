@@ -92,20 +92,13 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
 
     public function install(): bool
     {
-        try {
-            $this->schemaTool->create($this->entities);
-        } catch (Exception $exception) {
-            $this->addFlash('error', $exception->getMessage());
-
-            return false;
-        }
-
+        $this->schemaTool->create($this->entities);
         $this->setVars($this->getDefaultModVars());
 
         // create the default data for the module
         $request = null !== $this->requestStack ? $this->requestStack->getMasterRequest() : null;
         // fall back to English for CLI installations (#105)
-        $locale = null !== $request ? $this->requestStack->getLocale() : 'en';
+        $locale = null !== $request ? $request->getLocale() : 'en';
         $this->defaultdata($locale);
 
         // Initialisation successful
@@ -176,9 +169,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
             case '3.0.3':
             case '3.0.4':
             case '3.0.5': // 3.0.5 was the last version delivered with Zikula 2.*
-                $avatarPath = $this->variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'images/avatar');
+                $avatarPath = $this->getVariableApi()->get(UsersConstant::MODNAME, 'avatarpath', 'images/avatar');
                 if ('images/avatar' === $avatarPath) {
-                    $this->variableApi->set(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
+                    $this->getVariableApi()->set(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
                 }
             case '3.0.12':
                 // future upgrades
@@ -189,14 +182,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
 
     public function uninstall(): bool
     {
-        try {
-            $this->schemaTool->drop($this->entities);
-        } catch (PDOException $exception) {
-            $this->addFlash('error', $exception->getMessage());
-
-            return false;
-        }
-
+        $this->schemaTool->drop($this->entities);
         $this->delVars();
 
         return true;
