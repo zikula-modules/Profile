@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Zikula\ProfileModule;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
-use PDOException;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
