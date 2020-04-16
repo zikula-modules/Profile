@@ -181,9 +181,9 @@ class ExtensionMenu implements ExtensionMenuInterface
                 ])->setAttribute('icon', 'fas fa-user-friends');
             }
             if ($this->permissionApi->hasPermission($component . 'recent', '::', ACCESS_READ)) {
-                $menu['Members']->addChild('Last %s% registered users', [
+                $menu['Members']->addChild('Last %s%% registered users', [
                     'route' => 'zikulaprofilemodule_members_recent',
-                ])->setExtra('translation_params', ['%s%' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)])
+                ])->setExtra('translation_params', ['%s%%' => $this->variableApi->get($this->getBundleName(), 'recentmembersitemsperpage', 10)])
                     ->setAttribute('icon', 'fas fa-door-open');
             }
             if ($this->permissionApi->hasPermission($component . 'online', '::', ACCESS_READ)) {

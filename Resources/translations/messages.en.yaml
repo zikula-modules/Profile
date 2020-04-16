@@ -32,17 +32,17 @@ Statistics: null
 'Online:': null
 'Newest user:': null
 'View profile of %uname%': null
-'Last %s registered users': null
+'Last %s% registered users': null
 'Registration date': null
 'No recently registered users found.': null
 unread: null
 total: null
 'Send private message': null
-'%s registered user': null
-'%s on-line.': null
-'%s anonymous guest': null
-'%1$s and %2$s on-line.': null
-'Registered on %s': null
+'%s% registered user': null
+'%s% on-line.': null
+'%s% anonymous guest': null
+'%members% and %guests% on-line.': null
+'Registered on %s%': null
 'Visit this page''': null
 'Edit property': null
 'Create new property': null
@@ -97,7 +97,7 @@ Location: null
 Occupation: null
 Signature: null
 'Extra info': null
-'Custom block content for %s': null
+'Custom block content for %s%': null
 'Information to show': null
 'Show registration date': null
 'Number of recent visitors to display': null
@@ -115,6 +115,6 @@ Signature: null
 'Display profile': null
 'Change email address': null
 'Change password': null
-'Last %s% registered users': null
+'Last %s%% registered users': null
 'Edit ":name"': null
 'Delete ":name"': null

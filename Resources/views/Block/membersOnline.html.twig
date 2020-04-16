@@ -25,15 +25,15 @@
     {% endif %}
     <p class="text-info">
         {% if amountOfOnlineGuests == 0 %}
-            {% set amountOfMembers = '%s registered user'|trans({ '%s': sessions|length, '%count%': sessions|length }) %}
-            {% trans with { '%s': amountOfMembers } %}%s on-line.{% endtrans %}
+            {% set amountOfMembers = '%s% registered user'|trans({ '%s%': sessions|length, '%count%': sessions|length }) %}
+            {% trans with { '%s%': amountOfMembers } %}%s% on-line.{% endtrans %}
         {% elseif sessions|length == 0 %}
-            {% set amountOfGuests = '%s anonymous guest'|trans({ '%s': amountOfOnlineGuests, '%count%': amountOfOnlineGuests }) %}
-            {% trans with { '%s': amountOfGuests } %}%s on-line.{% endtrans %}
+            {% set amountOfGuests = '%s% anonymous guest'|trans({ '%s%': amountOfOnlineGuests, '%count%': amountOfOnlineGuests }) %}
+            {% trans with { '%s%': amountOfGuests } %}%s% on-line.{% endtrans %}
         {% else %}
-            {% set amountOfMembers = '%s registered user'|trans({ '%s': sessions|length, '%count%': sessions|length }) %}
-            {% set amountOfGuests = '%s anonymous guest'|trans({ '%s': amountOfOnlineGuests, '%count%': amountOfOnlineGuests }) %}
-            {% trans with { '%1$s': amountOfMembers, '%2$s': amountOfGuests } %}%1$s and %2$s on-line.{% endtrans %}
+            {% set amountOfMembers = '%s% registered user'|trans({ '%s%': sessions|length, '%count%': sessions|length }) %}
+            {% set amountOfGuests = '%s% anonymous guest'|trans({ '%s%': amountOfOnlineGuests, '%count%': amountOfOnlineGuests }) %}
+            {% trans with { '%members%': amountOfMembers, '%guests%': amountOfGuests } %}%members% and %guests% on-line.{% endtrans %}
         {% endif %}
     </p>
 {% endif %}

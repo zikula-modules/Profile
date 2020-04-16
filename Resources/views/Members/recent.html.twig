@@ -1,7 +1,7 @@
 {{ moduleHeader('user', 'Members'|trans, true, true) }}
 <h3>
     <span class="fas fa-door-open"></span>
-    {% trans with {'%s': getModVar('ZikulaProfileModule', 'recentmembersitemsperpage')} %}Last %s registered users{% endtrans %}
+    {% trans with {'%s%': getModVar('ZikulaProfileModule', 'recentmembersitemsperpage')} %}Last %s% registered users{% endtrans %}
 </h3>
 <table class="table table-bordered table-striped table-sm">
     <colgroup>
