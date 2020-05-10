@@ -1,6 +1,6 @@
 {
     "name": "zikula/profile-module",
-    "version": "3.1.12",
+    "version": "3.1.13",
     "description": "User profiles and member list",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
