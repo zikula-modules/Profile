@@ -9,6 +9,7 @@ services:
         bind:
             $extension: '@Zikula\ProfileModule\ZikulaProfileModule'
             $prefix: '%zikula_profile_module.property_prefix%'
+            $projectDir: '%kernel.project_dir%'
 
     Zikula\ProfileModule\:
         resource: '../../*'
