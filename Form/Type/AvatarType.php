@@ -18,6 +18,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\UsersModule\Constant as UsersConstant;
 
@@ -33,10 +34,12 @@ class AvatarType extends AbstractType
      */
     private $avatarPath;
 
-    public function __construct(VariableApiInterface $variableApi)
-    {
+    public function __construct(
+        ZikulaHttpKernelInterface $kernel,
+        VariableApiInterface $variableApi
+    ) {
         $this->modVars = $variableApi->getAll('ZikulaProfileModule');
-        $this->avatarPath = $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
+        $this->avatarPath = $kernel->getProjectDir() . '/' . $variableApi->get(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
     }
 
     public function configureOptions(OptionsResolver $resolver)

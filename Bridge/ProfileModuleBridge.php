@@ -16,6 +16,7 @@ namespace Zikula\ProfileModule\Bridge;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Helper\GravatarHelper;
 use Zikula\ProfileModule\ProfileConstant;
@@ -27,6 +28,11 @@ use Zikula\UsersModule\ProfileModule\ProfileModuleInterface;
 
 class ProfileModuleBridge implements ProfileModuleInterface
 {
+    /**
+     * @var ZikulaHttpKernelInterface
+     */
+    private $kernel;
+
     /**
      * @var RouterInterface
      */
@@ -63,6 +69,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
     private $prefix;
 
     public function __construct(
+        ZikulaHttpKernelInterface $kernel,
         RouterInterface $router,
         RequestStack $requestStack,
         VariableApiInterface $variableApi,
@@ -71,6 +78,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
         GravatarHelper $gravatarHelper,
         $prefix
     ) {
+        $this->kernel = $kernel;
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->variableApi = $variableApi;
@@ -122,7 +130,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
 
         $avatarUrl = '';
         if (!in_array($avatar, ['blank.gif', 'blank.jpg'], true)) {
-            if (isset($avatar) && !empty($avatar) && $avatar !== $gravatarImage && file_exists($avatarPath . '/' . $avatar)) {
+            if (isset($avatar) && !empty($avatar) && $avatar !== $gravatarImage && file_exists($this->kernel->getProjectDir() . '/' . $avatarPath . '/' . $avatar)) {
                 $request = $this->requestStack->getCurrentRequest();
                 if (null !== $request) {
                     $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;

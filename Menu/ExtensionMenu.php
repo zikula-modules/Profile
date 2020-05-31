@@ -102,8 +102,7 @@ class ExtensionMenu implements ExtensionMenuInterface
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADD)) {
             $menu->addChild('Create new property', [
                 'route' => 'zikulaprofilemodule_property_edit',
-            ])->setAttribute('icon', 'fas fa-plus')
-            ->setLinkAttribute('class', 'text-success');
+            ])->setAttribute('icon', 'fas fa-plus');
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADMIN)) {
             $menu->addChild('Settings', [

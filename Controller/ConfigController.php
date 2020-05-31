@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
+use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Form\Type\ConfigType;
@@ -35,8 +36,11 @@ class ConfigController extends AbstractController
      * @Theme("admin")
      * @Template("@ZikulaProfileModule/Config/config.html.twig")
      */
-    public function configAction(Request $request, VariableApiInterface $variableApi): array
-    {
+    public function configAction(
+        Request $request,
+        ZikulaHttpKernelInterface $kernel,
+        VariableApiInterface $variableApi
+    ): array {
         $modVars = $this->getVars();
 
         $varsInUsersModule = [
@@ -72,8 +76,8 @@ class ConfigController extends AbstractController
 
         $pathWarning = '';
         if (true === $modVars['allowUploads']) {
-            $path = $modVars[ProfileConstant::MODVAR_AVATAR_IMAGE_PATH];
-            if (!(file_exists($path) && is_readable($path))) {
+            $path = $kernel->getProjectDir() . '/' . $modVars[ProfileConstant::MODVAR_AVATAR_IMAGE_PATH];
+            if (!file_exists($path) || !is_readable($path)) {
                 $pathWarning = $this->trans('Warning! The avatar directory does not exist or is not readable for the webserver.');
             } elseif (!is_writable($path)) {
                 $pathWarning = $this->trans('Warning! The webserver cannot write to the avatar directory.');
