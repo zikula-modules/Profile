@@ -176,7 +176,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 // reduce field length to avoid too long key with utf8mb4 collation
                 $sql = 'ALTER TABLE `user_property` MODIFY `id` VARCHAR(190)';
                 $this->entityManager->getConnection()->executeQuery($sql);
-            case '3.0.16':
+            case '3.1.16':
                 // future upgrades
         }
 
