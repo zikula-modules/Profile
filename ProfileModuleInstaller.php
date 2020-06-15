@@ -118,9 +118,9 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 // nothing
             case '2.1.0':
                 // get old data and drop table
-                $sql = 'SELECT * FROM user_property';
+                $sql = 'SELECT * FROM `user_property`';
                 $properties = $this->entityManager->getConnection()->fetchAll($sql);
-                $sql = 'DROP TABLE user_property';
+                $sql = 'DROP TABLE `user_property`';
                 $this->entityManager->getConnection()->executeQuery($sql);
                 // create new table & insert upgraded data
                 $this->schemaTool->create($this->entities);
@@ -172,6 +172,11 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                     $this->getVariableApi()->set(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
                 }
             case '3.0.12':
+            case '3.1.15':
+                // reduce field length to avoid too long key with utf8mb4 collation
+                $sql = 'ALTER TABLE `user_property` MODIFY `id` VARCHAR(190)';
+                $this->entityManager->getConnection()->executeQuery($sql);
+            case '3.0.16':
                 // future upgrades
         }
 
