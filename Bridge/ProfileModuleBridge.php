@@ -162,7 +162,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
      *
      * @param int|string $uid The user's id or name
      */
-    private function findUser($uid = null): UserEntity
+    private function findUser($uid = null): ?UserEntity
     {
         if (empty($uid) && $this->currentUser->isLoggedIn()) {
             $uid = $this->currentUser->get('uid');
@@ -174,10 +174,10 @@ class ProfileModuleBridge implements ProfileModuleInterface
         // select user id by user name
         $results = $this->userRepository->searchActiveUser(['operator' => '=', 'operand' => $uid], 1);
         if (!count($results)) {
-            return '';
+            return null;
         }
 
-        return $results->getIterator()->getArrayCopy()[0];
+        return $results[0];
     }
 
     /**
