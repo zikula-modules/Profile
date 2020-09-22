@@ -26,7 +26,7 @@
             "icon": "fas fa-id-card",
             "capabilities": {
                 "admin": {
-                    "route": "zikulaprofilemodule_property_list"
+                    "route": "zikulaprofilemodule_property_listproperties"
                 },
                 "user": {
                     "route": "zikulaprofilemodule_profile_display"
