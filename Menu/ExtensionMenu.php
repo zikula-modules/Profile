@@ -96,7 +96,7 @@ class ExtensionMenu implements ExtensionMenuInterface
         $menu = $this->factory->createItem('profileAdminMenu');
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
             $menu->addChild('Property list', [
-                'route' => 'zikulaprofilemodule_property_list',
+                'route' => 'zikulaprofilemodule_property_listproperties',
             ])->setAttribute('icon', 'fas fa-list');
         }
         if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADD)) {
@@ -168,7 +168,7 @@ class ExtensionMenu implements ExtensionMenuInterface
         $component = $this->getBundleName() . ':Members:';
         if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
             $menu->addChild('Members', [
-                'route' => 'zikulaprofilemodule_members_list',
+                'route' => 'zikulaprofilemodule_members_listmembers',
             ])
                 ->setAttribute('icon', 'fas fa-users')
                 ->setAttribute('dropdown', true)
@@ -176,7 +176,7 @@ class ExtensionMenu implements ExtensionMenuInterface
 
             if ($this->permissionApi->hasPermission($component, '::', ACCESS_READ)) {
                 $menu['Members']->addChild('Members list', [
-                    'route' => 'zikulaprofilemodule_members_list',
+                    'route' => 'zikulaprofilemodule_members_listmembers',
                 ])->setAttribute('icon', 'fas fa-user-friends');
             }
             if ($this->permissionApi->hasPermission($component . 'recent', '::', ACCESS_READ)) {
@@ -215,7 +215,7 @@ class ExtensionMenu implements ExtensionMenuInterface
 
         if ($this->permissionApi->hasPermission($this->getBundleName() . ':Members:', '::', ACCESS_READ)) {
             $menu->addChild('Registered users', [
-                'route' => 'zikulaprofilemodule_members_list',
+                'route' => 'zikulaprofilemodule_members_listmembers',
             ])->setAttribute('icon', 'fas fa-user-friends');
         }
 

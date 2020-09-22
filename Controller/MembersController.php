@@ -65,7 +65,7 @@ class MembersController extends AbstractController
 
         $pageSize = $this->getVar('memberslistitemsperpage', 20);
         $paginator = $userRepository->paginatedQuery($critera, [$sortBy => $sortOrder], 'and', $page, $pageSize);
-        $paginator->setRoute('zikulaprofilemodule_members_list');
+        $paginator->setRoute('zikulaprofilemodule_members_listmembers');
         $paginator->setRouteParameters($routeParameters);
         unset($routeParameters['letter']);
 
@@ -75,7 +75,7 @@ class MembersController extends AbstractController
             'amountOfOnlineMembers' => count($this->getOnlineUids($userSessionRepository)),
             'newestMember' => $userRepository->findBy([], ['registrationDate' => 'DESC'], 1)[0],
             'paginator' => $paginator,
-            'alpha' => new AlphaFilter('zikulaprofilemodule_members_list', $routeParameters, $letter),
+            'alpha' => new AlphaFilter('zikulaprofilemodule_members_listmembers', $routeParameters, $letter),
             'sortby' => $sortBy,
             'sortorder' => $sortOrder,
             'activeProperties' => $this->getActiveProperties($propertyRepository),

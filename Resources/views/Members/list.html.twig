@@ -3,7 +3,7 @@
     <span class="fas fa-users"></span>
     {% trans %}Registered users{% endtrans %}
 </h3>
-<form action="{{ path('zikulaprofilemodule_members_list') }}" method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
+<form action="{{ path('zikulaprofilemodule_members_listmembers') }}" method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
     <div class="form-row">
         <div class="form-group col-md-8">
             <label for="searchby" class="col-sm-6 col-form-label">{% trans %}Search by user name{% endtrans %}</label>
@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-4">
             <input class="btn btn-success" type="submit" value="{% trans %}Submit{% endtrans %}" />
-            <a href="{{ path('zikulaprofilemodule_members_list') }}" class="btn btn-secondary">{% trans %}Clear{% endtrans %}</a>
+            <a href="{{ path('zikulaprofilemodule_members_listmembers') }}" class="btn btn-secondary">{% trans %}Clear{% endtrans %}</a>
         </div>
     </div>
 </form>
