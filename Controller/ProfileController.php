@@ -37,7 +37,7 @@ class ProfileController extends AbstractController
      * @PermissionCheck({"$_zkModule::view", "::", "read"})
      * @Template("@ZikulaProfileModule/Profile/display.html.twig")
      */
-    public function displayAction(
+    public function display(
         PropertyRepositoryInterface $propertyRepository,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository,
@@ -62,7 +62,7 @@ class ProfileController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function editAction(
+    public function edit(
         Request $request,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository,

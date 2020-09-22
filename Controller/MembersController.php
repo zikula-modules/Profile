@@ -36,7 +36,7 @@ class MembersController extends AbstractController
      * @PermissionCheck({"$_zkModule:Members:", "::", "read"})
      * @Template("@ZikulaProfileModule/Members/list.html.twig")
      */
-    public function listAction(
+    public function listMembers(
         Request $request,
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
@@ -90,7 +90,7 @@ class MembersController extends AbstractController
      *
      * Displays last X registered users.
      */
-    public function recentAction(
+    public function recent(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         VariableApiInterface $variableApi,
@@ -115,7 +115,7 @@ class MembersController extends AbstractController
      *
      * View users online.
      */
-    public function onlineAction(
+    public function online(
         PropertyRepositoryInterface $propertyRepository,
         UserRepositoryInterface $userRepository,
         UserSessionRepositoryInterface $userSessionRepository,

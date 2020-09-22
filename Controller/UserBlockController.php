@@ -38,7 +38,7 @@ class UserBlockController extends AbstractController
      *
      * @throws NotFoundHttpException Thrown if the users block isn't found
      */
-    public function editAction(
+    public function edit(
         Request $request,
         BlockRepositoryInterface $blockRepository,
         CurrentUserApiInterface $currentUserApi,

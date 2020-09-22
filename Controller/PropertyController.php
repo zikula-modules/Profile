@@ -36,7 +36,7 @@ class PropertyController extends AbstractController
      * @Theme("admin")
      * @Template("@ZikulaProfileModule/Property/list.html.twig")
      */
-    public function listAction(PropertyRepositoryInterface $propertyRepository): array
+    public function listProperties(PropertyRepositoryInterface $propertyRepository): array
     {
         $properties = $propertyRepository->findBy([], ['weight' => 'ASC']);
 
@@ -52,7 +52,7 @@ class PropertyController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function editAction(Request $request, PropertyEntity $propertyEntity = null)
+    public function edit(Request $request, PropertyEntity $propertyEntity = null)
     {
         if (!isset($propertyEntity)) {
             $propertyEntity = new PropertyEntity();
@@ -85,7 +85,7 @@ class PropertyController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, PropertyEntity $propertyEntity)
+    public function delete(Request $request, PropertyEntity $propertyEntity)
     {
         $form = $this->createForm(DeletionType::class, $propertyEntity);
         $form->handleRequest($request);
