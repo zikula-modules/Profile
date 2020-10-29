@@ -169,10 +169,10 @@ class UpgradeHelper
         switch (mb_strtolower(trim($format))) {
             case 'us':
                 return 'F j, Y';
-                break;
+
             case 'db':
                 return 'Y-m-d';
-                break;
+
             default:
             case 'eur':
                 return 'j F Y';
