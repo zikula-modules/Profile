@@ -176,7 +176,6 @@ class UpgradeHelper
             default:
             case 'eur':
                 return 'j F Y';
-                break;
         }
     }
 

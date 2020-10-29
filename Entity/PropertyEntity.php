@@ -38,7 +38,7 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
     /**
      * @ORM\Column(type="array")
      * @Assert\NotNull()
-     * @var string
+     * @var array
      */
     private $labels = [];
 
