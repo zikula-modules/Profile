@@ -35,9 +35,9 @@ enabled:
 disabled:
 #  - blank_line_before_break
 #  - blank_line_before_continue
-  - blank_line_before_declare
-  - blank_line_before_throw
-  - blank_line_before_try
+#  - blank_line_before_declare
+#  - blank_line_before_throw
+#  - blank_line_before_try
   - cast_spaces
   - concat_without_spaces
   - function_declaration
