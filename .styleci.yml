@@ -4,7 +4,7 @@ enabled:
   - alpha_ordered_imports
   - combine_consecutive_issets
   - combine_consecutive_unsets
-  - compact_nullable_typehint
+#  - compact_nullable_typehint
   - declare_strict_types
   - dir_constant
   - ereg_to_preg
@@ -15,10 +15,10 @@ enabled:
   - mb_str_functions
   - modernize_types_casting
   - multiline_comment_opening_closing
-  - no_alternative_syntax
+#  - no_alternative_syntax
   - no_null_property_initialization
   - no_php4_constructor
-  - no_short_echo_tag
+#  - no_short_echo_tag
 #  - no_unneeded_curly_braces
   - no_unneeded_final_method
   - no_useless_else
@@ -27,8 +27,8 @@ enabled:
   - php_unit_namespaced
   - php_unit_set_up_tear_down_visibility
   - random_api_migration
-  - short_array_syntax
-  - standardize_increment
+#  - short_array_syntax
+#  - standardize_increment
   - strict_comparison
   - ternary_to_null_coalescing
 
