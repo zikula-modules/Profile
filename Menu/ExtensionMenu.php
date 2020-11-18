@@ -94,17 +94,17 @@ class ExtensionMenu implements ExtensionMenuInterface
     private function getAdmin(): ?ItemInterface
     {
         $menu = $this->factory->createItem('profileAdminMenu');
-        if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_EDIT)) {
+        if ($this->permissionApi->hasPermission($this->getBundleName() . '::', '::', ACCESS_EDIT)) {
             $menu->addChild('Property list', [
                 'route' => 'zikulaprofilemodule_property_listproperties',
             ])->setAttribute('icon', 'fas fa-list');
         }
-        if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADD)) {
+        if ($this->permissionApi->hasPermission($this->getBundleName() . '::', '::', ACCESS_ADD)) {
             $menu->addChild('Create new property', [
                 'route' => 'zikulaprofilemodule_property_edit',
             ])->setAttribute('icon', 'fas fa-plus');
         }
-        if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_ADMIN)) {
+        if ($this->permissionApi->hasPermission($this->getBundleName() . '::', '::', ACCESS_ADMIN)) {
             $menu->addChild('Settings', [
                 'route' => 'zikulaprofilemodule_config_config',
             ])->setAttribute('icon', 'fas fa-wrench');
@@ -123,7 +123,7 @@ class ExtensionMenu implements ExtensionMenuInterface
                 ])->setAttribute('icon', 'fas fa-user-circle');
             }
 
-            if ($this->permissionApi->hasPermission($this->getBundleName().'::', '::', ACCESS_READ)) {
+            if ($this->permissionApi->hasPermission($this->getBundleName() . '::', '::', ACCESS_READ)) {
                 $menu->addChild('Profile', [
                     'route' => 'zikulaprofilemodule_profile_display',
                 ])->setAttribute('icon', 'fas fa-user');

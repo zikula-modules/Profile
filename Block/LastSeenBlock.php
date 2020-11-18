@@ -36,7 +36,7 @@ class LastSeenBlock extends AbstractBlockHandler
     public function display(array $properties): string
     {
         $title = !empty($properties['title']) ? $properties['title'] : '';
-        if (!$this->hasPermission('ZikulaProfileModule:LastSeenblock:', $title.'::', ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaProfileModule:LastSeenblock:', $title . '::', ACCESS_READ)) {
             return '';
         }
 

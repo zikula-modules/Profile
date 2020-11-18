@@ -106,7 +106,7 @@ class AvatarType extends AbstractType
      */
     private function allowUploads(): bool
     {
-        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool)$this->modVars['allowUploads'];
+        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool) $this->modVars['allowUploads'];
         if (!$allowUploads) {
             return false;
         }

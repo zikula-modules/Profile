@@ -34,7 +34,7 @@ class UserBlock extends AbstractBlockHandler
         if ('' === $title) {
             $title = $this->trans('Custom block content for %s%', ['%s%' => $this->currentUserApi->get('uname')]);
         }
-        if (!$this->hasPermission('Userblock::', $title.'::', ACCESS_READ)) {
+        if (!$this->hasPermission('Userblock::', $title . '::', ACCESS_READ)) {
             return '';
         }
 

@@ -149,8 +149,8 @@ class ProfileModuleBridge implements ProfileModuleInterface
             $parameters['class'] = 'img-fluid img-thumbnail';
         }
         $attributes = ' class="' . str_replace('"', '', htmlspecialchars($parameters['class'])) . '"';
-        $attributes .= isset($parameters['width']) ? ' width="' . (int)$parameters['width'] . '"' : '';
-        $attributes .= isset($parameters['height']) ? ' height="' . (int)$parameters['height'] . '"' : '';
+        $attributes .= isset($parameters['width']) ? ' width="' . (int) $parameters['width'] . '"' : '';
+        $attributes .= isset($parameters['height']) ? ' height="' . (int) $parameters['height'] . '"' : '';
 
         $result = '<img src="' . str_replace('"', '', htmlspecialchars($avatarUrl)) . '" title="' . str_replace('"', '', htmlspecialchars($userEntity->getUname())) . '" alt="' . str_replace('"', '', htmlspecialchars($userEntity->getUname())) . '"' . $attributes . ' />';
 
