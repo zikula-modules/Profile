@@ -5,7 +5,7 @@ enabled:
   - combine_consecutive_issets
   - combine_consecutive_unsets
 #  - compact_nullable_typehint
-  - declare_strict_types
+#  - declare_strict_types
   - dir_constant
   - ereg_to_preg
   - escape_implicit_backslashes
