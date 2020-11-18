@@ -23,9 +23,9 @@ class GravatarHelper
     public function getGravatarUrl(string $emailAddress = '', array $parameters = []): string
     {
         $url = 'https://secure.gravatar.com/avatar/';
-        $url .= md5(mb_strtolower(trim($emailAddress))).'.jpg';
+        $url .= md5(mb_strtolower(trim($emailAddress))) . '.jpg';
 
-        $url .= '?s=' . (isset($parameters['size']) ? (int)$parameters['size'] : 80);
+        $url .= '?s=' . (isset($parameters['size']) ? (int) $parameters['size'] : 80);
         $url .= '&amp;d=' . ($parameters['imageset'] ?? 'mm');
         $url .= '&amp;r=' . ($parameters['rating'] ?? 'g');
 

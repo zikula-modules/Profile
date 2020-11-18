@@ -152,8 +152,8 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 }
                 $this->entityManager->flush();
                 // update boolean vars
-                $this->setVar('viewregdate', (bool)$this->getVar('viewregdate'));
-                $this->setVar('filterunverified', (bool)$this->getVar('filterunverified'));
+                $this->setVar('viewregdate', (bool) $this->getVar('viewregdate'));
+                $this->setVar('filterunverified', (bool) $this->getVar('filterunverified'));
                 $this->setVar('activeminutes', 10);
                 // add new vars
                 $this->setVar('allowUploads', false);
@@ -161,6 +161,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->setVar('maxSize', 12000);
                 $this->setVar('maxWidth', 80);
                 $this->setVar('maxHeight', 80);
+                // no break
             case '3.0.0':
             case '3.0.1':
             case '3.0.2':
@@ -171,11 +172,13 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 if ('images/avatar' === $avatarPath) {
                     $this->getVariableApi()->set(UsersConstant::MODNAME, 'avatarpath', 'public/uploads/avatar');
                 }
+                // no break
             case '3.0.12':
             case '3.1.15':
                 // reduce field length to avoid too long key with utf8mb4 collation
                 $sql = 'ALTER TABLE `user_property` MODIFY `id` VARCHAR(190)';
                 $this->entityManager->getConnection()->executeQuery($sql);
+                // no break
             case '3.1.16':
                 // future upgrades
         }

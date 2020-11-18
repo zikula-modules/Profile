@@ -49,7 +49,7 @@ class UploadHelper
      */
     public function handleUpload(UploadedFile $file, int $userId = 0): string
     {
-        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool)$this->modVars['allowUploads'];
+        $allowUploads = isset($this->modVars['allowUploads']) && true === (bool) $this->modVars['allowUploads'];
         if (!$allowUploads) {
             return '';
         }
