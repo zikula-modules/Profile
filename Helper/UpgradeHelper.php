@@ -83,7 +83,7 @@ class UpgradeHelper
         $newProperty->setId($property['attributename']);
         $newProperty->setWeight($property['weight']);
         $newProperty->setActive($property['weight'] > 0);
-        $newProperty->setLabels([$locale => $this->trans(/** @Ignore */$property['label'])]);
+        $newProperty->setLabels([$locale => $this->trans(/** @Ignore */ $property['label'])]);
         $this->setFormType($newProperty, $property);
         $this->setFormOptions($newProperty, $property);
 
@@ -157,7 +157,7 @@ class UpgradeHelper
         foreach ($list as $id => $listItem) {
             $itemParts = explode('@', $listItem);
             $value = $itemParts[1] ?? $id;
-            $display = !empty($itemParts[0]) ? $this->trans(/** @Ignore */$itemParts[0]) : $id;
+            $display = !empty($itemParts[0]) ? $this->trans(/** @Ignore */ $itemParts[0]) : $id;
             $choices[$display] = $value;
         }
 

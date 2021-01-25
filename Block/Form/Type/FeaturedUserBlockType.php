@@ -40,7 +40,7 @@ class FeaturedUserBlockType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => true,
-                'choices' => /** @Ignore*/$options['activeProperties'],
+                'choices' => /** @Ignore*/ $options['activeProperties'],
                 'choice_label' => 'label',
                 'choice_value' => 'id'
             ])
