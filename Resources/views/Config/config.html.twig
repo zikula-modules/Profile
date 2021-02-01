@@ -11,7 +11,7 @@
 {% endif %}
 {% if getModVar('ZConfig', 'profilemodule') != 'ZikulaProfileModule' %}
     <div class="alert alert-danger">{% trans %}The profile module is not selected as the system profile module. This is needed for full functionality.{% endtrans %}&nbsp;
-        <a href="{{ path('zikulasettingsmodule_settings_main') }}">{% trans %}Update system settings{% endtrans %}</a>
+        <a href="{{ path('zikulasettingsmodule_settings_mainsettings') }}">{% trans %}Update system settings{% endtrans %}</a>
     </div>
 {% endif %}
 

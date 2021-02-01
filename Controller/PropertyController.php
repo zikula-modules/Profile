@@ -70,7 +70,7 @@ class PropertyController extends AbstractController
                 $this->addFlash('info', $this->trans('Operation cancelled.'));
             }
 
-            return $this->redirectToRoute('zikulaprofilemodule_property_list');
+            return $this->redirectToRoute('zikulaprofilemodule_property_listproperties');
         }
 
         return [
@@ -100,7 +100,7 @@ class PropertyController extends AbstractController
                 $this->addFlash('info', $this->trans('Operation cancelled.'));
             }
 
-            return $this->redirectToRoute('zikulaprofilemodule_property_list');
+            return $this->redirectToRoute('zikulaprofilemodule_property_listproperties');
         }
 
         return [
