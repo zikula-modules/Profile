@@ -90,8 +90,10 @@ class ProfileController extends AbstractController
 
         $form = $profileTypeFactory->createForm($attributes);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->get('save')->isClicked()) {
+            if (!$form->isValid()) {
+                $this->addFlash('error', 'Your input was not valid. Please review your input.');
+            } else {
                 $attributes = $form->getData();
                 foreach ($attributes as $attribute => $value) {
                     if (!empty($value)) {

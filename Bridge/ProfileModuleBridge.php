@@ -125,7 +125,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
 
         $userAttributes = $userEntity->getAttributes();
         $key = $this->prefix . ':avatar';
-        $avatar = $userAttributes[$key] ?? $gravatarImage;
+        $avatar = $userAttributes[$key] ? $userAttributes[$key]->getValue() : $gravatarImage;
 
         $avatarUrl = '';
         if (!in_array($avatar, ['blank.gif', 'blank.jpg'], true)) {
@@ -133,6 +133,7 @@ class ProfileModuleBridge implements ProfileModuleInterface
                 $request = $this->requestStack->getCurrentRequest();
                 if (null !== $request) {
                     $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
+                    $avatarUrl = str_replace('public/public/', 'public/', $avatarUrl);
                 }
             } elseif (true === $allowGravatars) {
                 $parameters = $this->squareSize($parameters);
