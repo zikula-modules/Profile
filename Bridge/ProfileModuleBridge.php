@@ -16,6 +16,7 @@ namespace Zikula\ProfileModule\Bridge;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use function Symfony\Component\String\s;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Helper\GravatarHelper;
 use Zikula\ProfileModule\ProfileConstant;
@@ -132,8 +133,8 @@ class ProfileModuleBridge implements ProfileModuleInterface
             if (isset($avatar) && !empty($avatar) && $avatar !== $gravatarImage && file_exists($this->projectDir . '/' . $avatarPath . '/' . $avatar)) {
                 $request = $this->requestStack->getCurrentRequest();
                 if (null !== $request) {
+                    $avatarPath = s($avatarPath)->after('public/')->toString();
                     $avatarUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $avatarPath . '/' . $avatar;
-                    $avatarUrl = str_replace('public/public/', 'public/', $avatarUrl);
                 }
             } elseif (true === $allowGravatars) {
                 $parameters = $this->squareSize($parameters);
