@@ -94,7 +94,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
         $this->setVars($this->getDefaultModVars());
 
         // create the default data for the module
-        $request = null !== $this->requestStack ? $this->requestStack->getMasterRequest() : null;
+        $request = null !== $this->requestStack ? $this->requestStack->getMainRequest() : null;
         // fall back to English for CLI installations (#105)
         $locale = null !== $request ? $request->getLocale() : 'en';
         $this->defaultdata($locale);
@@ -126,7 +126,7 @@ class ProfileModuleInstaller extends AbstractExtensionInstaller
                 $this->schemaTool->create($this->entities);
                 $propertyToIdMap = [];
 
-                $request = null !== $this->requestStack ? $this->requestStack->getMasterRequest() : null;
+                $request = null !== $this->requestStack ? $this->requestStack->getMainRequest() : null;
                 // fall back to English for CLI installations (#105)
                 $locale = null !== $request ? $this->requestStack->getLocale() : 'en';
 
