@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -64,6 +65,7 @@ class ProfileController extends AbstractController
      */
     public function edit(
         Request $request,
+        ManagerRegistry $doctrine,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository,
         ProfileTypeFactory $profileTypeFactory,
@@ -108,14 +110,14 @@ class ProfileController extends AbstractController
                         $userEntity->delAttribute($attribute);
                     }
                 }
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->flush();
             }
 
             return $this->redirectToRoute('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
         }
 
         // detach user entity because attributes may be altered for the form (e.g. multiple choice fields)
-        $this->getDoctrine()->getManager()->detach($userEntity);
+        $doctrine->getManager()->detach($userEntity);
 
         return [
             'user' => $userEntity,

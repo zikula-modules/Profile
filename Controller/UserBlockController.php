@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,7 @@ class UserBlockController extends AbstractController
      */
     public function edit(
         Request $request,
+        ManagerRegistry $doctrine,
         BlockRepositoryInterface $blockRepository,
         CurrentUserApiInterface $currentUserApi,
         UserRepositoryInterface $userRepository
@@ -68,7 +70,7 @@ class UserBlockController extends AbstractController
 
                 $userEntity->setAttribute('ublockon', $formData['ublockon']);
                 $userEntity->setAttribute('ublock', $formData['ublock']);
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->flush();
 
                 $this->addFlash('status', $this->trans('Done! Saved custom block.'));
             }

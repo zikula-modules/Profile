@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class PropertyController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function edit(Request $request, PropertyEntity $propertyEntity = null)
+    public function edit(Request $request, ManagerRegistry $doctrine, PropertyEntity $propertyEntity = null)
     {
         if (!isset($propertyEntity)) {
             $propertyEntity = new PropertyEntity();
@@ -62,8 +63,8 @@ class PropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $propertyEntity = $form->getData();
-                $this->getDoctrine()->getManager()->persist($propertyEntity);
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->persist($propertyEntity);
+                $doctrine->getManager()->flush();
                 $this->addFlash('success', $this->trans('Property saved.'));
             }
             if ($form->get('cancel')->isClicked()) {
@@ -85,15 +86,15 @@ class PropertyController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function delete(Request $request, PropertyEntity $propertyEntity)
+    public function delete(Request $request, ManagerRegistry $doctrine, PropertyEntity $propertyEntity)
     {
         $form = $this->createForm(DeletionType::class, $propertyEntity);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('delete')->isClicked()) {
                 $propertyEntity = $form->getData();
-                $this->getDoctrine()->getManager()->remove($propertyEntity);
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->remove($propertyEntity);
+                $doctrine->getManager()->flush();
                 $this->addFlash('success', $this->trans('Property removed.'));
             }
             if ($form->get('cancel')->isClicked()) {
