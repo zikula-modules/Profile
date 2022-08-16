@@ -15,7 +15,6 @@ namespace Zikula\ProfileModule\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Zikula\BlocksModule\Entity\RepositoryInterface\BlockRepositoryInterface;
 use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\MenuModule\ExtensionMenu\ExtensionMenuInterface;
@@ -28,57 +27,14 @@ use Zikula\ZAuthModule\ZAuthConstant;
 
 class ExtensionMenu implements ExtensionMenuInterface
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var PermissionApiInterface
-     */
-    private $permissionApi;
-
-    /**
-     * @var ZikulaHttpKernelInterface
-     */
-    private $kernel;
-
-    /**
-     * @var VariableApiInterface
-     */
-    private $variableApi;
-
-    /**
-     * @var CurrentUserApiInterface
-     */
-    private $currentUserApi;
-
-    /**
-     * @var MessageModuleCollector
-     */
-    private $messageModuleCollector;
-
-    /**
-     * @var BlockRepositoryInterface
-     */
-    private $blocksRepository;
-
     public function __construct(
-        FactoryInterface $factory,
-        PermissionApiInterface $permissionApi,
-        ZikulaHttpKernelInterface $kernel,
-        VariableApiInterface $variableApi,
-        CurrentUserApiInterface $currentUserApi,
-        MessageModuleCollector $messageModuleCollector,
-        BlockRepositoryInterface $blockRepository
+        private readonly FactoryInterface $factory,
+        private readonly PermissionApiInterface $permissionApi,
+        private readonly ZikulaHttpKernelInterface $kernel,
+        private readonly VariableApiInterface $variableApi,
+        private readonly CurrentUserApiInterface $currentUserApi,
+        private readonly MessageModuleCollector $messageModuleCollector
     ) {
-        $this->factory = $factory;
-        $this->permissionApi = $permissionApi;
-        $this->kernel = $kernel;
-        $this->variableApi = $variableApi;
-        $this->currentUserApi = $currentUserApi;
-        $this->messageModuleCollector = $messageModuleCollector;
-        $this->blocksRepository = $blockRepository;
     }
 
     public function get(string $type = self::TYPE_ADMIN): ?ItemInterface
@@ -217,14 +173,6 @@ class ExtensionMenu implements ExtensionMenuInterface
             $menu->addChild('Registered users', [
                 'route' => 'zikulaprofilemodule_members_listmembers',
             ])->setAttribute('icon', 'fas fa-user-friends');
-        }
-
-        // check if the users block exists
-        $block = $this->blocksRepository->findOneBy(['bkey' => 'ZikulaProfileModule:Zikula\ProfileModule\Block\UserBlock']);
-        if (isset($block)) {
-            $menu->addChild('Personal custom block', [
-                'route' => 'zikulaprofilemodule_userblock_edit',
-            ])->setAttribute('icon', 'fas fa-cube');
         }
 
         return 0 === $menu->count() ? null : $menu;

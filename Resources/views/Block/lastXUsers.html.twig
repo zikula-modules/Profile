@@ -1,7 +1,0 @@
-{% if users %}
-<ul class="list-group">
-    {% for user in users %}
-        <li class="list-group-item">{{ user.uid|profileLinkByUserId() }} ({{ user.registrationDate|format_date('medium') }})</li>
-    {% endfor %}
-</ul>
-{% endif %}
