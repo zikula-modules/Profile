@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\CoreBundle\Controller\AbstractController;
-use Zikula\Bundle\CoreBundle\RouteUrl;
 use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\ProfileTypeFactory;
@@ -47,13 +46,11 @@ class ProfileController extends AbstractController
         if (null === $userEntity) {
             $userEntity = $userRepository->find($currentUserApi->get('uid'));
         }
-        $routeUrl = new RouteUrl('zikulaprofilemodule_profile_display', ['uid' => $userEntity->getUid()]);
 
         return [
             'prefix' => $this->getParameter('zikula_profile_module.property_prefix'),
             'user' => $userEntity,
             'activeProperties' => $propertyRepository->getDynamicFieldsSpecification(),
-            'routeUrl' => $routeUrl
         ];
     }
 

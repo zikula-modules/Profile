@@ -16,7 +16,6 @@ namespace Zikula\ProfileModule\Bridge;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use function Symfony\Component\String\s;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\ProfileModule\Helper\GravatarHelper;
 use Zikula\ProfileModule\ProfileConstant;
@@ -26,66 +25,20 @@ use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Entity\UserEntity;
 use Zikula\UsersModule\ProfileModule\ProfileModuleInterface;
 
+use function Symfony\Component\String\s;
+
 class ProfileModuleBridge implements ProfileModuleInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var VariableApiInterface
-     */
-    private $variableApi;
-
-    /**
-     * @var CurrentUserApiInterface
-     */
-    private $currentUser;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var GravatarHelper
-     */
-    private $gravatarHelper;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $prefix;
-
     public function __construct(
-        RouterInterface $router,
-        RequestStack $requestStack,
-        VariableApiInterface $variableApi,
-        CurrentUserApiInterface $currentUser,
-        UserRepositoryInterface $userRepository,
-        GravatarHelper $gravatarHelper,
-        string $projectDir,
-        $prefix
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly VariableApiInterface $variableApi,
+        private readonly CurrentUserApiInterface $currentUser,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly GravatarHelper $gravatarHelper,
+        private readonly string $projectDir,
+        private readonly string $prefix
     ) {
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->variableApi = $variableApi;
-        $this->currentUser = $currentUser;
-        $this->userRepository = $userRepository;
-        $this->gravatarHelper = $gravatarHelper;
-        $this->projectDir = $projectDir;
-        $this->prefix = $prefix;
     }
 
     public function getDisplayName($uid = null): string
