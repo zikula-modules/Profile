@@ -19,7 +19,6 @@
     "extra": {
         "zikula": {
             "class": "Zikula\\ProfileModule\\ZikulaProfileModule",
-            "core-compatibility": ">=3.0.0",
             "displayname": "Profile",
             "url": "profile",
             "icon": "fas fa-id-card",

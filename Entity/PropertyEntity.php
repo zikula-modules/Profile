@@ -30,44 +30,36 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
      * Note this value is NOT auto-generated and must be manually created!
      * @ORM\Id
      * @ORM\Column(type="string", length=190, unique=true)
-     * @Assert\Regex("/^[a-zA-Z0-9\-\_]+$/")
-     * @var string
      */
-    private $id;
+    #[Assert\Regex("/^[a-zA-Z0-9\-\_]+$/")]
+    private string $id;
 
     /**
      * @ORM\Column(type="array")
-     * @Assert\NotNull()
-     * @var array
      */
-    private $labels = [];
+    private array $labels = [];
 
     /**
      * @ORM\Column(type="text")
-     * @Assert\Length(min="0", max="255", allowEmptyString="false")
-     * @var string
      */
-    private $formType = '';
+    #[Assert\Length(min: 0, max: 255, allowEmptyString: false)]
+    private string $formType = '';
 
     /**
      * @ORM\Column(type="array")
-     * @Assert\NotNull()
-     * @var array
      */
-    private $formOptions = [];
+    private array $formOptions = [];
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(0)
-     * @var int
      */
-    private $weight = 0;
+    #[Assert\GreaterThan(0)]
+    private int $weight = 0;
 
     /**
      * @ORM\Column(type="boolean")
-     * @var boolean
      */
-    private $active = true;
+    private bool $active = true;
 
     public function getId(): ?string
     {
