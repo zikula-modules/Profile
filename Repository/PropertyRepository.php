@@ -11,13 +11,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Zikula\ProfileModule\Entity\Repository;
+namespace Zikula\ProfileModule\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Zikula\Bundle\FormExtensionBundle\DynamicFieldsContainerInterface;
 use Zikula\ProfileModule\Entity\PropertyEntity;
-use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 
 class PropertyRepository extends ServiceEntityRepository implements PropertyRepositoryInterface, DynamicFieldsContainerInterface
 {

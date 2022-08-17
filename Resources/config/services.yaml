@@ -19,7 +19,7 @@ services:
         resource: '../../Helper/*'
         lazy: true
 
-    Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface: '@Zikula\ProfileModule\Entity\Repository\PropertyRepository'
+    Zikula\ProfileModule\Repository\PropertyRepositoryInterface: '@Zikula\ProfileModule\Repository\PropertyRepository'
 
     Zikula\ProfileModule\ProfileModuleInstaller:
         $prefix: '%zikula_profile_module.property_prefix%'

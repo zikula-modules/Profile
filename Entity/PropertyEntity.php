@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Zikula\Bundle\CoreBundle\Doctrine\EntityAccess;
 use Zikula\Bundle\FormExtensionBundle\DynamicFieldInterface;
-use Zikula\ProfileModule\Entity\Repository\PropertyRepository;
+use Zikula\ProfileModule\Repository\PropertyRepository;
 
 #[ORM\Entity(repositoryClass: PropertyRepository::class)]
 #[ORM\Table(name: 'user_property')]
