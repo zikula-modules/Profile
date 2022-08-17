@@ -13,52 +13,42 @@ declare(strict_types=1);
 
 namespace Zikula\ProfileModule\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Zikula\Bundle\CoreBundle\Doctrine\EntityAccess;
 use Zikula\Bundle\FormExtensionBundle\DynamicFieldInterface;
+use Zikula\ProfileModule\Entity\Repository\PropertyRepository;
 
-/**
- * @ORM\Entity(repositoryClass="Zikula\ProfileModule\Entity\Repository\PropertyRepository")
- * @ORM\Table(name="user_property")
- * @UniqueEntity("id")
- */
+#[ORM\Entity(repositoryClass: PropertyRepository::class)]
+#[ORM\Table(name: 'user_property')]
+#[UniqueEntity('id')]
 class PropertyEntity extends EntityAccess implements DynamicFieldInterface
 {
     /**
      * Note this value is NOT auto-generated and must be manually created!
-     * @ORM\Id
-     * @ORM\Column(type="string", length=190, unique=true)
      */
+    #[ORM\Id]
+    #[ORM\Column(length: 190, unique: true)]
     #[Assert\Regex("/^[a-zA-Z0-9\-\_]+$/")]
     private string $id;
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column]
     private array $labels = [];
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: Types::TEXT)]
     #[Assert\Length(min: 0, max: 255, allowEmptyString: false)]
     private string $formType = '';
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column]
     private array $formOptions = [];
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     #[Assert\GreaterThan(0)]
     private int $weight = 0;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column]
     private bool $active = true;
 
     public function getId(): ?string
