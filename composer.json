@@ -22,7 +22,6 @@
             "core-compatibility": ">=3.0.0",
             "displayname": "Profile",
             "url": "profile",
-            "oldnames": ["Profile"],
             "icon": "fas fa-id-card",
             "capabilities": {
                 "admin": {
@@ -38,12 +37,7 @@
                 "ZikulaProfileModule::item": "PropertyId::",
                 "ZikulaProfileModule:Members:": "::",
                 "ZikulaProfileModule:Members:recent": "::",
-                "ZikulaProfileModule:Members:online": "::",
-                "ZikulaProfileModule:FeaturedUserblock:": "Block title::",
-                "ZikulaProfileModule:LastSeenblock:": "Block title::",
-                "ZikulaProfileModule:LastXUsersblock:": "Block title::",
-                "ZikulaProfileModule:MembersOnlineblock:": "Block title::",
-                "Userblock::": "Block title::"
+                "ZikulaProfileModule:Members:online": "::"
             }
         }
     }
