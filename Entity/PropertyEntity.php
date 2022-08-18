@@ -28,10 +28,10 @@ class PropertyEntity extends EntityAccess implements DynamicFieldInterface
 {
     /**
      * Note this value is NOT auto-generated and must be manually created!
+     * @Assert\Regex("/^[a-zA-Z0-9\-\_]+$/")
      */
     #[ORM\Id]
     #[ORM\Column(length: 190, unique: true)]
-    #[Assert\Regex("/^[a-zA-Z0-9\-\_]+$/")]
     private string $id;
 
     #[ORM\Column]

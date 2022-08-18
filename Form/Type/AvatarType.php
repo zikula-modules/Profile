@@ -81,7 +81,7 @@ class AvatarType extends AbstractType
                 'Max. dimensions: %maxWidth%x%maxHeight% pixels'
             ];
             $defaults['help_translation_parameters'] = [
-                '%extensions%' => implode(', ', ['gif', 'jpeg', 'jpg', 'png'/*, 'swf'*/]),
+                '%extensions%' => implode(', ', ['gif', 'jpeg', 'jpg', 'png']),
                 '%maxSize%' => $this->modVars['maxSize'],
                 '%maxWidth%' => $this->modVars['maxWidth'],
                 '%maxHeight%' => $this->modVars['maxHeight']
