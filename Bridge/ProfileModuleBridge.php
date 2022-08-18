@@ -21,9 +21,9 @@ use Zikula\ProfileModule\Helper\GravatarHelper;
 use Zikula\ProfileModule\ProfileConstant;
 use Zikula\UsersModule\Api\ApiInterface\CurrentUserApiInterface;
 use Zikula\UsersModule\Constant as UsersConstant;
-use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
 use Zikula\UsersModule\Entity\UserEntity;
 use Zikula\UsersModule\ProfileModule\ProfileModuleInterface;
+use Zikula\UsersModule\Repository\UserRepositoryInterface;
 
 use function Symfony\Component\String\s;
 

@@ -22,8 +22,8 @@ use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\DeletionType;
 use Zikula\PermissionsModule\Annotation\PermissionCheck;
 use Zikula\ProfileModule\Entity\PropertyEntity;
-use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\Form\Type\PropertyType;
+use Zikula\ProfileModule\Repository\PropertyRepositoryInterface;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**

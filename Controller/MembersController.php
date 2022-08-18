@@ -21,10 +21,10 @@ use Zikula\Bundle\CoreBundle\Controller\AbstractController;
 use Zikula\Bundle\CoreBundle\Filter\AlphaFilter;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\PermissionsModule\Annotation\PermissionCheck;
-use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
+use Zikula\ProfileModule\Repository\PropertyRepositoryInterface;
 use Zikula\SettingsModule\SettingsConstant;
-use Zikula\UsersModule\Entity\RepositoryInterface\UserRepositoryInterface;
-use Zikula\UsersModule\Entity\RepositoryInterface\UserSessionRepositoryInterface;
+use Zikula\UsersModule\Repository\UserRepositoryInterface;
+use Zikula\UsersModule\Repository\UserSessionRepositoryInterface;
 
 /**
  * @Route("/members")

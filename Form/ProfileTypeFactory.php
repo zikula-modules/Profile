@@ -20,8 +20,8 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Zikula\Bundle\FormExtensionBundle\Form\Type\InlineFormDefinitionType;
-use Zikula\ProfileModule\Entity\RepositoryInterface\PropertyRepositoryInterface;
 use Zikula\ProfileModule\ProfileConstant;
+use Zikula\ProfileModule\Repository\PropertyRepositoryInterface;
 
 class ProfileTypeFactory
 {
